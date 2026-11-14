@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, onMounted } from 'vue';
 import { Head, Link, usePage } from '@inertiajs/vue3';
 import type { PageProps, User } from '@/types';
 import { Badge } from '@/Components/ui/badge';
@@ -29,6 +29,9 @@ import {
     WifiOff,
     HelpCircle,
     X,
+    ChevronLeft,
+    PanelLeftClose,
+    PanelLeftOpen,
 } from 'lucide-vue-next';
 
 interface Props {
@@ -43,6 +46,30 @@ const userRole = computed(() => user.value?.role ?? 'cashier');
 
 // Mobile drawer state
 const isMobileMenuOpen = ref(false);
+
+// Desktop sidebar collapse state
+const isDesktopSidebarOpen = ref(true);
+
+onMounted(() => {
+    const saved = localStorage.getItem('lms_desktop_sidebar_open');
+    if (saved !== null) {
+        isDesktopSidebarOpen.value = saved === 'true';
+    }
+});
+
+function handleMenuToggle() {
+    if (window.innerWidth < 1024) {
+        isMobileMenuOpen.value = true;
+    } else {
+        isDesktopSidebarOpen.value = !isDesktopSidebarOpen.value;
+        localStorage.setItem('lms_desktop_sidebar_open', String(isDesktopSidebarOpen.value));
+    }
+}
+
+function closeDesktopSidebar() {
+    isDesktopSidebarOpen.value = false;
+    localStorage.setItem('lms_desktop_sidebar_open', 'false');
+}
 
 // WhatsApp Gateway tooltip state
 const showWaTooltip = ref(false);
@@ -172,17 +199,19 @@ const roleLabel = computed(() => {
         <Head :title="title ? `${title} - Andik Laundry` : 'Andik Laundry'" />
 
         <!-- Top Header Navigation -->
-        <header class="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-xs">
+        <header class="relative z-40 bg-white border-b border-slate-200 shadow-xs">
             <div class="px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-                <!-- Left: Hamburger (Mobile) + Store Logo & Title -->
+                <!-- Left: Hamburger / Toggle (Mobile & Desktop) + Store Logo & Title -->
                 <div class="flex items-center space-x-3 sm:space-x-4">
                     <button
                         type="button"
-                        class="lg:hidden inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-2 text-slate-600 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500"
-                        @click="isMobileMenuOpen = true"
-                        aria-label="Buka menu navigasi"
+                        class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-500 cursor-pointer transition-colors"
+                        @click="handleMenuToggle"
+                        :title="isDesktopSidebarOpen ? 'Tutup menu samping' : 'Buka menu samping'"
+                        aria-label="Buka atau tutup menu navigasi"
                     >
-                        <Menu class="h-6 w-6" />
+                        <component :is="isDesktopSidebarOpen ? PanelLeftClose : Menu" class="h-6 w-6 hidden lg:block text-slate-700" />
+                        <Menu class="h-6 w-6 lg:hidden text-slate-700" />
                     </button>
 
                     <Link href="/" class="flex items-center space-x-3 group">
@@ -294,12 +323,28 @@ const roleLabel = computed(() => {
         </div>
 
         <div class="flex-1 flex w-full">
-            <!-- Desktop Sidebar Navigation Rail (>= 1024px) -->
-            <aside class="hidden lg:flex lg:flex-col w-64 bg-slate-900 border-r border-slate-800 shrink-0 select-none">
-                <div class="p-4 space-y-1">
-                    <p class="px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                        Menu Utama
-                    </p>
+            <!-- Desktop Sidebar Navigation Rail (>= 1024px) with Toggle Transition -->
+            <aside
+                :class="[
+                    'hidden lg:flex lg:flex-col bg-slate-900 border-r border-slate-800 shrink-0 select-none transition-all duration-300 ease-in-out',
+                    isDesktopSidebarOpen ? 'w-64 opacity-100' : 'w-0 border-r-0 opacity-0 overflow-hidden pointer-events-none'
+                ]"
+            >
+                <div class="p-4 space-y-1 w-64">
+                    <div class="flex items-center justify-between px-3 py-2">
+                        <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                            Menu Utama
+                        </p>
+                        <button
+                            type="button"
+                            class="text-slate-400 hover:text-white p-1 rounded-md hover:bg-slate-800 transition-colors cursor-pointer"
+                            @click="closeDesktopSidebar"
+                            title="Tutup menu navigasi"
+                            aria-label="Tutup menu navigasi"
+                        >
+                            <ChevronLeft class="h-4 w-4" />
+                        </button>
+                    </div>
 
                     <nav class="space-y-1">
                         <Link
@@ -319,7 +364,7 @@ const roleLabel = computed(() => {
                     </nav>
                 </div>
 
-                <div class="mt-auto p-4 border-t border-slate-800">
+                <div class="mt-auto p-4 border-t border-slate-800 w-64">
                     <div class="rounded-lg bg-slate-800/80 p-3 text-xs text-slate-400">
                         <span class="block font-semibold text-slate-200">Andik Laundry v1.0</span>
                         <span class="block text-[11px] text-slate-500 mt-0.5">Single-Store Foundation</span>

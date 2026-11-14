@@ -97,7 +97,7 @@ onUnmounted(() => {
         <Head :title="`${title} - Andik Laundry POS`" />
 
         <!-- High-Speed POS Header -->
-        <header class="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-xs">
+        <header class="relative z-40 bg-white border-b border-slate-200 shadow-xs">
             <div class="px-4 sm:px-6 h-16 flex items-center justify-between">
                 <!-- Left: Home / AL Brand & Store Title + Quick Navigation -->
                 <div class="flex items-center space-x-3">
