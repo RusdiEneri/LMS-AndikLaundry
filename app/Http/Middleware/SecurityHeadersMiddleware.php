@@ -23,20 +23,14 @@ class SecurityHeadersMiddleware
         $response->headers->set('X-XSS-Protection', '1; mode=block');
         $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
         $response->headers->set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
-        $isLocal = app()->environment('local', 'testing');
-        $viteDev = $isLocal ? " http://localhost:5173 http://127.0.0.1:5173 http://[::1]:5173" : "";
-        $viteWs = $isLocal ? " ws://localhost:5173 ws://127.0.0.1:5173 ws://[::1]:5173" : "";
 
-        $response->headers->set(
-            'Content-Security-Policy',
-            "default-src 'self'; " .
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval'{$viteDev}; " .
-            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com{$viteDev}; " .
-            "font-src 'self' https://fonts.gstatic.com data:{$viteDev}; " .
-            "img-src 'self' data: blob:{$viteDev}; " .
-            "connect-src 'self' ws: wss:{$viteDev}{$viteWs}; " .
-            "frame-ancestors 'self';"
-        );
+        $isLocal = app()->environment('local', 'testing');
+
+        $csp = $isLocal
+            ? "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' http: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com http: https:; font-src 'self' https://fonts.gstatic.com data: http: https:; img-src 'self' data: blob: http: https:; connect-src 'self' ws: wss: http: https:; frame-ancestors 'self';"
+            : "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' ws: wss:; frame-ancestors 'self';";
+
+        $response->headers->set('Content-Security-Policy', $csp);
 
         if ($request->isSecure()) {
             $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
