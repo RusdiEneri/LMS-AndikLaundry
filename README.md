@@ -84,7 +84,7 @@ Sebelum memulai, pastikan perangkat komputer Anda telah terpasang perangkat luna
 #### Langkah 1: Kloning Repositori & Masuk ke Direktori Proyek
 Buka terminal (PowerShell, Command Prompt, atau Terminal Linux/macOS) lalu jalankan:
 ```bash
-git clone -b dev-ilham https://github.com/m-ilham/LMS-AndikLaundry.git
+git clone -b dev-ilham https://github.com/RusdiEneri/LMS-AndikLaundry.git
 cd LMS-AndikLaundry
 ```
 
