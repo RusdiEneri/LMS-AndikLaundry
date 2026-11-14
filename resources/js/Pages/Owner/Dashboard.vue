@@ -298,16 +298,16 @@ function barHeight(value: number): string {
                         <dl class="space-y-2.5 text-sm">
                             <div class="flex justify-between gap-3">
                                 <dt class="text-[#6B6B6B]">Omzet selesai diakui</dt>
-                                <dd class="font-semibold text-[#0A0A0A] tabular-nums font-mono">{{ formatRupiah(accrual.recognized_revenue) }}</dd>
+                                <dd class="font-semibold text-[#0A0A0A] tabular-nums">{{ formatRupiah(accrual.recognized_revenue) }}</dd>
                             </div>
                             <div class="flex justify-between gap-3">
                                 <dt class="text-[#6B6B6B]">Total biaya toko</dt>
-                                <dd class="font-semibold text-[#0A0A0A] tabular-nums font-mono">− {{ formatRupiah(accrual.operating_expenses) }}</dd>
+                                <dd class="font-semibold text-[#0A0A0A] tabular-nums">− {{ formatRupiah(accrual.operating_expenses) }}</dd>
                             </div>
                             <div class="flex items-baseline justify-between gap-3 border-t border-[#E8E8EC] pt-3.5">
                                 <dt class="font-bold text-[#0A0A0A]">Laba bersih</dt>
                                 <dd
-                                    class="text-2xl sm:text-3xl font-bold tracking-tight tabular-nums font-mono"
+                                    class="text-2xl sm:text-3xl font-bold tracking-tight tabular-nums"
                                     :class="accrual.net_operating_profit < 0 ? 'text-[#EF4444]' : 'text-[#10B981]'"
                                 >
                                     {{ formatRupiah(accrual.net_operating_profit) }}
@@ -315,7 +315,7 @@ function barHeight(value: number): string {
                             </div>
                             <div class="flex justify-between gap-3 text-xs text-[#6B6B6B] pt-0.5">
                                 <dt>Margin laba</dt>
-                                <dd class="font-medium text-[#0A0A0A] tabular-nums font-mono">{{ accrual.profit_margin_percent }}%</dd>
+                                <dd class="font-medium text-[#0A0A0A] tabular-nums">{{ accrual.profit_margin_percent }}%</dd>
                             </div>
                         </dl>
                     </CardContent>
@@ -335,24 +335,24 @@ function barHeight(value: number): string {
                         <dl class="space-y-2.5 text-sm">
                             <div class="flex justify-between gap-3">
                                 <dt class="text-[#6B6B6B]">Uang diterima kasir</dt>
-                                <dd class="font-semibold text-[#0A0A0A] tabular-nums font-mono">{{ formatRupiah(cash.cash_in.total) }}</dd>
+                                <dd class="font-semibold text-[#0A0A0A] tabular-nums">{{ formatRupiah(cash.cash_in.total) }}</dd>
                             </div>
                             <div class="flex justify-between gap-3 pl-3 text-xs text-[#9C9C9C]">
                                 <dt>Tunai</dt>
-                                <dd class="font-medium text-[#6B6B6B] tabular-nums font-mono">{{ formatRupiah(cash.cash_in.tunai) }}</dd>
+                                <dd class="font-medium text-[#6B6B6B] tabular-nums">{{ formatRupiah(cash.cash_in.tunai) }}</dd>
                             </div>
                             <div class="flex justify-between gap-3 pl-3 text-xs text-[#9C9C9C]">
                                 <dt>Transfer / QRIS / e-wallet</dt>
-                                <dd class="font-medium text-[#6B6B6B] tabular-nums font-mono">{{ formatRupiah(digitalIn) }}</dd>
+                                <dd class="font-medium text-[#6B6B6B] tabular-nums">{{ formatRupiah(digitalIn) }}</dd>
                             </div>
                             <div class="flex justify-between gap-3">
                                 <dt class="text-[#6B6B6B]">Kas keluar</dt>
-                                <dd class="font-semibold text-[#0A0A0A] tabular-nums font-mono">− {{ formatRupiah(cash.cash_out) }}</dd>
+                                <dd class="font-semibold text-[#0A0A0A] tabular-nums">− {{ formatRupiah(cash.cash_out) }}</dd>
                             </div>
                             <div class="flex items-baseline justify-between gap-3 border-t border-[#E8E8EC] pt-3.5">
                                 <dt class="font-bold text-[#0A0A0A]">Saldo kas bersih</dt>
                                 <dd
-                                    class="text-2xl sm:text-3xl font-bold tracking-tight tabular-nums font-mono"
+                                    class="text-2xl sm:text-3xl font-bold tracking-tight tabular-nums"
                                     :class="cash.net_cash_flow < 0 ? 'text-[#EF4444]' : 'text-[#10B981]'"
                                 >
                                     {{ formatRupiah(cash.net_cash_flow) }}
@@ -384,7 +384,7 @@ function barHeight(value: number): string {
                         </div>
                         <div>
                             <h2 class="font-display text-base font-bold text-[#0A0A0A]">Piutang Pelanggan Berjalan</h2>
-                            <p class="text-2xl sm:text-3xl font-bold tracking-tight tabular-nums font-mono text-[#0A0A0A]">{{ formatRupiah(receivables.total_outstanding) }}</p>
+                            <p class="text-2xl sm:text-3xl font-bold tracking-tight tabular-nums text-[#0A0A0A]">{{ formatRupiah(receivables.total_outstanding) }}</p>
                             <p class="text-xs text-[#6B6B6B] mt-0.5">
                                 {{ receivables.orders_count }} nota belum lunas dari {{ receivables.customers_count }} pelanggan · semua periode
                             </p>
