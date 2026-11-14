@@ -695,11 +695,18 @@ class WhatsAppNotificationService
                 'data' => $rawJson ?? $response->body(),
             ];
         } catch (\Throwable $e) {
+            $msg = $e->getMessage();
+            if (str_contains($msg, 'cURL error 7') || str_contains($msg, 'Failed to connect') || str_contains($msg, 'Connection refused')) {
+                $friendly = "Gagal terhubung ke WhatsApp gateway ({$serverUrl}): Server belum dijalankan. Jalankan gateway dengan mengeksekusi `whatsapp-gateway.exe` di folder `gateway/`, atau gunakan Mode Manual (wa.me).";
+            } else {
+                $friendly = 'Gagal menghubungi server WhatsApp gateway: ' . $msg;
+            }
+
             return [
                 'success' => false,
                 'mode' => 'automatic',
                 'status' => 500,
-                'message' => 'Gagal menghubungi server WhatsApp gateway: ' . $e->getMessage(),
+                'message' => $friendly,
             ];
         }
     }
@@ -999,11 +1006,18 @@ class WhatsAppNotificationService
                 'data' => $rawJson ?? $response->body(),
             ];
         } catch (\Throwable $e) {
+            $msg = $e->getMessage();
+            if (str_contains($msg, 'cURL error 7') || str_contains($msg, 'Failed to connect') || str_contains($msg, 'Connection refused')) {
+                $friendly = "Gagal terhubung ke WhatsApp gateway ({$serverUrl}): Server belum dijalankan. Jalankan gateway di folder `gateway/`, atau gunakan Mode Manual (wa.me).";
+            } else {
+                $friendly = 'Terjadi kesalahan saat mengirim pesan uji coba: ' . $msg;
+            }
+
             return [
                 'success' => false,
                 'mode' => 'automatic',
                 'status' => 500,
-                'message' => 'Terjadi kesalahan saat mengirim pesan uji coba: ' . $e->getMessage(),
+                'message' => $friendly,
             ];
         }
     }

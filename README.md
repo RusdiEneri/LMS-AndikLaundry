@@ -191,6 +191,22 @@ npx vue-tsc --noEmit
 npm run build
 ```
 
+### 6.4 WhatsApp Gateway Companion (Go / whatsmeow)
+LMS Andik Laundry supports automated background WhatsApp notifications using the companion service located in `gateway/` (built with pure Go & tulir's `whatsmeow`):
+
+```powershell
+# Run the WhatsApp gateway daemon
+cd gateway
+.\whatsapp-gateway.exe
+# or run from source:
+go run .
+```
+
+1. The gateway listens on `http://localhost:8080`.
+2. A QR code displays in the terminal for WhatsApp Web multi-device pairing.
+3. Open LMS Andik Laundry as Owner -> **Pengaturan Toko** -> **WhatsApp Gateway** -> click **Uji Koneksi Gateway** to verify connection health.
+
+
 ---
 
 ## 7. License
