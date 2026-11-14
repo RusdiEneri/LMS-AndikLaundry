@@ -217,11 +217,11 @@ function barHeight(value: number): string {
                         type="button"
                         :aria-pressed="activePreset === p.key"
                         :disabled="loading"
-                        class="min-h-[44px] rounded-lg border px-4 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2 disabled:opacity-60"
+                        class="min-h-[44px] rounded-lg border px-4 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2 disabled:opacity-60"
                         :class="
                             activePreset === p.key
-                                ? 'border-teal-700 bg-teal-700 text-white'
-                                : 'border-slate-300 bg-white text-slate-800 hover:bg-slate-50'
+                                ? 'border-teal-600 bg-teal-600 text-white font-semibold shadow-xs'
+                                : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:text-slate-900 font-medium'
                         "
                         @click="selectPreset(p.key)"
                     >
@@ -232,11 +232,11 @@ function barHeight(value: number): string {
                         :aria-pressed="activePreset === 'custom'"
                         :aria-expanded="activePreset === 'custom'"
                         aria-controls="custom-range"
-                        class="min-h-[44px] rounded-lg border px-4 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2"
+                        class="min-h-[44px] rounded-lg border px-4 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2"
                         :class="
                             activePreset === 'custom'
-                                ? 'border-teal-700 bg-teal-700 text-white'
-                                : 'border-slate-300 bg-white text-slate-800 hover:bg-slate-50'
+                                ? 'border-teal-600 bg-teal-600 text-white font-semibold shadow-xs'
+                                : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:text-slate-900 font-medium'
                         "
                         @click="selectPreset('custom')"
                     >
@@ -282,77 +282,77 @@ function barHeight(value: number): string {
             </div>
 
             <!-- Accrual profit vs cash on hand, side by side -->
-            <div class="grid grid-cols-1 gap-4 md:grid-cols-2" :class="{ 'opacity-60': loading }">
-                <Card class="border-indigo-200">
-                    <CardHeader class="flex flex-row items-start justify-between space-y-0 pb-3">
+            <div class="grid grid-cols-1 gap-5 md:grid-cols-2" :class="{ 'opacity-60': loading }">
+                <Card class="border-slate-200/90 bg-white shadow-xs rounded-xl">
+                    <CardHeader class="flex flex-row items-start justify-between space-y-0 pb-4">
                         <div>
-                            <CardTitle class="text-base font-bold text-indigo-950">Laba Bersih Usaha</CardTitle>
-                            <CardDescription class="text-xs text-slate-600">Akrual SAK EMKM: dihitung dari nota yang sudah selesai</CardDescription>
+                            <CardTitle class="text-base font-bold text-slate-900">Laba Bersih Usaha</CardTitle>
+                            <CardDescription class="text-xs text-slate-500 mt-0.5">Akrual SAK EMKM: dihitung dari nota yang sudah selesai</CardDescription>
                         </div>
-                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-700">
+                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-700">
                             <Scale class="h-5 w-5" aria-hidden="true" />
                         </div>
                     </CardHeader>
                     <CardContent>
-                        <dl class="space-y-2 text-sm">
+                        <dl class="space-y-2.5 text-sm">
                             <div class="flex justify-between gap-3">
-                                <dt class="text-slate-700">Omzet selesai diakui</dt>
-                                <dd class="font-mono font-semibold text-slate-900">{{ formatRupiah(accrual.recognized_revenue) }}</dd>
+                                <dt class="text-slate-600">Omzet selesai diakui</dt>
+                                <dd class="font-semibold text-slate-900 tabular-nums">{{ formatRupiah(accrual.recognized_revenue) }}</dd>
                             </div>
                             <div class="flex justify-between gap-3">
-                                <dt class="text-slate-700">Total biaya toko</dt>
-                                <dd class="font-mono font-semibold text-slate-900">− {{ formatRupiah(accrual.operating_expenses) }}</dd>
+                                <dt class="text-slate-600">Total biaya toko</dt>
+                                <dd class="font-semibold text-slate-900 tabular-nums">− {{ formatRupiah(accrual.operating_expenses) }}</dd>
                             </div>
-                            <div class="flex items-baseline justify-between gap-3 border-t border-indigo-100 pt-3">
-                                <dt class="font-bold text-indigo-950">Laba bersih</dt>
+                            <div class="flex items-baseline justify-between gap-3 border-t border-slate-100 pt-3.5">
+                                <dt class="font-bold text-slate-900">Laba bersih</dt>
                                 <dd
-                                    class="font-mono text-2xl font-bold"
-                                    :class="accrual.net_operating_profit < 0 ? 'text-rose-700' : 'text-indigo-800'"
+                                    class="text-2xl sm:text-3xl font-bold tracking-tight tabular-nums"
+                                    :class="accrual.net_operating_profit < 0 ? 'text-rose-600' : 'text-emerald-600'"
                                 >
                                     {{ formatRupiah(accrual.net_operating_profit) }}
                                 </dd>
                             </div>
-                            <div class="flex justify-between gap-3 text-xs text-slate-600">
+                            <div class="flex justify-between gap-3 text-xs text-slate-500 pt-0.5">
                                 <dt>Margin laba</dt>
-                                <dd class="font-mono">{{ accrual.profit_margin_percent }}%</dd>
+                                <dd class="font-medium text-slate-700 tabular-nums">{{ accrual.profit_margin_percent }}%</dd>
                             </div>
                         </dl>
                     </CardContent>
                 </Card>
 
-                <Card class="border-emerald-200">
-                    <CardHeader class="flex flex-row items-start justify-between space-y-0 pb-3">
+                <Card class="border-slate-200/90 bg-white shadow-xs rounded-xl">
+                    <CardHeader class="flex flex-row items-start justify-between space-y-0 pb-4">
                         <div>
-                            <CardTitle class="text-base font-bold text-emerald-950">Uang Kas Nyata di Tangan</CardTitle>
-                            <CardDescription class="text-xs text-slate-600">Uang yang benar-benar masuk dan keluar di periode ini</CardDescription>
+                            <CardTitle class="text-base font-bold text-slate-900">Uang Kas Nyata di Tangan</CardTitle>
+                            <CardDescription class="text-xs text-slate-500 mt-0.5">Uang yang benar-benar masuk dan keluar di periode ini</CardDescription>
                         </div>
-                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-700">
+                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-teal-50 text-teal-700">
                             <Wallet class="h-5 w-5" aria-hidden="true" />
                         </div>
                     </CardHeader>
                     <CardContent>
-                        <dl class="space-y-2 text-sm">
+                        <dl class="space-y-2.5 text-sm">
                             <div class="flex justify-between gap-3">
-                                <dt class="text-slate-700">Uang diterima kasir</dt>
-                                <dd class="font-mono font-semibold text-slate-900">{{ formatRupiah(cash.cash_in.total) }}</dd>
+                                <dt class="text-slate-600">Uang diterima kasir</dt>
+                                <dd class="font-semibold text-slate-900 tabular-nums">{{ formatRupiah(cash.cash_in.total) }}</dd>
                             </div>
-                            <div class="flex justify-between gap-3 pl-3 text-xs text-slate-600">
+                            <div class="flex justify-between gap-3 pl-3 text-xs text-slate-500">
                                 <dt>Tunai</dt>
-                                <dd class="font-mono">{{ formatRupiah(cash.cash_in.tunai) }}</dd>
+                                <dd class="font-medium text-slate-700 tabular-nums">{{ formatRupiah(cash.cash_in.tunai) }}</dd>
                             </div>
-                            <div class="flex justify-between gap-3 pl-3 text-xs text-slate-600">
+                            <div class="flex justify-between gap-3 pl-3 text-xs text-slate-500">
                                 <dt>Transfer / QRIS / e-wallet</dt>
-                                <dd class="font-mono">{{ formatRupiah(digitalIn) }}</dd>
+                                <dd class="font-medium text-slate-700 tabular-nums">{{ formatRupiah(digitalIn) }}</dd>
                             </div>
                             <div class="flex justify-between gap-3">
-                                <dt class="text-slate-700">Kas keluar</dt>
-                                <dd class="font-mono font-semibold text-slate-900">− {{ formatRupiah(cash.cash_out) }}</dd>
+                                <dt class="text-slate-600">Kas keluar</dt>
+                                <dd class="font-semibold text-slate-900 tabular-nums">− {{ formatRupiah(cash.cash_out) }}</dd>
                             </div>
-                            <div class="flex items-baseline justify-between gap-3 border-t border-emerald-100 pt-3">
-                                <dt class="font-bold text-emerald-950">Saldo kas bersih</dt>
+                            <div class="flex items-baseline justify-between gap-3 border-t border-slate-100 pt-3.5">
+                                <dt class="font-bold text-slate-900">Saldo kas bersih</dt>
                                 <dd
-                                    class="font-mono text-2xl font-bold"
-                                    :class="cash.net_cash_flow < 0 ? 'text-rose-700' : 'text-emerald-800'"
+                                    class="text-2xl sm:text-3xl font-bold tracking-tight tabular-nums"
+                                    :class="cash.net_cash_flow < 0 ? 'text-rose-600' : 'text-emerald-600'"
                                 >
                                     {{ formatRupiah(cash.net_cash_flow) }}
                                 </dd>
@@ -369,27 +369,27 @@ function barHeight(value: number): string {
             >
                 <Info class="mt-0.5 h-5 w-5 shrink-0 text-sky-700" aria-hidden="true" />
                 <p>
-                    Ada <strong class="font-mono">{{ formatRupiah(gap) }}</strong> uang laba yang masih tertahan di piutang pelanggan.
+                    Ada <strong class="tabular-nums font-semibold">{{ formatRupiah(gap) }}</strong> uang laba yang masih tertahan di piutang pelanggan.
                     <span class="text-sky-900">Laba sudah tercatat karena nota selesai, tapi uangnya belum masuk kas.</span>
                 </p>
             </div>
 
             <!-- Outstanding receivables -->
-            <Card class="border-amber-200" :class="{ 'opacity-60': loading }">
+            <Card class="border-slate-200/90 bg-white shadow-xs rounded-xl" :class="{ 'opacity-60': loading }">
                 <CardContent class="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
-                    <div class="flex items-start gap-3">
+                    <div class="flex items-start gap-3.5">
                         <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-amber-800">
                             <Receipt class="h-5 w-5" aria-hidden="true" />
                         </div>
                         <div>
-                            <h2 class="text-base font-bold text-amber-950">Piutang Pelanggan Berjalan</h2>
-                            <p class="font-mono text-2xl font-bold text-amber-800">{{ formatRupiah(receivables.total_outstanding) }}</p>
-                            <p class="text-xs text-slate-600">
+                            <h2 class="text-base font-bold text-slate-900">Piutang Pelanggan Berjalan</h2>
+                            <p class="text-2xl sm:text-3xl font-bold tracking-tight tabular-nums text-slate-900">{{ formatRupiah(receivables.total_outstanding) }}</p>
+                            <p class="text-xs text-slate-500 mt-0.5">
                                 {{ receivables.orders_count }} nota belum lunas dari {{ receivables.customers_count }} pelanggan · semua periode
                             </p>
                         </div>
                     </div>
-                    <Button as-child variant="outline" class="gap-2 border-amber-300 font-semibold text-amber-900 hover:bg-amber-50">
+                    <Button as-child variant="outline" class="gap-2 border-slate-300 font-semibold text-slate-700 hover:bg-slate-50 hover:text-slate-900">
                         <Link href="/owner/receivables">
                             <span>Lihat & tagih piutang</span>
                             <ArrowRight class="h-4 w-4" aria-hidden="true" />
