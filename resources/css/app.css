@@ -1,3 +1,5 @@
+@import url('https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
 @import "tailwindcss";
 
 @source "../views";
@@ -5,10 +7,39 @@
 
 @theme {
   /* Typography Families */
-  --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-display: "General Sans", system-ui, -apple-system, sans-serif;
+  --font-sans: "DM Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: "JetBrains Mono", "Fira Code", monospace;
 
-  /* Layer 1: Primitive Colors - Brand Primary Teal */
+  /* Genesis Core Primitive Design Tokens */
+  --color-primary: #6366F1;
+  --color-primary-hover: #4F46E5;
+  --color-secondary: #20970B;
+  --color-neutral: #9C9C9C;
+  --color-background: #FAFAFA;
+  --color-surface: #FFFFFF;
+  --color-text-primary: #0A0A0A;
+  --color-text-secondary: #6B6B6B;
+  --color-border: #E8E8EC;
+
+  /* Genesis Semantic Status Tokens */
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+
+  /* Genesis Border Radius Tokens */
+  --radius-tag: 4px;
+  --radius-btn: 6px;
+  --radius-panel: 8px;
+  --radius-card: 12px;
+  --radius-pill: 9999px;
+
+  /* Genesis Elevation & Shadow Tokens */
+  --shadow-card-hover: 0 8px 30px rgba(0, 0, 0, 0.08);
+  --shadow-button-glow: 0 4px 12px rgba(99, 102, 241, 0.35);
+  --shadow-focus-ring: 0 0 0 3px rgba(99, 102, 241, 0.12);
+
+  /* Layer 1: Primitive Colors - Brand Primary Teal (Preserved for compatibility) */
   --color-teal-50:  #f0fdfa;
   --color-teal-100: #ccfbf1;
   --color-teal-200: #99f6e4;
@@ -62,70 +93,70 @@
 /* Layer 2: Semantic Tokens & shadcn-vue Theme Binding */
 :root {
   /* Surface Semantics */
-  --surface-canvas: var(--color-slate-100);
-  --surface-card: #ffffff;
-  --surface-muted: var(--color-slate-50);
-  --surface-sidebar: var(--color-slate-900);
+  --surface-canvas: #FAFAFA;
+  --surface-card: #FFFFFF;
+  --surface-muted: #FAFAFA;
+  --surface-sidebar: #FFFFFF;
 
   /* Text Semantics */
-  --text-primary: var(--color-slate-900);
-  --text-secondary: var(--color-slate-600);
-  --text-muted: var(--color-slate-400);
-  --text-inverse: #ffffff;
+  --text-primary: #0A0A0A;
+  --text-secondary: #6B6B6B;
+  --text-muted: #9C9C9C;
+  --text-inverse: #FFFFFF;
 
   /* Border Semantics */
-  --border-subtle: var(--color-slate-200);
-  --border-strong: var(--color-slate-400);
+  --border-subtle: #E8E8EC;
+  --border-strong: #9C9C9C;
 
   /* Interactive Semantics */
-  --interactive-primary: var(--color-teal-600);
-  --interactive-primary-hover: var(--color-teal-700);
-  --interactive-focus-ring: var(--color-teal-500);
+  --interactive-primary: #6366F1;
+  --interactive-primary-hover: #4F46E5;
+  --interactive-focus-ring: rgba(99, 102, 241, 0.12);
 
   /* Status Badge Semantics */
-  --status-paid-bg: var(--color-teal-50);
-  --status-paid-text: var(--color-teal-800);
-  --status-unpaid-bg: var(--color-rose-50);
-  --status-unpaid-text: var(--color-rose-700);
-  --status-partial-bg: var(--color-amber-50);
-  --status-partial-text: var(--color-amber-800);
+  --status-paid-bg: rgba(16, 185, 129, 0.1);
+  --status-paid-text: #10B981;
+  --status-unpaid-bg: rgba(239, 68, 68, 0.1);
+  --status-unpaid-text: #EF4444;
+  --status-partial-bg: rgba(245, 158, 11, 0.1);
+  --status-partial-text: #F59E0B;
 
   /* shadcn-vue CSS Variables */
-  --background: 0 0% 100%;
-  --foreground: 222.2 84% 4.9%;
+  --background: 0 0% 98%;          /* #FAFAFA */
+  --foreground: 0 0% 4%;           /* #0A0A0A */
 
-  --card: 0 0% 100%;
-  --card-foreground: 222.2 84% 4.9%;
+  --card: 0 0% 100%;               /* #FFFFFF */
+  --card-foreground: 0 0% 4%;      /* #0A0A0A */
 
-  --popover: 0 0% 100%;
-  --popover-foreground: 222.2 84% 4.9%;
+  --popover: 0 0% 100%;            /* #FFFFFF */
+  --popover-foreground: 0 0% 4%;   /* #0A0A0A */
 
-  --primary: 173 80% 32%; /* Teal-600 #0d9488 */
+  --primary: 238.7 83.5% 66.7%;    /* #6366F1 */
   --primary-foreground: 0 0% 100%;
 
-  --secondary: 210 40% 96.1%;
-  --secondary-foreground: 222.2 47.4% 11.2%;
+  --secondary: 0 0% 98%;           /* #FAFAFA */
+  --secondary-foreground: 0 0% 42%;/* #6B6B6B */
 
-  --muted: 210 40% 96.1%;
-  --muted-foreground: 215.4 16.3% 46.9%;
+  --muted: 0 0% 98%;
+  --muted-foreground: 0 0% 42%;
 
-  --accent: 210 40% 96.1%;
-  --accent-foreground: 222.2 47.4% 11.2%;
+  --accent: 0 0% 98%;
+  --accent-foreground: 0 0% 4%;
 
-  --destructive: 349 89% 60%; /* Rose-600 #e11d48 */
+  --destructive: 0 84.2% 60.2%;    /* #EF4444 */
   --destructive-foreground: 0 0% 100%;
 
-  --border: 214.3 31.8% 91.4%;
-  --input: 214.3 31.8% 91.4%;
-  --ring: 173 80% 32%;
+  --border: 240 5.9% 91.8%;        /* #E8E8EC */
+  --input: 240 5.9% 91.8%;         /* #E8E8EC */
+  --ring: 238.7 83.5% 66.7%;       /* #6366F1 */
 
-  --radius: 0.5rem;
+  --radius: 0.375rem;              /* 6px base */
 }
 
 /* Global Focus Utility */
 *:focus-visible {
-  outline: 2px solid var(--color-teal-600);
-  outline-offset: 2px;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
 }
 
 /* Layer 3: Component Tokens */
@@ -134,7 +165,7 @@
   min-width: 52px;
   font-size: 1.25rem;
   font-weight: 600;
-  border-radius: 0.5rem;
+  border-radius: 6px;
   background-color: var(--surface-card);
   border: 1px solid var(--border-subtle);
   color: var(--text-primary);
@@ -146,11 +177,12 @@
 }
 .btn-numpad:hover {
   background-color: var(--surface-muted);
-  border-color: var(--border-strong);
+  border-color: #9C9C9C;
+  transform: translateY(-1px);
 }
 .btn-numpad:active {
-  background-color: var(--color-slate-200);
-  transform: scale(0.98);
+  background-color: #E8E8EC;
+  transform: translateY(0);
 }
 
 .btn-quick-tender {
@@ -158,27 +190,41 @@
   padding: 0 1rem;
   font-size: 0.875rem;
   font-weight: 600;
-  border-radius: 0.375rem;
-  background-color: var(--color-slate-100);
+  border-radius: 6px;
+  background-color: #FFFFFF;
   border: 1px solid var(--border-subtle);
   color: var(--text-primary);
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.15s ease-in-out;
+}
+.btn-quick-tender:hover {
+  background-color: #FAFAFA;
+  border-color: #9C9C9C;
+  transform: translateY(-1px);
 }
 
 .tab-service-category {
   min-height: 44px;
   padding: 0 1.25rem;
   font-weight: 500;
-  border-radius: 0.5rem;
+  border-radius: 6px;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  background-color: #FFFFFF;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
   transition: all 0.15s ease-in-out;
 }
+.tab-service-category:hover {
+  color: var(--text-primary);
+  background-color: #FAFAFA;
+}
 .tab-service-category.active {
-  background-color: var(--color-teal-600);
+  background-color: #6366F1;
+  border-color: #6366F1;
   color: #ffffff;
-  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
 }

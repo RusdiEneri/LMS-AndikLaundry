@@ -195,30 +195,30 @@ const roleLabel = computed(() => {
 </script>
 
 <template>
-    <div class="h-screen w-full flex overflow-hidden bg-slate-50 font-sans text-slate-900 antialiased">
+    <div class="h-screen w-full flex overflow-hidden bg-[#FAFAFA] font-sans text-[#0A0A0A] antialiased">
         <Head :title="title ? `${title} - Andik Laundry` : 'Andik Laundry'" />
 
         <!-- 1. Left Desktop Sidebar (>= 1024px) - Pinned Full Viewport Height -->
         <aside
             :class="[
-                'hidden lg:flex lg:flex-col bg-slate-900 border-r border-slate-800 shrink-0 select-none transition-all duration-300 ease-in-out z-30',
+                'hidden lg:flex lg:flex-col bg-white border-r border-[#E8E8EC] shrink-0 select-none transition-all duration-300 ease-in-out z-30',
                 isDesktopSidebarOpen ? 'w-64 opacity-100' : 'w-0 border-r-0 opacity-0 overflow-hidden pointer-events-none'
             ]"
         >
             <!-- Sidebar Header: Logo + Brand + Collapse button -->
-            <div class="h-16 shrink-0 flex items-center justify-between px-4 border-b border-slate-800">
+            <div class="h-14 shrink-0 flex items-center justify-between px-4 border-b border-[#E8E8EC]">
                 <Link href="/" class="flex items-center space-x-3 group min-w-0">
-                    <div class="h-9 w-9 rounded-lg bg-teal-600 flex items-center justify-center text-white font-bold text-base shadow-sm shrink-0 transition-transform group-hover:scale-105">
+                    <div class="h-8 w-8 rounded-[6px] bg-[#6366F1] flex items-center justify-center text-white font-bold text-sm shadow-xs shrink-0 transition-transform group-hover:scale-105">
                         AL
                     </div>
                     <div class="truncate">
-                        <span class="block text-sm font-bold text-white tracking-tight leading-tight truncate">Andik Laundry</span>
-                        <span class="block text-[11px] font-medium text-slate-400 leading-none truncate">Sistem Manajemen</span>
+                        <span class="block text-sm font-bold text-[#0A0A0A] tracking-tight leading-tight truncate">Andik Laundry</span>
+                        <span class="block text-[11px] font-medium text-[#6B6B6B] leading-none truncate">Sistem Manajemen</span>
                     </div>
                 </Link>
                 <button
                     type="button"
-                    class="min-h-[36px] min-w-[36px] flex items-center justify-center rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer shrink-0"
+                    class="min-h-[36px] min-w-[36px] flex items-center justify-center rounded-[6px] text-[#6B6B6B] hover:text-[#0A0A0A] hover:bg-[#FAFAFA] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12 transition-colors cursor-pointer shrink-0"
                     @click="closeDesktopSidebar"
                     title="Tutup menu navigasi"
                     aria-label="Tutup menu navigasi"
@@ -229,7 +229,7 @@ const roleLabel = computed(() => {
 
             <!-- Navigation Links (Internally scrollable if needed) -->
             <div class="flex-1 overflow-y-auto px-3 py-4 space-y-1">
-                <div class="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                <div class="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-[#9C9C9C]">
                     Menu Utama
                 </div>
                 <nav class="space-y-1">
@@ -238,10 +238,10 @@ const roleLabel = computed(() => {
                         :key="item.href"
                         :href="item.href"
                         :class="[
-                            'flex items-center space-x-3 px-3 py-2.5 rounded-lg min-h-[44px] text-sm font-medium transition-colors',
+                            'flex items-center space-x-3 px-3 py-2.5 rounded-[6px] min-h-[44px] text-sm font-medium transition-colors',
                             isCurrentRoute(item.href)
-                                ? 'bg-teal-600 text-white font-semibold shadow-xs'
-                                : 'text-slate-300 hover:bg-slate-800 hover:text-white',
+                                ? 'bg-[#6366F1] text-white font-medium hover:bg-[#4F46E5]'
+                                : 'text-[#6B6B6B] hover:bg-[#FAFAFA] hover:text-[#0A0A0A]',
                         ]"
                     >
                         <component :is="item.icon" class="h-4 w-4 shrink-0" />
@@ -251,65 +251,65 @@ const roleLabel = computed(() => {
             </div>
 
             <!-- Sidebar Footer: Brand info & Version -->
-            <div class="p-3 border-t border-slate-800 shrink-0">
-                <div class="rounded-lg bg-slate-800/70 p-2.5 text-xs text-slate-400">
+            <div class="p-3 border-t border-[#E8E8EC] shrink-0">
+                <div class="rounded-[6px] bg-[#FAFAFA] border border-[#E8E8EC] p-2.5 text-xs text-[#6B6B6B]">
                     <div class="flex items-center justify-between">
-                        <span class="font-semibold text-slate-200">Andik Laundry</span>
-                        <span class="text-[10px] bg-slate-700/80 text-teal-400 px-1.5 py-0.5 rounded font-mono">v1.0</span>
+                        <span class="font-semibold text-[#0A0A0A]">Andik Laundry</span>
+                        <span class="text-[10px] bg-[#6366F1]/10 text-[#6366F1] border border-[#6366F1]/20 px-1.5 py-0.5 rounded-[4px] font-mono">v1.0</span>
                     </div>
-                    <span class="block text-[11px] text-slate-400 mt-0.5">Sistem Kasir & Operasional</span>
+                    <span class="block text-[11px] text-[#6B6B6B] mt-0.5">Sistem Kasir & Operasional</span>
                 </div>
             </div>
         </aside>
 
         <!-- 2. Right Column: Top Header + Independently Scrollable Canvas -->
-        <div class="flex-1 flex flex-col min-w-0 h-full overflow-hidden bg-slate-50">
+        <div class="flex-1 flex flex-col min-w-0 h-full overflow-hidden bg-[#FAFAFA]">
             <!-- Top Header Navigation -->
-            <header class="h-16 shrink-0 bg-white border-b border-slate-200 px-4 sm:px-6 flex items-center justify-between z-20">
+            <header class="h-14 shrink-0 bg-white/90 backdrop-blur-md border-b border-[#E8E8EC] px-4 sm:px-6 flex items-center justify-between z-20">
                 <!-- Left: Sidebar Toggle + Title/Context -->
                 <div class="flex items-center space-x-3">
                     <!-- Desktop Open Button (Visible only when desktop sidebar is closed) -->
                     <button
                         v-if="!isDesktopSidebarOpen"
                         type="button"
-                        class="hidden lg:inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-500 cursor-pointer transition-colors"
+                        class="hidden lg:inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-[6px] p-2 text-[#6B6B6B] hover:bg-[#FAFAFA] hover:text-[#0A0A0A] focus:outline-none focus:ring-3 focus:ring-[#6366F1]/12 cursor-pointer transition-colors"
                         @click="handleMenuToggle"
                         title="Buka menu samping"
                         aria-label="Buka menu navigasi"
                     >
-                        <PanelLeftOpen class="h-5 w-5 text-slate-700" />
+                        <PanelLeftOpen class="h-5 w-5 text-[#6B6B6B]" />
                     </button>
 
                     <!-- Mobile Toggle Button (< lg) -->
                     <button
                         type="button"
-                        class="lg:hidden inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-500 cursor-pointer transition-colors"
+                        class="lg:hidden inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-[6px] p-2 text-[#6B6B6B] hover:bg-[#FAFAFA] hover:text-[#0A0A0A] focus:outline-none focus:ring-3 focus:ring-[#6366F1]/12 cursor-pointer transition-colors"
                         @click="handleMenuToggle"
                         title="Buka menu samping"
                         aria-label="Buka menu navigasi"
                     >
-                        <Menu class="h-5 w-5 text-slate-700" />
+                        <Menu class="h-5 w-5 text-[#6B6B6B]" />
                     </button>
 
                     <!-- Desktop Collapsed Brand Fallback -->
                     <div v-if="!isDesktopSidebarOpen" class="hidden lg:flex items-center space-x-2.5">
-                        <div class="h-8 w-8 rounded-lg bg-teal-600 flex items-center justify-center text-white font-bold text-sm shadow-xs">
+                        <div class="h-8 w-8 rounded-[6px] bg-[#6366F1] flex items-center justify-center text-white font-bold text-sm shadow-xs">
                             AL
                         </div>
-                        <span class="text-sm font-bold text-slate-900">Andik Laundry</span>
+                        <span class="text-sm font-bold text-[#0A0A0A]">Andik Laundry</span>
                     </div>
 
                     <!-- Mobile Brand (< lg) -->
                     <div class="flex lg:hidden items-center space-x-2">
-                        <div class="h-8 w-8 rounded-lg bg-teal-600 flex items-center justify-center text-white font-bold text-sm shadow-xs">
+                        <div class="h-8 w-8 rounded-[6px] bg-[#6366F1] flex items-center justify-center text-white font-bold text-sm shadow-xs">
                             AL
                         </div>
-                        <span class="text-sm font-bold text-slate-900 sm:inline hidden">Andik Laundry</span>
+                        <span class="text-sm font-bold text-[#0A0A0A] sm:inline hidden">Andik Laundry</span>
                     </div>
 
                     <!-- Current Page Context on Desktop when sidebar is open -->
                     <div v-if="isDesktopSidebarOpen" class="hidden lg:flex items-center space-x-2">
-                        <span class="text-sm font-semibold text-slate-700">{{ title ?? 'Dashboard' }}</span>
+                        <span class="text-sm font-semibold text-[#0A0A0A]">{{ title ?? 'Dashboard' }}</span>
                     </div>
                 </div>
 
@@ -320,7 +320,7 @@ const roleLabel = computed(() => {
                         <button
                             type="button"
                             @click="showWaTooltip = !showWaTooltip"
-                            class="inline-flex min-h-[44px] items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-amber-200 bg-amber-50 text-amber-900 text-xs font-semibold hover:bg-amber-100 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-colors"
+                            class="inline-flex min-h-[44px] items-center space-x-1.5 px-3 py-1.5 rounded-full border border-amber-200/80 bg-amber-50/80 text-amber-900 text-xs font-semibold hover:bg-amber-100 focus:outline-none focus:ring-3 focus:ring-[#6366F1]/12 transition-colors"
                             aria-label="Info status WhatsApp fallback"
                         >
                             <WifiOff class="h-4 w-4 text-amber-700" />
@@ -330,31 +330,31 @@ const roleLabel = computed(() => {
 
                         <div
                             v-if="showWaTooltip"
-                            class="absolute right-0 top-12 z-50 w-72 rounded-lg bg-slate-900 p-3.5 text-xs text-white shadow-xl border border-slate-700"
+                            class="absolute right-0 top-12 z-50 w-72 rounded-[8px] bg-white p-3.5 text-xs text-[#0A0A0A] shadow-[0_8px_30px_rgba(0,0,0,0.08)] border border-[#E8E8EC]"
                         >
                             <div class="flex justify-between items-start mb-1">
-                                <span class="font-bold text-amber-400">Mode Fallback Aktif</span>
+                                <span class="font-bold text-[#F59E0B]">Mode Fallback Aktif</span>
                                 <button
                                     type="button"
-                                    class="text-slate-400 hover:text-white min-h-[36px] min-w-[36px] -m-1.5 flex items-center justify-center"
+                                    class="text-[#6B6B6B] hover:text-[#0A0A0A] min-h-[36px] min-w-[36px] -m-1.5 flex items-center justify-center"
                                     @click="showWaTooltip = false"
                                 >
                                     <X class="h-4 w-4" />
                                 </button>
                             </div>
-                            <p class="text-slate-300 leading-relaxed">
+                            <p class="text-[#6B6B6B] leading-relaxed">
                                 Gateway otomatis WhatsApp offline. Notifikasi struk dan status cucian dapat dikirim langsung oleh kasir melalui tautan resmi wa.me.
                             </p>
                         </div>
                     </div>
 
                     <!-- User Profile & Role Badge -->
-                    <div class="flex items-center space-x-2.5 bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5">
+                    <div class="flex items-center space-x-2.5 bg-white border border-[#E8E8EC] rounded-[8px] px-3 py-1.5">
                         <div class="text-right hidden sm:block">
-                            <span class="block text-xs font-bold text-slate-800 leading-tight">
+                            <span class="block text-xs font-bold text-[#0A0A0A] leading-tight">
                                 {{ user?.name ?? 'Staf Laundry' }}
                             </span>
-                            <span class="block text-[11px] text-slate-500 tabular-nums leading-none">
+                            <span class="block text-[11px] text-[#6B6B6B] tabular-nums leading-none">
                                 {{ user?.phone ?? '' }}
                             </span>
                         </div>
@@ -368,7 +368,7 @@ const roleLabel = computed(() => {
                         href="/logout"
                         method="post"
                         as="button"
-                        class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg border border-slate-200 p-2 text-slate-600 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 focus:outline-none focus:ring-2 focus:ring-rose-500 transition-colors"
+                        class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-[6px] border border-[#E8E8EC] p-2 text-[#6B6B6B] hover:bg-[#EF4444]/10 hover:text-[#EF4444] hover:border-[#EF4444]/30 focus:outline-none focus:ring-3 focus:ring-[#6366F1]/12 transition-colors"
                         title="Keluar dari Aplikasi"
                         aria-label="Keluar dari Aplikasi"
                     >
@@ -378,7 +378,7 @@ const roleLabel = computed(() => {
             </header>
 
             <!-- Offline WhatsApp Fallback Banner (Mobile/Tablet Alert) -->
-            <div class="sm:hidden bg-amber-500 text-slate-950 px-4 py-1.5 text-xs font-semibold flex items-center justify-between border-b border-amber-600 shrink-0">
+            <div class="sm:hidden bg-[#F59E0B] text-slate-950 px-4 py-1.5 text-xs font-semibold flex items-center justify-between border-b border-[#F59E0B]/50 shrink-0">
                 <div class="flex items-center space-x-1.5">
                     <WifiOff class="h-3.5 w-3.5 shrink-0 text-slate-950" />
                     <span>Mode Offline: Fallback Manual WA Aktif</span>
@@ -393,7 +393,7 @@ const roleLabel = computed(() => {
                     <div
                         v-for="flash in flashMessages"
                         :key="flash.type"
-                        :class="['flex items-center justify-between p-3.5 rounded-lg border shadow-xs', flash.bg]"
+                        :class="['flex items-center justify-between p-3.5 rounded-[8px] border shadow-xs', flash.bg]"
                         role="alert"
                     >
                         <div class="flex items-center space-x-3">
@@ -420,15 +420,15 @@ const roleLabel = computed(() => {
 
         <!-- 3. Mobile Sliding Navigation Drawer (< 1024px) -->
         <Sheet v-model:open="isMobileMenuOpen">
-            <SheetContent side="left" class="w-72 bg-slate-900 text-white border-slate-800 p-0 flex flex-col">
-                <SheetHeader class="p-5 border-b border-slate-800 text-left">
+            <SheetContent side="left" class="w-72 bg-white text-[#0A0A0A] border-r border-[#E8E8EC] p-0 flex flex-col">
+                <SheetHeader class="p-5 border-b border-[#E8E8EC] text-left">
                     <div class="flex items-center space-x-3">
-                        <div class="h-9 w-9 rounded-lg bg-teal-600 flex items-center justify-center text-white font-bold text-base shadow-sm">
+                        <div class="h-8 w-8 rounded-[6px] bg-[#6366F1] flex items-center justify-center text-white font-bold text-sm shadow-xs">
                             AL
                         </div>
                         <div>
-                            <SheetTitle class="text-white text-base font-bold leading-tight">Andik Laundry</SheetTitle>
-                            <SheetDescription class="text-slate-400 text-xs">Menu Navigasi</SheetDescription>
+                            <SheetTitle class="text-[#0A0A0A] text-base font-bold leading-tight">Andik Laundry</SheetTitle>
+                            <SheetDescription class="text-[#6B6B6B] text-xs">Menu Navigasi</SheetDescription>
                         </div>
                     </div>
                 </SheetHeader>
@@ -441,10 +441,10 @@ const roleLabel = computed(() => {
                             :href="item.href"
                             @click="isMobileMenuOpen = false"
                             :class="[
-                                'flex items-center space-x-3 px-3 py-3 rounded-lg min-h-[44px] text-sm font-medium transition-colors',
+                                'flex items-center space-x-3 px-3 py-3 rounded-[6px] min-h-[44px] text-sm font-medium transition-colors',
                                 isCurrentRoute(item.href)
-                                    ? 'bg-teal-600 text-white font-semibold'
-                                    : 'text-slate-300 hover:bg-slate-800 hover:text-white',
+                                    ? 'bg-[#6366F1] text-white font-medium hover:bg-[#4F46E5]'
+                                    : 'text-[#6B6B6B] hover:bg-[#FAFAFA] hover:text-[#0A0A0A]',
                             ]"
                         >
                             <component :is="item.icon" class="h-5 w-5 shrink-0" />
@@ -453,13 +453,13 @@ const roleLabel = computed(() => {
                     </nav>
                 </div>
 
-                <div class="p-4 border-t border-slate-800">
+                <div class="p-4 border-t border-[#E8E8EC]">
                     <Link
                         href="/logout"
                         method="post"
                         as="button"
                         @click="isMobileMenuOpen = false"
-                        class="flex w-full items-center space-x-3 px-3 py-3 rounded-lg min-h-[44px] text-sm font-medium text-rose-400 hover:bg-rose-950/40 hover:text-rose-300 transition-colors"
+                        class="flex w-full items-center space-x-3 px-3 py-3 rounded-[6px] min-h-[44px] text-sm font-medium text-[#EF4444] hover:bg-[#EF4444]/10 transition-colors"
                     >
                         <LogOut class="h-5 w-5 shrink-0" />
                         <span>Keluar Aplikasi</span>

@@ -183,23 +183,24 @@ function barHeight(value: number): string {
     <AppLayout title="Owner Dashboard">
         <div class="space-y-6 print:hidden" :aria-busy="loading">
             <!-- Header: title, period, actions -->
-            <div class="flex flex-col gap-4 rounded-xl border border-slate-200 bg-white p-5 lg:flex-row lg:items-end lg:justify-between">
+            <div class="flex flex-col gap-4 rounded-[12px] border border-[#E8E8EC] bg-white p-5 lg:flex-row lg:items-end lg:justify-between transition-all duration-200">
                 <div>
-                    <h1 class="text-2xl font-bold tracking-tight text-slate-900">Keuangan Toko</h1>
-                    <p class="mt-1 text-sm text-slate-600">
-                        Periode <span class="font-semibold text-slate-900">{{ periodLabel }}</span>
-                        <span class="text-slate-500">({{ period.days }} hari)</span>
+                    <h1 class="font-display text-2xl font-bold tracking-tight text-[#0A0A0A]">Keuangan Toko</h1>
+                    <p class="mt-1 font-sans text-sm text-[#6B6B6B]">
+                        Periode <span class="font-semibold text-[#0A0A0A]">{{ periodLabel }}</span>
+                        <span class="text-[#9C9C9C]">({{ period.days }} hari)</span>
                     </p>
                 </div>
 
                 <div class="flex flex-wrap gap-2">
-                    <Button as="a" :href="csvUrl" variant="outline" class="gap-2 font-semibold text-slate-800">
+                    <Button as="a" :href="csvUrl" variant="outline" class="gap-2 font-medium">
                         <Download class="h-4 w-4" aria-hidden="true" />
                         <span>Unduh CSV</span>
                     </Button>
                     <Button
                         type="button"
-                        class="gap-2 bg-slate-900 font-semibold text-white hover:bg-slate-800"
+                        variant="default"
+                        class="gap-2 font-medium"
                         @click="printSummary"
                     >
                         <Printer class="h-4 w-4" aria-hidden="true" />
@@ -209,7 +210,7 @@ function barHeight(value: number): string {
             </div>
 
             <!-- Period filter -->
-            <div class="space-y-3 rounded-xl border border-slate-200 bg-white p-4">
+            <div class="space-y-3 rounded-[12px] border border-[#E8E8EC] bg-white p-4 transition-all duration-200">
                 <div role="group" aria-label="Pilih periode laporan" class="flex flex-wrap gap-2">
                     <button
                         v-for="p in presets"
@@ -217,11 +218,11 @@ function barHeight(value: number): string {
                         type="button"
                         :aria-pressed="activePreset === p.key"
                         :disabled="loading"
-                        class="min-h-[44px] rounded-lg border px-4 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2 disabled:opacity-60"
+                        class="min-h-[44px] rounded-[6px] border px-4 text-sm transition-all duration-150 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12 disabled:opacity-60 cursor-pointer"
                         :class="
                             activePreset === p.key
-                                ? 'border-teal-600 bg-teal-600 text-white font-semibold shadow-xs'
-                                : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:text-slate-900 font-medium'
+                                ? 'border-[#6366F1] bg-[#6366F1] text-white font-medium hover:bg-[#4F46E5] hover:shadow-[0_4px_12px_rgba(99,102,241,0.35)] hover:-translate-y-px'
+                                : 'border-[#E8E8EC] bg-white text-[#6B6B6B] hover:bg-[#FAFAFA] hover:text-[#0A0A0A] hover:-translate-y-px font-medium'
                         "
                         @click="selectPreset(p.key)"
                     >
@@ -232,11 +233,11 @@ function barHeight(value: number): string {
                         :aria-pressed="activePreset === 'custom'"
                         :aria-expanded="activePreset === 'custom'"
                         aria-controls="custom-range"
-                        class="min-h-[44px] rounded-lg border px-4 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2"
+                        class="min-h-[44px] rounded-[6px] border px-4 text-sm transition-all duration-150 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12 cursor-pointer"
                         :class="
                             activePreset === 'custom'
-                                ? 'border-teal-600 bg-teal-600 text-white font-semibold shadow-xs'
-                                : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:text-slate-900 font-medium'
+                                ? 'border-[#6366F1] bg-[#6366F1] text-white font-medium hover:bg-[#4F46E5] hover:shadow-[0_4px_12px_rgba(99,102,241,0.35)] hover:-translate-y-px'
+                                : 'border-[#E8E8EC] bg-white text-[#6B6B6B] hover:bg-[#FAFAFA] hover:text-[#0A0A0A] hover:-translate-y-px font-medium'
                         "
                         @click="selectPreset('custom')"
                     >
@@ -250,7 +251,7 @@ function barHeight(value: number): string {
                     class="flex flex-col gap-3 sm:flex-row sm:items-end"
                     @submit.prevent="applyCustom"
                 >
-                    <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+                    <label class="flex flex-col gap-1 text-sm font-medium text-[#6B6B6B]">
                         Tanggal Awal
                         <input
                             v-model="customStart"
@@ -258,10 +259,10 @@ function barHeight(value: number): string {
                             name="start_date"
                             required
                             :max="customEnd || undefined"
-                            class="min-h-[44px] rounded-lg border border-slate-300 bg-white px-3 text-slate-900 focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-600/30"
+                            class="min-h-[44px] rounded-[6px] border border-[#E8E8EC] bg-white px-3.5 py-2.5 text-sm text-[#0A0A0A] placeholder:text-[#9C9C9C] focus:border-[#6366F1] focus:outline-none focus:ring-3 focus:ring-[#6366F1]/12 transition-colors"
                         />
                     </label>
-                    <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+                    <label class="flex flex-col gap-1 text-sm font-medium text-[#6B6B6B]">
                         Tanggal Akhir
                         <input
                             v-model="customEnd"
@@ -269,90 +270,90 @@ function barHeight(value: number): string {
                             name="end_date"
                             required
                             :min="customStart || undefined"
-                            class="min-h-[44px] rounded-lg border border-slate-300 bg-white px-3 text-slate-900 focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-600/30"
+                            class="min-h-[44px] rounded-[6px] border border-[#E8E8EC] bg-white px-3.5 py-2.5 text-sm text-[#0A0A0A] placeholder:text-[#9C9C9C] focus:border-[#6366F1] focus:outline-none focus:ring-3 focus:ring-[#6366F1]/12 transition-colors"
                         />
                     </label>
-                    <Button type="submit" :disabled="customInvalid || loading" class="font-semibold">Terapkan</Button>
+                    <Button type="submit" variant="default" :disabled="customInvalid || loading" class="font-medium">Terapkan</Button>
                 </form>
 
-                <p v-if="errors.start_date || errors.end_date" role="alert" class="text-sm font-medium text-rose-700">
+                <p v-if="errors.start_date || errors.end_date" role="alert" class="text-sm font-medium text-[#EF4444]">
                     {{ errors.start_date || errors.end_date }}
                 </p>
-                <p v-if="loading" class="text-sm text-slate-600" aria-live="polite">Memuat laporan periode baru…</p>
+                <p v-if="loading" class="text-sm text-[#6B6B6B]" aria-live="polite">Memuat laporan periode baru…</p>
             </div>
 
             <!-- Accrual profit vs cash on hand, side by side -->
             <div class="grid grid-cols-1 gap-5 md:grid-cols-2" :class="{ 'opacity-60': loading }">
-                <Card class="border-slate-200/90 bg-white shadow-xs rounded-xl">
+                <Card class="border border-[#E8E8EC] bg-white rounded-[12px] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
                     <CardHeader class="flex flex-row items-start justify-between space-y-0 pb-4">
                         <div>
-                            <CardTitle class="text-base font-bold text-slate-900">Laba Bersih Usaha</CardTitle>
-                            <CardDescription class="text-xs text-slate-500 mt-0.5">Akrual SAK EMKM: dihitung dari nota yang sudah selesai</CardDescription>
+                            <CardTitle class="font-display text-base font-bold text-[#0A0A0A]">Laba Bersih Usaha</CardTitle>
+                            <CardDescription class="font-sans text-xs text-[#6B6B6B] mt-0.5">Akrual SAK EMKM: dihitung dari nota yang sudah selesai</CardDescription>
                         </div>
-                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-700">
+                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] bg-[#FAFAFA] border border-[#E8E8EC] text-[#0A0A0A]">
                             <Scale class="h-5 w-5" aria-hidden="true" />
                         </div>
                     </CardHeader>
                     <CardContent>
                         <dl class="space-y-2.5 text-sm">
                             <div class="flex justify-between gap-3">
-                                <dt class="text-slate-600">Omzet selesai diakui</dt>
-                                <dd class="font-semibold text-slate-900 tabular-nums">{{ formatRupiah(accrual.recognized_revenue) }}</dd>
+                                <dt class="text-[#6B6B6B]">Omzet selesai diakui</dt>
+                                <dd class="font-semibold text-[#0A0A0A] tabular-nums font-mono">{{ formatRupiah(accrual.recognized_revenue) }}</dd>
                             </div>
                             <div class="flex justify-between gap-3">
-                                <dt class="text-slate-600">Total biaya toko</dt>
-                                <dd class="font-semibold text-slate-900 tabular-nums">− {{ formatRupiah(accrual.operating_expenses) }}</dd>
+                                <dt class="text-[#6B6B6B]">Total biaya toko</dt>
+                                <dd class="font-semibold text-[#0A0A0A] tabular-nums font-mono">− {{ formatRupiah(accrual.operating_expenses) }}</dd>
                             </div>
-                            <div class="flex items-baseline justify-between gap-3 border-t border-slate-100 pt-3.5">
-                                <dt class="font-bold text-slate-900">Laba bersih</dt>
+                            <div class="flex items-baseline justify-between gap-3 border-t border-[#E8E8EC] pt-3.5">
+                                <dt class="font-bold text-[#0A0A0A]">Laba bersih</dt>
                                 <dd
-                                    class="text-2xl sm:text-3xl font-bold tracking-tight tabular-nums"
-                                    :class="accrual.net_operating_profit < 0 ? 'text-rose-600' : 'text-emerald-600'"
+                                    class="text-2xl sm:text-3xl font-bold tracking-tight tabular-nums font-mono"
+                                    :class="accrual.net_operating_profit < 0 ? 'text-[#EF4444]' : 'text-[#10B981]'"
                                 >
                                     {{ formatRupiah(accrual.net_operating_profit) }}
                                 </dd>
                             </div>
-                            <div class="flex justify-between gap-3 text-xs text-slate-500 pt-0.5">
+                            <div class="flex justify-between gap-3 text-xs text-[#6B6B6B] pt-0.5">
                                 <dt>Margin laba</dt>
-                                <dd class="font-medium text-slate-700 tabular-nums">{{ accrual.profit_margin_percent }}%</dd>
+                                <dd class="font-medium text-[#0A0A0A] tabular-nums font-mono">{{ accrual.profit_margin_percent }}%</dd>
                             </div>
                         </dl>
                     </CardContent>
                 </Card>
 
-                <Card class="border-slate-200/90 bg-white shadow-xs rounded-xl">
+                <Card class="border border-[#E8E8EC] bg-white rounded-[12px] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
                     <CardHeader class="flex flex-row items-start justify-between space-y-0 pb-4">
                         <div>
-                            <CardTitle class="text-base font-bold text-slate-900">Uang Kas Nyata di Tangan</CardTitle>
-                            <CardDescription class="text-xs text-slate-500 mt-0.5">Uang yang benar-benar masuk dan keluar di periode ini</CardDescription>
+                            <CardTitle class="font-display text-base font-bold text-[#0A0A0A]">Uang Kas Nyata di Tangan</CardTitle>
+                            <CardDescription class="font-sans text-xs text-[#6B6B6B] mt-0.5">Uang yang benar-benar masuk dan keluar di periode ini</CardDescription>
                         </div>
-                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-teal-50 text-teal-700">
+                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] bg-[#6366F1]/10 border border-[#6366F1]/20 text-[#6366F1]">
                             <Wallet class="h-5 w-5" aria-hidden="true" />
                         </div>
                     </CardHeader>
                     <CardContent>
                         <dl class="space-y-2.5 text-sm">
                             <div class="flex justify-between gap-3">
-                                <dt class="text-slate-600">Uang diterima kasir</dt>
-                                <dd class="font-semibold text-slate-900 tabular-nums">{{ formatRupiah(cash.cash_in.total) }}</dd>
+                                <dt class="text-[#6B6B6B]">Uang diterima kasir</dt>
+                                <dd class="font-semibold text-[#0A0A0A] tabular-nums font-mono">{{ formatRupiah(cash.cash_in.total) }}</dd>
                             </div>
-                            <div class="flex justify-between gap-3 pl-3 text-xs text-slate-500">
+                            <div class="flex justify-between gap-3 pl-3 text-xs text-[#9C9C9C]">
                                 <dt>Tunai</dt>
-                                <dd class="font-medium text-slate-700 tabular-nums">{{ formatRupiah(cash.cash_in.tunai) }}</dd>
+                                <dd class="font-medium text-[#6B6B6B] tabular-nums font-mono">{{ formatRupiah(cash.cash_in.tunai) }}</dd>
                             </div>
-                            <div class="flex justify-between gap-3 pl-3 text-xs text-slate-500">
+                            <div class="flex justify-between gap-3 pl-3 text-xs text-[#9C9C9C]">
                                 <dt>Transfer / QRIS / e-wallet</dt>
-                                <dd class="font-medium text-slate-700 tabular-nums">{{ formatRupiah(digitalIn) }}</dd>
+                                <dd class="font-medium text-[#6B6B6B] tabular-nums font-mono">{{ formatRupiah(digitalIn) }}</dd>
                             </div>
                             <div class="flex justify-between gap-3">
-                                <dt class="text-slate-600">Kas keluar</dt>
-                                <dd class="font-semibold text-slate-900 tabular-nums">− {{ formatRupiah(cash.cash_out) }}</dd>
+                                <dt class="text-[#6B6B6B]">Kas keluar</dt>
+                                <dd class="font-semibold text-[#0A0A0A] tabular-nums font-mono">− {{ formatRupiah(cash.cash_out) }}</dd>
                             </div>
-                            <div class="flex items-baseline justify-between gap-3 border-t border-slate-100 pt-3.5">
-                                <dt class="font-bold text-slate-900">Saldo kas bersih</dt>
+                            <div class="flex items-baseline justify-between gap-3 border-t border-[#E8E8EC] pt-3.5">
+                                <dt class="font-bold text-[#0A0A0A]">Saldo kas bersih</dt>
                                 <dd
-                                    class="text-2xl sm:text-3xl font-bold tracking-tight tabular-nums"
-                                    :class="cash.net_cash_flow < 0 ? 'text-rose-600' : 'text-emerald-600'"
+                                    class="text-2xl sm:text-3xl font-bold tracking-tight tabular-nums font-mono"
+                                    :class="cash.net_cash_flow < 0 ? 'text-[#EF4444]' : 'text-[#10B981]'"
                                 >
                                     {{ formatRupiah(cash.net_cash_flow) }}
                                 </dd>
@@ -364,32 +365,32 @@ function barHeight(value: number): string {
 
             <div
                 v-if="showGapNote"
-                class="flex items-start gap-3 rounded-xl border border-sky-200 bg-sky-50 p-4 text-sm text-sky-950"
+                class="flex items-start gap-3 rounded-[12px] border border-[#F59E0B]/30 bg-[#F59E0B]/10 p-4 text-sm text-[#0A0A0A]"
                 role="note"
             >
-                <Info class="mt-0.5 h-5 w-5 shrink-0 text-sky-700" aria-hidden="true" />
+                <Info class="mt-0.5 h-5 w-5 shrink-0 text-[#F59E0B]" aria-hidden="true" />
                 <p>
                     Ada <strong class="tabular-nums font-semibold">{{ formatRupiah(gap) }}</strong> uang laba yang masih tertahan di piutang pelanggan.
-                    <span class="text-sky-900">Laba sudah tercatat karena nota selesai, tapi uangnya belum masuk kas.</span>
+                    <span class="text-[#6B6B6B]">Laba sudah tercatat karena nota selesai, tapi uangnya belum masuk kas.</span>
                 </p>
             </div>
 
             <!-- Outstanding receivables -->
-            <Card class="border-slate-200/90 bg-white shadow-xs rounded-xl" :class="{ 'opacity-60': loading }">
+            <Card class="border border-[#E8E8EC] bg-white rounded-[12px] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)]" :class="{ 'opacity-60': loading }">
                 <CardContent class="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
                     <div class="flex items-start gap-3.5">
-                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-amber-800">
+                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] bg-amber-500/10 border border-amber-500/20 text-[#F59E0B]">
                             <Receipt class="h-5 w-5" aria-hidden="true" />
                         </div>
                         <div>
-                            <h2 class="text-base font-bold text-slate-900">Piutang Pelanggan Berjalan</h2>
-                            <p class="text-2xl sm:text-3xl font-bold tracking-tight tabular-nums text-slate-900">{{ formatRupiah(receivables.total_outstanding) }}</p>
-                            <p class="text-xs text-slate-500 mt-0.5">
+                            <h2 class="font-display text-base font-bold text-[#0A0A0A]">Piutang Pelanggan Berjalan</h2>
+                            <p class="text-2xl sm:text-3xl font-bold tracking-tight tabular-nums font-mono text-[#0A0A0A]">{{ formatRupiah(receivables.total_outstanding) }}</p>
+                            <p class="text-xs text-[#6B6B6B] mt-0.5">
                                 {{ receivables.orders_count }} nota belum lunas dari {{ receivables.customers_count }} pelanggan · semua periode
                             </p>
                         </div>
                     </div>
-                    <Button as-child variant="outline" class="gap-2 border-slate-300 font-semibold text-slate-700 hover:bg-slate-50 hover:text-slate-900">
+                    <Button as-child variant="outline" class="gap-2 font-medium">
                         <Link href="/owner/receivables">
                             <span>Lihat & tagih piutang</span>
                             <ArrowRight class="h-4 w-4" aria-hidden="true" />
@@ -399,22 +400,22 @@ function barHeight(value: number): string {
             </Card>
 
             <!-- Trend chart -->
-            <Card class="border-slate-200">
+            <Card class="border border-[#E8E8EC] bg-white rounded-[12px]">
                 <CardHeader>
-                    <CardTitle class="text-base font-bold text-slate-900">Omzet selesai vs biaya toko per {{ trendUnit }}</CardTitle>
-                    <div class="flex flex-wrap gap-4 pt-1 text-xs text-slate-700" aria-hidden="true">
-                        <span class="flex items-center gap-1.5"><span class="h-3 w-3 rounded-sm bg-teal-600"></span>Omzet selesai</span>
-                        <span class="flex items-center gap-1.5"><span class="h-3 w-3 rounded-sm bg-rose-500"></span>Biaya toko</span>
+                    <CardTitle class="font-display text-base font-bold text-[#0A0A0A]">Omzet selesai vs biaya toko per {{ trendUnit }}</CardTitle>
+                    <div class="flex flex-wrap gap-4 pt-1 text-xs text-[#6B6B6B]" aria-hidden="true">
+                        <span class="flex items-center gap-1.5"><span class="h-3 w-3 rounded-[2px] bg-[#6366F1]"></span>Omzet selesai</span>
+                        <span class="flex items-center gap-1.5"><span class="h-3 w-3 rounded-[2px] bg-[#EF4444]"></span>Biaya toko</span>
                     </div>
                 </CardHeader>
                 <CardContent>
-                    <p v-if="trendEmpty" class="rounded-lg border border-dashed border-slate-300 p-6 text-center text-sm text-slate-600">
+                    <p v-if="trendEmpty" class="rounded-[8px] border border-dashed border-[#E8E8EC] p-6 text-center text-sm text-[#6B6B6B]">
                         Belum ada nota selesai atau biaya toko di periode ini. Grafik terisi setelah nota ditandai selesai di Antrean Cuci
                         atau pengeluaran dicatat di menu Pengeluaran.
                     </p>
                     <div v-else class="-mx-2 overflow-x-auto px-2 pb-1">
                         <ul
-                            class="flex h-56 items-end gap-1.5 border-b border-slate-300"
+                            class="flex h-56 items-end gap-1.5 border-b border-[#E8E8EC]"
                             :style="{ minWidth: `${trend.points.length * 2.25}rem` }"
                             :aria-label="`Grafik omzet dan biaya per ${trendUnit}`"
                         >
@@ -427,12 +428,12 @@ function barHeight(value: number): string {
                                 <span class="sr-only">
                                     {{ point.label }}: omzet {{ formatRupiah(point.revenue) }}, biaya {{ formatRupiah(point.expenses) }}
                                 </span>
-                                <span class="w-full max-w-[18px] rounded-t-sm bg-teal-600" :style="{ height: barHeight(point.revenue) }" aria-hidden="true"></span>
-                                <span class="w-full max-w-[18px] rounded-t-sm bg-rose-500" :style="{ height: barHeight(point.expenses) }" aria-hidden="true"></span>
+                                <span class="w-full max-w-[18px] rounded-t-[2px] bg-[#6366F1]" :style="{ height: barHeight(point.revenue) }" aria-hidden="true"></span>
+                                <span class="w-full max-w-[18px] rounded-t-[2px] bg-[#EF4444]" :style="{ height: barHeight(point.expenses) }" aria-hidden="true"></span>
                             </li>
                         </ul>
                         <div class="flex gap-1.5 pt-1.5" :style="{ minWidth: `${trend.points.length * 2.25}rem` }" aria-hidden="true">
-                            <span v-for="point in trend.points" :key="point.key" class="flex-1 text-center text-[11px] leading-tight text-slate-600">
+                            <span v-for="point in trend.points" :key="point.key" class="flex-1 text-center text-[11px] font-mono leading-tight text-[#6B6B6B]">
                                 {{ point.label }}
                             </span>
                         </div>
