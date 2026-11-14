@@ -25,9 +25,9 @@ The database seeder provisions three canonical user accounts covering each opera
 
 | Role | Email | Password | Primary Responsibility & Access Scope |
 | :--- | :--- | :--- | :--- |
-| **Owner** | `owner@andiklaundry.test` | `password` | Executive dashboard, SAK EMKM accrual & cash flow reports, CSV exports, user management, system settings, audit logs, backup management. |
-| **Cashier** | `cashier@andiklaundry.test` | `password` | POS order creation, customer intake, payment processing (Cash, QRIS, Bank Transfer, e-Wallet), digital receipts, cash drawer shift management. |
-| **Operator** | `operator@andiklaundry.test` | `password` | Production workstation, status tracking (received -> washing -> drying -> ironing -> packing -> ready for pickup -> completed), rack assignments, rewash handling. |
+| **Owner** | `owner@andiklaundry.test` | `Password123!` (or `password`) | Executive dashboard, SAK EMKM accrual & cash flow reports, CSV exports, user management, system settings, audit logs, backup management. |
+| **Cashier** | `cashier@andiklaundry.test` | `Password123!` (or `password`) | POS order creation, customer intake, payment processing (Cash, QRIS, Bank Transfer, e-Wallet), digital receipts, cash drawer shift management. |
+| **Operator** | `operator@andiklaundry.test` | `Password123!` (or `password`) | Production workstation, status tracking (received -> washing -> drying -> ironing -> packing -> ready for pickup -> completed), rack assignments, rewash handling. |
 
 ---
 
