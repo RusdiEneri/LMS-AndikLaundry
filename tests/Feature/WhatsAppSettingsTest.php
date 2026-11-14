@@ -968,3 +968,84 @@ describe('WhatsApp Test Message Delivery (R3)', function () {
         expect($response->json('message'))->toContain('Remote gateway denied authentication');
     });
 });
+
+describe('WhatsApp Session Pairing & Disconnection (R4)', function () {
+
+    it('returns QR data when connect-session is requested with qr method', function () {
+        $owner = User::factory()->create(['role' => 'owner', 'is_active' => true]);
+
+        Http::fake([
+            'http://localhost:8080/session/connect' => Http::response([
+                'code' => 200,
+                'success' => true,
+                'message' => 'Silakan scan QR code',
+                'data' => [
+                    'connected' => true,
+                    'loggedIn' => false,
+                    'qr' => 'https://wa.me/settings/linked_devices#mock-qr',
+                    'qr_image' => 'data:image/png;base64,mockPngBase64',
+                ],
+            ], 200),
+        ]);
+
+        $response = $this->actingAs($owner)->postJson('/owner/settings/whatsapp/connect-session', [
+            'method' => 'qr',
+            'server_url' => 'http://localhost:8080',
+        ]);
+
+        $response->assertOk()
+            ->assertJsonPath('success', true)
+            ->assertJsonPath('data.qr', 'https://wa.me/settings/linked_devices#mock-qr')
+            ->assertJsonPath('data.qr_image', 'data:image/png;base64,mockPngBase64');
+    });
+
+    it('returns 8-character pairing code when connect-session is requested with otp method', function () {
+        $owner = User::factory()->create(['role' => 'owner', 'is_active' => true]);
+
+        Http::fake([
+            'http://localhost:8080/session/pair-code' => Http::response([
+                'code' => 200,
+                'success' => true,
+                'message' => 'Kode pairing WhatsApp berhasil dibuat.',
+                'data' => [
+                    'pairing_code' => 'ABCD1234',
+                    'formatted_code' => 'ABCD-1234',
+                    'phone' => '6281234567890',
+                    'instructions' => ['Buka WhatsApp', 'Masukkan kode'],
+                ],
+            ], 200),
+        ]);
+
+        $response = $this->actingAs($owner)->postJson('/owner/settings/whatsapp/connect-session', [
+            'method' => 'otp',
+            'phone' => '081234567890',
+            'server_url' => 'http://localhost:8080',
+        ]);
+
+        $response->assertOk()
+            ->assertJsonPath('success', true)
+            ->assertJsonPath('data.pairing_code', 'ABCD1234')
+            ->assertJsonPath('data.formatted_code', 'ABCD-1234');
+    });
+
+    it('disconnects and logs out active WhatsApp session', function () {
+        $owner = User::factory()->create(['role' => 'owner', 'is_active' => true]);
+
+        Http::fake([
+            'http://localhost:8080/session/logout' => Http::response([
+                'code' => 200,
+                'success' => true,
+                'message' => 'Sesi WhatsApp berhasil diputuskan (logout).',
+            ], 200),
+        ]);
+
+        $response = $this->actingAs($owner)->postJson('/owner/settings/whatsapp/disconnect-session', [
+            'server_url' => 'http://localhost:8080',
+        ]);
+
+        $response->assertOk()
+            ->assertJsonPath('success', true)
+            ->assertJsonPath('message', 'Sesi WhatsApp berhasil diputuskan (logout).');
+    });
+});
+

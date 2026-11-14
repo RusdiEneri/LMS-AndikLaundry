@@ -178,4 +178,49 @@ class SettingController extends Controller
 
         return response()->json($result, $httpCode);
     }
+
+    /**
+     * Connect or pair WhatsApp session via QR code or Pairing OTP code.
+     */
+    public function connectWhatsAppSession(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'method' => ['required', 'string', 'in:qr,otp,pairing_code'],
+            'phone' => ['nullable', 'string', 'max:50'],
+            'server_url' => ['nullable', 'string', 'max:500'],
+            'api_key' => ['nullable', 'string', 'max:500'],
+        ]);
+
+        $params = [
+            'server_url' => $validated['server_url'] ?? null,
+            'api_key' => $validated['api_key'] ?? null,
+        ];
+
+        if ($validated['method'] === 'otp' || $validated['method'] === 'pairing_code') {
+            $phone = $validated['phone'] ?? BusinessSetting::get('store.phone', '6281234567890');
+            $result = $this->waService->requestPairingCode($phone, $params);
+        } else {
+            $result = $this->waService->connectSession($params);
+        }
+
+        $httpCode = $result['success'] ? 200 : ($result['status'] ?? 422);
+
+        return response()->json($result, $httpCode);
+    }
+
+    /**
+     * Disconnect and logout WhatsApp session.
+     */
+    public function disconnectWhatsAppSession(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'server_url' => ['nullable', 'string', 'max:500'],
+            'api_key' => ['nullable', 'string', 'max:500'],
+        ]);
+
+        $result = $this->waService->disconnectSession($validated);
+        $httpCode = $result['success'] ? 200 : ($result['status'] ?? 422);
+
+        return response()->json($result, $httpCode);
+    }
 }

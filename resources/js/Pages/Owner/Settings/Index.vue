@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
 import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import {
@@ -20,6 +20,10 @@ import {
     Radio,
     Copy,
     Check,
+    QrCode,
+    Smartphone,
+    KeyRound,
+    LogOut,
 } from 'lucide-vue-next';
 import Button from '@/Components/ui/button/Button.vue';
 import type { PageProps } from '@/types';
@@ -231,6 +235,19 @@ async function runConnectionTest() {
 
         const data = await response.json();
         connectionTestResult.value = data;
+        if (data && data.data) {
+            if (data.data.loggedIn || data.data.state === 'authenticated') {
+                sessionState.value.isLoggedIn = true;
+                sessionState.value.connected = true;
+                sessionState.value.jid = data.data.jid || sessionState.value.jid;
+            } else {
+                sessionState.value.isLoggedIn = false;
+                if (data.data.qr_image) {
+                    sessionState.value.qr_image = data.data.qr_image;
+                    sessionState.value.qr = data.data.qr;
+                }
+            }
+        }
     } catch (err: any) {
         connectionTestResult.value = {
             success: false,
@@ -240,6 +257,225 @@ async function runConnectionTest() {
         isTestingConnection.value = false;
     }
 }
+
+// WhatsApp Session Pairing State (Scan QR vs OTP Code)
+const pairingMethod = ref<'qr' | 'otp'>('qr');
+const pairingPhone = ref(
+    props.settings.whatsapp?.['whatsapp.session_id'] ||
+    props.settings.store?.['store.phone'] ||
+    '081234567890'
+);
+const isConnectingSession = ref(false);
+const isDisconnectingSession = ref(false);
+const sessionState = ref<{
+    isLoggedIn?: boolean;
+    connected?: boolean;
+    jid?: string;
+    qr?: string;
+    qr_image?: string;
+    pairing_code?: string;
+    formatted_code?: string;
+    phone?: string;
+    instructions?: string[];
+}>({
+    isLoggedIn: false,
+    connected: false,
+    jid: '',
+    qr: '',
+    qr_image: '',
+    pairing_code: '',
+    formatted_code: '',
+});
+const sessionError = ref<string | null>(null);
+const codeCopied = ref(false);
+let sessionPollTimer: any = null;
+
+const setPairingMethod = (method: 'qr' | 'otp') => {
+    pairingMethod.value = method;
+    sessionError.value = null;
+    if (method === 'qr' && !sessionState.value.qr_image && !sessionState.value.isLoggedIn) {
+        connectWhatsAppSession();
+    }
+};
+
+const copyPairingCode = async (code: string) => {
+    if (!code) return;
+    try {
+        await navigator.clipboard.writeText(code.replace('-', ''));
+        codeCopied.value = true;
+        setTimeout(() => { codeCopied.value = false; }, 2500);
+    } catch {
+        // fallback
+    }
+};
+
+const connectWhatsAppSession = async () => {
+    isConnectingSession.value = true;
+    sessionError.value = null;
+
+    try {
+        const payload: Record<string, any> = {
+            method: pairingMethod.value,
+            server_url: form['whatsapp.server_url'],
+            api_key: form['whatsapp.api_key'],
+            phone: pairingPhone.value,
+        };
+
+        const response = await fetch('/owner/settings/whatsapp/connect-session', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': getCsrfToken(),
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            body: JSON.stringify(payload),
+        });
+
+        const res = await response.json();
+        if (res.success && res.data) {
+            const data = res.data;
+            sessionState.value = {
+                ...sessionState.value,
+                connected: !!data.connected,
+                isLoggedIn: !!data.loggedIn,
+                jid: data.jid || sessionState.value.jid || '',
+                qr: data.qr || sessionState.value.qr || '',
+                qr_image: data.qr_image || sessionState.value.qr_image || '',
+                pairing_code: data.pairing_code || sessionState.value.pairing_code || '',
+                formatted_code: data.formatted_code || sessionState.value.formatted_code || '',
+                instructions: data.instructions || sessionState.value.instructions,
+            };
+
+            if (sessionState.value.isLoggedIn) {
+                stopSessionPolling();
+            } else {
+                startSessionPolling();
+            }
+        } else {
+            sessionError.value = res.message || 'Gagal memulai koneksi WhatsApp.';
+        }
+    } catch (err: any) {
+        sessionError.value = err.message || 'Terjadi kesalahan saat menghubungi server gateway.';
+    } finally {
+        isConnectingSession.value = false;
+    }
+};
+
+const disconnectWhatsAppSession = async () => {
+    if (!confirm('Apakah Anda yakin ingin memutuskan sesi WhatsApp ini?')) return;
+
+    isDisconnectingSession.value = true;
+    sessionError.value = null;
+
+    try {
+        const response = await fetch('/owner/settings/whatsapp/disconnect-session', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': getCsrfToken(),
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            body: JSON.stringify({
+                server_url: form['whatsapp.server_url'],
+                api_key: form['whatsapp.api_key'],
+            }),
+        });
+
+        const res = await response.json();
+        if (res.success) {
+            sessionState.value = {
+                isLoggedIn: false,
+                connected: false,
+                jid: '',
+                qr: '',
+                qr_image: '',
+                pairing_code: '',
+                formatted_code: '',
+            };
+            stopSessionPolling();
+            setTimeout(() => {
+                connectWhatsAppSession();
+            }, 600);
+        } else {
+            sessionError.value = res.message || 'Gagal memutuskan sesi WhatsApp.';
+        }
+    } catch (err: any) {
+        sessionError.value = err.message || 'Gagal menghubungi server gateway.';
+    } finally {
+        isDisconnectingSession.value = false;
+    }
+};
+
+const startSessionPolling = () => {
+    stopSessionPolling();
+    sessionPollTimer = setInterval(async () => {
+        if (sessionState.value.isLoggedIn) {
+            stopSessionPolling();
+            return;
+        }
+
+        try {
+            const response = await fetch('/owner/settings/whatsapp/test-connection', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': getCsrfToken(),
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                body: JSON.stringify({
+                    mode: 'automatic',
+                    server_url: form['whatsapp.server_url'],
+                    api_key: form['whatsapp.api_key'],
+                }),
+            });
+
+            const res = await response.json();
+            const data = res.data;
+            if (data) {
+                if (data.loggedIn || data.state === 'authenticated') {
+                    sessionState.value.isLoggedIn = true;
+                    sessionState.value.connected = true;
+                    sessionState.value.jid = data.jid || 'WhatsApp Outlet';
+                    sessionState.value.qr_image = '';
+                    sessionState.value.pairing_code = '';
+                    sessionState.value.formatted_code = '';
+                    stopSessionPolling();
+                } else if (data.qr_image && pairingMethod.value === 'qr') {
+                    sessionState.value.qr_image = data.qr_image;
+                    sessionState.value.qr = data.qr;
+                }
+            }
+        } catch {
+            // silent polling catch
+        }
+    }, 3000);
+};
+
+const stopSessionPolling = () => {
+    if (sessionPollTimer) {
+        clearInterval(sessionPollTimer);
+        sessionPollTimer = null;
+    }
+};
+
+onMounted(() => {
+    if (form['whatsapp.mode'] === 'automatic') {
+        connectWhatsAppSession();
+    }
+});
+
+onUnmounted(() => {
+    stopSessionPolling();
+});
+
+watch(activeTab, (tab) => {
+    if (tab === 'whatsapp' && form['whatsapp.mode'] === 'automatic' && !sessionState.value.isLoggedIn) {
+        connectWhatsAppSession();
+    }
+});
 
 // Test Message State
 const testPhone = ref(
@@ -760,6 +996,256 @@ const submitSettings = () => {
                                         <p class="text-xs text-slate-600 leading-relaxed">
                                             Sistem menghasilkan tombol klik `wa.me` langsung di antarmuka kasir. Membuka aplikasi WhatsApp Web/HP dengan pesan siap kirim.
                                         </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Section 1.5: WhatsApp Multi-Device Session Connection -->
+                            <div v-if="form['whatsapp.mode'] === 'automatic'" class="bg-white rounded-xl border border-slate-200 p-6 shadow-xs space-y-5">
+                                <div class="border-b border-slate-100 pb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                                    <div>
+                                        <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                                            <Radio class="w-4 h-4 text-teal-600" />
+                                            Penyambungan Sesi WhatsApp Gateway
+                                        </h3>
+                                        <p class="text-xs text-slate-500 mt-0.5">
+                                            Hubungkan nomor WhatsApp outlet Anda ke gateway otomatis menggunakan Scan QR Code atau Kode OTP Pairing
+                                        </p>
+                                    </div>
+
+                                    <!-- Connection Status Badge -->
+                                    <div class="flex items-center gap-2">
+                                        <span
+                                            v-if="sessionState.isLoggedIn"
+                                            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200"
+                                        >
+                                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                            Sesi Terhubung ({{ sessionState.jid || 'Aktif' }})
+                                        </span>
+                                        <span
+                                            v-else
+                                            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200"
+                                        >
+                                            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                                            Belum Terhubung (Unpaired)
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Active Connected State View -->
+                                <div v-if="sessionState.isLoggedIn" class="p-4 rounded-xl bg-teal-50/60 border border-teal-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                                    <div class="space-y-1">
+                                        <div class="text-sm font-bold text-teal-950 flex items-center gap-2">
+                                            <CheckCircle2 class="w-4 h-4 text-teal-600 shrink-0" />
+                                            WhatsApp Siap Digunakan untuk Notifikasi Otomatis
+                                        </div>
+                                        <p class="text-xs text-teal-800 leading-relaxed">
+                                            Nomor akun: <span class="font-mono font-semibold">{{ sessionState.jid }}</span>. Notifikasi intake, cucian selesai, dan pengingat tagihan akan dikirim otomatis dari nomor ini.
+                                        </p>
+                                    </div>
+                                    <Button
+                                        type="button"
+                                        @click="disconnectWhatsAppSession"
+                                        :disabled="isDisconnectingSession"
+                                        variant="outline"
+                                        class="border-rose-300 text-rose-700 hover:bg-rose-50 hover:text-rose-800 text-xs font-semibold flex items-center gap-1.5 shrink-0"
+                                    >
+                                        <LogOut class="w-3.5 h-3.5" />
+                                        <span>{{ isDisconnectingSession ? 'Memutuskan...' : 'Putuskan Sesi' }}</span>
+                                    </Button>
+                                </div>
+
+                                <!-- Unpaired / Pairing Interface -->
+                                <div v-else class="space-y-5">
+                                    <!-- Step 1: Select Pairing Method -->
+                                    <div>
+                                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
+                                            Pilih Metode Penyambungan Sesi
+                                        </label>
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                            <!-- Method 1: Scan QR Code -->
+                                            <div
+                                                @click="setPairingMethod('qr')"
+                                                :class="[
+                                                    'p-4 rounded-xl border-2 cursor-pointer transition flex items-start gap-3.5',
+                                                    pairingMethod === 'qr'
+                                                        ? 'border-teal-600 bg-teal-50/40 ring-1 ring-teal-600 shadow-xs'
+                                                        : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+                                                ]"
+                                            >
+                                                <div :class="['w-9 h-9 rounded-lg flex items-center justify-center shrink-0 mt-0.5', pairingMethod === 'qr' ? 'bg-teal-600 text-white' : 'bg-slate-100 text-slate-600']">
+                                                    <QrCode class="w-5 h-5" />
+                                                </div>
+                                                <div class="space-y-1">
+                                                    <div class="flex items-center gap-2">
+                                                        <span class="text-sm font-bold text-slate-900">Pindai Kode QR (Scan QR)</span>
+                                                        <span v-if="pairingMethod === 'qr'" class="w-2 h-2 rounded-full bg-teal-600"></span>
+                                                    </div>
+                                                    <p class="text-xs text-slate-500 leading-relaxed">
+                                                        Pindai kode QR langsung dari aplikasi WhatsApp di HP Anda (menu Perangkat Tertaut).
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <!-- Method 2: Kode OTP / Pairing Code -->
+                                            <div
+                                                @click="setPairingMethod('otp')"
+                                                :class="[
+                                                    'p-4 rounded-xl border-2 cursor-pointer transition flex items-start gap-3.5',
+                                                    pairingMethod === 'otp'
+                                                        ? 'border-teal-600 bg-teal-50/40 ring-1 ring-teal-600 shadow-xs'
+                                                        : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+                                                ]"
+                                            >
+                                                <div :class="['w-9 h-9 rounded-lg flex items-center justify-center shrink-0 mt-0.5', pairingMethod === 'otp' ? 'bg-teal-600 text-white' : 'bg-slate-100 text-slate-600']">
+                                                    <KeyRound class="w-5 h-5" />
+                                                </div>
+                                                <div class="space-y-1">
+                                                    <div class="flex items-center gap-2">
+                                                        <span class="text-sm font-bold text-slate-900">Kode OTP / Pairing Code</span>
+                                                        <span v-if="pairingMethod === 'otp'" class="w-2 h-2 rounded-full bg-teal-600"></span>
+                                                    </div>
+                                                    <p class="text-xs text-slate-500 leading-relaxed">
+                                                        Tautkan dengan nomor HP tanpa kamera. Cukup masukkan kode 8 karakter di WhatsApp HP.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Step 2: Content for Method: Scan QR Code -->
+                                    <div v-if="pairingMethod === 'qr'" class="bg-slate-50/70 border border-slate-200 rounded-xl p-5 space-y-4">
+                                        <div class="flex flex-col md:flex-row items-center gap-6">
+                                            <!-- QR Code Box -->
+                                            <div class="shrink-0 flex flex-col items-center gap-2">
+                                                <div class="w-56 h-56 bg-white border border-slate-300 rounded-xl p-3 shadow-xs flex items-center justify-center relative overflow-hidden">
+                                                    <img
+                                                        v-if="sessionState.qr_image"
+                                                        :src="sessionState.qr_image"
+                                                        alt="Scan QR WhatsApp"
+                                                        class="w-full h-full object-contain"
+                                                    />
+                                                    <div v-else-if="isConnectingSession" class="text-center p-4 space-y-2">
+                                                        <RefreshCw class="w-8 h-8 text-teal-600 animate-spin mx-auto" />
+                                                        <p class="text-xs text-slate-500 font-medium">Memuat QR Code...</p>
+                                                    </div>
+                                                    <div v-else class="text-center p-4 space-y-2">
+                                                        <QrCode class="w-10 h-10 text-slate-300 mx-auto" />
+                                                        <p class="text-xs text-slate-400">Klik tombol di bawah untuk menampilkan QR code</p>
+                                                    </div>
+                                                </div>
+
+                                                <Button
+                                                    type="button"
+                                                    @click="connectWhatsAppSession"
+                                                    :disabled="isConnectingSession"
+                                                    class="bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold px-4 min-h-[38px] flex items-center gap-2 w-full justify-center"
+                                                >
+                                                    <RefreshCw :class="['w-3.5 h-3.5', isConnectingSession ? 'animate-spin' : '']" />
+                                                    <span>{{ sessionState.qr_image ? 'Perbarui QR Code' : 'Sambungkan & Tampilkan QR' }}</span>
+                                                </Button>
+                                            </div>
+
+                                            <!-- Instructions -->
+                                            <div class="space-y-3 text-sm text-slate-700">
+                                                <div class="font-bold text-slate-900 flex items-center gap-2">
+                                                    <Smartphone class="w-4 h-4 text-teal-600" />
+                                                    Langkah Menghubungkan via Scan QR:
+                                                </div>
+                                                <ol class="space-y-2 text-xs text-slate-600 list-decimal list-inside leading-relaxed pl-1">
+                                                    <li>Buka aplikasi <strong>WhatsApp</strong> di HP Anda.</li>
+                                                    <li>Ketuk menu <strong>Titik Tiga</strong> (Android) atau <strong>Pengaturan</strong> (iPhone).</li>
+                                                    <li>Pilih <strong>Perangkat Tertaut (Linked Devices)</strong>.</li>
+                                                    <li>Ketuk tombol <strong>Tautkan Perangkat</strong>.</li>
+                                                    <li>Arahkan kamera HP ke gambar <strong>QR Code</strong> di samping.</li>
+                                                </ol>
+                                                <div class="text-[11px] text-teal-700 bg-teal-50 p-2.5 rounded-lg border border-teal-100 flex items-center gap-2">
+                                                    <CheckCircle2 class="w-4 h-4 text-teal-600 shrink-0" />
+                                                    <span>Halaman ini akan otomatis mendeteksi ketika WhatsApp di ponsel Anda berhasil dipindai.</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Step 2: Content for Method: Kode OTP / Pairing Code -->
+                                    <div v-else class="bg-slate-50/70 border border-slate-200 rounded-xl p-5 space-y-5">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 items-start">
+                                            <div class="space-y-4">
+                                                <div>
+                                                    <label class="block text-sm font-semibold text-slate-800 mb-1.5">
+                                                        Nomor WhatsApp HP Anda <span class="text-rose-500">*</span>
+                                                    </label>
+                                                    <div class="flex gap-2">
+                                                        <input
+                                                            v-model="pairingPhone"
+                                                            type="text"
+                                                            class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-sm font-mono"
+                                                            placeholder="Contoh: 081234567890 / 6281234567890"
+                                                        />
+                                                        <Button
+                                                            type="button"
+                                                            @click="connectWhatsAppSession"
+                                                            :disabled="isConnectingSession || !pairingPhone"
+                                                            class="bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold px-4 min-h-[42px] shrink-0 flex items-center gap-1.5"
+                                                        >
+                                                            <RefreshCw :class="['w-3.5 h-3.5', isConnectingSession ? 'animate-spin' : '']" />
+                                                            <span>{{ isConnectingSession ? 'Meminta Kode...' : 'Dapatkan Kode OTP' }}</span>
+                                                        </Button>
+                                                    </div>
+                                                    <p class="text-xs text-slate-400 mt-1">Masukkan nomor WhatsApp HP yang akan dijadikan pengirim notifikasi.</p>
+                                                </div>
+
+                                                <!-- Pairing Code Display Box -->
+                                                <div v-if="sessionState.pairing_code || sessionState.formatted_code" class="p-4 rounded-xl bg-white border-2 border-teal-500 shadow-sm space-y-3">
+                                                    <div class="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                                                        Kode Pairing WhatsApp Anda:
+                                                    </div>
+                                                    <div class="flex items-center justify-between gap-3 bg-slate-900 text-white p-3.5 rounded-lg">
+                                                        <span class="font-mono text-2xl font-black tracking-widest text-teal-400">
+                                                            {{ sessionState.formatted_code || sessionState.pairing_code }}
+                                                        </span>
+                                                        <Button
+                                                            type="button"
+                                                            @click="copyPairingCode(sessionState.formatted_code || sessionState.pairing_code || '')"
+                                                            variant="outline"
+                                                            class="bg-slate-800 border-slate-700 text-slate-200 hover:bg-slate-700 hover:text-white text-xs px-3 py-1.5 min-h-[36px] flex items-center gap-1.5"
+                                                        >
+                                                            <Check v-if="codeCopied" class="w-3.5 h-3.5 text-emerald-400" />
+                                                            <Copy v-else class="w-3.5 h-3.5" />
+                                                            <span>{{ codeCopied ? 'Tersalin!' : 'Salin Kode' }}</span>
+                                                        </Button>
+                                                    </div>
+                                                    <p class="text-xs text-slate-600 leading-relaxed">
+                                                        Kode ini berlaku sekitar 2-3 menit. Masukkan segera pada WhatsApp di ponsel Anda.
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <!-- Instructions for OTP Code -->
+                                            <div class="space-y-3 text-sm text-slate-700 bg-white p-4 rounded-xl border border-slate-200">
+                                                <div class="font-bold text-slate-900 flex items-center gap-2">
+                                                    <KeyRound class="w-4 h-4 text-teal-600" />
+                                                    Cara Memasukkan Kode di WhatsApp Ponsel:
+                                                </div>
+                                                <ol class="space-y-2 text-xs text-slate-600 list-decimal list-inside leading-relaxed pl-1">
+                                                    <li>Buka aplikasi <strong>WhatsApp</strong> di HP Anda.</li>
+                                                    <li>Masuk ke menu <strong>Perangkat Tertaut (Linked Devices)</strong>.</li>
+                                                    <li>Ketuk <strong>Tautkan Perangkat</strong>.</li>
+                                                    <li>Ketuk opsi <strong>"Tautkan dengan nomor telepon saja"</strong> (Link with phone number instead) di bagian bawah.</li>
+                                                    <li>Masukkan <strong>8 karakter kode pairing</strong> di atas.</li>
+                                                </ol>
+                                                <div class="text-[11px] text-teal-700 bg-teal-50 p-2.5 rounded-lg border border-teal-100 flex items-center gap-2">
+                                                    <CheckCircle2 class="w-4 h-4 text-teal-600 shrink-0" />
+                                                    <span>Sistem otomatis menyambungkan begitu kode dimasukkan di WhatsApp Anda.</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Session Error Alert -->
+                                    <div v-if="sessionError" class="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-900 text-xs flex items-center gap-2">
+                                        <AlertCircle class="w-4 h-4 text-rose-600 shrink-0" />
+                                        <span>{{ sessionError }}</span>
                                     </div>
                                 </div>
                             </div>

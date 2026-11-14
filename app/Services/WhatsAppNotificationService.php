@@ -1021,4 +1021,210 @@ class WhatsAppNotificationService
             ];
         }
     }
+
+    /**
+     * Start/refresh gateway WhatsApp connection and retrieve active pairing state or QR code.
+     *
+     * @param  array<string, mixed>|null  $params
+     * @return array<string, mixed>
+     */
+    public function connectSession(?array $params = null): array
+    {
+        $serverUrl = $this->resolveServerUrl($params);
+        $apiKey = trim((string) ($params['api_key'] ?? BusinessSetting::get('whatsapp.api_key', '')));
+
+        try {
+            $headers = ['Accept' => 'application/json'];
+            if (! empty($apiKey)) {
+                $headers['Token'] = $apiKey;
+                $headers['Authorization'] = 'Bearer ' . $apiKey;
+            }
+
+            $client = Http::timeout(10)->withHeaders($headers);
+            $response = $client->post("{$serverUrl}/session/connect");
+
+            if (! $response->successful()) {
+                $response = $client->get("{$serverUrl}/session/status");
+            }
+
+            if ($response->successful()) {
+                $rawJson = $response->json();
+                $data = is_array($rawJson) && isset($rawJson['data']) && is_array($rawJson['data'])
+                    ? $rawJson['data']
+                    : (is_array($rawJson) ? $rawJson : []);
+
+                return [
+                    'success' => true,
+                    'status' => $response->status(),
+                    'message' => $rawJson['message'] ?? 'Sesi WhatsApp aktif.',
+                    'data' => $data,
+                ];
+            }
+
+            return [
+                'success' => false,
+                'status' => $response->status(),
+                'message' => 'Gagal menghubungkan sesi ke gateway WhatsApp (HTTP ' . $response->status() . ').',
+                'data' => $response->json() ?? $response->body(),
+            ];
+        } catch (\Throwable $e) {
+            $msg = $e->getMessage();
+            if (str_contains($msg, 'cURL error 7') || str_contains($msg, 'Failed to connect') || str_contains($msg, 'Connection refused')) {
+                $friendly = "Gagal terhubung ke WhatsApp gateway ({$serverUrl}): Server belum dijalankan. Jalankan gateway di folder `gateway/`.";
+            } else {
+                $friendly = 'Gagal menghubungi server WhatsApp gateway: ' . $msg;
+            }
+
+            return [
+                'success' => false,
+                'status' => 500,
+                'message' => $friendly,
+            ];
+        }
+    }
+
+    /**
+     * Request WhatsApp phone pairing code (OTP) for code-based device linking.
+     *
+     * @param  string  $phone
+     * @param  array<string, mixed>|null  $params
+     * @return array<string, mixed>
+     */
+    public function requestPairingCode(string $phone, ?array $params = null): array
+    {
+        $normalizedPhone = PhoneFormatter::normalize($phone);
+        $cleanPhone = ltrim($normalizedPhone, '+');
+
+        if (empty($cleanPhone) || ! ctype_digit($cleanPhone) || strlen($cleanPhone) < 8) {
+            return [
+                'success' => false,
+                'status' => 422,
+                'message' => 'Nomor WhatsApp tidak valid. Masukkan nomor HP aktif (contoh: 081234567890 / 6281234567890).',
+            ];
+        }
+
+        $serverUrl = $this->resolveServerUrl($params);
+        $apiKey = trim((string) ($params['api_key'] ?? BusinessSetting::get('whatsapp.api_key', '')));
+
+        try {
+            $headers = ['Accept' => 'application/json'];
+            if (! empty($apiKey)) {
+                $headers['Token'] = $apiKey;
+                $headers['Authorization'] = 'Bearer ' . $apiKey;
+            }
+
+            $client = Http::timeout(15)->withHeaders($headers);
+            $response = $client->post("{$serverUrl}/session/pair-code", [
+                'phone' => $cleanPhone,
+            ]);
+
+            $rawJson = $response->json();
+            if ($response->successful()) {
+                $data = is_array($rawJson) && isset($rawJson['data']) && is_array($rawJson['data'])
+                    ? $rawJson['data']
+                    : (is_array($rawJson) ? $rawJson : []);
+
+                return [
+                    'success' => true,
+                    'status' => 200,
+                    'message' => $rawJson['message'] ?? 'Kode pairing WhatsApp berhasil dibuat.',
+                    'data' => $data,
+                ];
+            }
+
+            $errorMsg = is_array($rawJson) && ! empty($rawJson['message'])
+                ? $rawJson['message']
+                : 'Gagal membuat kode pairing dari gateway (HTTP ' . $response->status() . ').';
+
+            return [
+                'success' => false,
+                'status' => $response->status(),
+                'message' => $errorMsg,
+                'data' => $rawJson,
+            ];
+        } catch (\Throwable $e) {
+            $msg = $e->getMessage();
+            if (str_contains($msg, 'cURL error 7') || str_contains($msg, 'Failed to connect') || str_contains($msg, 'Connection refused')) {
+                $friendly = "Gagal terhubung ke WhatsApp gateway ({$serverUrl}): Server belum dijalankan. Jalankan gateway di folder `gateway/`.";
+            } else {
+                $friendly = 'Gagal menghubungi server WhatsApp gateway: ' . $msg;
+            }
+
+            return [
+                'success' => false,
+                'status' => 500,
+                'message' => $friendly,
+            ];
+        }
+    }
+
+    /**
+     * Disconnect and logout WhatsApp session.
+     *
+     * @param  array<string, mixed>|null  $params
+     * @return array<string, mixed>
+     */
+    public function disconnectSession(?array $params = null): array
+    {
+        $serverUrl = $this->resolveServerUrl($params);
+        $apiKey = trim((string) ($params['api_key'] ?? BusinessSetting::get('whatsapp.api_key', '')));
+
+        try {
+            $headers = ['Accept' => 'application/json'];
+            if (! empty($apiKey)) {
+                $headers['Token'] = $apiKey;
+                $headers['Authorization'] = 'Bearer ' . $apiKey;
+            }
+
+            $client = Http::timeout(10)->withHeaders($headers);
+            $response = $client->post("{$serverUrl}/session/logout");
+
+            if ($response->successful()) {
+                $rawJson = $response->json();
+
+                return [
+                    'success' => true,
+                    'status' => 200,
+                    'message' => $rawJson['message'] ?? 'Sesi WhatsApp berhasil diputuskan (logout).',
+                ];
+            }
+
+            return [
+                'success' => false,
+                'status' => $response->status(),
+                'message' => 'Gagal memutuskan sesi WhatsApp di gateway.',
+            ];
+        } catch (\Throwable $e) {
+            return [
+                'success' => false,
+                'status' => 500,
+                'message' => 'Gagal menghubungi server WhatsApp gateway: ' . $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * Resolve server URL with fallback.
+     *
+     * @param  array<string, mixed>|null  $params
+     * @return string
+     */
+    protected function resolveServerUrl(?array $params = null): string
+    {
+        if (isset($params['server_url']) && trim((string) $params['server_url']) !== '') {
+            $rawUrl = trim((string) $params['server_url']);
+        } else {
+            $dbUrl = BusinessSetting::get('whatsapp.server_url');
+            if (empty($dbUrl) || ! is_string($dbUrl) || trim($dbUrl) === '') {
+                $dbUrl = 'http://localhost:8080';
+            }
+            $rawUrl = trim((string) $dbUrl);
+        }
+
+        if (! str_starts_with($rawUrl, 'http://') && ! str_starts_with($rawUrl, 'https://')) {
+            $rawUrl = 'http://' . $rawUrl;
+        }
+
+        return rtrim($rawUrl, '/');
+    }
 }

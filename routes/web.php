@@ -83,6 +83,8 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/owner/settings', [SettingController::class, 'update'])->name('owner.settings.update');
         Route::post('/owner/settings/whatsapp/test-connection', [SettingController::class, 'testWhatsAppConnection'])->name('owner.settings.whatsapp.test-connection');
         Route::post('/owner/settings/whatsapp/test-message', [SettingController::class, 'sendWhatsAppTestMessage'])->name('owner.settings.whatsapp.test-message');
+        Route::post('/owner/settings/whatsapp/connect-session', [SettingController::class, 'connectWhatsAppSession'])->name('owner.settings.whatsapp.connect-session');
+        Route::post('/owner/settings/whatsapp/disconnect-session', [SettingController::class, 'disconnectWhatsAppSession'])->name('owner.settings.whatsapp.disconnect-session');
 
         // Operational Expenses (Phase 3)
         Route::get('/owner/expenses', [ExpenseController::class, 'index'])->name('owner.expenses.index');
