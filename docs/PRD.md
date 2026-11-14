@@ -12,40 +12,42 @@
 ## 1. Executive Summary & Product Vision
 
 ### 1.1 Executive Summary
-**LMS-AndikLaundry** is an enterprise-grade, single-store Laundry Management System engineered to digitize, streamline, and secure the end-to-end operations of Andik Laundry. The application unifies a high-speed Point of Sale (POS) Cashier interface, an industrial Production Tracking pipeline, a Cashier Shift & Cash Drawer Reconciliation engine, and an Executive Owner Analytics Dashboard into a single, cohesive monolithic architecture.
+**LMS-AndikLaundry** is a streamlined, single-store Laundry Management System engineered specifically for **home-based family laundry operations (usaha rumahan yang dikelola keluarga)**. The system unifies a high-speed Point of Sale (POS) Cashier interface, an intuitive Production Tracking pipeline, a pragmatic Daily Cash Summary (Rekap Kas Harian) & Expense Tracker, and an Owner Analytics Dashboard into a single, cohesive monolithic web application.
 
-Unlike generic POS systems or fragmented multi-app spreadsheets, LMS-AndikLaundry is tailored specifically to Indonesian laundry retail realities: handling per-kilogram weighing with minimum billable thresholds, per-piece garment condition inspections, scent/perfume selections, orthogonal production and payment states, split-tender payments (Cash + QRIS), cashier blind-count shift auditing, and automated WhatsApp notifications with an instant manual `wa.me` fallback.
+In this home-based operating model, the **Store Owner acts directly as the primary Cashier and Operator (kasirnya ya ownernya sendiri)**, supported collaboratively by family members. Unnecessary corporate bureaucracy—such as artificial shift opening locks, blind-count cash drawer disputes, and manager PIN overrides for handing over clothes—is completely eliminated in favor of operational speed, practical cash flow visibility, and seamless 1-click navigation across all features.
+
+Unlike generic POS systems or fragmented multi-app spreadsheets, LMS-AndikLaundry is tailored specifically to Indonesian laundry retail realities: handling per-kilogram weighing with minimum billable thresholds, per-piece garment condition inspections, scent/perfume selections, orthogonal production and payment states, split-tender payments (Cash + QRIS), daily cash and expense reconciliation, and automated WhatsApp notifications with an instant manual `wa.me` fallback.
 
 ### 1.2 Product Vision
-To establish Andik Laundry as the benchmark for operational efficiency, zero garment loss, zero revenue leakage, and transparent customer communication through a robust, sub-second responsive web application running on local hardware and cloud VPS without recurring per-message software overhead.
+To establish Andik Laundry as the benchmark for operational efficiency, zero garment loss, transparent daily cash flow, and responsive customer communication through a robust, sub-second responsive web application running on local hardware and cloud VPS without recurring per-message software overhead.
 
 ---
 
 ## 2. Target Market, Problem Statement & Strategic Objectives
 
 ### 2.1 Problem Statement
-Indonesian single-store retail laundries face recurring operational, financial, and customer relationship bottlenecks:
+Indonesian home-based and family-run retail laundries face distinct operational, financial, and customer relationship bottlenecks:
 
-1. **Revenue Leakage & Unchecked Credit (Piutang Liar):**
-   - Laundry bundles are handed over to customers before payment is verified, resulting in untracked accounts receivable.
-   - Cashiers lack strict system enforcement preventing uncollected laundry release.
-2. **Cash Drawer Skimming & Reconciliation Disputes:**
-   - Cashiers know the system's expected cash total before counting, enabling opportunistic skimming or covering up small daily deficits.
-   - Emergency store purchases (LPG gas, soap, drinking water) are taken from the cash drawer without strict receipt logging or shift linkage.
+1. **Unrecorded Customer Credit & Handovers (Piutang Tak Tercatat):**
+   - Garments are handed over to regular neighborhood customers before payment is verified, resulting in untracked accounts receivable.
+   - The owner needs an effortless way to record customer debt (piutang) without clunky bureaucratic PIN barriers.
+2. **Mixed Household & Business Cash Flow:**
+   - In home-based laundries, daily cash received from customers is often mixed with operational purchases (detergent, softener, 3kg LPG gas, plastic packaging, water refills).
+   - Without an integrated Daily Cash Recap (Rekap Kas Harian) and expense log, tracking actual daily take-home earnings is difficult.
 3. **Garment Loss, Dye Bleeding & Quality Blame-Games:**
    - Garments entering the wash drum lack condition tagging (e.g., pre-existing tears, missing buttons, color run risks).
-   - Incomplete tracking across wash, dry, and iron stages makes it impossible to identify which operator handled a damaged or re-washed bundle.
+   - Incomplete tracking across wash, dry, and iron stages makes it difficult to manage re-wash cycles and keep bundles organized.
 4. **Customer Anxiety & Status Inquiry Bottlenecks:**
-   - Customers repeatedly call or WhatsApp store staff asking if their laundry is ready, distracting cashiers during rush hours.
+   - Customers repeatedly call or WhatsApp asking if their laundry is ready, distracting the family during washing and pressing.
    - Manual WhatsApp messaging is tedious, prone to typing incorrect phone numbers, and inconsistent in formatting.
 5. **Historical Pricing Corruption:**
    - Updating master service prices (e.g., Cuci Komplit from Rp 7,000 to Rp 8,000) accidentally mutates past transaction records and distorts historical financial reports when database relations lack price snapshotting.
 
 ### 2.2 Strategic Objectives & Key Results (OKRs)
-- **Objective 1 (Zero Financial Leakage):** Achieve 100% traceability for all cash drawer movements, enforcing blind-count shift closes and mandatory manager overrides for unpaid order releases.
-  - *KR 1.1:* Zero untracked cash variances exceeding Rp 5,000 per cashier shift.
+- **Objective 1 (Frictionless Daily Cash & Expense Control):** Achieve 100% transparency for daily cash intake, non-cash payments (QRIS/Transfer), and operational disbursements via Rekap Kas Harian without shift lockouts.
+  - *KR 1.1:* 100% of daily operational expenses (detergent, LPG gas, packaging) recorded with category and amount.
   - *KR 1.2:* 100% of customer debt (piutang) captured with customer ID, promised due date, and aging tracking.
-- **Objective 2 (Operational Velocity & Quality):** Eliminate laundry mix-ups and reduce intake-to-wash queue times.
+- **Objective 2 (Operational Velocity & Quality):** Eliminate laundry mix-ups and streamline intake-to-wash queue times.
   - *KR 2.1:* POS order intake completed in under 45 seconds per customer (including scale weighing and receipt printing).
   - *KR 2.2:* 100% of garments staged on designated rack coordinates (`Rack-Shelf-Bin`) upon entering `ready_for_pickup`.
   - *KR 2.3:* Quality inspection catches 95%+ of residual stains at the steam ironing station before packaging, routing them through an audited re-wash loop.
@@ -65,14 +67,14 @@ To guarantee laser focus, high reliability, and rapid delivery, explicit archite
 ├──────────────────────────────────┬─────────────────────────────────────┤
 │             IN SCOPE             │            OUT OF SCOPE             │
 ├──────────────────────────────────┼─────────────────────────────────────┤
-│ • Single physical store monolith │ • Multi-outlet inventory transfers  │
+│ • Single-store home business hub │ • Multi-outlet inventory transfers  │
 │ • Unified MySQL 8.4 LTS database │ • Multi-tenant SaaS architecture    │
 │ • POS Cashier interface (Vue 3)  │ • Native mobile apps (iOS/Android)  │
 │ • Production Tracking board      │ • Customer self-service portal/web  │
 │ • Owner Dashboard & analytics    │ • Microservices or separate backends│
 │ • Digital scale integration      │ • Automated conveyor/RFID robotics  │
-│ • Orthogonal state machines      │ • Complex payroll/HR tax systems    │
-│ • Cashier blind-close shifts     │ • Integrated bank payment gateways  │
+│ • Orthogonal state machines      │ • Complex corporate HR/payroll      │
+│ • Daily Cash Recap & Expenses    │ • Integrated bank payment gateways  │
 │ • Split payments (Cash + QRIS)   │   (Uses manual/static QRIS in POS)  │
 │ • Price snapshot immutability    │ • Wholesale B2B laundry contracts   │
 │ • WuzAPI WhatsApp + wa.me link   │ • Multi-currency accounting         │
@@ -81,13 +83,13 @@ To guarantee laser focus, high reliability, and rapid delivery, explicit archite
 
 ### 3.1 In-Scope Capabilities
 1. **Single-Store Modular Monolith:** A cohesive Laravel 13 application with Inertia.js 3 and Vue 3 frontend running on a unified MySQL database.
-2. **High-Speed POS Cashier Workflow:** Customer search/registration, digital scale weight input (`DECIMAL(8,2)`), minimum billable weight enforcement, per-piece inspection notes, fragrance selection, down payment, and split payment.
-3. **Production Pipeline Tracking:** Operator status transitions across 11 physical operational stages with station-specific validation, re-wash loops, and rack coordinate assignment (`R-XX-YY`).
+2. **High-Speed POS Cashier Workflow:** Customer search/registration, digital scale weight input (`DECIMAL(8,2)`), minimum billable weight enforcement, per-piece inspection notes, fragrance selection, down payment, and split payment. Always ready without shift gates.
+3. **Production Pipeline Tracking:** Status transitions across physical operational stages with station-specific validation, re-wash loops, and rack coordinate assignment (`R-XX-YY`).
 4. **Orthogonal State Decoupling:** Complete separation of `production_status` and `payment_status`.
-5. **Cashier Shift & Blind Cash Reconciliation:** Shift opening float, mid-shift drops, emergency petty cash disbursements, denomination breakdown counting, and variance calculation.
+5. **Daily Cash Recap (Rekap Kas Harian) & Expense Tracker:** Direct recording of daily incoming payments (cash, QRIS, transfer), business expenses (detergent, perfume, LPG 3kg, plastic packaging), and net cash calculations.
 6. **Financial & Accounting Management:** Immutable price snapshots on order items, accrual vs cash basis reporting, customer receivables (piutang) aging, and operational expense tracking.
 7. **Dual-Channel WhatsApp Messaging:** Asynchronous queue-driven notifications via WuzAPI (Go + whatsmeow companion container) with one-click manual `wa.me` deep-link fallback in the cashier UI.
-8. **Role-Based Access Control (RBAC):** Strict permission boundaries for Owner, Cashier, and Production Operator roles.
+8. **Unified Family Team Access:** Direct, friction-free access for the Owner (as Cashier & Manager) and family assistants without artificial permission barriers.
 
 ### 3.2 Out-of-Scope (Explicitly Excluded)
 1. **Multi-Outlet / Multi-Tenant Support:** No central headquarters routing, inter-branch garment transfers, or multi-tenant database partitioning. The system is dedicated to a single store.

@@ -27,10 +27,56 @@ class UserFactory extends Factory
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
+            'phone' => '628' . fake()->unique()->numerify('#########'),
             'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
+            'password' => static::$password ??= Hash::make('Password123!'),
+            'role' => 'operator',
+            'is_active' => true,
             'remember_token' => Str::random(10),
         ];
+    }
+
+    /**
+     * Indicate that the user is an owner.
+     */
+    public function owner(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'owner',
+            'is_active' => true,
+        ]);
+    }
+
+    /**
+     * Indicate that the user is a cashier.
+     */
+    public function cashier(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'cashier',
+            'is_active' => true,
+        ]);
+    }
+
+    /**
+     * Indicate that the user is an operator.
+     */
+    public function operator(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'operator',
+            'is_active' => true,
+        ]);
+    }
+
+    /**
+     * Indicate that the user is inactive.
+     */
+    public function inactive(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'is_active' => false,
+        ]);
     }
 
     /**

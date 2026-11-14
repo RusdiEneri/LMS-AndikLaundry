@@ -14,9 +14,9 @@
 This document establishes the authoritative, binding business rules and operational specifications governing the LMS-AndikLaundry system. Every business entity, finite state machine transition, financial calculation, and physical workflow within the application must strictly adhere to the rules defined herein.
 
 The system is architectured around three foundational principles:
-1. **Physical Traceability:** Every garment bundle that enters the store is uniquely tracked across an 11-stage physical and digital operations lifecycle.
+1. **Physical Traceability:** Every garment bundle that enters the store is uniquely tracked across an operational lifecycle from intake, washing, drying, ironing, to pickup.
 2. **State Orthogonality:** The physical state of laundry processing (`production_status`) is strictly decoupled from the financial state of invoice payment (`payment_status`).
-3. **Financial Immutability & Auditability:** Historical transactions freeze their pricing snapshots, cash drawers enforce blind-count shift closing protocols, and order handovers are safeguarded by strict counter release guards.
+3. **Financial Immutability & Practical Cash Flow Control:** Historical transactions freeze their pricing snapshots, daily cash intake and operational expenses are summarized in a simple Rekap Kas Harian, and the owner can flexibly manage customer handovers and credit (piutang) without artificial bureaucratic PIN blocks.
 
 ---
 
@@ -297,39 +297,41 @@ To cover the fixed utility and labor costs of running washing machines, single-s
 
 ---
 
-## 5. Counter Release Guard & Customer Credit (Piutang) Policy
+## 5. Counter Handover & Customer Credit (Piutang) Policy
 
-### 5.1 The Counter Release Guard Rule
-To eliminate uncollected revenue leakage, the POS interface enforces an automated architectural guard:
+### 5.1 The Counter Handover Workflow (Family Operating Model)
+In a family-run laundry where the owner is the cashier, the counter handover workflow is direct and flexible without artificial bureaucratic PIN blocks:
 
-> **Counter Release Guard:**  
-> An order CANNOT transition to `completed` if `payment_status != 'paid'`, **UNLESS** an authorized user explicitly flags `is_debt_approved = true` with customer identity verification and a promised payment due date.
+> **Counter Handover Rule:**  
+> An order can transition to `completed` upon physical customer pickup.
+> - If `payment_status == 'paid'`: Handover completes immediately.
+> - If `payment_status != 'paid'`: The POS interface displays an explicit debt notice (`Tagihan Belum Lunas: Rp XX.XXX`), and the Owner/Cashier can either:
+>   1. Settle remaining balance immediately (Tunai / QRIS / Transfer), OR
+>   2. Complete handover with debt recorded (`is_debt_approved = true`), logging customer identity and promised due date (`due_date`) directly into the Receivables Ledger without requiring a separate manager PIN.
 
-### 5.2 Attempted Release Flow:
+### 5.2 Counter Handover Decision Tree:
 ```
-[ Cashier clicks "Serahkan Cucian" ]
+[ Owner/Cashier clicks "Serahkan Cucian" ]
                  │
                  ▼
        Is payment_status == 'paid'?
         /                       \
       YES                        NO
       /                            \
-[ Handover Approved ]     Does Cashier have permission 'allow_credit_release'?
+[ Handover Approved ]     [ Debt Warning: Tagihan Belum Lunas ]
 [ Status: completed ]               /                                \
-                                  YES                                 NO
-                                  /                                    \
-               [ Cashier toggles 'Izinkan Piutang' ]       [ Block Transition ]
-               [ System records debtor & due date   ]       [ Prompt: Tagihan Wajib Lunas ]
-               [ Status: completed, payment: unpaid ]
+                        [ Customer Pays Now ]              [ Bayar Nanti (Piutang) ]
+                                │                                     │
+                        [ Record Payment ]                 [ Confirm Due Date ]
+                        [ Status: completed, paid ]        [ Status: completed, unpaid/partially_paid ]
 ```
 
 ### 5.3 Customer Receivables (Piutang) Rules:
-1. **Credit Ceiling:** Standard retail customers have a maximum credit ceiling of Rp 150,000. If an unpaid order exceeds this ceiling or if the customer has existing overdue debts, credit release is blocked until the Store Owner enters their PIN.
-2. **Promised Due Date (`due_date`):** Mandatory field when approving debt. Defaults to 7 calendar days from order handover.
-3. **Aging Brackets & WhatsApp Dunning:**
-   - **Current (0 to 7 days):** Polite reminder template sent 1 day before due date.
-   - **Overdue (8 to 14 days):** Follow-up reminder template with direct QRIS payment link.
-   - **Delinquent (> 14 days):** Customer account flagged in POS; cashier alerted to block new order intakes until prior debt is settled.
+1. **Promised Due Date (`due_date`):** Mandatory field when approving debt handover. Defaults to 7 calendar days from order handover.
+2. **Receivables Aging Tracking:**
+   - **Current (0 to 7 days):** Order highlighted in amber on Owner Receivables list.
+   - **Overdue (8 to 14 days):** Follow-up reminder button available to dispatch WhatsApp payment reminder with QRIS image.
+   - **Delinquent (> 14 days):** Customer profile flagged in POS; prompt alerts owner when customer brings new laundry orders.
 
 ---
 
@@ -426,61 +428,43 @@ In retail laundry, owners periodically adjust prices (e.g., inflating Cuci Kompl
 
 ---
 
-## 9. Cashier Shift Management & Cash Drawer Reconciliation
+## 9. Daily Cash Recap (Rekap Kas Harian) & Operational Expense Management
 
-To completely eliminate register skimming, unaccounted emergency purchases, and employee disputes, LMS-AndikLaundry implements the **Blind Count Shift Protocol**.
+In a home-based family business where the owner manages the counter directly, artificial multi-employee shift lockouts and blind counting are replaced by an intuitive **Rekap Kas Harian (Daily Cash Summary)** and **Pencatatan Pengeluaran Operasional (Expense Tracker)**.
 
-### 9.1 Shift Lifecycle States
+### 9.1 Continuous POS Readiness
+- The POS terminal is always accessible and ready to record transactions throughout store operating hours.
+- There is no requirement to enter an opening float before accepting laundry drop-offs.
+- Cash intake, digital settlements (QRIS / Bank Transfer), down payments, and debt settlements accumulate in real-time.
 
-```
-[ Shift Closed ] ──(Open Shift: Enter Opening Float)──> [ Shift Open / Active ]
-                                                                │
-     ┌──────────────────────────────────────────────────────────┴──────────────────────────────┐
-     │ Operations: POS Cash Intake, QRIS Sales, Piutang Settlements, Mid-Shift Drops/Expenses   │
-     └──────────────────────────────────────────────────────────┬──────────────────────────────┘
-                                                                │
-[ Shift Closed & Audited ] <──(Blind Cash Count & Audit)─── [ Shift Closing ]
-```
+### 9.2 Operational Expense Management (`expenses`)
+Store expenses paid from cash on hand (detergent, softener, LPG 3kg, plastic bags, electricity token, drinking water) are logged directly in the system:
+1. `amount`: Monetary disbursement in IDR (`DECIMAL(12, 2)`).
+2. `category`: Expense category (`detergent_chemicals`, `gas_lpg`, `packaging_plastic`, `utilities_electricity_water`, `maintenance_equipment`, `other`).
+3. `description`: Mandatory description of the purchase (e.g. "Beli 2 tabung Gas LPG 3kg").
+4. `payment_method`: `cash` or `bank_transfer`.
+5. `receipt_image_path`: Optional photo of supplier receipt/nota.
 
-### 9.2 Cash Drawer Movements (`shift_cash_movements`)
-Every movement of physical cash in or out of the register drawer during an active shift is recorded in an immutable ledger:
-1. `opening_float` (Modal Awal): Starting cash change in register (e.g. Rp 200,000 in small bills).
-2. `cash_sale` (Penjualan Tunai): Cash received from order intake or pickup settlement.
-3. `cash_refund` (Pengembalian Tunai): Cash paid out for canceled orders or overpayments.
-4. `cash_drop` (Setoran Kas ke Brankas): Excess cash transferred to store safe during shift.
-5. `expense` (Kas Kecil Kasir / Petty Cash Out): Small emergency operational disbursements (e.g. buying 3kg LPG cylinder for Rp 22,000). Requires category, description, and receipt photo.
-6. `cash_in` (Penambahan Modal Kasir): Emergency change cash added by Store Owner.
+### 9.3 Daily Cash Summary Formulas
+At any point during the day or at close of business, the system calculates the exact cash position:
 
-### 9.3 Cash Drawer Reconciliation Formula
-Physical cash reconciliation computes the exact expected cash balance:
+$$\text{Total Kas Masuk Hari Ini} = \sum \text{Cash Payments Received (Orders + Down Payments + Piutang Collections)}$$
 
-$$\text{Expected Cash} = \text{Opening Float} + \text{Cash Sales} - \text{Cash Refunds} + \text{Cash In} - \text{Cash Drops} - \text{Cash Expenses}$$
+$$\text{Total Pengeluaran Kas Hari Ini} = \sum \text{Cash Expenses Logged Today}$$
 
-*(Note: Non-cash payments—such as QRIS, EDC, and Bank Transfers—are verified in financial audit reports but are strictly **excluded** from the physical cash drawer reconciliation formula!)*
+$$\text{Sisa Kas Bersih Tunai Hari Ini} = \text{Total Kas Masuk Hari Ini} - \text{Total Pengeluaran Kas Hari Ini}$$
 
-### 9.4 The Blind Count Audit Protocol (Audit Hitung Buta)
-1. **Concealment:** When the cashier initiates "Tutup Shift", the POS interface **deliberately hides** the computed `Expected Cash` balance.
-2. **Physical Denomination Input:** The cashier physically counts the drawer contents and inputs counts per Indonesian currency denomination:
+Non-cash payments (QRIS, Bank Transfer) are aggregated separately:
+$$\text{Total Non-Tunai Masuk} = \sum \text{QRIS Payments} + \sum \text{Transfer Payments}$$
 
-| Denomination | Form Field | Multiplier |
-|:---|:---:|:---|
-| Rp 100,000 | `bill_100k` | $\times 100,000$ |
-| Rp 50,000 | `bill_50k` | $\times 50,000$ |
-| Rp 20,000 | `bill_20k` | $\times 20,000$ |
-| Rp 10,000 | `bill_10k` | $\times 10,000$ |
-| Rp 5,000 | `bill_5k` | $\times 5,000$ |
-| Rp 2,000 | `bill_2k` | $\times 2,000$ |
-| Rp 1,000 | `bill_1k` | $\times 1,000$ |
-| Coins (Rp 1000, 500, 200, 100) | `coins_total`| Exact value |
-
-3. **Variance Calculation:**
-   $$\text{Variance} = \text{Actual Cash Counted} - \text{Expected Cash}$$
-   - If $\text{Variance} = 0$: Flagged as `closed_balanced` (Kas Imbang).
-   - If $\text{Variance} > 0$: Flagged as `closed_with_surplus` (Kas Lebih). Surplus is credited to `Pendapatan Kas Lebih (Other Operating Income)`.
-   - If $\text{Variance} < 0$: Flagged as `closed_with_shortage` (Kas Kurang). Discrepancy logged for payroll deduction or owner forgiveness.
-4. **Shift Reports:**
-   - **X-Report:** Mid-shift informational audit slip printed without closing the shift.
-   - **Z-Report:** Official end-of-shift closing audit slip freezing shift records permanently.
+### 9.4 Daily Summary Slip (Ringkasan Kas Harian)
+The owner can print an end-of-day summary slip on the 58mm/80mm thermal printer:
+- Total Nota Transaksi Masuk (Kiloan & Satuan)
+- Total Pendapatan Omset Transaksi
+- Rincian Uang Masuk per Saluran (Tunai, QRIS, Transfer)
+- Daftar Pengeluaran Operasional Hari Ini
+- Sisa Uang Kas Bersih Hari Ini
+- Rekap Piutang Baru & Pelunasan Piutang Hari Ini
 
 ---
 
@@ -491,10 +475,12 @@ To verify that any implemented feature complies with these business rules, devel
 - [ ] Does every kiloan intake enforce minimum billable weight via $\max(\text{actual}, \text{min})$?
 - [ ] Are `production_status` and `payment_status` fully independent finite state machines?
 - [ ] Is `payment_status` derived exclusively from the immutable payment records ledger?
-- [ ] Does the Counter Release Guard prevent completing an unpaid order without authorized debt flag?
+- [ ] Does the counter handover allow flexible debt approval without requiring a manager PIN?
 - [ ] Does the re-wash loop enforce a strict maximum cap of 2 cycles with mandatory reason logging?
 - [ ] Does every packed order assign a valid rack coordinate before triggering WhatsApp dispatch?
 - [ ] Are line-item prices, discounts, and names permanently snapshotted in `order_items`?
-- [ ] Does shift closing enforce the blind count protocol without displaying the expected cash balance?
+- [ ] Is the POS always ready for transactions without shift opening locks?
+- [ ] Are non-cash payments (QRIS/Transfer) tracked separately from physical cash drawer movements?
+- [ ] Are all monetary calculations stored and manipulated using `DECIMAL(12, 2)` precision?
 - [ ] Are non-cash payments (QRIS/Transfer) excluded from the physical cash drawer reconciliation formula?
 - [ ] Are all monetary calculations stored and manipulated using `DECIMAL(12, 2)` precision?

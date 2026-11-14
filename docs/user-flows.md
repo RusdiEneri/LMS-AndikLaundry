@@ -11,46 +11,34 @@
 
 ## 1. Overview & System Actor Profiles
 
-LMS-AndikLaundry coordinates operations across three distinct user roles inside a single physical store:
+LMS-AndikLaundry is engineered as a unified, single-store system tailored specifically for a **home-based business managed by the owner and family (usaha rumahan yang dikelola keluarga)**:
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                            System Actor Architecture                        │
-├──────────────────────┬───────────────────────────┬──────────────────────────┤
-│    STORE CASHIER     │    PRODUCTION OPERATOR    │       STORE OWNER        │
-│  (Front of House)    │     (Back of House)       │  (Executive & Auditing)  │
-├──────────────────────┼───────────────────────────┼──────────────────────────┤
-│ • Shift Open & Float │ • Tagging & Barcoding     │ • Real-Time Analytics    │
-│ • Scale Weighing     │ • Sorting & Spotting      │ • Accrual vs Cash P&L    │
-│ • Split Payments     │ • Washer/Dryer Assignment │ • Shift Variance Audit   │
-│ • Counter Release    │ • Steam Ironing QC Gate   │ • Expense & COGS Entry   │
-│ • Blind Shift Close  │ • Rewash Loop Trigger     │ • Catalog Price Updates  │
-│ • Manual WA Fallback │ • Rack Staging (R-XX-YY)  │ • QR Gateway Pairing     │
-└──────────────────────┴───────────────────────────┴──────────────────────────┘
+│                      Family-Run System Actor Architecture                   │
+├─────────────────────────────────────────┬───────────────────────────────────┤
+│       STORE OWNER & CASHIER             │     FAMILY OPERATOR / ASSISTANT   │
+│     (Pemilik & Kasir Utama)             │     (Anggota Keluarga / Operator) │
+├─────────────────────────────────────────┼───────────────────────────────────┤
+│ • POS Order Intake & Digital Scale      │ • Garment Tagging & Washing       │
+│ • Scent Selection & Item Inspection     │ • Drying & Steam Ironing QC Gate  │
+│ • Split Payments (Cash & QRIS)          │ • Rewash Loop Trigger             │
+│ • Customer Handover & Flexible Piutang  │ • Rack Staging Allocation         │
+│ • Direct Daily Expense Logging          │ • Packaging & Pickup Prep         │
+│ • Daily Cash Recap (Rekap Kas Harian)   │ • 1-Click Jump to POS if helping  │
+│ • Analytics Dashboard & Pricing Admin   │                                   │
+└─────────────────────────────────────────┴───────────────────────────────────┘
 ```
+
+The system features **unified navigation**: the Owner/Cashier can jump instantly between **POS Kasir (`/pos`)**, **Antrean Cuci (`/production/station`)**, **Buku Kas / Pengeluaran**, and **Dashboard (`/dashboard`)** without logging out or switching user accounts.
 
 ---
 
-## 2. Cashier User Flows & Step-by-Step Journeys
+## 2. Cashier & Counter Operational Journeys
 
-### Flow 1.1: Shift Opening & Initial Cash Drawer Setup
-- **Objective:** Establish physical cash accountability and prevent unauthorized register usage before trading begins.
-- **Preconditions:** Cashier is authenticated with `role: cashier`; no active shift is assigned to this user.
-
-```
-[ Step 1: Login ] ──> [ Step 2: Shift Prompt ] ──> [ Step 3: Count Float ] ──> [ Step 4: POS Ready ]
-```
-
-1. **Step 1 (Login):** Cashier logs into LMS via Sanctum session authentication.
-2. **Step 2 (Shift Gate):** System detects no active shift for the cashier and redirects automatically to `/shifts/open`. All POS sales routes (`/pos/*`) are strictly blocked with HTTP 403 until a shift is opened.
-3. **Step 3 (Opening Float Entry):** Cashier physically counts the opening cash change provided by the store safe (modal kembalian, e.g. Rp 200,000 in small denominations) and enters the total amount.
-4. **Step 4 (Shift Confirmation):** System creates a `cashier_shifts` record with `status = 'open'` and logs the starting cash in `shift_cash_movements`. The POS sales terminal unlocks immediately.
-
----
-
-### Flow 1.2: POS Order Intake & Digital Scale Weighing
-- **Objective:** Process walk-in customer drop-offs in under 45 seconds with automated scale capture, minimum billable threshold enforcement, piece inspection, and fragrance selection.
-- **Preconditions:** Active cashier shift open; digital scale connected or manual input enabled.
+### Flow 1.1: Direct POS Intake & Digital Scale Weighing (Always Ready)
+- **Objective:** Process walk-in customer drop-offs immediately in under 45 seconds with automated scale capture, minimum billable threshold enforcement, piece inspection, and fragrance selection.
+- **Preconditions:** Store is open; POS terminal is active. No artificial shift opening ceremony or float lock is required.
 
 ```
 [ Customer Lookup / Register ]
@@ -77,16 +65,16 @@ LMS-AndikLaundry coordinates operations across three distinct user roles inside 
 ```
 
 1. **Step 1 (Customer Lookup / Registration):**
-   - Cashier enters customer WhatsApp number or name.
-   - If existing: Customer profile, loyalty tier, and any outstanding debt alerts load instantly.
-   - If new: Inline registration opens. Cashier enters Customer Name and Phone Number. System normalizes phone to E.164 (`628...`).
-2. **Step 2 (Service Tier Selection):** Cashier chooses service tier: "Cuci Komplit Reguler" (48-72h), "Kilat" (24h), "Express" (6-8h), or "Flash" (2-3h).
+   - Owner/Cashier enters customer WhatsApp number or name.
+   - If existing: Customer profile, loyalty history, and any outstanding debt alerts load instantly.
+   - If new: Inline registration opens. Enters Customer Name and Phone Number. System normalizes phone to E.164 (`628...`).
+2. **Step 2 (Service Tier Selection):** Selects service tier: "Cuci Komplit Reguler" (48-72h), "Kilat" (24h), "Express" (6-8h), or "Flash" (2-3h).
 3. **Step 3 (Measurement & Weighing):**
-   - *For Kiloan:* Cashier places laundry bundle on scale. Actual scale weight is captured (e.g. `1.65 kg`). System automatically applies the minimum threshold (e.g. `min_weight = 3.00 kg`), setting `actual_quantity = 1.65` and `billed_quantity = 3.00`.
-   - *For Satuan:* Cashier selects discrete items (e.g., "Bedcover King", "Jas Pria"). If garments have tears, missing buttons, or stubborn stains, cashier enters mandatory notes into `item_condition_notes`.
-4. **Step 4 (Fragrance Selection):** Cashier selects customer fragrance preference: Lavender, Sakura, Ocean Fresh, Snappy, or Non-Parfum.
+   - *For Kiloan:* Places laundry bundle on scale. Actual scale weight is captured (e.g. `1.65 kg`). System automatically applies the minimum threshold (e.g. `min_weight = 3.00 kg`), setting `actual_quantity = 1.65` and `billed_quantity = 3.00`.
+   - *For Satuan:* Selects discrete items (e.g., "Bedcover King", "Jas Pria"). If garments have tears, missing buttons, or stains, enters notes into `item_condition_notes`.
+4. **Step 4 (Fragrance Selection):** Selects customer fragrance preference: Lavender, Sakura, Ocean Fresh, Snappy, or Non-Parfum.
 5. **Step 5 (Line-Item Price Freezing):** System calculates line item subtotals, creating immutable snapshots (`unit_price_snapshot`, `discount_snapshot`, `subtotal_snapshot`).
-6. **Step 6 (Intake Slip Printing):** Cashier confirms order. Thermal printer emits 58mm/80mm intake slip with tracking QR code and garment tags. System enqueues automated WhatsApp "Nota Diterima" notification.
+6. **Step 6 (Intake Slip Printing):** Confirms order. Thermal printer emits 58mm/80mm intake slip with tracking QR code. System enqueues automated WhatsApp "Nota Diterima" notification (with instant manual `wa.me` fallback link).
 
 ---
 
@@ -139,104 +127,82 @@ LMS-AndikLaundry coordinates operations across three distinct user roles inside 
         /              \
       PAID            UNPAID / PARTIALLY PAID
       /                  \
-[ Retrieve Bundle ]    [ Counter Release Guard Tripped ]
+[ Retrieve Bundle ]    [ Display Debt Warning: Rp XX.XXX ]
 [ Fast Handover   ]              │
-[ Order Completed ]    [ Settle Balance via Cash/QRIS? ]
+[ Order Completed ]    [ Customer Settlement Choice ]
                          /                            \
-                       YES                             NO (Request Piutang)
+                   [ Pay Now ]                 [ Bayar Nanti (Piutang) ]
                        /                                \
-             [ Record Payment ]             [ Cashier Checks Credit Limit ]
-             [ Status: paid   ]             [ Toggle 'Izinkan Piutang'    ]
-             [ Handover Done  ]             [ Input Due Date & Debtor Name]
-                                            [ Handover with Debt Ledger   ]
+             [ Record Payment ]             [ Owner Confirms Due Date ]
+             [ Status: paid   ]             [ Set is_debt_approved = true ]
+             [ Handover Done  ]             [ Handover with Debt Ledger   ]
 ```
 
-1. **Step 1 (Counter Search):** Customer gives name, phone number, or presents digital WhatsApp receipt. Cashier scans barcode or searches name in POS search bar.
-2. **Step 2 (Rack Coordinate Lookup):** Order record displays in POS with large bold coordinate: **RAK: R-02-B**. Cashier or assistant locates the bundle in seconds.
-3. **Step 3 (Release Guard Verification):**
-   - *If `payment_status == 'paid'`*: Cashier clicks "Serahkan Cucian". System sets `production_status = 'completed'`. Order lifecycle closes.
-   - *If `payment_status != 'paid'`*: System activates **Counter Release Guard**, locking the handover button with warning: `Tagihan Belum Lunas: Rp 25.000`.
-4. **Step 4 (Balance Settlement or Debt Approval):**
-   - *Settlement Path:* Customer pays outstanding balance. Cashier logs payment. Status updates to `paid`. Handover proceeds.
-   - *Credit Approval Path (Piutang):* If customer promises to transfer later, Cashier toggles "Izinkan Piutang". Cashier enters promised due date (`due_date`) and debtor name. System sets `is_debt_approved = true`, transitions production to `completed`, and records balance in the Customer Receivables Ledger.
+1. **Step 1 (Counter Search):** Customer gives name, phone number, or presents digital WhatsApp receipt. Owner/Cashier scans barcode or searches name in POS search bar.
+2. **Step 2 (Rack Coordinate Lookup):** Order record displays in POS with large bold coordinate: **RAK: R-02-B**. The bundle is retrieved immediately.
+3. **Step 3 (Handover Verification):**
+   - *If `payment_status == 'paid'`*: Owner/Cashier clicks "Serahkan Cucian". System sets `production_status = 'completed'`. Order lifecycle closes.
+   - *If `payment_status != 'paid'`*: System displays a clear status notice: `Tagihan Belum Lunas: Rp XX.XXX`.
+4. **Step 4 (Balance Settlement or Direct Debt Approval):**
+   - *Settlement Path:* Customer pays outstanding balance (Cash/QRIS/Transfer). Owner logs payment. Status updates to `paid`. Handover proceeds.
+   - *Credit Approval Path (Piutang):* If customer is a trusted neighbor or requests to pay later, Owner clicks "Serahkan (Catat Piutang)". Owner confirms due date (`due_date`, default 7 days). System sets `is_debt_approved = true`, transitions production to `completed`, and records balance in the Customer Receivables Ledger without needing a manager PIN.
 
 ---
 
-### Flow 1.5: Mid-Shift Cash Drawer Operations (Drops & Petty Cash)
-- **Objective:** Safeguard cash in drawer against robbery and account for emergency store operational expenses.
-- **Preconditions:** Cashier shift active; physical cash present in drawer.
+### Flow 1.5: Operational Expense Management (Pencatatan Biaya Toko)
+- **Objective:** Track store purchases (LPG gas, soap/detergent, softener, plastic packaging) directly to maintain accurate daily take-home earnings.
+- **Preconditions:** Store expense incurred.
 
 ```
-[ Cashier clicks "Kelola Kas Laci" ]
-                  │
-        Select Operation Type
-         /                  \
-   [ Cash Drop ]      [ Petty Cash Out ]
-         │                     │
-• Enter drop amount    • Enter expense amount
-• Safe deposit note    • Select expense category (LPG, Soap, Water)
-• Manager authorization• Input description & upload receipt photo
-         │                     │
-         └──────────┬──────────┘
-                    │
-                    ▼
-[ System writes shift_cash_movements record ]
-[ Expected cash in drawer decremented in real-time ]
+[ Click "Catat Pengeluaran" ]
+              │
+              ▼
+    [ Input Expense Modal ]
+  • Nominal (Rp)
+  • Kategori (Gas LPG, Deterjen, Plastik, Listrik/Air, Lainnya)
+  • Keterangan (e.g. "Beli 2 tabung LPG 3kg")
+  • Metode Pembayaran (Tunai Laci / Transfer)
+  • Foto Bukti / Nota (Opsional)
+              │
+              ▼
+[ System writes expenses record ]
+[ Deducts from Daily Net Cash in real-time ]
 ```
 
-1. **Cash Drop (Setoran ke Brankas):** When cash in drawer exceeds the security limit (e.g. Rp 1,500,000), cashier selects "Cash Drop". Enters amount (e.g. Rp 1,000,000) and transfers physical cash to store safe. System logs `shift_cash_movements` of type `cash_drop`.
-2. **Petty Cash Disbursement (Kas Keluar Darurat):** Cashier takes Rp 22,000 from drawer to buy 3kg LPG gas cylinder. Cashier selects "Petty Cash Out", enters Rp 22,000, selects category "Bahan Baku (Gas LPG)", enters note "Beli tabung 3kg Toko Bu Joko", and snaps receipt photo using counter webcam/tablet. System logs expense and decrements expected drawer cash balance.
+1. **Expense Entry:** When buying supplies (e.g., Rp 44,000 for two 3kg LPG cylinders), Owner/Cashier clicks "Catat Pengeluaran".
+2. **Details:** Enters amount (Rp 44,000), selects category ("Bahan Baku (Gas LPG)"), inputs note ("Beli 2 tabung LPG 3kg Toko Bu Joko"), and selects payment method ("Kas Tunai").
+3. **Real-Time Update:** System logs the record and immediately adjusts the Daily Cash Summary net cash balance.
 
 ---
 
-### Flow 1.6: Shift Closing Blind Count & Discrepancy Auditing
-- **Objective:** Prevent cash register skimming by enforcing physical denomination counting without revealing system expected totals.
-- **Preconditions:** Cashier shift active; end of working shift reached.
+### Flow 1.6: Daily Cash Recap (Rekap Kas Harian)
+- **Objective:** Provide a transparent, stress-free summary of daily sales, incoming payments, store expenses, and net cash on hand.
+- **Preconditions:** End of day or anytime during operating hours.
 
 ```
-[ Cashier clicks "Tutup Shift" ]
-               │
-               ▼
-[ POS CONCEALS Expected Cash Balance ]
-               │
-               ▼
-[ Cashier Counts Physical Cash per Denomination ]
-• Rp 100,000 x N1
-• Rp 50,000  x N2
-• Rp 20,000  x N3
-• Rp 10,000  x N4
-• Rp 5,000   x N5
-• Rp 2,000   x N6
-• Rp 1,000   x N7
-• Koin / Logam Total
-               │
-               ▼
-[ Cashier Submits Blind Count Form ]
-               │
-               ▼
-[ System Computes Variance = Actual Cash - Expected Cash ]
-               │
-               ├──────────────────┬──────────────────┐
-               ▼                  ▼                  ▼
-       [ Variance == 0 ]   [ Variance > 0 ]   [ Variance < 0 ]
-       (Kas Imbang)        (Kas Lebih)        (Kas Kurang / Defisit)
-               │                  │                  │
-               └──────────────────┼──────────────────┘
-                                  │
-                                  ▼
-                    [ Print Z-Report Slip ]
-                    [ Shift Frozen & Closed ]
-                    [ Alert Sent to Owner ]
+[ Open "Rekap Kas Harian" ]
+              │
+              ▼
+[ Real-Time Financial Summary Display ]
+  • Total Kas Masuk Tunai
+  • Total Pembayaran QRIS & Transfer
+  • Total Pengeluaran Operasional
+  • Sisa Kas Bersih Tunai Hari Ini (Uang di Laci/Dompet)
+  • Rekap Piutang Baru & Pelunasan Piutang
+              │
+              ├──────────────────────────────────┐
+              ▼                                  ▼
+   [ Print Daily Summary Slip ]       [ Optional Physical Count ]
+   (Thermal 58mm/80mm Ringkasan)      (Check drawer bills/coins)
 ```
 
-1. **Step 1 (Initiate Close):** Cashier clicks "Tutup Shift".
-2. **Step 2 (Blind Count Screen):** POS deliberately conceals expected cash totals. The screen presents count input fields for each Indonesian currency denomination.
-3. **Step 3 (Denomination Entry):** Cashier counts and inputs physical bill counts. Form displays real-time calculated total of entered cash.
-4. **Step 4 (Submission & Variance Computation):** Cashier submits count. System compares `actual_cash` against `expected_cash`:
-   - `Variance = 0`: Shift marked `closed_balanced`.
-   - `Variance > 0`: Shift marked `closed_with_surplus`. Surplus credited to other operating income.
-   - `Variance < 0`: Shift marked `closed_with_shortage`. Discrepancy logged for owner audit/deduction.
-5. **Step 5 (Z-Report Generation):** System permanently closes shift, unlocks cash drawer for transfer to owner, and prints official thermal Z-Report slip.
+1. **Step 1 (View Daily Recap):** Owner opens "Rekap Kas Harian" from POS or Dashboard.
+2. **Step 2 (Transparent Review):** System displays:
+   - Total Cash Intake from Orders & Piutang settlements.
+   - Total Digital Payments (QRIS / Bank Transfer).
+   - Total Expenses logged today.
+   - Sisa Kas Bersih Tunai = Total Kas Tunai - Total Pengeluaran Kas Tunai.
+3. **Step 3 (Optional Count & Print):** Owner can verify the physical cash in the drawer using the quick denomination calculator and print a daily summary slip on the 58mm/80mm thermal receipt printer.
 
 ---
 

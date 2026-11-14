@@ -17,7 +17,7 @@ This document defines the mathematical, architectural, and financial logic gover
 2. **Price Snapshotting:** Master service catalog modifications never alter existing transactions. Every order item freezes its unit price, applied discount, and subtotal at the exact moment of order intake.
 3. **Orthogonal State Decoupling:** Production progress (`production_status`) and payment settlement (`payment_status`) operate as independent finite state machines. Orders can be in production while unpaid, but physical customer release is protected by release guard policies.
 4. **Accounting Segregation:** The system strictly separates **Cash Basis Accounting** (cash drawer liquidity and physical cash reconciliation) from **Accrual Basis Accounting** (earned service revenue recognized upon completion per Indonesian SAK EMKM standards).
-5. **Loss Prevention:** Cashier shift management mandates the **Blind Count Audit Protocol** at shift closing to prevent skimming and enforce transparent discrepancy logging.
+5. **Pragmatic Daily Cash Control:** For family-managed home laundry operations, daily cash intake and business expenses are consolidated in a transparent Rekap Kas Harian, matching physical cash on hand with recorded net sales minus expenses without artificial employee blind counts or shift locks.
 
 ---
 
@@ -344,62 +344,34 @@ sequenceDiagram
     end
 ```
 
-### 6.1 Shift Lifecycle States
-Every cash transaction in LMS Andik Laundry must be tied to an active `shift_id`. Cashiers cannot operate the POS without opening a shift.
-1. `Shift Closed`: Initial state. Terminal locked for billing.
-2. `Shift Open`: Cashier verified physical opening float (modal kembalian). Transacting enabled.
-3. `Shift Closing`: Blind count entered, calculations executed.
-4. `Shift Closed & Audited`: Shift finalized, Z-report generated, records sealed against edits.
+### 6.1 Family Business Cash Control Paradigm
+In a home-based business operated directly by the owner and family ("usaha rumahan dikelola keluarga"), the cash drawer is managed directly by the family. The financial priority is not policing internal employee theft via blind counts or locking the POS with shift floats, but maintaining **accurate daily liquidity tracking (Rekap Kas Harian)** and **systematic recording of store operating expenses**.
 
-### 6.2 Mid-Shift Cash Drawer Movements (`shift_cash_movements`)
-Cash in the physical register drawer fluctuates beyond sales transactions:
-- **`cash_drop` (Setoran Kas ke Brankas / Penarikan Owner):** When cash in the drawer exceeds a security threshold (e.g. Rp 1,500,000), cashier transfers cash to the back-office safe. Requires authorized signature or reason note. Decrements drawer cash.
-- **`expense` (Kas Kecil Kasir / Petty Cash Out):** Emergency store expense paid directly from register cash (e.g., Rp 22,000 for emergency 3kg LPG gas, Rp 15,000 for drinking water refill). Requires category, description, and attached receipt photo. Decrements drawer cash.
-- **`cash_in` (Penambahan Modal Kasir):** Additional small change bills injected by Owner into the drawer during peak hours. Increments drawer cash.
+### 6.2 Store Operational Expense Accounting (`expenses`)
+Operational disbursements made from daily cash or bank transfer are logged directly:
+- **`detergent_chemicals`:** Detergent, liquid softener, alkali, sour, stain spotter.
+- **`gas_lpg`:** 3kg subsidized or 12kg Bright Gas cylinders for dryers and boilers.
+- **`packaging_plastic`:** Roll plastics, hanger covers, kresek bags.
+- **`utilities`:** Electricity token, PDAM water bill, Wi-Fi.
+- **`maintenance`:** Washer/dryer belt repair, steam iron descaling.
+- **`other`:** Minor store supplies (staples, markers, drinking water).
 
-### 6.3 Expected Cash in Drawer Formula
-$$\text{Expected Cash} = \text{Opening Float} + \sum \text{Cash Sales} - \sum \text{Cash Refunds} + \sum \text{Cash In} - \sum \text{Cash Drops} - \sum \text{Cash Petty Expenses}$$
+### 6.3 Daily Cash Summary Formulas
+At any point during the day or at close of business, the system calculates the exact cash position:
 
-*Strict Segregation Notice:* Non-cash payments (QRIS, EDC Debit/Credit, Bank Transfer) are tracked in payment audit summaries but are **strictly excluded** from physical cash drawer reconciliation.
+$$\text{Total Kas Masuk Hari Ini} = \sum \text{Cash Payments Received (Orders + Down Payments + Piutang Collections)}$$
 
-### 6.4 The Blind Count Audit Protocol (Audit Hitung Buta)
-To prevent register skimming, cashier fraud, and collusion, LMS Andik Laundry implements a mandatory Blind Count protocol:
-1. **Masked Interface:** When the cashier initiates "Tutup Shift", the POS system deliberately **hides** the system-calculated `Expected Cash in Drawer`. The cashier cannot view what amount the system expects.
-2. **Denomination Counting:** The cashier physically counts the cash in the register drawer and enters the quantity of each standard Bank Indonesia currency denomination:
-   - $N_{100\text{k}}$: Lembar Rp 100.000
-   - $N_{50\text{k}}$: Lembar Rp 50.000
-   - $N_{20\text{k}}$: Lembar Rp 20.000
-   - $N_{10\text{k}}$: Lembar Rp 10.000
-   - $N_{5\text{k}}$: Lembar Rp 5.000
-   - $N_{2\text{k}}$: Lembar Rp 2.000
-   - $N_{1\text{k}}$: Lembar Rp 1.000
-   - $N_{\text{coin}}$: Total Koin (Rp 1.000, 500, 200, 100)
-3. **Total Actual Cash Counted:**
-   $$\text{Actual Cash} = (100000 \times N_{100\text{k}}) + (50000 \times N_{50\text{k}}) + (20000 \times N_{20\text{k}}) + (10000 \times N_{10\text{k}}) + (5000 \times N_{5\text{k}}) + (2000 \times N_{2\text{k}}) + (1000 \times N_{1\text{k}}) + N_{\text{coin}}$$
-4. **Variance Calculation (Selisih Kas):**
-   $$\text{Variance} = \text{Actual Cash} - \text{Expected Cash}$$
+$$\text{Total Pengeluaran Kas Hari Ini} = \sum \text{Cash Expenses Logged Today}$$
 
-### 6.5 Variance Classification & Accounting Treatment
+$$\text{Sisa Kas Bersih Tunai Hari Ini} = \text{Total Kas Masuk Hari Ini} - \text{Total Pengeluaran Kas Hari Ini}$$
 
-| Variance Condition | Status Flag | Operational & Accounting Meaning | System Action |
-|:---|:---|:---|:---|
-| **$\text{Variance} = \text{Rp } 0.00$** | `balanced` | Perfect reconciliation. Physical cash exactly matches system transactions. | Shift closes cleanly. |
-| **$\text{Variance} > \text{Rp } 0.00$** | `surplus` (Kas Lebih) | Physical cash exceeds system ledger. Typically caused by unrecorded sales or customer leaving small change. | Credited to accounting account `Pendapatan Selisih Kas (Other Operating Income)`. Cashier is prohibited from pocketing surplus. |
-| **$\text{Variance} < \text{Rp } 0.00$** | `shortage` (Kas Kurang) | Physical cash is less than expected. Indicates wrong change handed out, unrecorded register expense, or theft. | Recorded as `Beban Selisih Kas (Cash Shortage Expense)` and flagged as Cashier Receivable/Liability. Shift flagged `closed_with_shortage`. |
+Non-cash payments (QRIS, Bank Transfer) are segregated to reconcile with bank accounts:
+$$\text{Total Non-Tunai Masuk} = \sum \text{QRIS Payments} + \sum \text{Transfer Payments}$$
 
-*Owner Notification Gate:* If $|\text{Variance}| > \text{Rp } 5.000$, the system automatically dispatches an instant WhatsApp alert to the Store Owner specifying the cashier name, shift hours, expected cash, actual counted cash, and variance amount.
+$$\text{Total Omset Pendapatan} = \text{Total Kas Masuk} + \text{Total Non-Tunai Masuk}$$
 
-### 6.6 Shift X-Report and Z-Report Specifications
-
-#### A. X-Report (Laporan Kas Sementara)
-- **Purpose:** Mid-shift auditing tool. Used by owner or cashier during shift rotation to verify current progress without closing the shift.
-- **State Impact:** Non-fiscal. Does not close the shift; does not reset drawer accumulators; does not lock transactions.
-- **Printed Layout Header:** `*** LAPORAN X (MID-SHIFT AUDIT) ***`
-
-#### B. Z-Report (Laporan Kas Final / Penutupan Shift)
-- **Purpose:** Permanent fiscal closure of cashier shift.
-- **State Impact:** Irreversible. Locks all transactions under the shift ID; resets terminal session; prints comprehensive reconciliation ledger.
-- **Thermal Receipt Layout Specification (58mm / 80mm):**
+### 6.4 Daily Recap Thermal Slip (58mm / 80mm Ringkasan Kas Harian)
+The owner can print an end-of-day summary slip on the thermal receipt printer:
 
 ```text
 ========================================
@@ -407,63 +379,40 @@ To prevent register skimming, cashier fraud, and collusion, LMS Andik Laundry im
      Jl. Merdeka No. 45, Surabaya       
          Telp: 0812-3456-7890           
 ========================================
-LAPORAN Z (PENUTUPAN SHIFT)
-No. Shift   : SHF-20261113-0002
-Kasir       : Siti Aminah (ID: KSR-03)
-Waktu Buka  : 13/11/2026 07:00:15 WIB
-Waktu Tutup : 13/11/2026 15:02:44 WIB
+RINGKASAN KAS HARIAN
+Tanggal     : 14/11/2026
+Dicetak Oleh: Andik (Pemilik Usaha)
+Waktu Cetak : 14/11/2026 21:00:15 WIB
 ----------------------------------------
-RINGKASAN PENJUALAN
-Total Transaksi Nota        : 28 Nota
+RINGKASAN TRANSAKSI
+Total Nota Diterima         : 28 Nota
 Total Berat Kiloan          : 94.50 kg
 Total Item Satuan           : 12 pcs
 
-Subtotal Penjualan          : Rp  756.000
-Diskon Promo                : Rp   25.000
-Biaya Kilat / Express       : Rp   45.000
-Biaya Antar / Jemput        : Rp   15.000
-Pajak (PPN 0%)              : Rp        0
+Total Omset Penjualan       : Rp  791.000
 ----------------------------------------
-TOTAL OMSET TRANSAKSI       : Rp  791.000
-----------------------------------------
-METODE PEMBAYARAN MASUK
+PEMBAYARAN DITERIMA HARI INI
 1. Kas Tunai (Cash)         : Rp  480.000
-2. QRIS (Midtrans/Static)   : Rp  210.000
-3. Transfer Bank BCA        : Rp   60.000
-4. Piutang (Bayar Nanti)    : Rp   41.000
+2. QRIS                     : Rp  210.000
+3. Transfer Bank            : Rp   60.000
 ----------------------------------------
-TOTAL PEMBAYARAN DITERIMA   : Rp  750.000
+TOTAL UANG MASUK            : Rp  750.000
 ----------------------------------------
-REKONSILIASI KAS LACI (CASH DRAWER)
-Modal Awal (Opening Float)  : Rp  150.000
-(+) Pembayaran Tunai Masuk  : Rp  480.000
-(-) Pengembalian Kas (Refund): Rp        0
-(+) Tambah Modal (Cash In)  : Rp        0
-(-) Setor Brankas (Cash Drop): Rp  300.000
-(-) Kas Kecil (Shift Expense): Rp   22.000
-    [Beli LPG 3kg Darurat]
+PENGELUARAN OPERASIONAL HARI INI
+1. Beli Gas LPG 3kg (2 tbg) : Rp   44.000
+2. Beli Sabun & Pewangi     : Rp   75.000
+3. Plastik Packing Kresek   : Rp   25.000
 ----------------------------------------
-TOTAL EKSPEKTASI KAS        : Rp  308.000
+TOTAL PENGELUARAN TUNAI     : Rp  144.000
 ----------------------------------------
-HASIL HITUNG FISIK (BLIND COUNT)
-Lembar Rp 100.000 x 2       : Rp  200.000
-Lembar Rp  50.000 x 1       : Rp   50.000
-Lembar Rp  20.000 x 2       : Rp   40.000
-Lembar Rp  10.000 x 1       : Rp   10.000
-Lembar Rp   5.000 x 1       : Rp    5.000
-Lembar Rp   2.000 x 1       : Rp    2.000
-Koin Rp       500 x 2       : Rp    1.000
+SISA KAS BERSIH TUNAI       : Rp  336.000
+(Uang Tunai di Laci/Dompet Hari Ini)
 ----------------------------------------
-TOTAL KAS FISIK DIHITUNG    : Rp  308.000
-----------------------------------------
-SELISIH KAS (VARIANCE)      : Rp        0
-STATUS                      : SEIMBANG (OK)
+STATUS PIUTANG (BAYAR NANTI)
+Piutang Baru Hari Ini       : Rp   41.000
+Pelunasan Piutang Hari Ini  : Rp   50.000
 ========================================
-Tanda Tangan Kasir,   Tanda Tangan Supervisor,
-
-
-
-( Siti Aminah )       ( Bpk. Andik / Owner )
+         TERIMA KASIH & SEMANGAT!       
 ========================================
 ```
 

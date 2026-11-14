@@ -22,7 +22,7 @@
 | **ADR-005** | WuzAPI as Primary MVP WhatsApp Gateway with Interface Abstraction | `Recommended` | Integrations | Zero per-message cost, rapid onboarding |
 | **ADR-006** | Orthogonal Decoupled Finite State Machines (Production vs Payment) | `Confirmed` | Domain Logic | Independent garment & payment lifecycles |
 | **ADR-007** | Immutable Price Snapshotting on Order Items | `Confirmed` | Financial Logic | Historical transaction integrity |
-| **ADR-008** | Blind Count Protocol for Cashier Shift Drawer Closing | `Confirmed` | Loss Prevention | Tamper-proof cash reconciliation |
+| **ADR-008** | Owner-as-Cashier Family Model & Daily Cash Summary (Rekap Kas Harian) | `Confirmed` | Operations & Financial | Frictionless family-run home laundry operations, unified hub, Rekap Kas Harian |
 | **ADR-009** | Dual-Basis Financial Reporting: Cash Flow vs Accrual Revenue | `Confirmed` | Financial Logic | SAK EMKM compliance & liquidity control |
 | **ADR-010** | Authentication via Laravel Sanctum Stateful Session Cookies | `Confirmed` | Security & Auth | XSS mitigation, seamless Inertia SPA auth |
 | **ADR-011** | Zero-Trust Server-Side Validation via Dedicated Form Requests | `Confirmed` | Security | Integrity enforcement at API boundary |
@@ -159,22 +159,27 @@
 
 ---
 
-### ADR-008: Blind Count Protocol for Cashier Shift Drawer Closing
+### ADR-008: Owner-as-Cashier Family Operating Model & Daily Cash Summary (Rekap Kas Harian)
 
-- **Status:** `Confirmed` (Explicit User Requirement R4)
+- **Status:** `Confirmed` (Explicit User Pivot: Family-Run Home Business)
 - **Context & Problem Statement:**
-  Cash registers in retail laundry environments are vulnerable to employee skimming and unrecorded cash leakages. If the POS interface reveals the expected drawer cash total at shift closing, a dishonest cashier can easily match the reported number and pocket any surplus, or hide unexplained shortages.
+  Andik Laundry operates as a home-based family business ("usaha rumahan dikelola keluarga") where the owner acts directly as the primary cashier and operator ("kasirnya ya ownernya sendiri"), assisted by family members.
+  Corporate retail controls—such as mandatory shift opening floats, artificial blind-count drawer reconciliations to prevent employee theft, manager PIN overrides for counter releases, or blocking sales with HTTP 403 when a shift is not open—introduce excessive bureaucratic friction. The owner manages their own money and does not need to hide cash balances from themselves or enter PINs to approve debt handovers to known neighborhood customers.
 - **Decision Taken:**
-  Enforce the **Blind Count Shift Closing Protocol**:
-  1. When closing the shift, the POS UI deliberately hides the system-calculated `expected_drawer_cash`.
-  2. The cashier must physically count and input exact denomination counts (100k, 50k, 20k, 10k, 5k, 2k, 1k bills and coins).
-  3. The system calculates variance (`actual - expected`) server-side upon submission.
-  4. Any discrepancy is permanently recorded in the shift audit log and flagged for Owner review.
+  1. **Unified All-in-One Interface:** Unify POS Cashier, Production Laundry Queue, Daily Cash Book & Expenses, and Owner Dashboard into a single web application with instant 1-click navigation without switching accounts or roles.
+  2. **Continuous POS Readiness (No Shift Roadblocks):** The POS terminal is always ready to receive customer drop-offs and process payments without requiring an "Open Shift" ceremony or opening float lock.
+  3. **Daily Cash Summary (Rekap Kas Harian):** Replace multi-employee shift reconciliation with a transparent, pragmatic daily cash recap:
+     - Real-time aggregation of today's incoming cash, QRIS, and bank transfers.
+     - Direct tracking of operational store expenses (detergent, softener, LPG 3kg, plastic packaging, water, electricity).
+     - Net cash on hand = Cash Sales Today - Cash Expenses Today.
+     - Optional denomination breakdown calculator for physical cash counting at the end of the day.
+  4. **Frictionless Counter Release:** The owner can hand over completed laundry and directly record customer debt (piutang) or mark as paid without requiring a separate manager PIN approval.
 - **Alternatives Considered:**
-  1. *Open count (displaying expected total):* High risk of cash skimming and false balance confirmations.
+  1. *Multi-Employee Shift Management with Blind Counts:* Unsuitable for single-operator/family business; creates unnecessary blockers and user frustration.
 - **Consequences & Trade-offs:**
-  - ✅ Complete cash accountability and loss prevention.
-  - ⚠️ Requires cashier to spend 3–5 minutes counting physical bills at shift end.
+  - ✅ Extreme operational speed and zero artificial roadblocks for family operations.
+  - ✅ Clear, transparent daily take-home cash flow and expense tracking.
+  - ⚠️ If external hired employees are onboarded in the distant future, shift auditing can be added as an optional module.
 
 ---
 

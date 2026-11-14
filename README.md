@@ -1,58 +1,198 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# LMS Andik Laundry
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+> **Production-Grade Laundry Management, POS & SAK EMKM Accounting System**  
+> Tailored for Indonesian Laundry MSMEs (Kiloan, Satuan, and Meteran operations).
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 1. System Overview & Tech Stack
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+LMS Andik Laundry is a modern, high-performance web platform engineered to manage end-to-end operational, financial, and customer tracking workflows for Indonesian laundry businesses. It provides role-based access control (RBAC), multi-unit pricing calculation (weight with minimum weight threshold, item units, square meter measurements), live production station tracking, public digital receipts with WhatsApp notification capabilities, automated daily database backups, and SAK EMKM-compliant dual-basis financial accounting.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Technology Stack
+- **Backend Framework**: [Laravel 13.x](https://laravel.com) on **PHP 8.4**
+- **Frontend Engine**: [Inertia.js v3](https://inertiajs.com) with [Vue 3](https://vuejs.org) (Composition API, `<script setup lang="ts">`, TypeScript strict mode)
+- **Styling & UI**: [Tailwind CSS v4](https://tailwindcss.com) with `@tailwindcss/vite`, Radix Vue, and Lucide Vue Next
+- **Database Engine**: **MySQL 8.4** (with seamless SQLite in-memory support for testing)
+- **Automated Test Suite**: [Pest PHP v4](https://pestphp.com) (350 feature and unit tests, 100% passing)
+- **Asset Bundler**: [Vite 8](https://vitejs.dev) with clean ESNext chunking
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 2. Default Seed & Demo Credentials
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+The database seeder provisions three canonical user accounts covering each operational role:
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+| Role | Email | Password | Primary Responsibility & Access Scope |
+| :--- | :--- | :--- | :--- |
+| **Owner** | `owner@andiklaundry.test` | `password` | Executive dashboard, SAK EMKM accrual & cash flow reports, CSV exports, user management, system settings, audit logs, backup management. |
+| **Cashier** | `cashier@andiklaundry.test` | `password` | POS order creation, customer intake, payment processing (Cash, QRIS, Bank Transfer, e-Wallet), digital receipts, cash drawer shift management. |
+| **Operator** | `operator@andiklaundry.test` | `password` | Production workstation, status tracking (received -> washing -> drying -> ironing -> packing -> ready for pickup -> completed), rack assignments, rewash handling. |
 
-## Agentic Development
+---
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## 3. Owner Operational Runbook
 
-```bash
-composer require laravel/boost --dev
+### 3.1 Executive Dashboard & Financial Reporting (`/dashboard`)
+The Owner Executive Dashboard delivers real-time visibility into business performance with side-by-side KPI cards distinguishing **Accrual Basis** (SAK EMKM compliance) from **Cash Basis** (liquidity and drawer cash):
 
-php artisan boost:install
+1. **Accrual Basis Metrics (SAK EMKM)**:
+   - **Recognized Revenue**: Earned exclusively from orders that have achieved `completed` production status within the selected timeframe, regardless of whether payment has been settled.
+   - **Operating Expenses**: Recorded operational expenses incurred within the period (e.g. detergents, electricity, LPG, salaries).
+   - **Net Operating Profit**: Recognized Revenue minus Operating Expenses.
+   - **Operating Profit Margin %**: Calculated as `(Net Profit / Recognized Revenue) * 100%`.
+2. **Cash Basis Metrics (Cash Flow & Drawer Audit)**:
+   - **Cash Inflow by Channel**: Categorized into physical cash (`tunai`), dynamic QRIS (`qris`), manual bank transfer (`transfer`), and digital wallets (`ewallet`).
+   - **Cash Outflow**: Total cash expenses disbursed directly from the register drawer or operational funds.
+   - **Net Cash Flow**: Total Cash Inflow minus Total Cash Outflow.
+   - **Net Cash on Hand (Fisik Laci Kasir)**: Physical cash received (`tunai`) minus physical cash paid out, reflecting the actual banknotes in the register drawer.
+3. **Cash-to-Accrual Gap Reconciliation**:
+   - Explicitly explains the gap between cash flow and recognized income:
+     - *Uncollected Receivables (Piutang Usaha)*: Orders completed and recognized as revenue, but outstanding balance remains unpaid by customers.
+     - *Work-in-Progress Intake (Uang Muka Pelanggan)*: Cash paid upfront at intake for laundry currently in washing/drying/ironing status, which is not yet recognized as accrual revenue.
+
+### 3.2 Date Range Filtering
+The dashboard and accounting service support flexible date range queries:
+- **Preset Buttons**: Quick 1-click filtering for `Hari Ini` (Today), `7 Hari Terakhir` (Last 7 Days), and `Bulan Ini` (Current Month).
+- **Custom Date Picker**: Select arbitrary `start_date` and `end_date`.
+- **Validation Guards**: Enforces `end_date >= start_date` and a maximum query ceiling of 366 days to protect database server memory and ensure consistent query latency.
+
+### 3.3 Transaction CSV Export
+Download detailed transactional records for external accounting or tax filing:
+- **Direct Endpoint**: `GET /owner/reports/export-csv?start_date=YYYY-MM-DD&end_date=YYYY-MM-DD`
+- **Dashboard Action**: Click the **Unduh CSV** button on the Executive Dashboard.
+- **Security Features**:
+  - Encoded with **UTF-8 BOM** (`\xEF\xBB\xBF`) for native character support in Microsoft Excel and LibreOffice Calc.
+  - **CSV Formula Injection Guard**: Automatically prepends apostrophes (`'`) to values starting with `=`, `+`, `-`, or `@` to neutralize formula execution risks.
+  - Formatted columns: No Nota, Tanggal, Pelanggan, Status Produksi, Total Tagihan, Terbayar, Sisa Piutang, and Metode Pembayaran.
+
+---
+
+## 4. Database Backup & Disaster Recovery Runbook
+
+### 4.1 Automated & Manual Backup Execution
+The application includes a native, environment-aware database backup command:
+
+```powershell
+# Manual backup execution with default 30-day retention
+php artisan db:backup
+
+# Backup with custom retention threshold (e.g. 14 days)
+php artisan db:backup --retention=14
+
+# Backup with custom archive name
+php artisan db:backup --filename=pre-migration-dump.sql.gz
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+- **Output Directory**: `storage/app/backups/`
+- **Naming Pattern**: `backup-YYYY-MM-DD_His.sql.gz` (e.g. `backup-2026-11-14_093000.sql.gz`)
+- **Compression**: Maximum gzip compression (Level 9 via PHP `zlib`) directly written to disk.
+- **Git Protection**: `storage/app/backups/.gitignore` enforces `*\n!.gitignore\n`, guaranteeing zero accidental repository leakage of customer or financial data.
+- **Multi-Driver Engine**:
+  - Automatically identifies active connection (`mysql` or `sqlite`).
+  - For MySQL: Utilizes `mysqldump` client binary if present, with an automated fallback to pure PHP PDO schema/data extractor (`SET FOREIGN_KEY_CHECKS=0`).
+  - For SQLite: Handles both physical SQLite files and in-memory test databases (`sqlite_master` DDL and row INSERT generation).
 
-## Contributing
+### 4.2 Automated Daily Backup Schedule
+Backups are registered to run automatically every night at **02:00 WIB**:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```php
+// routes/console.php
+Schedule::command('db:backup')
+    ->dailyAt('02:00')
+    ->description('Daily database backup with 30-day retention');
+```
 
-## Code of Conduct
+Verify the active schedule using:
+```powershell
+php artisan schedule:list
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+In production, ensure the system cron job triggers Laravel's scheduler once every minute:
+```bash
+* * * * * cd /path-to-project && php artisan schedule:run >> /dev/null 2>&1
+```
 
-## Security Vulnerabilities
+### 4.3 Automated 30-Day Retention Pruning
+During each backup execution, the system scans `storage/app/backups/` and unlinks any `.sql.gz` archive where the last modified timestamp (`filemtime`) exceeds the retention period (default: 30 days). Pruning activity is logged to `storage/logs/laravel.log`.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 4.4 Disaster Recovery & Restoration Procedure
+In the event of hardware failure, database corruption, or disaster recovery drills, restore the database using the following two steps:
 
-## License
+**Step 1: Decompress the backup archive**
+- *Linux / macOS*:
+  ```bash
+  gzip -d -k storage/app/backups/backup-2026-11-14_020000.sql.gz
+  ```
+- *Windows (PowerShell / 7-Zip)*:
+  ```powershell
+  # Using 7-Zip
+  7z x storage\app\backups\backup-2026-11-14_020000.sql.gz -ostorage\app\backups\
+  ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+**Step 2: Import SQL dump into MySQL**
+```powershell
+mysql -u root -p lms_andiklaundry < storage/app/backups/backup-2026-11-14_020000.sql
+```
+
+---
+
+## 5. Security Controls & Hardening
+
+### 5.1 HTTP Security Headers Middleware
+All incoming web requests pass through `App\Http\Middleware\SecurityHeadersMiddleware`:
+- `X-Content-Type-Options: nosniff` (Prevents MIME-sniffing attacks)
+- `X-Frame-Options: SAMEORIGIN` (Mitigates clickjacking attacks)
+- `X-XSS-Protection: 1; mode=block` (Browser cross-site scripting filter activation)
+- `Referrer-Policy: strict-origin-when-cross-origin` (Safeguards sensitive referral parameters)
+- `Permissions-Policy: camera=(), microphone=(), geolocation=()` (Disables unauthorized browser hardware APIs)
+- `Content-Security-Policy`: Restricts scripts, styles, fonts, and frame ancestors while permitting Google Fonts and Vite HMR.
+- `Strict-Transport-Security: max-age=31536000; includeSubDomains` (Enforced on HTTPS connections)
+
+### 5.2 Public Digital Receipt Rate Limiting
+To defend against automated scraping, invoice harvesting, or brute-force enumeration of public receipts:
+- Endpoints: `GET /receipts/{invoice_number}` and alias `GET /receipt/{orderNumber}`
+- Rate Limiter: Named limiter `receipts` configured in `AppServiceProvider`:
+  - **Limit**: **60 requests per minute per IP address**.
+  - **Exceeding**: Returns HTTP `429 Too Many Requests` with retry headers.
+
+---
+
+## 6. Developer, QA & Verification Commands
+
+### 6.1 Prerequisites
+- **PHP**: `>= 8.4` (required extensions: `pdo_mysql`, `pdo_sqlite`, `zlib`, `intl`, `bcmath`, `curl`)
+- **Composer**: `>= 2.7`
+- **Node.js**: `>= 20.x` & **npm**: `>= 10.x`
+- **MySQL**: `>= 8.4`
+
+### 6.2 Running Automated Tests (Pest Suite)
+Execute the complete test suite (350 tests):
+```powershell
+# Set PHP in path if required
+$env:PATH = "C:\tools\php;C:\Program Files\MySQL\MySQL Server 8.4\bin;$env:PATH"
+
+# Run all 350 tests
+php artisan test
+
+# Run Database Backup & Security tests
+php artisan test tests/Feature/DatabaseBackupTest.php
+
+# Run Accounting & Reporting tests
+php artisan test tests/Feature/AccountingReportTest.php
+```
+
+### 6.3 TypeScript Static Analysis & Frontend Compilation
+```powershell
+# Static type checking with vue-tsc (0 errors expected)
+npx vue-tsc --noEmit
+
+# Compile production Vite assets
+npm run build
+```
+
+---
+
+## 7. License
+
+LMS Andik Laundry is proprietary software designed for Indonesian laundry business operations. All rights reserved.

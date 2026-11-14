@@ -20,14 +20,14 @@ gantt
     Phase 0 - Planning & Documentation (Current) :active, p0, 2026-11-01, 2026-11-14
     section MVP Core Release
     Phase 1 - Foundation Auth & Architecture     :p1, after p0, 10d
-    Phase 2 - Master Data & Customers            :p2, after p1, 10d
-    Phase 3 - POS Cashier & Shifts (MVP)         :crit, p3, after p2, 14d
+    Phase 2 - Master Data, Customers & POS Core  :p2, after p1, 10d
+    Phase 3 - Daily Cash Recap & Expenses (MVP)  :crit, p3, after p2, 10d
     section Operational Expansion
     Phase 4 - Production Tracking Station        :p4, after p3, 10d
     Phase 5 - WuzAPI WhatsApp Integration        :p5, after p4, 10d
     section Analytics & Hardening
-    Phase 6 - Accounting & Owner Analytics       :p6, after p5, 12d
-    Phase 7 - Hardening & Meta API               :p7, after p6, 10d
+    Phase 6 - Owner Analytics & Accounting       :p6, after p5, 12d
+    Phase 7 - Hardening & Production Ready       :p7, after p6, 10d
 ```
 
 ### 1.1 Milestone Definitions & Release Gates
@@ -35,7 +35,7 @@ gantt
 | Milestone | Target Phases | Scope Summary | Operational Release Capability |
 | :--- | :--- | :--- | :--- |
 | **Milestone 0: Blueprint** | Phase 0 | 14 Architectural & Planning Specifications | Complete engineering blueprint ready for code implementation |
-| **Milestone 1: MVP Core** | Phases 1–3 | Authentication, RBAC, Customer CRM, Service Catalog, POS Intake, Thermal Receipt, Shift Blind Count | Full counter operations: Cashiers can intake orders, print receipts, accept multi-tender payments, and reconcile cash |
+| **Milestone 1: MVP Core** | Phases 1–3 | Auth, Customer CRM, Service Catalog, POS Intake, Thermal Receipt, Daily Cash Recap, Expense Tracker | Full family counter operations: Owner can intake orders, print receipts, accept multi-tender payments, log store expenses, and view daily net cash |
 | **Milestone 2: Operations** | Phases 4–5 | Operator Washing/Drying/Ironing Station, Shelf Staging, Automated WuzAPI WhatsApp Alerts | Back-of-house tracking: Machine timers, rewash loops, and automated WhatsApp notifications to customers |
 | **Milestone 3: Enterprise** | Phases 6–7 | Store Expenses, Accrual vs Cash P&L, Owner Analytics, Meta Cloud API Adaptor, Security Audit | Full financial accounting, profit analytics, disaster recovery, and production hardening |
 
@@ -145,41 +145,38 @@ Build the core data management foundation: customer CRM, pricing catalogs, turna
 
 ---
 
-### Phase 3: POS Cashier, Order Intake & Shift Management (MVP Release)
+### Phase 3: Daily Cash Recap, Operational Expense Management & Owner Hub (MVP Release)
 
 #### 1. Objective & Strategic Rationale
-**The Core Minimum Viable Product (MVP).** Deliver full front-desk counter transaction capability. Enable cashiers to open shifts with float, intake laundry, weigh kiloan bundles, select scents, take down payments or full payments (cash, QRIS, transfer), print thermal receipts, and perform blind count cash reconciliation at shift closing.
+**The Core Minimum Viable Product (MVP).** Deliver full front-desk counter transaction and daily cash management capability for the family-run home laundry. The owner acts as primary cashier and operator. Enable immediate order intake, weighing, multi-tender payments (cash, QRIS, transfer), thermal receipt printing, daily store expense recording (detergent, LPG gas, plastic packaging), and automated Daily Cash Recap (Rekap Kas Harian) calculating net daily cash on hand without artificial shift locks.
 
 #### 2. Granular Deliverables
 - **Backend:**
-  - Migrations: `orders`, `order_items`, `payments`, `cashier_shifts`, `shift_cash_movements`.
-  - Domain Services: `OrderService`, `FinancialService`, `OrderStateMachine`, `ShiftService`.
-  - Form Requests: `StoreOrderRequest`, `StorePaymentRequest`, `OpenShiftRequest`, `CloseShiftRequest`.
-  - Price snapshot logic freezing `unit_price_snapshot`, `discount_snapshot`, `subtotal_snapshot`.
-  - Release Guard logic blocking unpaid handover unless flagged with approved debtor record.
-  - Blind Count audit calculation computing drawer variance.
+  - Migrations: `expenses` (amount, category, description, payment_method, receipt_image_path).
+  - Domain Services: `ExpenseService`, `DailyCashRecapService`.
+  - Form Requests: `StoreExpenseRequest`.
+  - Daily cash recap calculations: Total Cash In, Non-cash In (QRIS/Transfer), Total Expenses, Net Cash on Hand.
+  - End-of-day summary receipt generator (58mm / 80mm).
 - **Frontend:**
-  - POS Cashier Screen (`Pos/Index.vue`): Fast search, item catalog grid, live reactive cart drawer.
-  - Service selection drawer with weight inputs (`DECIMAL(8,2)`), minimum weight notice, scent picker.
-  - Checkout & Payment Modal (`PaymentModal.vue`): Multi-tender split payment (Cash + QRIS), cash tendered with live change calculation.
-  - Thermal Receipt layout formatted for 58mm / 80mm ESC/POS thermal printers.
-  - Shift Management Modals: Open Shift Modal (opening float), Close Shift Modal (blind denomination counter).
+  - Expense Tracker modal & page (`Expenses/Index.vue`): Quick expense entry (Gas LPG, Deterjen, Plastik, etc.).
+  - Daily Cash Recap View (`Dashboard/DailyRecap.vue` or Modal): Real-time breakdown of cash intake, digital payments, expenses, and net cash.
+  - Daily summary thermal slip printout.
+  - Quick 1-click navigation bar across POS (`/pos`), Production Queue (`/production/station`), Expenses, and Dashboard.
 - **Tests:**
-  - Unit tests for financial formulas (subtotal, minimum weight threshold, split payments, change, variance).
-  - Feature tests for order creation, price snapshotting, split payments, and shift lifecycle.
-  - E2E tests for complete cashier checkout journey.
+  - Unit tests for daily cash calculations, expense deductions, and net cash formulas.
+  - Feature tests for expense recording and daily cash recap endpoints.
+  - E2E tests for complete intake -> payment -> expense -> daily recap flow.
 
 #### 3. Scope Boundaries
-- **In-Scope:** POS intake, shift management, thermal receipt printing, split payments, blind count closing.
-- **Out-of-Scope:** Automated WhatsApp queue worker (manual `wa.me` fallback link is used in MVP).
+- **In-Scope:** Direct expense tracking, daily cash summary, thermal summary slip, seamless owner-as-cashier hub.
+- **Out-of-Scope:** Complex accrual multi-year depreciation accounting, corporate payroll tax modules.
 
 #### 4. Acceptance Criteria
-- [ ] Cashier cannot perform POS transactions without an active open shift.
-- [ ] Kiloan weighing strictly enforces minimum billable weight (e.g. 1.5 kg -> billed 3.0 kg).
-- [ ] Price snapshots protect historical order lines from catalog price modifications.
-- [ ] Blind count modal hides expected drawer total during shift close.
-- [ ] Thermal receipt prints cleanly with order QR code, items, and outstanding balance.
-- [ ] **MVP GO-LIVE READY:** Outlet can conduct commercial counter operations.
+- [ ] POS terminal is continuously accessible without requiring shift opening float entry.
+- [ ] Store expenses can be logged in under 15 seconds with category and payment method.
+- [ ] Daily Cash Recap accurately calculates Net Cash on Hand = Cash Sales - Cash Expenses.
+- [ ] Thermal summary slip prints cleanly on 58mm and 80mm printers.
+- [ ] **MVP GO-LIVE READY:** Outlet can conduct full commercial counter operations and track daily profits cleanly.
 
 ---
 
