@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { Plus, Minus, Trash2, Scale, AlertTriangle, Sparkles, Clock, Percent } from 'lucide-vue-next';
+import { Plus, Minus, Trash2, Scale, AlertTriangle, Sparkles, Clock, Percent, Truck, MapPin } from 'lucide-vue-next';
 import { formatRupiah } from '@/Support/whatsapp';
 import type { ServiceItem } from './ServiceCard.vue';
 
@@ -12,6 +12,9 @@ export interface CartLineItem {
     item_condition_notes?: string;
     special_instructions?: string;
     discount_amount?: number;
+    length?: number;
+    width?: number;
+    calculated_area?: number;
 }
 
 export interface TurnaroundTier {
@@ -27,6 +30,7 @@ interface Props {
     perfumeVariants: string[];
     defaultMinWeight?: number;
     orderDiscount?: number;
+    deliveryOption?: 'pickup' | 'delivery';
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -34,13 +38,15 @@ const props = withDefaults(defineProps<Props>(), {
     turnaroundTiers: () => [],
     selectedTierCode: 'reguler',
     perfumeVariants: () => ['Lavender', 'Sakura', 'Ocean Fresh', 'Non-Parfum'],
-    defaultMinWeight: 3.0,
+    defaultMinWeight: 2.0,
     orderDiscount: 0,
+    deliveryOption: 'pickup',
 });
 
 const emits = defineEmits<{
     (e: 'update:selectedTierCode', code: string): void;
     (e: 'update:orderDiscount', discount: number): void;
+    (e: 'update:deliveryOption', option: 'pickup' | 'delivery'): void;
     (e: 'update-qty', index: number, newQty: number): void;
     (e: 'update-perfume', index: number, perfume: string): void;
     (e: 'remove-item', index: number): void;
@@ -56,7 +62,8 @@ const tierSurcharge = computed(() => currentTier.value?.surcharge ?? 0);
 const subtotal = computed(() => {
     return props.items.reduce((acc, item) => {
         const itemDiscount = item.discount_amount ?? 0;
-        return acc + Math.max(0, (item.billed_qty * item.service.price) - itemDiscount);
+        const qty = item.calculated_area ? item.calculated_area : item.billed_qty;
+        return acc + Math.max(0, (qty * item.service.price) - itemDiscount);
     }, 0);
 });
 
@@ -70,7 +77,8 @@ function handleQtyStep(index: number, delta: number) {
     const item = props.items[index];
     if (!item) return;
     const isKg = item.service.unit.toLowerCase() === 'kg';
-    const step = isKg ? 0.5 : 1;
+    const isMeterService = item.service.unit.toLowerCase() === 'm²' || (item.service as any).is_meter_service === true;
+    const step = isKg ? 0.5 : (isMeterService ? 0.5 : 1);
     const nextQty = Math.max(0.1, Number((item.actual_qty + (delta * step)).toFixed(2)));
     emits('update-qty', index, nextQty);
 }
@@ -80,6 +88,18 @@ function handleDirectQtyChange(index: number, event: Event) {
     if (!isNaN(val) && val > 0) {
         emits('update-qty', index, Math.max(0.01, Number(val.toFixed(2))));
     }
+}
+
+function calculateArea(item: CartLineItem) {
+    if (item.length && item.width && item.length > 0 && item.width > 0) {
+        item.calculated_area = Number((item.length * item.width).toFixed(2));
+        item.billed_qty = item.calculated_area;
+        item.actual_qty = item.calculated_area;
+    }
+}
+
+function isKarpetService(item: CartLineItem): boolean {
+    return item.service.unit.toLowerCase() === 'm²' || item.service.name.toLowerCase().includes('karpet');
 }
 </script>
 
@@ -157,8 +177,50 @@ function handleDirectQtyChange(index: number, event: Event) {
                     </button>
                 </div>
 
-                <!-- Weight / Quantity Controls & Billed calculation -->
-                <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+                <!-- Meter Input for Karpet Service -->
+                <div v-if="isKarpetService(item)" class="meter-input p-3 bg-blue-50 rounded-lg border border-blue-200 space-y-2">
+                    <div class="flex items-center space-x-2">
+                        <MapPin class="h-4 w-4 text-blue-600" />
+                        <span class="text-xs font-bold text-blue-800">Input Ukuran Karpet</span>
+                    </div>
+                    <div class="flex gap-2">
+                        <div class="flex-1">
+                            <label class="text-[10px] text-blue-600 font-medium block">Panjang (m)</label>
+                            <input
+                                type="number"
+                                step="0.1"
+                                min="0"
+                                :value="item.length || 0"
+                                @input="(e) => { item.length = parseFloat((e.target as HTMLInputElement).value) || 0; calculateArea(item); }"
+                                class="w-full min-h-[36px] rounded-lg border border-blue-300 px-2 py-1 text-xs font-mono text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="0.0"
+                            />
+                        </div>
+                        <div class="flex-1">
+                            <label class="text-[10px] text-blue-600 font-medium block">Lebar (m)</label>
+                            <input
+                                type="number"
+                                step="0.1"
+                                min="0"
+                                :value="item.width || 0"
+                                @input="(e) => { item.width = parseFloat((e.target as HTMLInputElement).value) || 0; calculateArea(item); }"
+                                class="w-full min-h-[36px] rounded-lg border border-blue-300 px-2 py-1 text-xs font-mono text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="0.0"
+                            />
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <span class="text-xs font-bold text-blue-800">
+                            Luas: {{ item.calculated_area || 0 }} m²
+                        </span>
+                        <span v-if="item.calculated_area > 0" class="text-[10px] text-blue-600 ml-2">
+                            → {{ formatRupiah((item.calculated_area || 0) * item.service.price) }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Weight / Quantity Controls & Billed calculation (for non-karpet services) -->
+                <div v-else class="flex items-center justify-between pt-2 border-t border-slate-100">
                     <div class="flex items-center space-x-1.5">
                         <button
                             type="button"
@@ -193,7 +255,7 @@ function handleDirectQtyChange(index: number, event: Event) {
 
                     <div class="text-right">
                         <div class="font-mono font-bold text-xs text-slate-900">
-                            {{ formatRupiah(item.billed_qty * item.service.price) }}
+                            {{ formatRupiah((item.calculated_area || item.billed_qty) * item.service.price) }}
                         </div>
                         <!-- Minimum weight notice if actual < min_weight -->
                         <span
@@ -207,7 +269,43 @@ function handleDirectQtyChange(index: number, event: Event) {
             </div>
         </div>
 
-        <!-- Turnaround Tier Selector (Reguler / Kilat / Express / Flash) -->
+        <!-- Delivery Option Selector -->
+        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-600 block flex items-center space-x-1.5">
+                <Truck class="h-3.5 w-3.5 text-slate-500" />
+                <span>Pilihan Pengantaran</span>
+            </span>
+            <div class="grid grid-cols-2 gap-2">
+                <button
+                    type="button"
+                    @click="emits('update:deliveryOption', 'pickup')"
+                    :class="[
+                        'min-h-[44px] p-2 text-left rounded-lg border text-xs font-semibold transition-all focus:outline-none',
+                        deliveryOption === 'pickup'
+                            ? 'bg-teal-600 text-white border-teal-600 shadow-xs'
+                            : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100',
+                    ]"
+                >
+                    <span class="block truncate font-bold">Ambil Sendiri</span>
+                    <span class="block text-[10px] opacity-90">Datang ke lokasi</span>
+                </button>
+                <button
+                    type="button"
+                    @click="emits('update:deliveryOption', 'delivery')"
+                    :class="[
+                        'min-h-[44px] p-2 text-left rounded-lg border text-xs font-semibold transition-all focus:outline-none',
+                        deliveryOption === 'delivery'
+                            ? 'bg-teal-600 text-white border-teal-600 shadow-xs'
+                            : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100',
+                    ]"
+                >
+                    <span class="block truncate font-bold">Antar Jemput</span>
+                    <span class="block text-[10px] opacity-90">Gratis &lt; 3 km</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Turnaround Tier Selector (Reguler / Ekspres) -->
         <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
             <span class="text-[11px] font-bold uppercase tracking-wider text-slate-600 block flex items-center space-x-1.5">
                 <Clock class="h-3.5 w-3.5 text-slate-500" />

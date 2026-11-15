@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Pos;
 
 use App\Models\Customer;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreTransactionRequest extends FormRequest
@@ -12,7 +13,7 @@ class StoreTransactionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user() !== null;
+        return $this->user() !== null && in_array($this->user()->role, ['owner', 'cashier'], true);
     }
 
     /**
@@ -40,7 +41,7 @@ class StoreTransactionRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
@@ -50,15 +51,20 @@ class StoreTransactionRequest extends FormRequest
             'items.*.service_id' => ['required', 'integer', 'exists:services,id'],
             'items.*.service_tier_id' => ['nullable', 'integer', 'exists:service_tiers,id'],
             'items.*.actual_quantity' => ['required', 'numeric', 'min:0.01'],
+            'items.*.billed_quantity' => ['nullable', 'numeric', 'min:0.01'],
             'items.*.discount_amount' => ['nullable', 'numeric', 'min:0'],
             'items.*.perfume_variant' => ['nullable', 'string', 'max:100'],
             'items.*.item_condition_notes' => ['nullable', 'string', 'max:1000'],
             'items.*.special_instructions' => ['nullable', 'string', 'max:1000'],
+            'items.*.length' => ['nullable', 'numeric', 'min:0'],
+            'items.*.width' => ['nullable', 'numeric', 'min:0'],
             'discount_amount' => ['nullable', 'numeric', 'min:0'],
             'surcharge_amount' => ['nullable', 'numeric', 'min:0'],
             'tax_amount' => ['nullable', 'numeric', 'min:0'],
             'paid_amount' => ['nullable', 'numeric', 'min:0'],
             'payment_method' => ['nullable', 'string', 'max:50'],
+            'payment_status' => ['nullable', 'string', 'in:paid,unpaid'],
+            'delivery_option' => ['nullable', 'string', 'in:pickup,delivery'],
             'notes' => ['nullable', 'string', 'max:1000'],
             'target_completion_at' => ['nullable', 'date'],
             'staging_rack' => ['nullable', 'string', 'max:30'],

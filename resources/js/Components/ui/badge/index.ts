@@ -6,7 +6,7 @@ export const badgeVariants = cva(
         variants: {
             variant: {
                 default: 'border-transparent bg-[#6366F1] text-white hover:bg-[#4F46E5]',
-                secondary: 'border border-[#E8E8EC] bg-[#FAFAFA] text-[#6B6B6B] hover:bg-slate-100',
+                secondary: 'border border-[#E8E8EC] bg-[#FAFAFA] text-[#6B6B6B] hover:bg-[#F1F1F5]',
                 destructive: 'border border-[#EF4444]/20 bg-[#EF4444]/10 text-[#EF4444]',
                 outline: 'border border-[#E8E8EC] text-[#0A0A0A]',
                 success: 'border border-[#10B981]/20 bg-[#10B981]/10 text-[#10B981]',

@@ -241,7 +241,7 @@ class AccountingReportService
     {
         return Transaction::query()
             ->with('items:id,transaction_id,pricing_unit_snapshot,actual_quantity,subtotal_snapshot')
-            ->where('production_status', ProductionStatus::COMPLETED->value)
+            ->whereIn('production_status', [ProductionStatus::COMPLETED->value, ProductionStatus::SUDAH_DIAMBIL->value])
             ->whereRaw(
                 'COALESCE(actual_completion_at, picked_up_at, updated_at) BETWEEN ? AND ?',
                 [$rangeStart->toDateTimeString(), $rangeEnd->toDateTimeString()]

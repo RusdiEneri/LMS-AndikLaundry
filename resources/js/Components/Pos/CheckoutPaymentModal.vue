@@ -5,7 +5,7 @@ import {
     CreditCard,
     Banknote,
     QrCode,
-    Smartphone,
+    Truck,
     AlertTriangle,
     CheckCircle2,
     Loader2,
@@ -28,6 +28,7 @@ interface Props {
     turnaroundTier?: TurnaroundTier | null;
     creditCeiling?: number;
     quickTenders?: number[];
+    deliveryOption?: 'pickup' | 'delivery';
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -41,6 +42,7 @@ const props = withDefaults(defineProps<Props>(), {
     turnaroundTier: null,
     creditCeiling: 150000,
     quickTenders: () => [10000, 20000, 50000, 100000],
+    deliveryOption: 'pickup',
 });
 
 const emits = defineEmits<{
@@ -48,9 +50,9 @@ const emits = defineEmits<{
     (e: 'checkout-success', transaction: any): void;
 }>();
 
-// Payment Options
-const paymentMethod = ref<'cash' | 'qris' | 'bank_transfer' | 'ewallet'>('cash');
-const paymentMode = ref<'paid' | 'partial' | 'unpaid'>('paid');
+// Payment Options - Simplified: Cash and QRIS only
+const paymentMethod = ref<'cash' | 'qris'>('cash');
+const paymentStatus = ref<'paid' | 'unpaid'>('paid');
 const tenderInput = ref<string>('');
 const isSubmitting = ref(false);
 const errorMessage = ref('');
@@ -62,7 +64,7 @@ const debtApprovalNotes = ref('');
 watch(() => props.isOpen, (open) => {
     if (open) {
         paymentMethod.value = 'cash';
-        paymentMode.value = 'paid';
+        paymentStatus.value = 'paid';
         tenderInput.value = String(props.grandTotal);
         errorMessage.value = '';
         isDebtApproved.value = false;
@@ -70,29 +72,26 @@ watch(() => props.isOpen, (open) => {
     }
 });
 
-watch(paymentMode, (mode) => {
-    if (mode === 'paid') {
+watch(paymentStatus, (status) => {
+    if (status === 'paid') {
         tenderInput.value = String(props.grandTotal);
-    } else if (mode === 'partial') {
-        tenderInput.value = String(Math.round(props.grandTotal / 2));
-    } else if (mode === 'unpaid') {
+    } else if (status === 'unpaid') {
         tenderInput.value = '0';
     }
 });
 
 // Numeric tender parsing
 const tenderNumber = computed(() => {
-    if (paymentMode.value === 'unpaid') return 0;
+    if (paymentStatus.value === 'unpaid') return 0;
     const val = Number(tenderInput.value.replace(/[^0-9]/g, ''));
     return isNaN(val) ? 0 : val;
 });
 
 // Amount actually paid toward the transaction
 const actualPaidAmount = computed(() => {
-    if (paymentMode.value === 'unpaid') return 0;
+    if (paymentStatus.value === 'unpaid') return 0;
     if (paymentMethod.value !== 'cash') {
-        // Non-cash must pay exact amount
-        return paymentMode.value === 'partial' ? tenderNumber.value : props.grandTotal;
+        return props.grandTotal;
     }
     return Math.min(tenderNumber.value, props.grandTotal);
 });
@@ -150,12 +149,7 @@ async function processOrderSubmit() {
         return;
     }
 
-    if (paymentMode.value === 'partial' && actualPaidAmount.value <= 0) {
-        errorMessage.value = 'Nominal DP harus lebih dari Rp 0.';
-        return;
-    }
-
-    if (paymentMethod.value === 'cash' && paymentMode.value === 'paid' && tenderNumber.value < props.grandTotal) {
+    if (paymentMethod.value === 'cash' && paymentStatus.value === 'paid' && tenderNumber.value < props.grandTotal) {
         errorMessage.value = 'Nominal uang tunai kurang dari total tagihan.';
         return;
     }
@@ -175,18 +169,22 @@ async function processOrderSubmit() {
             customer_id: props.customer?.id ?? null,
             items: props.cartItems.map(item => ({
                 service_id: item.service.id,
-                service_tier_id: props.turnaroundTier?.code === 'reguler' ? null : (item.service.tiers?.find(t => t.tier_code === props.turnaroundTier?.code)?.id ?? null),
-                actual_quantity: item.actual_qty,
+                actual_quantity: item.calculated_area ?? item.actual_qty,
+                billed_quantity: item.calculated_area ?? item.billed_qty,
                 perfume_variant: item.perfume || 'Lavender',
                 item_condition_notes: item.item_condition_notes || null,
                 special_instructions: item.special_instructions || null,
                 discount_amount: item.discount_amount || 0,
+                length: item.length || null,
+                width: item.width || null,
             })),
             discount_amount: props.orderDiscount || 0,
             surcharge_amount: props.tierSurcharge || 0,
             paid_amount: actualPaidAmount.value,
             payment_method: paymentMethod.value,
+            payment_status: paymentStatus.value,
             notes: orderNotes.value.trim() || null,
+            delivery_option: props.deliveryOption || 'pickup',
             is_debt_approved: isDebtApproved.value,
             debt_notes: isDebtApproved.value ? (debtApprovalNotes.value || 'Disetujui kasir') : null,
         };
@@ -264,53 +262,41 @@ async function processOrderSubmit() {
                     <span>{{ errorMessage }}</span>
                 </div>
 
-                <!-- Payment Mode Selector: Lunas, DP, Bayar Nanti -->
+                <!-- Payment Status Selector: Lunas / Belum Lunas -->
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Tipe Pembayaran</label>
-                    <div class="grid grid-cols-3 gap-2">
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Status Pembayaran</label>
+                    <div class="grid grid-cols-2 gap-2">
                         <button
                             type="button"
-                            @click="paymentMode = 'paid'"
+                            @click="paymentStatus = 'paid'"
                             :class="[
                                 'min-h-[44px] py-2 px-3 rounded-lg border text-xs font-bold transition-all',
-                                paymentMode === 'paid'
+                                paymentStatus === 'paid'
                                     ? 'bg-teal-600 text-white border-teal-600 shadow-xs'
                                     : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50',
                             ]"
                         >
-                            Bayar Lunas
+                            Lunas
                         </button>
                         <button
                             type="button"
-                            @click="paymentMode = 'partial'"
+                            @click="paymentStatus = 'unpaid'"
                             :class="[
                                 'min-h-[44px] py-2 px-3 rounded-lg border text-xs font-bold transition-all',
-                                paymentMode === 'partial'
-                                    ? 'bg-amber-600 text-white border-amber-600 shadow-xs'
-                                    : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50',
-                            ]"
-                        >
-                            Uang Muka (DP)
-                        </button>
-                        <button
-                            type="button"
-                            @click="paymentMode = 'unpaid'"
-                            :class="[
-                                'min-h-[44px] py-2 px-3 rounded-lg border text-xs font-bold transition-all',
-                                paymentMode === 'unpaid'
+                                paymentStatus === 'unpaid'
                                     ? 'bg-slate-800 text-white border-slate-800 shadow-xs'
                                     : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50',
                             ]"
                         >
-                            Bayar Nanti
+                            Belum Lunas
                         </button>
                     </div>
                 </div>
 
-                <!-- Payment Method Selector (Cash, QRIS, Transfer, E-Wallet) -->
-                <div v-if="paymentMode !== 'unpaid'">
+                <!-- Payment Method Selector (Cash, QRIS only) -->
+                <div v-if="paymentStatus !== 'unpaid'">
                     <label class="block text-xs font-bold text-slate-700 mb-1.5">Metode Pembayaran</label>
-                    <div class="grid grid-cols-4 gap-2">
+                    <div class="grid grid-cols-2 gap-2">
                         <button
                             type="button"
                             @click="paymentMethod = 'cash'"
@@ -321,7 +307,7 @@ async function processOrderSubmit() {
                                     : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50',
                             ]"
                         >
-                            <Banknote class="h-4 w-4" />
+                            <Banknote class="h-5 w-5" />
                             <span>Tunai</span>
                         </button>
                         <button
@@ -334,40 +320,14 @@ async function processOrderSubmit() {
                                     : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50',
                             ]"
                         >
-                            <QrCode class="h-4 w-4" />
+                            <QrCode class="h-5 w-5" />
                             <span>QRIS</span>
-                        </button>
-                        <button
-                            type="button"
-                            @click="paymentMethod = 'bank_transfer'"
-                            :class="[
-                                'min-h-[44px] p-2 rounded-lg border text-xs font-bold flex flex-col items-center justify-center space-y-1 transition-all',
-                                paymentMethod === 'bank_transfer'
-                                    ? 'bg-teal-50 border-teal-600 text-teal-800'
-                                    : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50',
-                            ]"
-                        >
-                            <CreditCard class="h-4 w-4" />
-                            <span>Transfer</span>
-                        </button>
-                        <button
-                            type="button"
-                            @click="paymentMethod = 'ewallet'"
-                            :class="[
-                                'min-h-[44px] p-2 rounded-lg border text-xs font-bold flex flex-col items-center justify-center space-y-1 transition-all',
-                                paymentMethod === 'ewallet'
-                                    ? 'bg-teal-50 border-teal-600 text-teal-800'
-                                    : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50',
-                            ]"
-                        >
-                            <Smartphone class="h-4 w-4" />
-                            <span>E-Wallet</span>
                         </button>
                     </div>
                 </div>
 
                 <!-- Cash Tender Inputs & Numpad -->
-                <div v-if="paymentMode !== 'unpaid' && paymentMethod === 'cash'" class="space-y-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                <div v-if="paymentStatus !== 'unpaid' && paymentMethod === 'cash'" class="space-y-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
                     <div class="flex items-center justify-between text-xs">
                         <span class="font-bold text-slate-700">Uang Tunai Diterima:</span>
                         <div class="text-right">
@@ -419,6 +379,17 @@ async function processOrderSubmit() {
                         :allow-decimal="false"
                         class="pt-1"
                     />
+                </div>
+
+                <!-- QRIS Payment Info -->
+                <div v-if="paymentStatus !== 'unpaid' && paymentMethod === 'qris'" class="p-4 bg-slate-50 rounded-xl border border-slate-200 text-center space-y-2">
+                    <QrCode class="h-8 w-8 text-slate-600 mx-auto" />
+                    <p class="text-xs text-slate-600">
+                        Tunjukkan kode QRIS kepada pelanggan untuk pembayaran.
+                    </p>
+                    <p class="text-sm font-bold text-slate-900">
+                        Total: {{ formatRupiah(grandTotal) }}
+                    </p>
                 </div>
 
                 <!-- Credit Ceiling Alert if projected debt exceeds threshold -->

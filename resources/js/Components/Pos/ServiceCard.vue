@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { Plus, Sparkles, Scale, Shirt } from 'lucide-vue-next';
-import { Badge } from '@/Components/ui/badge';
+import { Plus, Sparkles, Scale, Shirt, MapPin } from 'lucide-vue-next';
 import { formatRupiah } from '@/Support/whatsapp';
 
 export interface ServiceItem {
@@ -14,6 +13,7 @@ export interface ServiceItem {
     min_weight: number | null;
     estimated_hours: number;
     code?: string;
+    is_meter_service?: boolean;
     tiers?: Array<{
         id?: number;
         tier_name: string;
@@ -38,15 +38,19 @@ const isKiloan = computed(() => {
     return props.service.unit.toLowerCase() === 'kg' || props.service.category.toLowerCase().includes('kiloan');
 });
 
+const isMeterService = computed(() => {
+    return props.service.unit.toLowerCase() === 'm²' || 
+           props.service.category.toLowerCase().includes('meteran') ||
+           props.service.is_meter_service === true ||
+           props.service.name.toLowerCase().includes('karpet');
+});
+
 const categoryBadgeClass = computed(() => {
     const cat = props.service.category.toLowerCase();
     if (cat.includes('kiloan')) {
         return 'bg-blue-50 text-blue-700 border-blue-200';
     }
-    if (cat.includes('satuan')) {
-        return 'bg-emerald-50 text-emerald-700 border-emerald-200';
-    }
-    if (cat.includes('dry')) {
+    if (cat.includes('meteran')) {
         return 'bg-purple-50 text-purple-700 border-purple-200';
     }
     return 'bg-amber-50 text-amber-700 border-amber-200';
@@ -73,13 +77,14 @@ function handleClick() {
                     ]"
                 >
                     <Scale v-if="isKiloan" class="h-3 w-3 inline" />
+                    <MapPin v-else-if="isMeterService" class="h-3 w-3 inline" />
                     <Shirt v-else class="h-3 w-3 inline" />
                     <span>{{ service.category }}</span>
                 </span>
 
-                <!-- Min weight tag -->
+                <!-- Min weight tag (for kiloan only) -->
                 <span
-                    v-if="service.min_weight"
+                    v-if="service.min_weight && isKiloan"
                     class="text-[10px] text-amber-800 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded-md font-mono font-bold"
                 >
                     Min {{ service.min_weight }} kg
@@ -93,6 +98,11 @@ function handleClick() {
 
             <p class="text-[11px] text-slate-500 mt-0.5">
                 Estimasi: {{ service.estimated_hours }} Jam
+            </p>
+
+            <!-- Unit type indicator -->
+            <p v-if="isMeterService" class="text-[10px] text-purple-700 font-medium mt-0.5">
+                Input P x L (m²)
             </p>
         </div>
 

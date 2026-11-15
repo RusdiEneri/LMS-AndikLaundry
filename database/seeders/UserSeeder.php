@@ -23,22 +23,6 @@ class UserSeeder extends Seeder
                 'role' => 'owner',
                 'is_active' => true,
             ],
-            [
-                'name' => 'Siti (Kasir)',
-                'email' => 'cashier@andiklaundry.test',
-                'phone' => '6281234567002',
-                'password' => Hash::make('Password123!'),
-                'role' => 'cashier',
-                'is_active' => true,
-            ],
-            [
-                'name' => 'Budi (Operator)',
-                'email' => 'operator@andiklaundry.test',
-                'phone' => '6281234567003',
-                'password' => Hash::make('Password123!'),
-                'role' => 'operator',
-                'is_active' => true,
-            ],
         ];
 
         foreach ($users as $userData) {

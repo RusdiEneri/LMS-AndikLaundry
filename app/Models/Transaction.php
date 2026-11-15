@@ -55,6 +55,7 @@ class Transaction extends Model
         'is_debt_approved',
         'debt_notes',
         'cancellation_reason',
+        'delivery_option',
     ];
 
     /**
@@ -211,8 +212,7 @@ class Transaction extends Model
     public function scopeInProduction(Builder $query): Builder
     {
         return $query->whereNotIn('production_status', [
-            ProductionStatus::COMPLETED->value,
-            ProductionStatus::CANCELLED->value,
+            ProductionStatus::SUDAH_DIAMBIL->value,
         ]);
     }
 }

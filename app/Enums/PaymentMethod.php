@@ -7,19 +7,25 @@ enum PaymentMethod: string
     case CASH = 'cash';
     case QRIS = 'qris';
     case BANK_TRANSFER = 'bank_transfer';
-    case EWALLET = 'ewallet';
     case E_WALLET = 'e_wallet';
 
-    /**
-     * Get human-readable localized Indonesian label.
-     */
+    public const EWALLET = self::E_WALLET;
+
     public function label(): string
     {
         return match ($this) {
             self::CASH => 'Tunai (Cash)',
             self::QRIS => 'QRIS',
-            self::BANK_TRANSFER => 'Transfer Bank',
-            self::EWALLET, self::E_WALLET => 'E-Wallet',
+            self::BANK_TRANSFER => 'Transfer Bank (Nonaktif)',
+            self::E_WALLET => 'E-Wallet (Nonaktif)',
         };
+    }
+
+    /**
+     * Active payment methods in POS cashier (Cash & QRIS only).
+     */
+    public static function activeMethods(): array
+    {
+        return [self::CASH, self::QRIS];
     }
 }

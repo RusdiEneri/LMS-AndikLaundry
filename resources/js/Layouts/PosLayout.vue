@@ -132,13 +132,13 @@ onUnmounted(() => {
                     </Link>
 
                     <Link
-                        href="/owner/daily-recap"
+                        href="/owner/settings"
                         class="inline-flex min-h-[38px] items-center space-x-1.5 px-3 py-1.5 rounded-[6px] border border-[#E8E8EC] bg-white text-[#6B6B6B] hover:bg-[#FAFAFA] hover:text-[#0A0A0A] hover:-translate-y-px transition-all focus:outline-none focus:ring-3 focus:ring-[#6366F1]/12 text-xs font-semibold"
-                        title="Rekap Kas Harian"
-                        aria-label="Ke Rekap Kas Harian"
+                        title="Pengaturan Toko & WhatsApp"
+                        aria-label="Ke Pengaturan Toko"
                     >
-                        <Wallet class="h-4 w-4 text-[#10B981]" />
-                        <span class="hidden lg:inline">Rekap Kas</span>
+                        <Settings class="h-4 w-4 text-[#6366F1]" />
+                        <span class="hidden lg:inline">Pengaturan</span>
                     </Link>
 
                     <div class="flex items-center space-x-2.5 pl-2 border-l border-[#E8E8EC]">
@@ -148,7 +148,7 @@ onUnmounted(() => {
                         <div>
                             <div class="flex items-center space-x-2">
                                 <span class="font-bold text-sm text-[#0A0A0A] leading-tight">{{ storeName }}</span>
-                                <Badge variant="teal" class="text-[10px] uppercase font-bold py-0 px-2 rounded-[4px]">Kasir Toko</Badge>
+                                <Badge variant="teal" class="text-[10px] uppercase font-bold py-0 px-2 rounded-[4px]">Owner (Pemilik & Kasir)</Badge>
                             </div>
                             <span class="text-xs text-[#6B6B6B] leading-none">Usaha Rumahan Mandiri</span>
                         </div>

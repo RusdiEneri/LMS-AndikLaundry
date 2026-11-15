@@ -55,7 +55,7 @@ const props = withDefaults(defineProps<Props>(), {
         name: 'Andik Laundry',
         phone: '6281234567890',
         address: 'Jl. Raya Laundry No. 12, Jakarta',
-        default_min_weight: 3.0,
+        default_min_weight: 2.0,
         customer_credit_ceiling: 150000,
         paper_width: '58mm',
         receipt_footer: 'Terima kasih telah mencuci di Andik Laundry. Bersih, Wangi, Rapi!',
@@ -66,21 +66,17 @@ const props = withDefaults(defineProps<Props>(), {
         phone: '',
         outstanding_receivables: 0,
     }),
-    categories: () => ['Semua', 'Kiloan', 'Satuan', 'Dry Clean', 'Sepatu & Karpet'],
+    categories: () => ['Semua', 'Kiloan', 'Meteran'],
     services: () => [
-        { id: 1, name: 'Cuci Komplit Reguler', category: 'Kiloan', price: 7000, unit: 'kg', min_weight: 3.0, estimated_hours: 48 },
-        { id: 2, name: 'Cuci Kering Lipat', category: 'Kiloan', price: 5000, unit: 'kg', min_weight: 3.0, estimated_hours: 48 },
-        { id: 3, name: 'Setrika Uap Reguler', category: 'Kiloan', price: 4000, unit: 'kg', min_weight: 3.0, estimated_hours: 24 },
-        { id: 4, name: 'Bedcover King', category: 'Satuan', price: 25000, unit: 'pcs', min_weight: null, estimated_hours: 48 },
-        { id: 5, name: 'Jas Pria (Dry Clean)', category: 'Dry Clean', price: 35000, unit: 'pcs', min_weight: null, estimated_hours: 72 },
-        { id: 6, name: 'Sepatu Canvas', category: 'Sepatu & Karpet', price: 30000, unit: 'pasang', min_weight: null, estimated_hours: 72 },
+        { id: 1, name: 'Cuci Basah', category: 'Kiloan', price: 5000, unit: 'kg', min_weight: 2.0, estimated_hours: 48 },
+        { id: 2, name: 'Cuci Kering', category: 'Kiloan', price: 6000, unit: 'kg', min_weight: 2.0, estimated_hours: 48 },
+        { id: 3, name: 'Cuci Setrika', category: 'Kiloan', price: 8000, unit: 'kg', min_weight: 2.0, estimated_hours: 24 },
+        { id: 4, name: 'Cuci Karpet', category: 'Meteran', price: 15000, unit: 'm²', min_weight: null, estimated_hours: 72, is_meter_service: true },
     ],
     quick_tenders: () => [10000, 20000, 50000, 100000],
     turnaround_tiers: () => [
-        { code: 'reguler', label: 'Reguler (48 jam)', surcharge: 0 },
-        { code: 'kilat', label: 'Kilat (24 jam)', surcharge: 10000 },
-        { code: 'express', label: 'Express (8 jam)', surcharge: 20000 },
-        { code: 'flash', label: 'Flash (3 jam)', surcharge: 35000 },
+        { code: 'reguler', label: 'Reguler (2-3 Hari)', surcharge: 0 },
+        { code: 'ekspres', label: 'Ekspres (Same Day)', surcharge: 2000 },
     ],
     perfume_variants: () => ['Lavender', 'Sakura', 'Ocean Fresh', 'Akasia', 'Non-Parfum'],
 });
@@ -102,6 +98,7 @@ const inspectingService = ref<ServiceItem | null>(null);
 const cartItems = ref<CartLineItem[]>([]);
 const selectedTierCode = ref(props.turnaround_tiers[0]?.code ?? 'reguler');
 const orderDiscount = ref<number>(0);
+const deliveryOption = ref<'pickup' | 'delivery'>('pickup');
 const defaultPerfume = computed(() => props.perfume_variants[0] ?? 'Lavender');
 
 // Checkout & Receipt Modal State
@@ -139,27 +136,36 @@ const grandTotal = computed(() => {
 // Service selection handler
 function onSelectService(service: ServiceItem) {
     const isKg = service.unit.toLowerCase() === 'kg';
-    if (!isKg) {
+    const isMeterService = (service as any).is_meter_service === true || service.unit.toLowerCase() === 'm²';
+    
+    if (!isKg && !isMeterService) {
         // Satuan / Pieces service: Open Inspection Modal
         inspectingService.value = service;
         isInspectionModalOpen.value = true;
     } else {
-        // Kiloan service: Add or increment in cart
-        const defaultWeight = service.min_weight ?? props.store_info.default_min_weight ?? 3.0;
+        // Kiloan or Meteran service: Add or increment in cart
+        const defaultQty = isMeterService ? 1 : (service.min_weight ?? props.store_info.default_min_weight ?? 2.0);
         const existing = cartItems.value.find(item => item.service.id === service.id);
 
         if (existing) {
             existing.actual_qty = Number((existing.actual_qty + 1.0).toFixed(2));
-            const minWeight = existing.service.min_weight ?? props.store_info.default_min_weight ?? 3.0;
-            existing.billed_qty = Math.max(existing.actual_qty, minWeight);
+            if (isKg) {
+                const minWeight = existing.service.min_weight ?? props.store_info.default_min_weight ?? 2.0;
+                existing.billed_qty = Math.max(existing.actual_qty, minWeight);
+            } else {
+                existing.billed_qty = existing.actual_qty;
+            }
         } else {
             cartItems.value.push({
                 service,
-                actual_qty: defaultWeight,
-                billed_qty: defaultWeight,
+                actual_qty: defaultQty,
+                billed_qty: isKg ? defaultQty : defaultQty,
                 perfume: defaultPerfume.value,
                 item_condition_notes: '',
                 special_instructions: '',
+                length: isMeterService ? 0 : undefined,
+                width: isMeterService ? 0 : undefined,
+                calculated_area: isMeterService ? 0 : undefined,
             });
         }
     }
@@ -361,8 +367,10 @@ onUnmounted(() => {
                     :perfume-variants="perfume_variants"
                     :default-min-weight="store_info.default_min_weight"
                     :order-discount="orderDiscount"
+                    :delivery-option="deliveryOption"
                     @update:selected-tier-code="selectedTierCode = $event"
                     @update:order-discount="orderDiscount = $event"
+                    @update:delivery-option="deliveryOption = $event"
                     @update-qty="onUpdateQty"
                     @update-perfume="onUpdatePerfume"
                     @remove-item="onRemoveItem"
@@ -415,6 +423,7 @@ onUnmounted(() => {
         :turnaround-tier="currentTier"
         :credit-ceiling="store_info.customer_credit_ceiling"
         :quick-tenders="quick_tenders"
+        :delivery-option="deliveryOption"
         @checkout-success="onCheckoutSuccess"
     />
 

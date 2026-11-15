@@ -37,7 +37,7 @@ class BusinessSettingSeeder extends Seeder
             ],
             [
                 'key' => 'store.receipt_footer',
-                'value' => 'Terima kasih telah mencuci di Andik Laundry. Bersih, Wangi, Rapi!',
+                'value' => "Ketentuan Layanan:\n1. Pakaian luntur bukan menjadi tanggung jawab laundry.\n2. Komplain dilayani maksimal 1x24 jam setelah cucian diambil.\n3. Cucian yang tidak diambil lebih dari 1 bulan di luar tanggung jawab toko.",
                 'type' => 'string',
                 'group' => 'store',
                 'description' => 'Catatan kaki pada cetakan nota thermal',
@@ -46,7 +46,7 @@ class BusinessSettingSeeder extends Seeder
             // Operational Limits (5)
             [
                 'key' => 'operational.default_min_weight',
-                'value' => '3.00',
+                'value' => '2.00',
                 'type' => 'decimal',
                 'group' => 'operational',
                 'description' => 'Minimum cas kiloan default (kg)',

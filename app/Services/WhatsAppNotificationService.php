@@ -135,45 +135,77 @@ class WhatsAppNotificationService
 
     /**
      * Default message template for Intake confirmation.
+     * Sesuai Template 1: Pesan Masuk Cucian (Intake & Struk Digital)
      */
     public function getIntakeDefaultTemplate(): string
     {
         return "*{{store_name}}*\n"
-            . "Halo Kak *{{customer_name}}*, cucian Anda telah kami terima dengan baik!\n\n"
-            . "📄 *No. Nota:* {{invoice_number}}\n"
-            . "🧺 *Rincian Layanan:*\n{{items_summary}}"
-            . "💰 *Total Biaya:* {{total_amount}}\n"
-            . "{{paid_info}}"
-            . "📌 *Status Pembayaran:* {{status_text}}\n\n"
-            . "🔗 *Pantau Status Cucian & Nota Digital:*\n{{receipt_url}}\n\n"
-            . "Terima kasih telah mempercayakan cucian Anda di {{store_name}}!";
+            .'[{{store_address}}]'."\n"
+            .'No. WA Toko : {{store_phone}}'."\n"
+            .'===================='."\n"
+            .'Tanggal : {{tanggal}}'."\n"
+            .'No Nota : {{invoice_number}}'."\n"
+            .'Pelanggan : {{customer_name}}'."\n"
+            .'Layanan Antar : {{delivery_option}} (Gratis < 3 km)'."\n"
+            .'===================='."\n"
+            .'Halo {{customer_name}}, cucian Anda telah kami terima dengan rincian berikut:'."\n"
+            .'{{items_detail}}'
+            .'===================='."\n"
+            .'*TOTAL BAYAR : {{total_amount}}*'."\n"
+            .'Status Bayar : {{payment_status}}'."\n"
+            .'Progres Saat Ini : {{production_status}}'."\n"
+            .'Perkiraan Selesai : {{estimated_date}}'."\n"
+            .'===================='."\n"
+            .'*Ketentuan Layanan:*'."\n"
+            .'1. Pakaian luntur bukan menjadi tanggung jawab laundry.'."\n"
+            .'2. Komplain dilayani maksimal 1x24 jam setelah cucian diambil.'."\n"
+            .'3. Cucian yang tidak diambil lebih dari 1 bulan di luar tanggung jawab toko.'."\n"
+            .'===================='."\n"
+            .'Cek progres cucian & nota digital Anda di sini:'."\n"
+            .'{{receipt_url}}';
     }
 
     /**
      * Default message template for Ready for Pickup.
+     * Sesuai Template 2: Notifikasi Cucian Selesai
      */
     public function getReadyDefaultTemplate(): string
     {
-        return "*{{store_name}}*\n"
-            . "Kabar gembira Kak *{{customer_name}}*! Cucian Anda telah *SELESAI* dan siap diambil. ✨\n\n"
-            . "📄 *No. Nota:* {{invoice_number}}\n"
-            . "🏷️ *Lokasi Rak:* *{{rack_location}}*\n"
-            . "📌 *Status Pembayaran:* {{status_text}}\n\n"
-            . "🔗 *Lihat Nota Digital:*\n{{receipt_url}}\n\n"
-            . "Silakan datang ke toko untuk pengambilan. Terima kasih!";
+        return "*{{store_name}} — CUCIAN SELESAI*\n\n"
+            .'Halo Kak *{{customer_name}}*, cucian Anda dengan nomor nota *{{invoice_number}}* telah *SELESAI* diproses dan siap diambil/diantar.'."\n\n"
+            .'• Lokasi Rak : {{rack_location}}'."\n"
+            .'• Total Tagihan : {{total_amount}}'."\n"
+            .'• Status Bayar : {{payment_status}}'."\n\n"
+            .'Lihat detail nota & pembayaran QRIS di sini:'."\n"
+            .'{{receipt_url}}'."\n\n"
+            .'Terima kasih telah mempercayakan cucian Anda kepada {{store_name}}!';
     }
 
     /**
-     * Default message template for Payment Reminder.
+     * Default message template for Completed/Picked Up.
+     * Sesuai Template 3: Konfirmasi Cucian Sudah Diambil
+     */
+    public function getCompletedDefaultTemplate(): string
+    {
+        return "*{{store_name}} — TRANSAKSI SELESAI*\n\n"
+            .'Terima kasih Kak *{{customer_name}}*, cucian Anda dengan nomor nota *{{invoice_number}}* telah berstatus *SUDAH DIAMBIL* pada {{completed_date}}.'."\n\n"
+            .'Simpan tautan berikut sebagai arsip nota digital Anda:'."\n"
+            .'{{receipt_url}}'."\n\n"
+            .'Sampai jumpa kembali di {{store_name}}!';
+    }
+
+    /**
+     * Default message template for Receivable Payment Reminder.
      */
     public function getReminderDefaultTemplate(): string
     {
-        return "*{{store_name}}*\n"
-            . "Halo Kak *{{customer_name}}*, sekadar mengingatkan terkait tagihan cucian di {{store_name}}:\n\n"
-            . "📄 *No. Nota:* {{invoice_number}}\n"
-            . "💰 *Sisa Tagihan Belum Lunas:* *{{debt_amount}}*\n\n"
-            . "🔗 *Rincian Nota & Rekening Transfer:*\n{{receipt_url}}\n\n"
-            . "Pembayaran dapat dilakukan via transfer atau tunai saat mampir ke toko. Terima kasih banyak Kak!";
+        return "*{{store_name}} — PENGINGAT TAGIHAN*\n\n"
+            .'Halo Kak *{{customer_name}}*, nota *{{invoice_number}}* memiliki sisa tagihan sebesar *{{debt_amount}}*.'."\n\n"
+            .'{{paid_info}}'
+            .'Lokasi Rak: {{rack_location}}'."\n\n"
+            .'Lihat detail nota digital & QRIS di sini:'."\n"
+            .'{{receipt_url}}'."\n\n"
+            .'Terima kasih!';
     }
 
     /**
@@ -208,14 +240,22 @@ class WhatsAppNotificationService
 
         $sampleVariables = [
             'store_name' => $storeName,
+            'store_address' => 'Jl. Pandegiling No. 12, Surabaya',
+            'store_phone' => '081234567890',
             'customer_name' => 'Budi Santoso',
             'invoice_number' => $invoice,
+            'tanggal' => date('d/m/Y - H:i'),
+            'delivery_option' => 'Antar Jemput',
+            'items_detail' => "1. Cuci Komplit Reguler\n   Berat : 3.00 kg (Min. 2 kg)\n   Harga : Rp 8.000/kg\n   Subtotal : Rp 24.000\n",
             'items_summary' => "• Cuci Komplit Reguler (3,00 kg)\n• Bed Cover Sedang (1,00 pcs)\n",
             'total_amount' => 'Rp 50.000',
             'paid_amount' => 'Rp 30.000',
             'paid_info' => "💵 *Telah Dibayar:* Rp 30.000\n",
             'debt_amount' => 'Rp 20.000',
             'outstanding_balance' => 'Rp 20.000',
+            'payment_status' => 'BELUM LUNAS',
+            'production_status' => 'DIPROSES',
+            'estimated_date' => date('d/m/Y', strtotime('+3 days')),
             'status_text' => '⚠️ Sisa Tagihan: Rp 20.000',
             'rack_location' => 'Rak R-01-A',
             'staging_rack' => 'Rak R-01-A',
@@ -253,34 +293,47 @@ class WhatsAppNotificationService
 
     /**
      * Build customer intake notification message.
+     * With detailed item breakdown and delivery option.
      */
     public function buildIntakeMessage(Transaction $transaction): string
     {
         $storeName = BusinessSetting::get('store.name', 'Andik Laundry');
+        $storeAddress = BusinessSetting::get('store.address', 'Alamat Toko');
+        $storePhone = BusinessSetting::get('store.phone', '08xxxxxxxxxx');
         $customerName = $transaction->customer?->name ?? 'Pelanggan';
         $invoice = $transaction->invoice_number;
-        $totalFormatted = 'Rp ' . number_format($transaction->total_amount, 0, ',', '.');
-        $paidFormatted = 'Rp ' . number_format($transaction->paid_amount, 0, ',', '.');
-        $debtFormatted = 'Rp ' . number_format($transaction->outstanding_balance, 0, ',', '.');
+        $totalFormatted = 'Rp '.number_format($transaction->total_amount, 0, ',', '.');
+        $debtFormatted = 'Rp '.number_format($transaction->outstanding_balance, 0, ',', '.');
         $rackLocation = ! empty($transaction->staging_rack) ? $transaction->staging_rack : 'Rak Penerimaan';
 
-        $statusText = $transaction->outstanding_balance <= 0
-            ? '✅ LUNAS'
-            : "⚠️ Sisa Tagihan: {$debtFormatted}";
+        $paymentStatus = $transaction->outstanding_balance <= 0 ? 'LUNAS' : 'BELUM LUNAS (Sisa: '.$debtFormatted.')';
 
-        $itemsSummary = '';
-        foreach ($transaction->items as $item) {
+        $itemsDetail = '';
+        foreach ($transaction->items as $idx => $item) {
+            $idxNum = $idx + 1;
+            $itemName = $item->item_name_snapshot ?? 'Layanan';
             $qty = number_format($item->actual_quantity, 2, ',', '.');
             $unit = $item->pricing_unit_snapshot ?? 'kg';
-            $itemsSummary .= "• {$item->item_name_snapshot} ({$qty} {$unit})\n";
+            $unitPrice = number_format((float) $item->unit_price_snapshot, 0, ',', '.');
+            $subtotal = number_format((float) $item->subtotal_snapshot, 0, ',', '.');
+
+            $itemsDetail .= "{$idxNum}. {$itemName}\n";
+            if ($unit === 'kg') {
+                $itemsDetail .= "   Berat : {$qty} kg (Min. 2 kg)\n";
+                $itemsDetail .= "   Harga : Rp {$unitPrice}/kg\n";
+            } else {
+                $itemsDetail .= "   Ukuran : {$qty} {$unit}\n";
+                $itemsDetail .= "   Harga : Rp {$unitPrice}/{$unit}\n";
+            }
+            $itemsDetail .= "   Subtotal : Rp {$subtotal}\n";
         }
-        if (empty($itemsSummary)) {
-            $itemsSummary = "• Layanan Laundry Pakaian\n";
+        if (empty($itemsDetail)) {
+            $itemsDetail = "1. Layanan Laundry\n   Berat : 0 kg\n   Harga : Rp 0/kg\n   Subtotal : Rp 0\n";
         }
 
-        $paidInfo = $transaction->paid_amount > 0
-            ? "💵 *Telah Dibayar:* {$paidFormatted}\n"
-            : '';
+        $deliveryOption = $transaction->delivery_option === 'delivery' ? 'Antar Jemput' : 'Ambil Sendiri';
+        $estimatedDate = $transaction->target_completion_at?->format('d/m/Y') ?? date('d/m/Y', strtotime('+3 days'));
+        $intakeDate = $transaction->intake_at?->format('d/m/Y - H:i') ?? date('d/m/Y - H:i');
 
         $receiptUrl = route('receipts.show', ['invoice_number' => $invoice]);
 
@@ -291,38 +344,37 @@ class WhatsAppNotificationService
 
         return $this->interpolateTemplate($template, [
             'store_name' => $storeName,
+            'store_address' => $storeAddress,
+            'store_phone' => $storePhone,
             'customer_name' => $customerName,
             'invoice_number' => $invoice,
-            'items_summary' => $itemsSummary,
+            'delivery_option' => $deliveryOption,
+            'tanggal' => $intakeDate,
+            'items_detail' => $itemsDetail,
             'total_amount' => $totalFormatted,
-            'paid_amount' => $paidFormatted,
-            'paid_info' => $paidInfo,
-            'debt_amount' => $debtFormatted,
-            'outstanding_balance' => $debtFormatted,
-            'status_text' => $statusText,
+            'payment_status' => $paymentStatus,
+            'production_status' => 'DIPROSES',
+            'estimated_date' => $estimatedDate,
             'rack_location' => $rackLocation,
-            'staging_rack' => $rackLocation,
             'receipt_url' => $receiptUrl,
         ]);
     }
 
     /**
      * Build notification message when laundry is ready for pickup.
+     * Sesuai Template 2.
      */
     public function buildReadyForPickupMessage(Transaction $transaction): string
     {
         $storeName = BusinessSetting::get('store.name', 'Andik Laundry');
         $customerName = $transaction->customer?->name ?? 'Pelanggan';
         $invoice = $transaction->invoice_number;
-        $debtFormatted = 'Rp ' . number_format($transaction->outstanding_balance, 0, ',', '.');
+        $totalFormatted = 'Rp '.number_format($transaction->total_amount, 0, ',', '.');
         $rackLocation = ! empty($transaction->staging_rack) ? $transaction->staging_rack : 'Rak Pengambilan';
 
-        $totalFormatted = 'Rp ' . number_format($transaction->total_amount, 0, ',', '.');
-        $paidFormatted = 'Rp ' . number_format($transaction->paid_amount, 0, ',', '.');
-        $statusText = $transaction->outstanding_balance <= 0
-            ? '✅ Sudah Lunas (Tinggal Diambil)'
-            : "⚠️ Sisa Tagihan saat Ambil: {$debtFormatted}";
-
+        $debtFormatted = 'Rp '.number_format($transaction->outstanding_balance, 0, ',', '.');
+        $paidFormatted = 'Rp '.number_format($transaction->paid_amount, 0, ',', '.');
+        $paymentStatus = $transaction->outstanding_balance <= 0 ? 'LUNAS' : 'BELUM LUNAS';
         $paidInfo = $transaction->paid_amount > 0
             ? "💵 *Telah Dibayar:* {$paidFormatted}\n"
             : '';
@@ -350,15 +402,41 @@ class WhatsAppNotificationService
             'store_name' => $storeName,
             'customer_name' => $customerName,
             'invoice_number' => $invoice,
-            'items_summary' => $itemsSummary,
             'rack_location' => $rackLocation,
             'staging_rack' => $rackLocation,
             'total_amount' => $totalFormatted,
             'paid_amount' => $paidFormatted,
             'paid_info' => $paidInfo,
             'debt_amount' => $debtFormatted,
-            'outstanding_balance' => $debtFormatted,
-            'status_text' => $statusText,
+            'items_summary' => $itemsSummary,
+            'payment_status' => $paymentStatus,
+            'receipt_url' => $receiptUrl,
+        ]);
+    }
+
+    /**
+     * Build notification message when laundry is picked up.
+     * Sesuai Template 3.
+     */
+    public function buildCompletedMessage(Transaction $transaction): string
+    {
+        $storeName = BusinessSetting::get('store.name', 'Andik Laundry');
+        $customerName = $transaction->customer?->name ?? 'Pelanggan';
+        $invoice = $transaction->invoice_number;
+        $completedDate = $transaction->picked_up_at?->format('d/m/Y - H:i') ?? date('d/m/Y - H:i');
+
+        $receiptUrl = route('receipts.show', ['invoice_number' => $invoice]);
+
+        $template = BusinessSetting::get('whatsapp.template_completed');
+        if (empty($template) || ! is_string($template) || trim($template) === '') {
+            $template = $this->getCompletedDefaultTemplate();
+        }
+
+        return $this->interpolateTemplate($template, [
+            'store_name' => $storeName,
+            'customer_name' => $customerName,
+            'invoice_number' => $invoice,
+            'completed_date' => $completedDate,
             'receipt_url' => $receiptUrl,
         ]);
     }
@@ -371,9 +449,9 @@ class WhatsAppNotificationService
         $storeName = BusinessSetting::get('store.name', 'Andik Laundry');
         $customerName = $transaction->customer?->name ?? 'Pelanggan';
         $invoice = $transaction->invoice_number;
-        $totalFormatted = 'Rp ' . number_format($transaction->total_amount, 0, ',', '.');
-        $paidFormatted = 'Rp ' . number_format($transaction->paid_amount, 0, ',', '.');
-        $debtFormatted = 'Rp ' . number_format($transaction->outstanding_balance, 0, ',', '.');
+        $totalFormatted = 'Rp '.number_format($transaction->total_amount, 0, ',', '.');
+        $paidFormatted = 'Rp '.number_format($transaction->paid_amount, 0, ',', '.');
+        $debtFormatted = 'Rp '.number_format($transaction->outstanding_balance, 0, ',', '.');
         $rackLocation = ! empty($transaction->staging_rack) ? $transaction->staging_rack : 'Rak Pengambilan';
         $statusText = $transaction->outstanding_balance <= 0
             ? '✅ LUNAS'
@@ -427,7 +505,7 @@ class WhatsAppNotificationService
         $normalizedPhone = PhoneFormatter::normalize($phone ?? '');
         $digitsOnly = ltrim($normalizedPhone, '+');
 
-        return 'https://wa.me/' . $digitsOnly . '?text=' . urlencode($message);
+        return 'https://wa.me/'.$digitsOnly.'?text='.urlencode($message);
     }
 
     /**
@@ -493,7 +571,7 @@ class WhatsAppNotificationService
 
         $serverUrl = $rawUrl;
         if (! str_starts_with($serverUrl, 'http://') && ! str_starts_with($serverUrl, 'https://')) {
-            $serverUrl = 'http://' . $serverUrl;
+            $serverUrl = 'http://'.$serverUrl;
         }
         $serverUrl = rtrim($serverUrl, '/');
 
@@ -523,7 +601,7 @@ class WhatsAppNotificationService
             $headers = ['Accept' => 'application/json'];
             if (! empty($apiKey)) {
                 $headers['Token'] = $apiKey;
-                $headers['Authorization'] = 'Bearer ' . $apiKey;
+                $headers['Authorization'] = 'Bearer '.$apiKey;
             }
             if (! empty($sessionId)) {
                 $headers['Session'] = $sessionId;
@@ -659,7 +737,7 @@ class WhatsAppNotificationService
                             'success' => false,
                             'mode' => 'automatic',
                             'status' => 422,
-                            'message' => $this->extractErrorMessage($data['message'] ?? $data['error'] ?? $data['details'] ?? $data['detail'] ?? $data['data'] ?? null, 'Gateway merespons dengan kode error: ' . $errorCode),
+                            'message' => $this->extractErrorMessage($data['message'] ?? $data['error'] ?? $data['details'] ?? $data['detail'] ?? $data['data'] ?? null, 'Gateway merespons dengan kode error: '.$errorCode),
                             'data' => $data,
                         ];
                     }
@@ -699,7 +777,7 @@ class WhatsAppNotificationService
             if (str_contains($msg, 'cURL error 7') || str_contains($msg, 'Failed to connect') || str_contains($msg, 'Connection refused')) {
                 $friendly = "Gagal terhubung ke WhatsApp gateway ({$serverUrl}): Server belum dijalankan. Jalankan gateway dengan mengeksekusi `whatsapp-gateway.exe` di folder `gateway/`, atau gunakan Mode Manual (wa.me).";
             } else {
-                $friendly = 'Gagal menghubungi server WhatsApp gateway: ' . $msg;
+                $friendly = 'Gagal menghubungi server WhatsApp gateway: '.$msg;
             }
 
             return [
@@ -735,8 +813,8 @@ class WhatsAppNotificationService
 
         $storeName = BusinessSetting::get('store.name', 'Andik Laundry');
         $messageText = $message ?: "[Uji Coba WhatsApp Gateway]\n"
-            . "Halo! Ini adalah pesan uji coba dari sistem {$storeName}.\n"
-            . "Jika Anda menerima pesan ini, integrasi WhatsApp Gateway telah berfungsi dengan baik.";
+            ."Halo! Ini adalah pesan uji coba dari sistem {$storeName}.\n"
+            .'Jika Anda menerima pesan ini, integrasi WhatsApp Gateway telah berfungsi dengan baik.';
 
         if ($mode === 'manual') {
             $waUrl = $this->buildManualWhatsAppUrl($normalizedPhone, $messageText);
@@ -796,7 +874,7 @@ class WhatsAppNotificationService
 
         $serverUrl = $rawUrl;
         if (! str_starts_with($serverUrl, 'http://') && ! str_starts_with($serverUrl, 'https://')) {
-            $serverUrl = 'http://' . $serverUrl;
+            $serverUrl = 'http://'.$serverUrl;
         }
         $serverUrl = rtrim($serverUrl, '/');
 
@@ -826,7 +904,7 @@ class WhatsAppNotificationService
             $headers = ['Accept' => 'application/json'];
             if (! empty($apiKey)) {
                 $headers['Token'] = $apiKey;
-                $headers['Authorization'] = 'Bearer ' . $apiKey;
+                $headers['Authorization'] = 'Bearer '.$apiKey;
             }
             if (! empty($sessionId)) {
                 $headers['Session'] = $sessionId;
@@ -970,7 +1048,7 @@ class WhatsAppNotificationService
                             'success' => false,
                             'mode' => 'automatic',
                             'status' => 422,
-                            'message' => $this->extractErrorMessage($data['message'] ?? $data['error'] ?? $data['details'] ?? $data['detail'] ?? $data['data'] ?? null, 'Gagal mengirim pesan WhatsApp (kode error gateway: ' . $errorCode . ').'),
+                            'message' => $this->extractErrorMessage($data['message'] ?? $data['error'] ?? $data['details'] ?? $data['detail'] ?? $data['data'] ?? null, 'Gagal mengirim pesan WhatsApp (kode error gateway: '.$errorCode.').'),
                             'data' => $data,
                         ];
                     }
@@ -1010,7 +1088,7 @@ class WhatsAppNotificationService
             if (str_contains($msg, 'cURL error 7') || str_contains($msg, 'Failed to connect') || str_contains($msg, 'Connection refused')) {
                 $friendly = "Gagal terhubung ke WhatsApp gateway ({$serverUrl}): Server belum dijalankan. Jalankan gateway di folder `gateway/`, atau gunakan Mode Manual (wa.me).";
             } else {
-                $friendly = 'Terjadi kesalahan saat mengirim pesan uji coba: ' . $msg;
+                $friendly = 'Terjadi kesalahan saat mengirim pesan uji coba: '.$msg;
             }
 
             return [
@@ -1037,7 +1115,7 @@ class WhatsAppNotificationService
             $headers = ['Accept' => 'application/json'];
             if (! empty($apiKey)) {
                 $headers['Token'] = $apiKey;
-                $headers['Authorization'] = 'Bearer ' . $apiKey;
+                $headers['Authorization'] = 'Bearer '.$apiKey;
             }
 
             $client = Http::timeout(10)->withHeaders($headers);
@@ -1064,7 +1142,7 @@ class WhatsAppNotificationService
             return [
                 'success' => false,
                 'status' => $response->status(),
-                'message' => 'Gagal menghubungkan sesi ke gateway WhatsApp (HTTP ' . $response->status() . ').',
+                'message' => 'Gagal menghubungkan sesi ke gateway WhatsApp (HTTP '.$response->status().').',
                 'data' => $response->json() ?? $response->body(),
             ];
         } catch (\Throwable $e) {
@@ -1072,7 +1150,7 @@ class WhatsAppNotificationService
             if (str_contains($msg, 'cURL error 7') || str_contains($msg, 'Failed to connect') || str_contains($msg, 'Connection refused')) {
                 $friendly = "Gagal terhubung ke WhatsApp gateway ({$serverUrl}): Server belum dijalankan. Jalankan gateway di folder `gateway/`.";
             } else {
-                $friendly = 'Gagal menghubungi server WhatsApp gateway: ' . $msg;
+                $friendly = 'Gagal menghubungi server WhatsApp gateway: '.$msg;
             }
 
             return [
@@ -1086,7 +1164,6 @@ class WhatsAppNotificationService
     /**
      * Request WhatsApp phone pairing code (OTP) for code-based device linking.
      *
-     * @param  string  $phone
      * @param  array<string, mixed>|null  $params
      * @return array<string, mixed>
      */
@@ -1110,7 +1187,7 @@ class WhatsAppNotificationService
             $headers = ['Accept' => 'application/json'];
             if (! empty($apiKey)) {
                 $headers['Token'] = $apiKey;
-                $headers['Authorization'] = 'Bearer ' . $apiKey;
+                $headers['Authorization'] = 'Bearer '.$apiKey;
             }
 
             $client = Http::timeout(15)->withHeaders($headers);
@@ -1134,7 +1211,7 @@ class WhatsAppNotificationService
 
             $errorMsg = is_array($rawJson) && ! empty($rawJson['message'])
                 ? $rawJson['message']
-                : 'Gagal membuat kode pairing dari gateway (HTTP ' . $response->status() . ').';
+                : 'Gagal membuat kode pairing dari gateway (HTTP '.$response->status().').';
 
             return [
                 'success' => false,
@@ -1147,7 +1224,7 @@ class WhatsAppNotificationService
             if (str_contains($msg, 'cURL error 7') || str_contains($msg, 'Failed to connect') || str_contains($msg, 'Connection refused')) {
                 $friendly = "Gagal terhubung ke WhatsApp gateway ({$serverUrl}): Server belum dijalankan. Jalankan gateway di folder `gateway/`.";
             } else {
-                $friendly = 'Gagal menghubungi server WhatsApp gateway: ' . $msg;
+                $friendly = 'Gagal menghubungi server WhatsApp gateway: '.$msg;
             }
 
             return [
@@ -1173,7 +1250,7 @@ class WhatsAppNotificationService
             $headers = ['Accept' => 'application/json'];
             if (! empty($apiKey)) {
                 $headers['Token'] = $apiKey;
-                $headers['Authorization'] = 'Bearer ' . $apiKey;
+                $headers['Authorization'] = 'Bearer '.$apiKey;
             }
 
             $client = Http::timeout(10)->withHeaders($headers);
@@ -1198,7 +1275,7 @@ class WhatsAppNotificationService
             return [
                 'success' => false,
                 'status' => 500,
-                'message' => 'Gagal menghubungi server WhatsApp gateway: ' . $e->getMessage(),
+                'message' => 'Gagal menghubungi server WhatsApp gateway: '.$e->getMessage(),
             ];
         }
     }
@@ -1207,7 +1284,6 @@ class WhatsAppNotificationService
      * Resolve server URL with fallback.
      *
      * @param  array<string, mixed>|null  $params
-     * @return string
      */
     protected function resolveServerUrl(?array $params = null): string
     {
@@ -1222,7 +1298,7 @@ class WhatsAppNotificationService
         }
 
         if (! str_starts_with($rawUrl, 'http://') && ! str_starts_with($rawUrl, 'https://')) {
-            $rawUrl = 'http://' . $rawUrl;
+            $rawUrl = 'http://'.$rawUrl;
         }
 
         return rtrim($rawUrl, '/');

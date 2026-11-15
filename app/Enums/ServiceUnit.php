@@ -5,18 +5,16 @@ namespace App\Enums;
 enum ServiceUnit: string
 {
     case KG = 'kg';
-    case PCS = 'pcs';
     case M2 = 'm2';
+    case METER = 'meter';
+    case PCS = 'pcs';
 
-    /**
-     * Get human-readable localized label.
-     */
     public function label(): string
     {
         return match ($this) {
             self::KG => 'Kilogram (Kg)',
+            self::M2, self::METER => 'Meter Persegi (m²)',
             self::PCS => 'Satuan (Pcs)',
-            self::M2 => 'Meter Persegi (M²)',
         };
     }
 }

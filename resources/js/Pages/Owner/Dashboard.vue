@@ -183,7 +183,7 @@ function barHeight(value: number): string {
     <AppLayout title="Owner Dashboard">
         <div class="space-y-6 print:hidden" :aria-busy="loading">
             <!-- Header: title, period, actions -->
-            <div class="flex flex-col gap-4 rounded-[12px] border border-[#E8E8EC] bg-white p-5 lg:flex-row lg:items-end lg:justify-between transition-all duration-200">
+            <div class="flex flex-col gap-4 rounded-[12px] border border-[#E8E8EC] bg-white p-5 lg:flex-row lg:items-end lg:justify-between">
                 <div>
                     <h1 class="font-display text-2xl font-bold tracking-tight text-[#0A0A0A]">Keuangan Toko</h1>
                     <p class="mt-1 font-sans text-sm text-[#6B6B6B]">
@@ -210,7 +210,7 @@ function barHeight(value: number): string {
             </div>
 
             <!-- Period filter -->
-            <div class="space-y-3 rounded-[12px] border border-[#E8E8EC] bg-white p-4 transition-all duration-200">
+            <div class="space-y-3 rounded-[12px] border border-[#E8E8EC] bg-white p-4">
                 <div role="group" aria-label="Pilih periode laporan" class="flex flex-wrap gap-2">
                     <button
                         v-for="p in presets"
@@ -284,7 +284,7 @@ function barHeight(value: number): string {
 
             <!-- Accrual profit vs cash on hand, side by side -->
             <div class="grid grid-cols-1 gap-5 md:grid-cols-2" :class="{ 'opacity-60': loading }">
-                <Card class="border border-[#E8E8EC] bg-white rounded-[12px] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
+                <Card class="border border-[#E8E8EC] bg-white rounded-[12px]">
                     <CardHeader class="flex flex-row items-start justify-between space-y-0 pb-4">
                         <div>
                             <CardTitle class="font-display text-base font-bold text-[#0A0A0A]">Laba Bersih Usaha</CardTitle>
@@ -321,7 +321,7 @@ function barHeight(value: number): string {
                     </CardContent>
                 </Card>
 
-                <Card class="border border-[#E8E8EC] bg-white rounded-[12px] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
+                <Card class="border border-[#E8E8EC] bg-white rounded-[12px]">
                     <CardHeader class="flex flex-row items-start justify-between space-y-0 pb-4">
                         <div>
                             <CardTitle class="font-display text-base font-bold text-[#0A0A0A]">Uang Kas Nyata di Tangan</CardTitle>
@@ -376,7 +376,7 @@ function barHeight(value: number): string {
             </div>
 
             <!-- Outstanding receivables -->
-            <Card class="border border-[#E8E8EC] bg-white rounded-[12px] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)]" :class="{ 'opacity-60': loading }">
+            <Card class="border border-[#E8E8EC] bg-white rounded-[12px]" :class="{ 'opacity-60': loading }">
                 <CardContent class="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
                     <div class="flex items-start gap-3.5">
                         <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] bg-amber-500/10 border border-amber-500/20 text-[#F59E0B]">
@@ -405,7 +405,7 @@ function barHeight(value: number): string {
                     <CardTitle class="font-display text-base font-bold text-[#0A0A0A]">Omzet selesai vs biaya toko per {{ trendUnit }}</CardTitle>
                     <div class="flex flex-wrap gap-4 pt-1 text-xs text-[#6B6B6B]" aria-hidden="true">
                         <span class="flex items-center gap-1.5"><span class="h-3 w-3 rounded-[2px] bg-[#6366F1]"></span>Omzet selesai</span>
-                        <span class="flex items-center gap-1.5"><span class="h-3 w-3 rounded-[2px] bg-[#EF4444]"></span>Biaya toko</span>
+                        <span class="flex items-center gap-1.5"><span class="h-3 w-3 rounded-[2px] bg-[#9C9C9C]"></span>Biaya toko</span>
                     </div>
                 </CardHeader>
                 <CardContent>
@@ -429,7 +429,7 @@ function barHeight(value: number): string {
                                     {{ point.label }}: omzet {{ formatRupiah(point.revenue) }}, biaya {{ formatRupiah(point.expenses) }}
                                 </span>
                                 <span class="w-full max-w-[18px] rounded-t-[2px] bg-[#6366F1]" :style="{ height: barHeight(point.revenue) }" aria-hidden="true"></span>
-                                <span class="w-full max-w-[18px] rounded-t-[2px] bg-[#EF4444]" :style="{ height: barHeight(point.expenses) }" aria-hidden="true"></span>
+                                <span class="w-full max-w-[18px] rounded-t-[2px] bg-[#9C9C9C]" :style="{ height: barHeight(point.expenses) }" aria-hidden="true"></span>
                             </li>
                         </ul>
                         <div class="flex gap-1.5 pt-1.5" :style="{ minWidth: `${trend.points.length * 2.25}rem` }" aria-hidden="true">

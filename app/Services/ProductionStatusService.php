@@ -56,16 +56,18 @@ class ProductionStatusService
             }
 
             // Physical Rack Staging Coordinate Requirement
-            if ($toStatus === ProductionStatus::READY_FOR_PICKUP) {
+            if ($toStatus === ProductionStatus::READY_FOR_PICKUP || $toStatus === ProductionStatus::SELESAI) {
                 $rackCoordinate = $metadata['staging_rack'] ?? $transaction->staging_rack;
-                if (is_null($rackCoordinate) || trim((string) $rackCoordinate) === '') {
+                if ($toStatus === ProductionStatus::READY_FOR_PICKUP && (is_null($rackCoordinate) || trim((string) $rackCoordinate) === '')) {
                     throw new InvalidArgumentException('A valid staging rack coordinate is required when marking order ready for pickup.');
                 }
-                $transaction->staging_rack = trim((string) $rackCoordinate);
+                if (! is_null($rackCoordinate) && trim((string) $rackCoordinate) !== '') {
+                    $transaction->staging_rack = trim((string) $rackCoordinate);
+                }
             }
 
             // Counter Release Guard (blocking release to completed if unpaid unless debt approved)
-            if ($toStatus === ProductionStatus::COMPLETED) {
+            if ($toStatus === ProductionStatus::COMPLETED || $toStatus === ProductionStatus::SUDAH_DIAMBIL) {
                 if (! $this->canRelease($transaction)) {
                     throw new InvalidArgumentException('Cannot release order: payment has not been settled and credit/debt is not approved.');
                 }

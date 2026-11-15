@@ -8,7 +8,6 @@ use App\Models\Customer;
 use App\Models\Service;
 use App\Models\ServiceTier;
 use App\Models\Transaction;
-use App\Models\TransactionItem;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -24,11 +23,12 @@ class TransactionService
      * Create a new transaction intake with frozen price snapshots in a database transaction.
      *
      * @param  array<string, mixed>  $data
+     *
      * @throws InvalidArgumentException
      */
     public function createTransaction(array $data, ?User $cashier = null): Transaction
     {
-        if (empty($data['items']) || !is_array($data['items'])) {
+        if (empty($data['items']) || ! is_array($data['items'])) {
             throw new InvalidArgumentException('Transaction must contain at least one line item.');
         }
 
@@ -36,7 +36,7 @@ class TransactionService
             $customer = Customer::findOrFail($data['customer_id']);
             $cashierId = $cashier?->id ?? $data['cashier_id'] ?? auth()->id();
 
-            if (!$cashierId) {
+            if (! $cashierId) {
                 // If no authenticated cashier, resolve to the first available cashier/owner
                 $cashierId = User::whereIn('role', ['cashier', 'owner'])->value('id') ?? 1;
             }
@@ -50,7 +50,7 @@ class TransactionService
 
             foreach ($data['items'] as $itemData) {
                 $service = Service::findOrFail($itemData['service_id']);
-                $tier = !empty($itemData['service_tier_id'])
+                $tier = ! empty($itemData['service_tier_id'])
                     ? ServiceTier::find($itemData['service_tier_id'])
                     : null;
 
@@ -65,7 +65,7 @@ class TransactionService
                 $itemSubtotal = max(0.00, round(($billedQty * $unitPriceSnapshot) - $itemDiscount, 2));
 
                 $unitValue = is_string($service->unit) ? $service->unit : ($service->unit?->value ?? 'kg');
-                $itemName = $service->name . ($tier ? " ({$tier->tier_name})" : '');
+                $itemName = $service->name.($tier ? " ({$tier->tier_name})" : '');
 
                 $preparedItems[] = [
                     'service_id' => $service->id,
@@ -80,6 +80,9 @@ class TransactionService
                     'perfume_variant' => $itemData['perfume_variant'] ?? null,
                     'item_condition_notes' => $itemData['item_condition_notes'] ?? null,
                     'special_instructions' => $itemData['special_instructions'] ?? null,
+                    'length' => isset($itemData['length']) ? (float) $itemData['length'] : null,
+                    'width' => isset($itemData['width']) ? (float) $itemData['width'] : null,
+                    'calculated_area' => isset($itemData['calculated_area']) ? (float) $itemData['calculated_area'] : null,
                 ];
 
                 $subtotalSum += $itemSubtotal;
@@ -117,8 +120,11 @@ class TransactionService
             $changeAmount = max(0.00, round($paidAmount - $totalAmount, 2));
             $outstandingBalance = max(0.00, round($totalAmount - $paidAmount, 2));
 
-            // Determine payment status
-            if ($totalAmount == 0.00) {
+            // Determine payment status from request or calculate
+            $requestedPaymentStatus = $data['payment_status'] ?? null;
+            if ($requestedPaymentStatus === 'unpaid') {
+                $paymentStatus = PaymentStatus::UNPAID;
+            } elseif ($totalAmount == 0.00) {
                 $paymentStatus = PaymentStatus::PAID;
             } elseif ($paidAmount >= $totalAmount) {
                 $paymentStatus = $paidAmount > $totalAmount ? PaymentStatus::OVERPAID : PaymentStatus::PAID;
@@ -128,7 +134,7 @@ class TransactionService
                 $paymentStatus = PaymentStatus::UNPAID;
             }
 
-            $targetCompletion = !empty($data['target_completion_at'])
+            $targetCompletion = ! empty($data['target_completion_at'])
                 ? Carbon::parse($data['target_completion_at'])
                 : now()->addHours($maxDurationHours);
 
@@ -138,7 +144,7 @@ class TransactionService
                 'cashier_id' => $cashierId,
                 'shift_id' => $data['shift_id'] ?? null,
                 'approved_by_id' => $data['approved_by_id'] ?? null,
-                'production_status' => ProductionStatus::RECEIVED,
+                'production_status' => isset($data['production_status']) ? ProductionStatus::coerce($data['production_status']) : ProductionStatus::RECEIVED,
                 'payment_status' => $paymentStatus,
                 'intake_at' => now(),
                 'target_completion_at' => $targetCompletion,
@@ -155,6 +161,7 @@ class TransactionService
                 'notes' => $data['notes'] ?? null,
                 'is_debt_approved' => (bool) ($data['is_debt_approved'] ?? false),
                 'debt_notes' => $data['debt_notes'] ?? null,
+                'delivery_option' => $data['delivery_option'] ?? 'pickup',
             ]);
 
             foreach ($preparedItems as $itemAttributes) {
@@ -166,7 +173,7 @@ class TransactionService
                 $transaction->payments()->create([
                     'cashier_id' => $cashierId,
                     'shift_id' => $data['shift_id'] ?? null,
-                    'payment_number' => 'PAY-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -6)),
+                    'payment_number' => 'PAY-'.date('Ymd').'-'.strtoupper(substr(uniqid(), -6)),
                     'payment_method' => $rawMethod,
                     'amount' => min($paidAmount, $totalAmount),
                     'tender_amount' => $paidAmount,

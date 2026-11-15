@@ -27,12 +27,12 @@ class TransactionFactory extends Factory
         $total = $subtotal;
 
         return [
-            'invoice_number' => 'INV-' . date('Ymd') . '-' . fake()->unique()->numerify('####'),
+            'invoice_number' => 'INV-'.date('Ymd').'-'.fake()->unique()->numerify('####'),
             'customer_id' => Customer::factory(),
-            'cashier_id' => User::factory()->state(['role' => 'cashier']),
+            'cashier_id' => User::factory()->state(['role' => 'owner']),
             'shift_id' => null,
             'approved_by_id' => null,
-            'production_status' => ProductionStatus::RECEIVED,
+            'production_status' => ProductionStatus::DIPROSES,
             'payment_status' => PaymentStatus::UNPAID,
             'intake_at' => now(),
             'target_completion_at' => now()->addHours(48),
@@ -104,7 +104,7 @@ class TransactionFactory extends Factory
     public function completed(): self
     {
         return $this->state(fn (array $attributes) => [
-            'production_status' => ProductionStatus::COMPLETED,
+            'production_status' => ProductionStatus::SUDAH_DIAMBIL,
             'actual_completion_at' => now(),
             'picked_up_at' => now(),
         ]);

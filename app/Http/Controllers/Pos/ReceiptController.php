@@ -19,9 +19,37 @@ class ReceiptController extends Controller
     public function show(?string $invoice_number = null, ?Request $request = null): Response|JsonResponse
     {
         $request ??= request();
-        $targetInvoice = $invoice_number ?: (string) ($request->route('orderNumber') ?? $request->route('invoice_number') ?? '');
+        $targetInvoice = $invoice_number ?: (string) ($request->route('orderNumber') ?? $request->route('invoice_number') ?? $request->query('q') ?? '');
 
+        $storeInfo = [
+            'name' => BusinessSetting::get('store.name', 'Andik Laundry'),
+            'phone' => BusinessSetting::get('store.phone', '6281234567890'),
+            'address' => BusinessSetting::get('store.address', 'Jl. Raya Laundry No. 12, Jakarta'),
+            'default_min_weight' => (float) BusinessSetting::get('operational.default_min_weight', 2.0),
+            'paper_width' => BusinessSetting::get('printer.paper_width', '58mm'),
+            'receipt_footer' => BusinessSetting::get('store.receipt_footer', 'Terima kasih telah mencuci di Andik Laundry. Bersih, Wangi, Rapi!'),
+        ];
+
+        if (trim($targetInvoice) === '') {
+            if ($request->wantsJson()) {
+                return response()->json(['message' => 'Silakan masukkan nomor nota.'], 400);
+            }
+
+            return Inertia::render('Receipt/Show', [
+                'order' => null,
+                'store_info' => $storeInfo,
+            ]);
+        }
+
+        // Search by invoice number or phone number
         $transaction = Transaction::where('invoice_number', $targetInvoice)
+            ->orWhereHas('customer', function ($query) use ($targetInvoice) {
+                $normalizedPhone = preg_replace('/[^0-9]/', '', $targetInvoice);
+                if (strlen($normalizedPhone) >= 8) {
+                    $query->where('phone_normalized', 'like', '%'.$normalizedPhone)
+                        ->orWhere('phone', 'like', '%'.$targetInvoice);
+                }
+            })
             ->with([
                 'items.service',
                 'items.serviceTier',
@@ -32,14 +60,14 @@ class ReceiptController extends Controller
             ])
             ->first();
 
-        if (!$transaction) {
+        if (! $transaction) {
             if ($request->wantsJson()) {
                 return response()->json(['message' => 'Nota transaksi tidak ditemukan.'], 404);
             }
             abort(404, 'Nota transaksi tidak ditemukan.');
         }
 
-        $minWeight = (float) BusinessSetting::get('operational.default_min_weight', 3.0);
+        $minWeight = (float) BusinessSetting::get('operational.default_min_weight', 2.0);
 
         $orderData = [
             'id' => $transaction->id,
@@ -70,6 +98,7 @@ class ReceiptController extends Controller
             'outstanding_balance' => (float) $transaction->outstanding_balance,
             'staging_rack' => $transaction->staging_rack,
             'notes' => $transaction->notes,
+            'delivery_option' => $transaction->delivery_option,
             'customer' => [
                 'id' => $transaction->customer?->id,
                 'name' => $transaction->customer?->name ?? 'Pelanggan Umum',

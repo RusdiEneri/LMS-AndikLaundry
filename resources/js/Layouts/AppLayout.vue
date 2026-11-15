@@ -106,19 +106,19 @@ interface NavItem {
 
 const navigationItems: NavItem[] = [
     {
-        name: 'Dashboard',
+        name: 'Dashboard & Laporan',
         href: '/dashboard',
         icon: LayoutDashboard,
         roles: ['owner'],
     },
     {
-        name: 'Point of Sale (Kasir)',
+        name: 'Kasir POS',
         href: '/pos',
         icon: Store,
         roles: ['owner', 'cashier'],
     },
     {
-        name: 'Stasiun Produksi',
+        name: 'Progres Cucian',
         href: '/production/station',
         icon: Shirt,
         roles: ['owner', 'operator'],
@@ -130,22 +130,10 @@ const navigationItems: NavItem[] = [
         roles: ['owner', 'cashier'],
     },
     {
-        name: 'Rekap Kas Harian',
-        href: '/owner/daily-recap',
-        icon: Wallet,
-        roles: ['owner', 'cashier'],
-    },
-    {
         name: 'Buku Piutang',
         href: '/owner/receivables',
         icon: AlertCircle,
         roles: ['owner', 'cashier'],
-    },
-    {
-        name: 'Manajemen Pengguna',
-        href: '/owner/users',
-        icon: Users,
-        roles: ['owner'],
     },
     {
         name: 'Pengaturan Toko',
@@ -183,7 +171,7 @@ const roleBadgeVariant = computed(() => {
 const roleLabel = computed(() => {
     switch (userRole.value) {
         case 'owner':
-            return 'Pemilik & Kasir (Keluarga)';
+            return 'Owner (Pemilik & Kasir)';
         case 'cashier':
             return 'Kasir';
         case 'operator':

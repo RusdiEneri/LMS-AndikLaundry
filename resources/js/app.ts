@@ -20,7 +20,7 @@ createInertiaApp({
             .mount(el);
     },
     progress: {
-        color: '#0d9488', // Brand Teal-600
+        color: '#6366F1',
         showSpinner: true,
     },
 });

@@ -72,10 +72,10 @@ const grandTotal = computed(() => Number(props.transaction?.total_amount ?? 0));
 const paidAmount = computed(() => Number(props.transaction?.paid_amount ?? 0));
 const changeAmount = computed(() => Number(props.transaction?.change_amount ?? 0));
 const outstandingBalance = computed(() => Number(props.transaction?.outstanding_balance ?? 0));
+const deliveryOption = computed(() => props.transaction?.delivery_option ?? 'pickup');
 
 const paymentStatusLabel = computed(() => {
     if (outstandingBalance.value <= 0) return 'LUNAS';
-    if (paidAmount.value > 0) return 'BAYAR SEBAGIAN (DP)';
     return 'BELUM LUNAS';
 });
 
@@ -279,6 +279,16 @@ function handleNewTransaction() {
                             <div v-if="item.item_condition_notes" class="text-[9px] text-amber-900 bg-amber-50 px-1 py-0.5 rounded-sm">
                                 Catatan: {{ item.item_condition_notes }}
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Delivery Option -->
+                    <div class="py-2 border-b border-dashed border-slate-400 text-[10px]">
+                        <div class="flex justify-between">
+                            <span>Pengantaran:</span>
+                            <span class="font-bold">
+                                {{ deliveryOption === 'delivery' ? 'Antar Jemput' : 'Ambil Sendiri' }}
+                            </span>
                         </div>
                     </div>
 

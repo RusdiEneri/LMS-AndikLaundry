@@ -16,10 +16,14 @@ uses(RefreshDatabase::class);
 
 describe('Feature F7: Route & Layout Accessibility - Tier 1 Happy Paths', function () {
 
-    it('T1-ROUTE-01: Guest visiting / redirects to /login', function () {
+    it('T1-ROUTE-01: Guest visiting / sees the public Andik Laundry landing page', function () {
         $response = $this->get('/');
 
-        $response->assertRedirect('/login');
+        $response->assertOk();
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Welcome')
+            ->where('canLogin', true)
+        );
     });
 
     it('T1-ROUTE-02: Guest visiting protected routes redirects to /login', function (string $uri) {
@@ -61,7 +65,7 @@ describe('Feature F7: Route & Layout Accessibility - Tier 1 Happy Paths', functi
         $response->assertStatus(403);
         $response->assertInertia(fn (Assert $page) => $page
             ->component('Error/403')
-            ->where('message', fn ($msg) => str_contains($msg, 'Akses Ditolak') || str_contains($msg, 'wewenang') || str_contains($msg, 'unauthorized') || !empty($msg))
+            ->where('message', fn ($msg) => str_contains($msg, 'Akses Ditolak') || str_contains($msg, 'wewenang') || str_contains($msg, 'unauthorized') || ! empty($msg))
         );
     });
 
@@ -122,7 +126,7 @@ describe('Feature F7: Route & Layout Accessibility - Tier 2 Boundary Cases', fun
         $cashier = User::factory()->create(['role' => 'cashier', 'is_active' => true]);
 
         $this->actingAs($cashier);
-        
+
         // Invalidate session to simulate 480 min timeout
         auth()->logout();
         session()->flush();
