@@ -71,7 +71,7 @@ class DailyCashRecapService
         // Store branding
         $storeName = BusinessSetting::get('store.name', 'Andik Laundry');
         $storePhone = BusinessSetting::get('store.phone', '6281234567890');
-        $storeAddress = BusinessSetting::get('store.address', 'Jl. Merdeka No. 45, Surabaya');
+        $storeAddress = BusinessSetting::get('store.address', 'Hendrosari, RT.06/RW.03, Hendrosari, Kec. Menganti, Kabupaten Gresik, Jawa Timur 61174');
 
         return [
             'date' => $targetDate,

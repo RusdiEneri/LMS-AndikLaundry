@@ -59,7 +59,7 @@ Route::get('/', function () {
 
     $storeName = 'Andik Laundry';
     $storePhone = '6281234567890';
-    $storeAddress = 'Jl. Raya Laundry No. 12, Jakarta';
+    $storeAddress = 'Hendrosari, RT.06/RW.03, Hendrosari, Kec. Menganti, Kabupaten Gresik, Jawa Timur 61174';
 
     try {
         $storeName = BusinessSetting::get('store.name', $storeName);

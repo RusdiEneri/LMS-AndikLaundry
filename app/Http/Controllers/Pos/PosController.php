@@ -101,7 +101,7 @@ class PosController extends Controller
             'store_info' => [
                 'name' => BusinessSetting::get('store.name', 'Andik Laundry'),
                 'phone' => BusinessSetting::get('store.phone', '6281234567890'),
-                'address' => BusinessSetting::get('store.address', 'Jl. Raya Laundry No. 12, Jakarta'),
+                'address' => BusinessSetting::get('store.address', 'Hendrosari, RT.06/RW.03, Hendrosari, Kec. Menganti, Kabupaten Gresik, Jawa Timur 61174'),
                 'default_min_weight' => $minWeight,
                 'customer_credit_ceiling' => $creditCeiling,
                 'paper_width' => BusinessSetting::get('printer.paper_width', '58mm'),

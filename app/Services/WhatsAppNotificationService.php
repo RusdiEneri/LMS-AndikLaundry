@@ -298,7 +298,7 @@ class WhatsAppNotificationService
     public function buildIntakeMessage(Transaction $transaction): string
     {
         $storeName = BusinessSetting::get('store.name', 'Andik Laundry');
-        $storeAddress = BusinessSetting::get('store.address', 'Alamat Toko');
+        $storeAddress = BusinessSetting::get('store.address', 'Hendrosari, RT.06/RW.03, Hendrosari, Kec. Menganti, Kabupaten Gresik, Jawa Timur 61174');
         $storePhone = BusinessSetting::get('store.phone', '08xxxxxxxxxx');
         $customerName = $transaction->customer?->name ?? 'Pelanggan';
         $invoice = $transaction->invoice_number;

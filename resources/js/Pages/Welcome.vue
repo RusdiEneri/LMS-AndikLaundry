@@ -33,7 +33,7 @@ const menuLabel = computed(() => (menuOpen.value ? 'Tutup navigasi' : 'Buka navi
 // Data Toko & Kontak
 const storeName = computed(() => props.store?.name || 'Andik Laundry');
 const storePhone = computed(() => props.store?.phone || '6281234567890');
-const storeAddress = computed(() => props.store?.address || 'Jl. Raya Laundry No. 12, Jakarta');
+const storeAddress = computed(() => props.store?.address || 'Hendrosari, RT.06/RW.03, Hendrosari, Kec. Menganti, Kabupaten Gresik, Jawa Timur 61174');
 
 const whatsappUrl = computed(() => {
     const phone = storePhone.value.replace(/[^0-9]/g, '');
@@ -861,17 +861,22 @@ onBeforeUnmount(() => {
 
             <!-- Lokasi & Jam Buka Toko -->
             <section id="kontak" class="section-container" data-reveal>
-                <div class="store-info-card">
-                    <div class="store-info-col">
-                        <span class="text-xs font-semibold text-[#4F46E5] uppercase tracking-wider">Kunjungi Outlet Kami</span>
-                        <h3 class="text-xl md:text-2xl font-bold text-[#0A0A0A] mt-1">{{ storeName }}</h3>
-                        <p class="text-sm text-[#55555E] mt-2 flex items-start">
-                            <MapPin class="w-4 h-4 text-[#DC2626] mr-2 mt-0.5 flex-shrink-0" />
+                <div class="store-info-card grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
+                    <!-- Left: Detail Outlet & Kontak -->
+                    <div class="lg:col-span-6 flex flex-col justify-center">
+                        <div>
+                            <span class="text-[11px] font-black uppercase tracking-wider bg-[#FFEB3B] text-black border-2 border-black px-2.5 py-0.5 rounded-[4px] shadow-[1.5px_1.5px_0px_#000] inline-block">
+                                Kunjungi Outlet Kami
+                            </span>
+                        </div>
+                        <h3 class="text-2xl md:text-3xl font-black text-black tracking-tight mt-2.5">{{ storeName }}</h3>
+                        <p class="text-sm font-bold text-black/80 mt-3 flex items-start">
+                            <MapPin class="w-4 h-4 text-[#FF5252] mr-2.5 mt-0.5 shrink-0 stroke-[2.5]" />
                             <span>{{ storeAddress }}</span>
                         </p>
-                        <p class="text-sm text-[#55555E] mt-2 flex items-center">
-                            <Clock class="w-4 h-4 text-[#16A34A] mr-2 flex-shrink-0" />
-                            <span>Buka Setiap Hari: 07.00 – 21.00 WIB</span>
+                        <p class="text-sm font-bold text-black/80 mt-2 flex items-center">
+                            <Clock class="w-4 h-4 text-[#16A34A] mr-2.5 shrink-0 stroke-[2.5]" />
+                            <span>Buka Setiap Hari: 07.00 – 20.00 WIB</span>
                         </p>
 
                         <div class="flex flex-wrap gap-3 mt-6">
@@ -879,20 +884,48 @@ onBeforeUnmount(() => {
                                 :href="whatsappUrl"
                                 target="_blank"
                                 rel="noopener"
-                                class="btn-cta-primary text-sm py-2 px-4"
+                                class="btn-cta-primary text-xs sm:text-sm font-black py-2.5 px-4 rounded-[8px] border-2 border-black bg-[#22C55E] text-black hover:bg-[#16A34A] hover:text-white shadow-[3px_3px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center"
                             >
-                                <MessageCircle class="w-4 h-4 mr-1.5" />
+                                <MessageCircle class="w-4 h-4 mr-1.5 stroke-[2.5]" />
                                 <span>Hubungi WhatsApp Toko</span>
                             </a>
                             <a
-                                :href="`https://maps.google.com/?q=${encodeURIComponent(storeAddress)}`"
+                                href="https://maps.app.goo.gl/BF9BFLKf67e4CV3Y7"
                                 target="_blank"
                                 rel="noopener"
-                                class="btn-cta-secondary text-sm py-2 px-4"
+                                class="btn-cta-secondary text-xs sm:text-sm font-black py-2.5 px-4 rounded-[8px] border-2 border-black bg-[#FFEB3B] text-black hover:bg-[#FDE047] shadow-[3px_3px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center"
                             >
-                                <MapPin class="w-4 h-4 mr-1.5" />
+                                <MapPin class="w-4 h-4 mr-1.5 stroke-[2.5]" />
                                 <span>Buka Google Maps</span>
                             </a>
+                        </div>
+                    </div>
+
+                    <!-- Right: Interactive Draggable Map Preview -->
+                    <div class="lg:col-span-6">
+                        <div class="rounded-[10px] border-[3px] border-black shadow-[5px_5px_0px_#000] overflow-hidden bg-white">
+                            <div class="bg-black text-[#FFEB3B] px-3.5 py-2 text-xs font-black flex items-center justify-between border-b-2 border-black">
+                                <span class="flex items-center space-x-1.5">
+                                    <MapPin class="w-3.5 h-3.5 text-[#FF5252] stroke-[2.5]" />
+                                    <span>Peta Outlet (Bisa Digeser &amp; Di-zoom)</span>
+                                </span>
+                                <a
+                                    href="https://maps.app.goo.gl/BF9BFLKf67e4CV3Y7"
+                                    target="_blank"
+                                    rel="noopener"
+                                    class="text-[11px] font-bold text-white hover:text-[#FFEB3B] underline transition-colors"
+                                >
+                                    Buka Peta ↗
+                                </a>
+                            </div>
+                            <iframe
+                                src="https://maps.google.com/maps?q=-7.2392469,112.5817531+(Andik+Laundry)&amp;t=&amp;z=17&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
+                                class="w-full h-[260px] sm:h-[300px] border-0 block"
+                                loading="lazy"
+                                allowfullscreen
+                                referrerpolicy="no-referrer-when-downgrade"
+                                title="Peta Lokasi Andik Laundry Hendrosari Menganti Gresik"
+                            ></iframe>
                         </div>
                     </div>
                 </div>

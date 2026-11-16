@@ -27,8 +27,8 @@ class SecurityHeadersMiddleware
         $isLocal = app()->environment('local', 'testing');
 
         $csp = $isLocal
-            ? "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' http: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://api.fontshare.com http: https:; font-src 'self' https://fonts.gstatic.com https://cdn.fontshare.com data: http: https:; img-src 'self' data: blob: http: https:; connect-src 'self' ws: wss: http: https:; frame-ancestors 'self';"
-            : "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://api.fontshare.com; font-src 'self' https://fonts.gstatic.com https://cdn.fontshare.com data:; img-src 'self' data: blob:; connect-src 'self' ws: wss: https://cloudflareinsights.com; frame-ancestors 'self';";
+            ? "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' http: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://api.fontshare.com http: https:; font-src 'self' https://fonts.gstatic.com https://cdn.fontshare.com data: http: https:; img-src 'self' data: blob: http: https:; connect-src 'self' ws: wss: http: https:; frame-src 'self' https://maps.google.com https://www.google.com; frame-ancestors 'self';"
+            : "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://api.fontshare.com; font-src 'self' https://fonts.gstatic.com https://cdn.fontshare.com data:; img-src 'self' data: blob:; connect-src 'self' ws: wss: https://cloudflareinsights.com; frame-src 'self' https://maps.google.com https://www.google.com; frame-ancestors 'self';";
 
         $response->headers->set('Content-Security-Policy', $csp);
 

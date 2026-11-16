@@ -30,7 +30,7 @@ class BusinessSettingSeeder extends Seeder
             ],
             [
                 'key' => 'store.address',
-                'value' => 'Jl. Raya Laundry No. 12, Jakarta',
+                'value' => 'Hendrosari, RT.06/RW.03, Hendrosari, Kec. Menganti, Kabupaten Gresik, Jawa Timur 61174',
                 'type' => 'string',
                 'group' => 'store',
                 'description' => 'Alamat fisik toko pada nota transaksi',
