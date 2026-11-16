@@ -56,6 +56,10 @@ type ApiResponse struct {
 }
 
 func main() {
+	host := os.Getenv("HOST")
+	if host == "" {
+		host = "127.0.0.1"
+	}
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
@@ -427,11 +431,11 @@ func main() {
 	})
 
 	server := &http.Server{
-		Addr:    ":" + port,
+		Addr:    fmt.Sprintf("%s:%s", host, port),
 		Handler: corsHandler(mux),
 	}
 
-	appLogger.Infof("LMS WhatsApp Gateway berjalan di http://localhost:%s", port)
+	appLogger.Infof("LMS WhatsApp Gateway berjalan di http://%s:%s", host, port)
 
 	stopChan := make(chan os.Signal, 1)
 	signal.Notify(stopChan, os.Interrupt, syscall.SIGTERM)

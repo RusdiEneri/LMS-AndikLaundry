@@ -1,6 +1,6 @@
 module lms-whatsapp-gateway
 
-go 1.27.1
+go 1.24
 
 require (
 	github.com/mdp/qrterminal/v3 v3.2.1
