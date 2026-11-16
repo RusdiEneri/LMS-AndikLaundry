@@ -6,6 +6,11 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <title inertia>{{ config('app.name', 'LMS Andik Laundry') }}</title>
 
+        <!-- Favicon / Brand Icon -->
+        <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+        <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
+
         <!-- Fonts: General Sans (Fontshare), DM Sans & JetBrains Mono (Google Fonts) -->
         <link rel="preconnect" href="https://api.fontshare.com">
         <link rel="preconnect" href="https://fonts.googleapis.com">
