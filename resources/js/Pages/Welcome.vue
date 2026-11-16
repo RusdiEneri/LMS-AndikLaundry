@@ -76,10 +76,142 @@ function submitOrderCheck() {
 
 // Statistik pelanggan (riil + basis) untuk social proof di hero.
 const stats = computed(() => props.stats ?? { customers: 1250, orders: 3400, laundry_kg: 8200 });
-const customersLabel = computed(() => `${stats.value.customers.toLocaleString('id-ID')}+`);
-const ordersLabel = computed(() => `${stats.value.orders.toLocaleString('id-ID')}+`);
-const laundryKgLabel = computed(() => `${stats.value.laundry_kg.toLocaleString('id-ID')} kg`);
-const ratingScore = '4,9';
+
+// Counter ++ animasi bertahap dari 0 saat web load
+const animatedCustomers = ref(0);
+const animatedOrders = ref(0);
+const animatedLaundryKg = ref(0);
+const animatedRating = ref(0);
+
+const customersLabel = computed(() => `${Math.floor(animatedCustomers.value).toLocaleString('id-ID')}+`);
+const ordersLabel = computed(() => `${Math.floor(animatedOrders.value).toLocaleString('id-ID')}+`);
+const laundryKgLabel = computed(() => `${Math.floor(animatedLaundryKg.value).toLocaleString('id-ID')} kg`);
+const ratingScore = computed(() => animatedRating.value.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }));
+
+let counterRafId: number | null = null;
+
+function startCounterAnimation() {
+    if (typeof window === 'undefined') {
+        return;
+    }
+
+    const targetCustomers = stats.value.customers;
+    const targetOrders = stats.value.orders;
+    const targetLaundryKg = stats.value.laundry_kg;
+    const targetRating = 4.9;
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        animatedCustomers.value = targetCustomers;
+        animatedOrders.value = targetOrders;
+        animatedLaundryKg.value = targetLaundryKg;
+        animatedRating.value = targetRating;
+        return;
+    }
+
+    const duration = 1800;
+    const startTime = performance.now();
+    const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+
+    const step = (now: number) => {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const ease = easeOutCubic(progress);
+
+        animatedCustomers.value = targetCustomers * ease;
+        animatedOrders.value = targetOrders * ease;
+        animatedLaundryKg.value = targetLaundryKg * ease;
+        animatedRating.value = targetRating * ease;
+
+        if (progress < 1) {
+            counterRafId = requestAnimationFrame(step);
+        } else {
+            animatedCustomers.value = targetCustomers;
+            animatedOrders.value = targetOrders;
+            animatedLaundryKg.value = targetLaundryKg;
+            animatedRating.value = targetRating;
+            counterRafId = null;
+        }
+    };
+
+    counterRafId = requestAnimationFrame(step);
+}
+
+// Auto-typing text effect di input lacak progres
+const typewriterPlaceholder = ref('Nomor nota (AL-...) atau No. HP');
+const isInputFocused = ref(false);
+let typewriterTimer: ReturnType<typeof setTimeout> | null = null;
+
+const typingPhrases = [
+    'Nomor nota (AL-...) atau No. HP',
+    'Contoh: AL-20261115-001',
+    'Contoh: 08123456789',
+    'Ketik nomor nota Anda…',
+    'Ketik nomor WhatsApp Anda…',
+];
+
+let phraseIndex = 0;
+let charIndex = typingPhrases[0].length;
+let isDeleting = true;
+
+function tickTypewriter() {
+    if (isInputFocused.value) {
+        typewriterPlaceholder.value = 'Nomor nota (AL-...) atau No. HP';
+        return;
+    }
+
+    const currentPhrase = typingPhrases[phraseIndex];
+
+    if (isDeleting) {
+        charIndex = Math.max(0, charIndex - 1);
+        typewriterPlaceholder.value = charIndex > 0 ? `${currentPhrase.substring(0, charIndex)}|` : '|';
+
+        if (charIndex === 0) {
+            isDeleting = false;
+            phraseIndex = (phraseIndex + 1) % typingPhrases.length;
+            typewriterTimer = setTimeout(tickTypewriter, 350);
+            return;
+        }
+        typewriterTimer = setTimeout(tickTypewriter, 35);
+    } else {
+        charIndex = Math.min(currentPhrase.length, charIndex + 1);
+        const isDone = charIndex === currentPhrase.length;
+        typewriterPlaceholder.value = isDone ? currentPhrase : `${currentPhrase.substring(0, charIndex)}|`;
+
+        if (isDone) {
+            isDeleting = true;
+            typewriterTimer = setTimeout(tickTypewriter, 2200);
+            return;
+        }
+        typewriterTimer = setTimeout(tickTypewriter, 70);
+    }
+}
+
+function startTypewriter() {
+    if (typeof window === 'undefined') {
+        return;
+    }
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        typewriterPlaceholder.value = 'Nomor nota (AL-...) atau No. HP';
+        return;
+    }
+    typewriterTimer = setTimeout(tickTypewriter, 2000);
+}
+
+function onInputFocus() {
+    isInputFocused.value = true;
+    if (typewriterTimer) {
+        clearTimeout(typewriterTimer);
+        typewriterTimer = null;
+    }
+    typewriterPlaceholder.value = 'Nomor nota (AL-...) atau No. HP';
+}
+
+function onInputBlur() {
+    isInputFocused.value = false;
+    if (!orderQuery.value) {
+        typewriterTimer = setTimeout(tickTypewriter, 800);
+    }
+}
 
 // 4 Layanan Utama POS
 const services = [
@@ -193,6 +325,9 @@ const testimonials = [
 let revealObserver: IntersectionObserver | null = null;
 
 onMounted(() => {
+    startCounterAnimation();
+    startTypewriter();
+
     const revealTargets = document.querySelectorAll<HTMLElement>('[data-reveal]');
 
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) {
@@ -218,6 +353,16 @@ onMounted(() => {
 onBeforeUnmount(() => {
     revealObserver?.disconnect();
     revealObserver = null;
+
+    if (counterRafId !== null) {
+        cancelAnimationFrame(counterRafId);
+        counterRafId = null;
+    }
+
+    if (typewriterTimer !== null) {
+        clearTimeout(typewriterTimer);
+        typewriterTimer = null;
+    }
 });
 </script>
 
@@ -367,8 +512,10 @@ onBeforeUnmount(() => {
                                     name="q"
                                     inputmode="text"
                                     autocomplete="off"
-                                    placeholder="Nomor nota (AL-...) atau No. HP"
+                                    :placeholder="typewriterPlaceholder"
                                     aria-label="Nomor nota atau nomor HP"
+                                    @focus="onInputFocus"
+                                    @blur="onInputBlur"
                                 />
                                 <button class="hero-track-panel__submit" type="submit" :disabled="isCheckingOrder">
                                     {{ isCheckingOrder ? 'Mencari…' : 'Cek Status' }}
@@ -614,8 +761,10 @@ onBeforeUnmount(() => {
                         <input
                             v-model="orderQuery"
                             type="text"
-                            placeholder="Ketik No. Nota (AL-...) atau No. HP"
+                            :placeholder="typewriterPlaceholder"
                             class="flex-1 h-12 px-4 rounded-md border border-[#D7D7DF] bg-white text-sm text-[#0A0A0A] focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
+                            @focus="onInputFocus"
+                            @blur="onInputBlur"
                         />
                         <button
                             type="submit"
