@@ -96,7 +96,7 @@ function openWhatsAppReminder(debtor: DebtorItem) {
 
                 <div class="flex items-center gap-3">
                     <Link href="/pos">
-                        <Button variant="default" class="min-h-[44px] gap-2 font-bold bg-teal-600 hover:bg-teal-700 text-white">
+                        <Button variant="default" class="min-h-[44px] gap-2 font-bold bg-[#6366F1] hover:bg-[#4F46E5] text-white rounded-[6px] shadow-[0_4px_12px_rgba(99,102,241,0.35)]">
                             <span>Buka Kasir POS</span>
                         </Button>
                     </Link>
@@ -106,30 +106,30 @@ function openWhatsAppReminder(debtor: DebtorItem) {
             <!-- Aging & Totals KPI Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <!-- Total Piutang -->
-                <Card class="border-slate-200 shadow-xs">
+                <Card class="border-[#E8E8EC] shadow-xs rounded-[12px]">
                     <CardHeader class="pb-2">
-                        <CardTitle class="text-xs uppercase font-bold text-slate-500">Total Piutang Belum Lunas</CardTitle>
+                        <CardTitle class="text-xs uppercase font-bold text-[#6B6B6B]">Total Piutang Belum Lunas</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div class="text-2xl font-bold font-mono text-amber-700">
+                        <div class="text-2xl font-bold font-mono text-[#F59E0B]">
                             Rp {{ formatNumber(summary.total_receivables) }}
                         </div>
-                        <p class="text-xs text-slate-500 mt-1">
+                        <p class="text-xs text-[#6B6B6B] mt-1">
                             {{ summary.debtors_count }} orang • {{ summary.unpaid_orders_count }} nota
                         </p>
                     </CardContent>
                 </Card>
 
                 <!-- 0-7 Hari -->
-                <Card class="border-slate-200 shadow-xs bg-teal-50/40">
+                <Card class="border-[#E8E8EC] shadow-xs bg-[#10B981]/10 rounded-[12px]">
                     <CardHeader class="pb-2">
-                        <CardTitle class="text-xs uppercase font-bold text-teal-800">Lancar (0 - 7 Hari)</CardTitle>
+                        <CardTitle class="text-xs uppercase font-bold text-[#10B981]">Lancar (0 - 7 Hari)</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div class="text-2xl font-bold font-mono text-teal-800">
+                        <div class="text-2xl font-bold font-mono text-[#0A0A0A]">
                             Rp {{ formatNumber(summary.aging_breakdown.current) }}
                         </div>
-                        <p class="text-xs text-teal-600 mt-1">Masih dalam batas wajar</p>
+                        <p class="text-xs text-[#10B981] mt-1">Masih dalam batas wajar</p>
                     </CardContent>
                 </Card>
 
@@ -168,7 +168,7 @@ function openWhatsAppReminder(debtor: DebtorItem) {
                         v-model="search"
                         type="text"
                         placeholder="Cari nama pelanggan, nomor nota, atau telepon..."
-                        class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg text-sm min-h-[44px] focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                        class="w-full pl-10 pr-4 py-2 border border-[#E8E8EC] rounded-[6px] text-sm text-[#0A0A0A] min-h-[44px] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12"
                     />
                 </div>
             </div>

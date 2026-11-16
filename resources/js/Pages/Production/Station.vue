@@ -234,21 +234,21 @@ function getPerfumeBadgeVariant(perfume?: string): 'teal' | 'rose' | 'amber' | '
                 <div
                     v-for="washer in machines.washers"
                     :key="washer.id"
-                    class="p-3 rounded-lg border bg-white shadow-2xs space-y-1.5"
-                    :class="washer.status === 'running' ? 'border-teal-300 bg-teal-50/30' : 'border-slate-200'"
+                    class="p-3 rounded-[8px] border bg-white shadow-2xs space-y-1.5"
+                    :class="washer.status === 'running' ? 'border-[#6366F1]/30 bg-[#6366F1]/5' : 'border-[#E8E8EC]'"
                 >
                     <div class="flex items-center justify-between">
-                        <span class="text-xs font-bold text-slate-800">{{ washer.name }}</span>
+                        <span class="text-xs font-bold text-[#0A0A0A]">{{ washer.name }}</span>
                         <span
                             class="h-2 w-2 rounded-full"
-                            :class="washer.status === 'running' ? 'bg-teal-500 animate-pulse' : 'bg-slate-300'"
+                            :class="washer.status === 'running' ? 'bg-[#10B981]' : 'bg-[#9C9C9C]'"
                         ></span>
                     </div>
                     <div class="flex items-center justify-between text-xs">
                         <Badge :variant="washer.status === 'running' ? 'teal' : 'secondary'" class="text-[10px]">
                             {{ washer.status_label }}
                         </Badge>
-                        <span v-if="washer.status === 'running'" class="font-mono text-xs font-bold text-teal-800">
+                        <span v-if="washer.status === 'running'" class="font-mono text-xs font-bold text-[#6366F1]">
                             {{ washer.remaining_minutes }}m
                         </span>
                     </div>
@@ -257,21 +257,21 @@ function getPerfumeBadgeVariant(perfume?: string): 'teal' | 'rose' | 'amber' | '
                 <div
                     v-for="dryer in machines.dryers"
                     :key="dryer.id"
-                    class="p-3 rounded-lg border bg-white shadow-2xs space-y-1.5"
-                    :class="dryer.status === 'running' ? 'border-cyan-300 bg-cyan-50/30' : 'border-slate-200'"
+                    class="p-3 rounded-[8px] border bg-white shadow-2xs space-y-1.5"
+                    :class="dryer.status === 'running' ? 'border-[#6366F1]/30 bg-[#6366F1]/5' : 'border-[#E8E8EC]'"
                 >
                     <div class="flex items-center justify-between">
-                        <span class="text-xs font-bold text-slate-800">{{ dryer.name }}</span>
+                        <span class="text-xs font-bold text-[#0A0A0A]">{{ dryer.name }}</span>
                         <span
                             class="h-2 w-2 rounded-full"
-                            :class="dryer.status === 'running' ? 'bg-cyan-500 animate-pulse' : 'bg-slate-300'"
+                            :class="dryer.status === 'running' ? 'bg-[#10B981]' : 'bg-[#9C9C9C]'"
                         ></span>
                     </div>
                     <div class="flex items-center justify-between text-xs">
-                        <Badge :variant="dryer.status === 'running' ? 'cyan' : 'secondary'" class="text-[10px]">
+                        <Badge :variant="dryer.status === 'running' ? 'teal' : 'secondary'" class="text-[10px]">
                             {{ dryer.status_label }}
                         </Badge>
-                        <span v-if="dryer.status === 'running'" class="font-mono text-xs font-bold text-cyan-800">
+                        <span v-if="dryer.status === 'running'" class="font-mono text-xs font-bold text-[#6366F1]">
                             {{ dryer.remaining_minutes }}m
                         </span>
                     </div>
@@ -317,7 +317,7 @@ function getPerfumeBadgeVariant(perfume?: string): 'teal' | 'rose' | 'amber' | '
                                     Parfum: {{ order.perfume ?? 'Standar' }}
                                 </Badge>
                                 <Badge v-if="order.tier === 'Kilat'" variant="amber" class="text-[11px] font-bold">
-                                    ⚡ Kilat 24 Jam
+                                    Kilat (24 Jam)
                                 </Badge>
                             </div>
 

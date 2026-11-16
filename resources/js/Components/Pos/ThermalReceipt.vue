@@ -163,23 +163,23 @@ function handleNewTransaction() {
         class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 overflow-y-auto"
         @click.self="handleClose"
     >
-        <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-slate-200 overflow-hidden flex flex-col my-auto max-h-[95vh]">
+        <div class="bg-white rounded-[12px] max-w-lg w-full shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-[#E8E8EC] overflow-hidden flex flex-col my-auto max-h-[95vh]">
             <!-- Header & Paper Width Controls -->
-            <div class="px-5 py-3.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between no-print">
+            <div class="px-5 py-3.5 bg-[#FAFAFA] border-b border-[#E8E8EC] flex items-center justify-between no-print">
                 <div class="flex items-center space-x-2">
-                    <Printer class="h-4 w-4 text-teal-600" />
-                    <span class="font-bold text-sm text-slate-800">Struk Transaksi Kasir</span>
+                    <Printer class="h-4 w-4 text-[#6366F1]" />
+                    <span class="font-bold text-sm text-[#0A0A0A]">Struk Transaksi Kasir</span>
                 </div>
 
                 <div class="flex items-center space-x-2">
                     <!-- Paper Width Toggle (58mm / 80mm) -->
-                    <div class="flex items-center bg-slate-200 p-0.5 rounded-lg text-xs font-mono font-bold">
+                    <div class="flex items-center bg-[#E8E8EC] p-0.5 rounded-[6px] text-xs font-mono font-bold">
                         <button
                             type="button"
                             @click="currentPaperWidth = '58mm'"
                             :class="[
-                                'px-2 py-1 rounded-md transition-all',
-                                currentPaperWidth === '58mm' ? 'bg-white text-teal-800 shadow-2xs' : 'text-slate-600 hover:text-slate-900',
+                                'px-2 py-1 rounded-[4px] transition-all cursor-pointer',
+                                currentPaperWidth === '58mm' ? 'bg-white text-[#6366F1] shadow-2xs' : 'text-[#6B6B6B] hover:text-[#0A0A0A]',
                             ]"
                         >
                             58mm
@@ -188,8 +188,8 @@ function handleNewTransaction() {
                             type="button"
                             @click="currentPaperWidth = '80mm'"
                             :class="[
-                                'px-2 py-1 rounded-md transition-all',
-                                currentPaperWidth === '80mm' ? 'bg-white text-teal-800 shadow-2xs' : 'text-slate-600 hover:text-slate-900',
+                                'px-2 py-1 rounded-[4px] transition-all cursor-pointer',
+                                currentPaperWidth === '80mm' ? 'bg-white text-[#6366F1] shadow-2xs' : 'text-[#6B6B6B] hover:text-[#0A0A0A]',
                             ]"
                         >
                             80mm
@@ -387,9 +387,9 @@ function handleNewTransaction() {
                         :href="digitalReceiptUrl"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="min-h-[40px] flex items-center justify-center space-x-1.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-bold text-xs transition-all"
+                        class="min-h-[44px] flex items-center justify-center space-x-1.5 rounded-[6px] border border-[#E8E8EC] bg-white hover:bg-[#FAFAFA] text-[#0A0A0A] font-bold text-xs transition-all"
                     >
-                        <ExternalLink class="h-4 w-4 text-slate-500" />
+                        <ExternalLink class="h-4 w-4 text-[#6B6B6B]" />
                         <span>Buka Nota Digital</span>
                     </a>
                 </div>
@@ -398,7 +398,7 @@ function handleNewTransaction() {
                 <button
                     type="button"
                     @click="handleNewTransaction"
-                    class="min-h-[44px] w-full flex items-center justify-center space-x-1.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs shadow-xs transition-all"
+                    class="min-h-[44px] w-full flex items-center justify-center space-x-1.5 rounded-[6px] bg-[#6366F1] hover:bg-[#4F46E5] text-white font-bold text-xs shadow-[0_4px_12px_rgba(99,102,241,0.35)] transition-all cursor-pointer"
                 >
                     <RotateCcw class="h-4 w-4" />
                     <span>Mulai Transaksi Baru</span>

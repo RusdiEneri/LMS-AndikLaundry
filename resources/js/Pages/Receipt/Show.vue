@@ -125,13 +125,13 @@ const isCancelled = computed(() => props.order?.production_status.toLowerCase() 
 
 // Payment Badge (LUNAS / BELUM LUNAS)
 const paymentBadge = computed(() => {
-    if (!props.order) return { text: '-', bg: 'bg-slate-100 text-slate-800 border-slate-200' };
+    if (!props.order) return { text: '-', bg: 'bg-[#FAFAFA] text-[#6B6B6B] border-[#E8E8EC]' };
     const debt = Number(props.order.outstanding_balance || 0);
 
     if (debt <= 0) {
-        return { text: 'LUNAS', bg: 'bg-emerald-100 text-emerald-800 border-emerald-200' };
+        return { text: 'LUNAS', bg: 'bg-[#10B981]/10 text-[#10B981] border-[#10B981]/20' };
     }
-    return { text: 'BELUM LUNAS', bg: 'bg-rose-100 text-rose-800 border-rose-200' };
+    return { text: 'BELUM LUNAS', bg: 'bg-[#EF4444]/10 text-[#EF4444] border-[#EF4444]/20' };
 });
 
 // WhatsApp Link
@@ -186,17 +186,17 @@ const isUnpaid = computed(() => props.order && props.order.outstanding_balance >
 <template>
     <Head :title="order ? `Nota Digital - ${order.invoice_number} | ${store_info.name}` : `Cari Nota | ${store_info.name}`" />
 
-    <div class="min-h-screen bg-slate-100 text-slate-800 font-sans pb-12 antialiased">
+    <div class="min-h-screen bg-[#FAFAFA] text-[#0A0A0A] font-sans pb-12 antialiased">
         <!-- Top Navbar -->
-        <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-2xs no-print">
-            <div class="max-w-3xl mx-auto px-4 py-3.5 flex items-center justify-between">
+        <header class="bg-white border-b border-[#E8E8EC] sticky top-0 z-30 shadow-2xs no-print">
+            <div class="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
                 <div class="flex items-center space-x-2.5">
-                    <div class="h-9 w-9 rounded-xl bg-teal-600 text-white flex items-center justify-center font-bold text-sm shadow-xs">
+                    <div class="h-9 w-9 rounded-[6px] bg-[#6366F1] text-white flex items-center justify-center font-bold text-sm shadow-xs shrink-0">
                         AL
                     </div>
                     <div>
-                        <h1 class="font-bold text-sm text-slate-900 leading-tight">{{ store_info.name }}</h1>
-                        <p class="text-[11px] text-slate-500">Nota Digital & Status Pelacakan Live</p>
+                        <h1 class="font-bold text-sm text-[#0A0A0A] leading-tight">{{ store_info.name }}</h1>
+                        <p class="text-[11px] text-[#6B6B6B]">Nota Digital & Status Pelacakan Live</p>
                     </div>
                 </div>
 
@@ -204,9 +204,9 @@ const isUnpaid = computed(() => props.order && props.order.outstanding_balance >
                     <button
                         type="button"
                         @click="printReceipt"
-                        class="min-h-[40px] px-3.5 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold shadow-2xs flex items-center space-x-1.5 transition-all"
+                        class="min-h-[44px] px-3.5 py-1.5 rounded-[6px] border border-[#E8E8EC] bg-white hover:bg-[#FAFAFA] text-[#0A0A0A] text-xs font-semibold shadow-2xs flex items-center space-x-1.5 transition-all focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12"
                     >
-                        <Printer class="h-4 w-4" />
+                        <Printer class="h-4 w-4 text-[#6B6B6B]" />
                         <span class="hidden sm:inline">Cetak Nota</span>
                     </button>
 
@@ -214,7 +214,7 @@ const isUnpaid = computed(() => props.order && props.order.outstanding_balance >
                         :href="storeContactWaLink"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="min-h-[40px] px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs flex items-center space-x-1.5 transition-all"
+                        class="min-h-[44px] px-3.5 py-1.5 rounded-[6px] bg-[#25D366] hover:bg-[#128C7E] text-white text-xs font-bold shadow-xs flex items-center space-x-1.5 transition-all focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#25D366]/20"
                     >
                         <MessageCircle class="h-4 w-4" />
                         <span>Chat Kasir</span>
@@ -226,55 +226,55 @@ const isUnpaid = computed(() => props.order && props.order.outstanding_balance >
         <!-- Main Content Container -->
         <main class="max-w-3xl mx-auto px-4 pt-6 space-y-6">
             <!-- No Order Found: Search Section -->
-            <div v-if="!order" class="bg-white rounded-2xl p-8 border border-slate-200 shadow-xs text-center space-y-4">
-                <div class="h-16 w-16 rounded-full bg-slate-100 flex items-center justify-center mx-auto">
-                    <Search class="h-8 w-8 text-slate-400" />
+            <div v-if="!order" class="bg-white rounded-[12px] p-6 sm:p-8 border border-[#E8E8EC] text-center space-y-4">
+                <div class="h-14 w-14 rounded-full bg-[#FAFAFA] border border-[#E8E8EC] flex items-center justify-center mx-auto text-[#6B6B6B]">
+                    <Search class="h-6 w-6" />
                 </div>
                 <div>
-                    <h2 class="font-bold text-lg text-slate-900">Cari Nota</h2>
-                    <p class="text-sm text-slate-500 mt-1">Masukkan nomor nota atau nomor HP pelanggan</p>
+                    <h2 class="font-bold text-lg text-[#0A0A0A]">Cari Nota Digital</h2>
+                    <p class="text-sm text-[#6B6B6B] mt-1">Masukkan nomor nota atau nomor WhatsApp pelanggan</p>
                 </div>
-                <div class="flex gap-2 max-w-md mx-auto">
+                <div class="flex flex-col sm:flex-row gap-2 max-w-md mx-auto">
                     <input
                         v-model="searchQuery"
                         type="text"
-                        placeholder="Contoh: INV-2024-001234"
-                        class="flex-1 min-h-[44px] rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                        placeholder="Contoh: AL-20261115-001"
+                        class="flex-1 min-h-[44px] rounded-[6px] border border-[#E8E8EC] bg-white px-3 py-2 text-sm text-[#0A0A0A] placeholder:text-[#9C9C9C] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12"
                         @keyup.enter="searchOrder"
                     />
                     <button
                         type="button"
                         @click="searchOrder"
-                        class="min-h-[44px] px-4 rounded-lg bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm transition-colors"
+                        class="min-h-[44px] px-5 rounded-[6px] bg-[#6366F1] hover:bg-[#4F46E5] text-white font-bold text-sm transition-colors cursor-pointer shadow-[0_4px_12px_rgba(99,102,241,0.35)]"
                     >
                         Cari
                     </button>
                 </div>
-                <p class="text-xs text-slate-400">
-                    Atau buka langsung dari link di struk kasir Anda
+                <p class="text-xs text-[#6B6B6B]">
+                    Atau buka langsung tautan unik yang dikirimkan ke pesan WhatsApp Anda.
                 </p>
             </div>
 
             <!-- Order Found -->
             <template v-else>
                 <!-- Order Header Card -->
-                <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs space-y-4">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+                <div class="bg-white rounded-[12px] p-5 sm:p-6 border border-[#E8E8EC] space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#E8E8EC]">
                         <div>
                             <div class="flex items-center space-x-2 flex-wrap gap-2">
-                                <span class="text-xs font-bold uppercase tracking-wider text-teal-700">Nota Resmi</span>
-                                <span :class="['px-2.5 py-0.5 rounded-full text-[11px] font-bold border', paymentBadge.bg]">
+                                <span class="text-xs font-bold uppercase tracking-wider text-[#6366F1]">Nota Resmi</span>
+                                <span :class="['px-2.5 py-0.5 rounded-[4px] text-[11px] font-bold border', paymentBadge.bg]">
                                     {{ paymentBadge.text }}
                                 </span>
                             </div>
-                            <h2 class="font-mono font-bold text-2xl text-slate-900 mt-1 tracking-tight">
+                            <h2 class="font-mono font-bold text-xl sm:text-2xl text-[#0A0A0A] mt-1 tracking-tight">
                                 {{ order.invoice_number }}
                             </h2>
                         </div>
 
                         <div class="text-left sm:text-right">
-                            <span class="text-xs text-slate-500 block">Total Tagihan</span>
-                            <span class="font-mono font-bold text-2xl text-teal-800">
+                            <span class="text-xs text-[#6B6B6B] block">Total Tagihan</span>
+                            <span class="font-mono font-bold text-2xl text-[#0A0A0A]">
                                 {{ formatRupiah(order.total_amount) }}
                             </span>
                         </div>
@@ -283,173 +283,173 @@ const isUnpaid = computed(() => props.order && props.order.outstanding_balance >
                     <!-- Customer & Metadata Grid -->
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
                         <div>
-                            <span class="text-slate-400 block text-[11px]">Nama Pelanggan</span>
-                            <span class="font-bold text-slate-900">{{ order.customer.name }}</span>
+                            <span class="text-[#6B6B6B] block text-[11px]">Nama Pelanggan</span>
+                            <span class="font-bold text-[#0A0A0A]">{{ order.customer.name }}</span>
                         </div>
                         <div>
-                            <span class="text-slate-400 block text-[11px]">Waktu Terima</span>
-                            <span class="font-medium text-slate-700">{{ formatDateTimeIndo(order.intake_at) }}</span>
+                            <span class="text-[#6B6B6B] block text-[11px]">Waktu Masuk</span>
+                            <span class="font-medium text-[#0A0A0A]">{{ formatDateTimeIndo(order.intake_at) }}</span>
                         </div>
                         <div>
-                            <span class="text-slate-400 block text-[11px]">Estimasi Selesai</span>
-                            <span class="font-medium text-teal-700">{{ formatDateTimeIndo(order.target_completion_at) }}</span>
+                            <span class="text-[#6B6B6B] block text-[11px]">Estimasi Selesai</span>
+                            <span class="font-semibold text-[#6366F1]">{{ formatDateTimeIndo(order.target_completion_at) }}</span>
                         </div>
                         <div>
-                            <span class="text-slate-400 block text-[11px]">Rak Pengambilan</span>
-                            <span class="font-bold font-mono text-slate-800">{{ order.staging_rack || 'Menunggu Rak' }}</span>
+                            <span class="text-[#6B6B6B] block text-[11px]">Rak Pengambilan</span>
+                            <span class="font-bold font-mono text-[#0A0A0A]">{{ order.staging_rack || 'Menunggu Rak' }}</span>
                         </div>
                     </div>
 
                     <!-- Rack Location Display when status is SELESAI -->
-                    <div v-if="order.production_status.toLowerCase() === 'selesai' || order.production_status.toLowerCase() === 'ready_for_pickup'" class="p-4 bg-teal-50 rounded-xl border border-teal-200">
-                        <div class="flex items-center space-x-2">
-                            <MapPin class="h-5 w-5 text-teal-600" />
+                    <div v-if="order.production_status.toLowerCase() === 'selesai' || order.production_status.toLowerCase() === 'ready_for_pickup'" class="p-4 bg-[#6366F1]/5 rounded-[8px] border border-[#6366F1]/20">
+                        <div class="flex items-center space-x-2.5">
+                            <MapPin class="h-5 w-5 text-[#6366F1] shrink-0" />
                             <div>
-                                <span class="text-xs font-bold text-teal-800 block">Lokasi Rak:</span>
-                                <span class="font-mono font-bold text-xl text-teal-900">{{ order.staging_rack || 'Segera Ditentukan' }}</span>
+                                <span class="text-xs font-bold text-[#6366F1] block">Lokasi Rak Pengambilan:</span>
+                                <span class="font-mono font-bold text-xl text-[#0A0A0A]">{{ order.staging_rack || 'Segera Ditentukan' }}</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Delivery Option Display -->
-                    <div v-if="order.delivery_option === 'delivery'" class="p-4 bg-blue-50 rounded-xl border border-blue-200">
-                        <div class="flex items-center space-x-2">
-                            <Truck class="h-5 w-5 text-blue-600" />
+                    <div v-if="order.delivery_option === 'delivery'" class="p-4 bg-[#6366F1]/5 rounded-[8px] border border-[#6366F1]/20">
+                        <div class="flex items-center space-x-2.5">
+                            <Truck class="h-5 w-5 text-[#6366F1] shrink-0" />
                             <div>
-                                <span class="text-xs font-bold text-blue-800 block">Pilihan Pengantaran</span>
-                                <span class="text-sm text-blue-900">Antar Jemput (Gratis &lt; 3 km)</span>
+                                <span class="text-xs font-bold text-[#6366F1] block">Pilihan Pengantaran</span>
+                                <span class="text-sm font-semibold text-[#0A0A0A]">Antar Jemput (Gratis &lt; 3 km)</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- LIVE PRODUCTION 3-STATE TRACKER -->
-                <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs space-y-4">
+                <div class="bg-white rounded-[12px] p-5 sm:p-6 border border-[#E8E8EC] space-y-4">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-2">
-                            <Clock class="h-5 w-5 text-teal-600" />
-                            <h3 class="font-bold text-base text-slate-900">Pelacakan Proses Produksi</h3>
+                            <Clock class="h-5 w-5 text-[#6366F1]" />
+                            <h3 class="font-bold text-base text-[#0A0A0A]">Pelacakan Progres Cucian</h3>
                         </div>
-                        <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-teal-50 text-teal-800 border border-teal-200">
+                        <span class="text-xs font-semibold px-2.5 py-0.5 rounded-[4px] bg-[#6366F1]/10 text-[#6366F1] border border-[#6366F1]/20">
                             {{ order.production_status_label }}
                         </span>
                     </div>
 
                     <!-- Cancelled Warning if applicable -->
-                    <div v-if="isCancelled" class="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 flex items-center space-x-3">
-                        <AlertCircle class="h-6 w-6 text-rose-600 shrink-0" />
+                    <div v-if="isCancelled" class="p-4 rounded-[8px] bg-[#EF4444]/10 border border-[#EF4444]/20 text-[#EF4444] flex items-center space-x-3">
+                        <AlertCircle class="h-6 w-6 text-[#EF4444] shrink-0" />
                         <div>
                             <span class="font-bold text-sm block">Pesanan Dibatalkan</span>
-                            <span class="text-xs text-rose-700">Pesanan ini telah dibatalkan oleh kasir/admin.</span>
+                            <span class="text-xs text-[#EF4444]/80">Pesanan ini telah dibatalkan oleh pemilik/kasir.</span>
                         </div>
                     </div>
 
-                    <!-- 3-Step Timeline -->
-                    <div v-else class="space-y-4 pt-2">
-                        <div class="grid grid-cols-3 gap-3">
+                    <!-- 3-Step Timeline (Mobile Responsive Stack) -->
+                    <div v-else class="space-y-4 pt-1">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                             <div
                                 v-for="(step, sIdx) in workflowSteps"
                                 :key="step.key"
                                 :class="[
-                                    'p-4 rounded-xl border text-center transition-all flex flex-col items-center justify-between',
+                                    'p-3.5 rounded-[8px] border transition-all flex flex-row sm:flex-col items-center sm:text-center gap-3 sm:gap-2',
                                     sIdx < mappedStepIndex
-                                        ? 'bg-emerald-50/60 border-emerald-300 text-emerald-900'
+                                        ? 'bg-[#10B981]/10 border-[#10B981]/30 text-[#10B981]'
                                         : (sIdx === mappedStepIndex
-                                            ? 'bg-teal-600 border-teal-600 text-white shadow-md scale-102 ring-2 ring-teal-400 ring-offset-1'
-                                            : 'bg-slate-50 border-slate-200 text-slate-400'),
+                                            ? 'bg-[#6366F1] border-[#6366F1] text-white shadow-[0_4px_12px_rgba(99,102,241,0.35)]'
+                                            : 'bg-[#FAFAFA] border-[#E8E8EC] text-[#9C9C9C]'),
                                 ]"
                             >
-                                <div class="mb-2">
-                                    <CheckCircle2 v-if="sIdx < mappedStepIndex" class="h-6 w-6 text-emerald-600 mx-auto" />
-                                    <div v-else-if="sIdx === mappedStepIndex" class="h-6 w-6 rounded-full border-2 border-white flex items-center justify-center mx-auto font-bold text-xs">
+                                <div class="shrink-0">
+                                    <CheckCircle2 v-if="sIdx < mappedStepIndex" class="h-6 w-6 text-[#10B981]" />
+                                    <div v-else-if="sIdx === mappedStepIndex" class="h-6 w-6 rounded-full border-2 border-white flex items-center justify-center font-bold text-xs">
                                         {{ sIdx + 1 }}
                                     </div>
-                                    <div v-else class="h-6 w-6 rounded-full border border-slate-300 flex items-center justify-center mx-auto text-xs text-slate-400">
+                                    <div v-else class="h-6 w-6 rounded-full border border-[#E8E8EC] bg-white flex items-center justify-center text-xs text-[#9C9C9C]">
                                         {{ sIdx + 1 }}
                                     </div>
                                 </div>
 
-                                <div>
+                                <div class="min-w-0 flex-1 sm:flex-none">
                                     <span class="font-bold text-sm block leading-tight">{{ step.label }}</span>
-                                    <span class="text-[10px] opacity-80 block mt-1">{{ step.desc }}</span>
+                                    <span class="text-[11px] opacity-85 block mt-0.5">{{ step.desc }}</span>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Current Step Status Banner -->
-                        <div class="p-3.5 rounded-xl bg-teal-50 border border-teal-200 text-teal-950 flex items-center justify-between text-xs">
+                        <div class="p-3.5 rounded-[8px] bg-[#6366F1]/5 border border-[#6366F1]/20 text-[#0A0A0A] flex items-center justify-between text-xs">
                             <div class="flex items-center space-x-2">
-                                <Sparkles class="h-4 w-4 text-teal-600 shrink-0" />
+                                <Sparkles class="h-4 w-4 text-[#6366F1] shrink-0" />
                                 <span>
-                                    Status saat ini: <strong>{{ workflowSteps[mappedStepIndex]?.label ?? order.production_status_label }}</strong>
-                                    ({{ workflowSteps[mappedStepIndex]?.desc ?? 'Sedang diproses oleh staf operasional' }})
+                                    Status: <strong>{{ workflowSteps[mappedStepIndex]?.label ?? order.production_status_label }}</strong>
+                                    — {{ workflowSteps[mappedStepIndex]?.desc ?? 'Sedang diproses' }}
                                 </span>
                             </div>
-                            <span class="font-mono text-[11px] text-teal-700 hidden sm:inline">
-                                Step {{ mappedStepIndex + 1 }} dari 3
+                            <span class="font-mono text-[11px] text-[#6366F1] hidden sm:inline font-semibold">
+                                Tahap {{ mappedStepIndex + 1 }} dari 3
                             </span>
                         </div>
                     </div>
                 </div>
 
                 <!-- QRIS Payment Section for Unpaid Orders -->
-                <div v-if="isUnpaid && order.outstanding_balance > 0" class="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs text-center space-y-4">
-                    <div class="flex items-center justify-center space-x-2 text-slate-700">
-                        <span class="font-bold text-lg">Pembayaran QRIS</span>
+                <div v-if="isUnpaid && order.outstanding_balance > 0" class="bg-white rounded-[12px] p-5 sm:p-6 border border-[#E8E8EC] text-center space-y-4">
+                    <div class="flex items-center justify-center space-x-2 text-[#0A0A0A]">
+                        <span class="font-bold text-base">Pembayaran Non-Tunai (QRIS)</span>
                     </div>
-                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                    <div class="p-5 bg-[#FAFAFA] rounded-[8px] border border-[#E8E8EC] max-w-sm mx-auto">
                         <img 
                             src="/images/qris-andiklaundry.svg" 
                             alt="QRIS Payment Andik Laundry" 
-                            class="qris-image mx-auto max-w-[220px] border border-slate-200 rounded-lg shadow-2xs"
+                            class="qris-image mx-auto max-w-[200px] border border-[#E8E8EC] rounded-[6px] shadow-2xs bg-white p-2"
                         />
-                        <p class="text-xs text-slate-500 mt-3">Scan QRIS melalui aplikasi bank atau dompet digital Anda</p>
-                        <p class="text-xl font-bold font-mono text-teal-800 mt-1.5">
+                        <p class="text-xs text-[#6B6B6B] mt-3">Scan QRIS melalui mobile banking atau aplikasi e-wallet Anda</p>
+                        <p class="text-xl font-bold font-mono text-[#0A0A0A] mt-1.5">
                             {{ formatRupiah(order.outstanding_balance) }}
                         </p>
                     </div>
                 </div>
 
                 <!-- Itemized Breakdown Table -->
-                <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs space-y-4">
-                    <h3 class="font-bold text-base text-slate-900 flex items-center space-x-2">
-                        <Shirt class="h-5 w-5 text-teal-600" />
-                        <span>Rincian Layanan Cucian</span>
+                <div class="bg-white rounded-[12px] p-5 sm:p-6 border border-[#E8E8EC] space-y-4">
+                    <h3 class="font-bold text-base text-[#0A0A0A] flex items-center space-x-2">
+                        <Shirt class="h-5 w-5 text-[#6366F1]" />
+                        <span>Rincian Item & Biaya</span>
                     </h3>
 
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left text-xs">
+                        <table class="w-full text-left text-xs min-w-[480px] sm:min-w-0">
                             <thead>
-                                <tr class="border-b border-slate-200 text-slate-400 font-semibold">
+                                <tr class="border-b border-[#E8E8EC] text-[#6B6B6B] font-semibold">
                                     <th class="pb-2">Layanan</th>
                                     <th class="pb-2 text-center">Jumlah / Berat</th>
                                     <th class="pb-2 text-right">Tarif Satuan</th>
                                     <th class="pb-2 text-right">Subtotal</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-slate-100">
-                                <tr v-for="item in order.items" :key="item.id" class="hover:bg-slate-50/50">
+                            <tbody class="divide-y divide-[#E8E8EC]">
+                                <tr v-for="item in order.items" :key="item.id" class="hover:bg-[#FAFAFA]">
                                     <td class="py-3">
-                                        <span class="font-bold text-slate-900 block">{{ item.item_name }}</span>
-                                        <div class="flex flex-wrap items-center gap-1.5 mt-0.5 text-[11px] text-slate-500">
-                                            <span v-if="item.perfume_variant" class="inline-flex items-center space-x-1 text-teal-700 bg-teal-50 px-1.5 py-0.5 rounded-md">
-                                                <span>Wangi: {{ item.perfume_variant }}</span>
+                                        <span class="font-bold text-[#0A0A0A] block">{{ item.item_name }}</span>
+                                        <div class="flex flex-wrap items-center gap-1.5 mt-0.5 text-[11px] text-[#6B6B6B]">
+                                            <span v-if="item.perfume_variant" class="inline-flex items-center text-[#6366F1] bg-[#6366F1]/10 px-1.5 py-0.5 rounded-[4px]">
+                                                Wangi: {{ item.perfume_variant }}
                                             </span>
-                                            <span v-if="item.item_condition_notes" class="inline-flex items-center space-x-1 text-amber-800 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded-md">
-                                                <span>Catatan: {{ item.item_condition_notes }}</span>
+                                            <span v-if="item.item_condition_notes" class="inline-flex items-center text-[#F59E0B] bg-[#F59E0B]/10 border border-[#F59E0B]/20 px-1.5 py-0.5 rounded-[4px]">
+                                                Catatan: {{ item.item_condition_notes }}
                                             </span>
                                         </div>
                                     </td>
                                     <td class="py-3 text-center font-mono">
                                         <span>{{ item.actual_quantity }} {{ item.pricing_unit }}</span>
-                                        <span v-if="item.billed_quantity > item.actual_quantity" class="text-[10px] text-amber-700 block font-semibold">
+                                        <span v-if="item.billed_quantity > item.actual_quantity" class="text-[10px] text-[#F59E0B] block font-semibold">
                                             (Cas min. {{ item.billed_quantity }} {{ item.pricing_unit }})
                                         </span>
                                     </td>
-                                    <td class="py-3 text-right font-mono text-slate-700">
+                                    <td class="py-3 text-right font-mono text-[#6B6B6B]">
                                         {{ formatRupiah(item.unit_price) }}
                                     </td>
-                                    <td class="py-3 text-right font-mono font-bold text-slate-900">
+                                    <td class="py-3 text-right font-mono font-bold text-[#0A0A0A]">
                                         {{ formatRupiah(item.subtotal) }}
                                     </td>
                                 </tr>
@@ -458,32 +458,32 @@ const isUnpaid = computed(() => props.order && props.order.outstanding_balance >
                     </div>
 
                     <!-- Financial Ledger Summary -->
-                    <div class="pt-3 border-t border-slate-200 space-y-1.5 max-w-xs ml-auto text-xs">
-                        <div class="flex justify-between text-slate-600">
+                    <div class="pt-3 border-t border-[#E8E8EC] space-y-1.5 max-w-xs ml-auto text-xs">
+                        <div class="flex justify-between text-[#6B6B6B]">
                             <span>Subtotal:</span>
-                            <span class="font-mono">{{ formatRupiah(order.subtotal_amount) }}</span>
+                            <span class="font-mono text-[#0A0A0A]">{{ formatRupiah(order.subtotal_amount) }}</span>
                         </div>
-                        <div v-if="order.surcharge_amount > 0" class="flex justify-between text-teal-700">
+                        <div v-if="order.surcharge_amount > 0" class="flex justify-between text-[#6366F1]">
                             <span>Biaya Kecepatan:</span>
                             <span class="font-mono">+{{ formatRupiah(order.surcharge_amount) }}</span>
                         </div>
-                        <div v-if="order.discount_amount > 0" class="flex justify-between text-amber-700">
+                        <div v-if="order.discount_amount > 0" class="flex justify-between text-[#F59E0B]">
                             <span>Diskon:</span>
                             <span class="font-mono">-{{ formatRupiah(order.discount_amount) }}</span>
                         </div>
-                        <div class="flex justify-between font-bold text-sm text-slate-900 pt-1 border-t border-slate-200">
-                            <span>Grand Total:</span>
-                            <span class="font-mono text-teal-800">{{ formatRupiah(order.total_amount) }}</span>
+                        <div class="flex justify-between font-bold text-sm text-[#0A0A0A] pt-1.5 border-t border-[#E8E8EC]">
+                            <span>Total Tagihan:</span>
+                            <span class="font-mono text-[#0A0A0A]">{{ formatRupiah(order.total_amount) }}</span>
                         </div>
-                        <div class="flex justify-between text-slate-600">
+                        <div class="flex justify-between text-[#6B6B6B]">
                             <span>Sudah Dibayar:</span>
                             <span class="font-mono">{{ formatRupiah(order.paid_amount) }}</span>
                         </div>
-                        <div v-if="order.outstanding_balance > 0" class="flex justify-between font-bold text-rose-700 pt-1 border-t border-dotted border-slate-200">
+                        <div v-if="order.outstanding_balance > 0" class="flex justify-between font-bold text-[#EF4444] pt-1 border-t border-dotted border-[#E8E8EC]">
                             <span>Sisa Pembayaran:</span>
                             <span class="font-mono">{{ formatRupiah(order.outstanding_balance) }}</span>
                         </div>
-                        <div v-else class="flex justify-between font-bold text-emerald-700 pt-1 border-t border-dotted border-slate-200">
+                        <div v-else class="flex justify-between font-bold text-[#10B981] pt-1 border-t border-dotted border-[#E8E8EC]">
                             <span>Status:</span>
                             <span>LUNAS</span>
                         </div>
@@ -491,30 +491,30 @@ const isUnpaid = computed(() => props.order && props.order.outstanding_balance >
                 </div>
 
                 <!-- Contact/Request Delivery Button -->
-                <div class="bg-white rounded-2xl p-6 border border-slate-200 text-center space-y-3 no-print">
+                <div class="bg-white rounded-[12px] p-5 sm:p-6 border border-[#E8E8EC] text-center space-y-3 no-print">
                     <a
                         :href="whatsAppLink"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="inline-flex items-center justify-center space-x-2 min-h-[48px] px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md transition-all"
+                        class="inline-flex items-center justify-center space-x-2 min-h-[48px] px-6 py-2.5 rounded-[6px] bg-[#25D366] hover:bg-[#128C7E] text-white font-bold text-sm shadow-[0_4px_12px_rgba(37,211,102,0.35)] transition-all"
                     >
                         <MessageCircle class="h-5 w-5" />
                         <span>Hubungi Admin / Minta Antar</span>
                     </a>
-                    <p class="text-xs text-slate-500">
-                        Ada pertanyaan tentang pesanan? Hubungi kami via WhatsApp
+                    <p class="text-xs text-[#6B6B6B]">
+                        Konfirmasi bukti bayar QRIS atau permintaan pengantaran langsung via WhatsApp
                     </p>
                 </div>
 
                 <!-- Store Information Footer & Terms -->
-                <div class="bg-white rounded-2xl p-6 border border-slate-200 text-center space-y-3">
+                <div class="bg-white rounded-[12px] p-5 sm:p-6 border border-[#E8E8EC] text-center space-y-3">
                     <div class="space-y-1">
-                        <h4 class="font-bold text-sm text-slate-900">{{ store_info.name }}</h4>
-                        <p class="text-xs text-slate-500">{{ store_info.address }}</p>
-                        <p class="text-xs text-teal-700 font-mono">WhatsApp: {{ store_info.phone }}</p>
+                        <h4 class="font-bold text-sm text-[#0A0A0A]">{{ store_info.name }}</h4>
+                        <p class="text-xs text-[#6B6B6B]">{{ store_info.address }}</p>
+                        <p class="text-xs text-[#6366F1] font-mono">No. WA Toko: {{ store_info.phone }}</p>
                     </div>
 
-                    <p class="text-xs text-slate-400 italic max-w-md mx-auto pt-2 border-t border-slate-100">
+                    <p class="text-xs text-[#6B6B6B] italic max-w-md mx-auto pt-2 border-t border-[#E8E8EC]">
                         {{ store_info.receipt_footer }}
                     </p>
 
@@ -523,7 +523,7 @@ const isUnpaid = computed(() => props.order && props.order.outstanding_balance >
                             :href="storeContactWaLink"
                             target="_blank"
                             rel="noopener noreferrer"
-                            class="text-emerald-700 font-bold hover:underline inline-flex items-center space-x-1"
+                            class="text-[#25D366] font-bold hover:underline inline-flex items-center space-x-1"
                         >
                             <MessageCircle class="h-4 w-4" />
                             <span>Hubungi Kasir via WhatsApp</span>

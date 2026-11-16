@@ -18,7 +18,7 @@ const submit = () => {
 <template>
     <Head title="Masuk - LMS Andik Laundry" />
 
-    <div class="min-h-screen flex items-center justify-center p-4 sm:p-6 bg-background motif-dot-grid text-ink">
+    <div class="min-h-screen flex items-center justify-center p-4 sm:p-6 bg-background text-ink">
         <div class="max-w-md w-full bg-surface rounded-[12px] border border-line p-6 sm:p-8 space-y-6">
             <div class="text-center space-y-2">
                 <div class="mx-auto flex h-10 w-10 items-center justify-center rounded-[6px] bg-primary font-display text-base font-bold text-white">
@@ -93,9 +93,9 @@ const submit = () => {
                 <button
                     type="button"
                     @click="form.email = 'owner@andiklaundry.test'; form.password = 'Password123!'"
-                    class="text-xs text-primary hover:underline font-semibold min-h-[36px]"
+                    class="text-xs text-primary hover:underline font-semibold min-h-[44px] inline-flex items-center justify-center px-3"
                 >
-                    ⚡ Masuk Cepat: Akun Owner (Andik)
+                    Isi Kredensial Demo: Akun Owner (Andik)
                 </button>
             </div>
         </div>

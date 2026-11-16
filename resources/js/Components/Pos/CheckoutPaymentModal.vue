@@ -219,61 +219,61 @@ async function processOrderSubmit() {
 <template>
     <div
         v-if="isOpen"
-        class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4"
         @click.self="closeModal"
     >
-        <div class="bg-white rounded-2xl max-w-xl w-full shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[92vh]">
+        <div class="bg-white rounded-[12px] max-w-xl w-full shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-[#E8E8EC] overflow-hidden flex flex-col max-h-[92vh]">
             <!-- Header -->
-            <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
+            <div class="px-6 py-4 bg-[#0A0A0A] text-white flex items-center justify-between">
                 <div>
-                    <span class="text-[10px] font-bold text-teal-400 uppercase tracking-wider block">Pembayaran & Checkout</span>
+                    <span class="text-[10px] font-bold text-[#6366F1] uppercase tracking-wider block">Pembayaran & Checkout</span>
                     <h3 class="font-bold text-lg text-white">Kasir Andik Laundry</h3>
                 </div>
                 <div class="text-right">
-                    <span class="text-xs text-slate-400 block">Total Tagihan</span>
-                    <span class="font-mono font-bold text-xl text-teal-300">{{ formatRupiah(grandTotal) }}</span>
+                    <span class="text-xs text-[#9C9C9C] block">Total Tagihan</span>
+                    <span class="font-mono font-bold text-xl text-white">{{ formatRupiah(grandTotal) }}</span>
                 </div>
             </div>
 
             <!-- Content Area -->
             <div class="p-6 flex-1 overflow-y-auto space-y-4">
                 <!-- Customer Snapshot Banner -->
-                <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
+                <div class="p-3.5 bg-[#FAFAFA] rounded-[8px] border border-[#E8E8EC] flex items-center justify-between">
                     <div class="flex items-center space-x-2.5">
-                        <div class="h-9 w-9 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-xs">
+                        <div class="h-9 w-9 rounded-[6px] bg-[#6366F1]/10 text-[#6366F1] border border-[#6366F1]/20 flex items-center justify-center font-bold text-xs">
                             <UserIcon class="h-4 w-4" />
                         </div>
                         <div>
-                            <span class="font-bold text-xs text-slate-900 block">{{ customer?.name ?? 'Pelanggan Umum' }}</span>
-                            <span class="text-[11px] font-mono text-slate-500">{{ customer?.phone || 'Tanpa No. HP' }}</span>
+                            <span class="font-bold text-xs text-[#0A0A0A] block">{{ customer?.name ?? 'Pelanggan Umum' }}</span>
+                            <span class="text-[11px] font-mono text-[#6B6B6B]">{{ customer?.phone || 'Tanpa No. HP' }}</span>
                         </div>
                     </div>
 
                     <!-- Receivables pill if any -->
                     <div v-if="existingCustomerDebt > 0" class="text-right">
-                        <span class="text-[10px] text-rose-600 font-semibold block">Hutang Berjalan:</span>
-                        <span class="font-mono font-bold text-xs text-rose-700">{{ formatRupiah(existingCustomerDebt) }}</span>
+                        <span class="text-[10px] text-[#EF4444] font-semibold block">Hutang Berjalan:</span>
+                        <span class="font-mono font-bold text-xs text-[#EF4444]">{{ formatRupiah(existingCustomerDebt) }}</span>
                     </div>
                 </div>
 
                 <!-- Error Alert -->
-                <div v-if="errorMessage" class="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-start space-x-2">
+                <div v-if="errorMessage" class="p-3 rounded-[6px] bg-[#EF4444]/10 border border-[#EF4444]/20 text-[#EF4444] text-xs flex items-start space-x-2">
                     <AlertTriangle class="h-4 w-4 shrink-0 mt-0.5" />
                     <span>{{ errorMessage }}</span>
                 </div>
 
                 <!-- Payment Status Selector: Lunas / Belum Lunas -->
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Status Pembayaran</label>
+                    <label class="block text-xs font-bold text-[#0A0A0A] mb-1.5">Status Pembayaran</label>
                     <div class="grid grid-cols-2 gap-2">
                         <button
                             type="button"
                             @click="paymentStatus = 'paid'"
                             :class="[
-                                'min-h-[44px] py-2 px-3 rounded-lg border text-xs font-bold transition-all',
+                                'min-h-[44px] py-2 px-3 rounded-[6px] border text-xs font-bold transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12',
                                 paymentStatus === 'paid'
-                                    ? 'bg-teal-600 text-white border-teal-600 shadow-xs'
-                                    : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50',
+                                    ? 'bg-[#6366F1] text-white border-[#6366F1] shadow-[0_4px_12px_rgba(99,102,241,0.35)]'
+                                    : 'bg-white text-[#6B6B6B] border-[#E8E8EC] hover:bg-[#FAFAFA] hover:text-[#0A0A0A]',
                             ]"
                         >
                             Lunas
@@ -282,10 +282,10 @@ async function processOrderSubmit() {
                             type="button"
                             @click="paymentStatus = 'unpaid'"
                             :class="[
-                                'min-h-[44px] py-2 px-3 rounded-lg border text-xs font-bold transition-all',
+                                'min-h-[44px] py-2 px-3 rounded-[6px] border text-xs font-bold transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12',
                                 paymentStatus === 'unpaid'
-                                    ? 'bg-slate-800 text-white border-slate-800 shadow-xs'
-                                    : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50',
+                                    ? 'bg-[#0A0A0A] text-white border-[#0A0A0A] shadow-xs'
+                                    : 'bg-white text-[#6B6B6B] border-[#E8E8EC] hover:bg-[#FAFAFA] hover:text-[#0A0A0A]',
                             ]"
                         >
                             Belum Lunas
@@ -295,44 +295,44 @@ async function processOrderSubmit() {
 
                 <!-- Payment Method Selector (Cash, QRIS only) -->
                 <div v-if="paymentStatus !== 'unpaid'">
-                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Metode Pembayaran</label>
+                    <label class="block text-xs font-bold text-[#0A0A0A] mb-1.5">Metode Pembayaran</label>
                     <div class="grid grid-cols-2 gap-2">
                         <button
                             type="button"
                             @click="paymentMethod = 'cash'"
                             :class="[
-                                'min-h-[44px] p-2 rounded-lg border text-xs font-bold flex flex-col items-center justify-center space-y-1 transition-all',
+                                'min-h-[44px] p-2.5 rounded-[6px] border text-xs font-bold flex flex-col items-center justify-center space-y-1 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12',
                                 paymentMethod === 'cash'
-                                    ? 'bg-teal-50 border-teal-600 text-teal-800'
-                                    : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50',
+                                    ? 'bg-[#6366F1]/10 border-[#6366F1] text-[#6366F1]'
+                                    : 'bg-white border-[#E8E8EC] text-[#6B6B6B] hover:bg-[#FAFAFA] hover:text-[#0A0A0A]',
                             ]"
                         >
                             <Banknote class="h-5 w-5" />
-                            <span>Tunai</span>
+                            <span>Tunai (Cash)</span>
                         </button>
                         <button
                             type="button"
                             @click="paymentMethod = 'qris'"
                             :class="[
-                                'min-h-[44px] p-2 rounded-lg border text-xs font-bold flex flex-col items-center justify-center space-y-1 transition-all',
+                                'min-h-[44px] p-2.5 rounded-[6px] border text-xs font-bold flex flex-col items-center justify-center space-y-1 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12',
                                 paymentMethod === 'qris'
-                                    ? 'bg-teal-50 border-teal-600 text-teal-800'
-                                    : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50',
+                                    ? 'bg-[#6366F1]/10 border-[#6366F1] text-[#6366F1]'
+                                    : 'bg-white border-[#E8E8EC] text-[#6B6B6B] hover:bg-[#FAFAFA] hover:text-[#0A0A0A]',
                             ]"
                         >
                             <QrCode class="h-5 w-5" />
-                            <span>QRIS</span>
+                            <span>Non-Tunai (QRIS)</span>
                         </button>
                     </div>
                 </div>
 
                 <!-- Cash Tender Inputs & Numpad -->
-                <div v-if="paymentStatus !== 'unpaid' && paymentMethod === 'cash'" class="space-y-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                <div v-if="paymentStatus !== 'unpaid' && paymentMethod === 'cash'" class="space-y-3 p-4 bg-[#FAFAFA] rounded-[8px] border border-[#E8E8EC]">
                     <div class="flex items-center justify-between text-xs">
-                        <span class="font-bold text-slate-700">Uang Tunai Diterima:</span>
+                        <span class="font-bold text-[#0A0A0A]">Uang Tunai Diterima:</span>
                         <div class="text-right">
-                            <span class="text-slate-500 text-[11px]">Kembalian: </span>
-                            <span class="font-mono font-bold text-emerald-700 text-sm">{{ formatRupiah(changeAmount) }}</span>
+                            <span class="text-[#6B6B6B] text-[11px]">Kembalian: </span>
+                            <span class="font-mono font-bold text-[#10B981] text-sm">{{ formatRupiah(changeAmount) }}</span>
                         </div>
                     </div>
 
@@ -341,14 +341,14 @@ async function processOrderSubmit() {
                         <button
                             type="button"
                             @click="setExactCash"
-                            class="min-h-[36px] px-2 py-1 rounded-md border border-slate-300 bg-white hover:bg-slate-100 text-xs font-bold text-slate-800"
+                            class="min-h-[44px] px-2 py-1 rounded-[6px] border border-[#E8E8EC] bg-white hover:bg-[#FAFAFA] text-xs font-bold text-[#0A0A0A] cursor-pointer"
                         >
                             Uang Pas
                         </button>
                         <button
                             type="button"
                             @click="setDp50"
-                            class="min-h-[36px] px-2 py-1 rounded-md border border-amber-300 bg-amber-50 hover:bg-amber-100 text-xs font-bold text-amber-900"
+                            class="min-h-[44px] px-2 py-1 rounded-[6px] border border-[#F59E0B]/30 bg-[#F59E0B]/10 hover:bg-[#F59E0B]/20 text-xs font-bold text-[#F59E0B] cursor-pointer"
                         >
                             DP 50%
                         </button>
@@ -357,7 +357,7 @@ async function processOrderSubmit() {
                             :key="preset"
                             type="button"
                             @click="setPresetTender(preset)"
-                            class="min-h-[36px] px-2 py-1 rounded-md border border-slate-300 bg-white hover:bg-slate-100 text-xs font-mono font-bold text-slate-800"
+                            class="min-h-[44px] px-2 py-1 rounded-[6px] border border-[#E8E8EC] bg-white hover:bg-[#FAFAFA] text-xs font-mono font-bold text-[#0A0A0A] cursor-pointer"
                         >
                             {{ (preset / 1000) }}k
                         </button>
@@ -369,7 +369,7 @@ async function processOrderSubmit() {
                             v-model="tenderInput"
                             type="text"
                             placeholder="Nominal Pembayaran Tunai"
-                            class="min-h-[44px] w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base font-mono font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                            class="min-h-[44px] w-full rounded-[6px] border border-[#E8E8EC] bg-white px-3 py-2 text-base font-mono font-bold text-[#0A0A0A] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12"
                         />
                     </div>
 
@@ -382,12 +382,12 @@ async function processOrderSubmit() {
                 </div>
 
                 <!-- QRIS Payment Info -->
-                <div v-if="paymentStatus !== 'unpaid' && paymentMethod === 'qris'" class="p-4 bg-slate-50 rounded-xl border border-slate-200 text-center space-y-2">
-                    <QrCode class="h-8 w-8 text-slate-600 mx-auto" />
-                    <p class="text-xs text-slate-600">
-                        Tunjukkan kode QRIS kepada pelanggan untuk pembayaran.
+                <div v-if="paymentStatus !== 'unpaid' && paymentMethod === 'qris'" class="p-4 bg-[#FAFAFA] rounded-[8px] border border-[#E8E8EC] text-center space-y-2">
+                    <QrCode class="h-8 w-8 text-[#6366F1] mx-auto" />
+                    <p class="text-xs text-[#6B6B6B]">
+                        Tunjukkan gambar QRIS kepada pelanggan untuk pembayaran.
                     </p>
-                    <p class="text-sm font-bold text-slate-900">
+                    <p class="text-base font-bold font-mono text-[#0A0A0A]">
                         Total: {{ formatRupiah(grandTotal) }}
                     </p>
                 </div>
@@ -395,13 +395,13 @@ async function processOrderSubmit() {
                 <!-- Credit Ceiling Alert if projected debt exceeds threshold -->
                 <div
                     v-if="isExceedingCreditCeiling"
-                    class="p-4 rounded-xl bg-amber-50 border border-amber-300 text-amber-900 space-y-2"
+                    class="p-4 rounded-[8px] bg-[#F59E0B]/10 border border-[#F59E0B]/30 text-[#0A0A0A] space-y-2"
                 >
                     <div class="flex items-center space-x-2">
-                        <ShieldAlert class="h-5 w-5 text-amber-600 shrink-0" />
-                        <span class="font-bold text-xs">Peringatan Batas Plafon Piutang (Credit Ceiling)</span>
+                        <ShieldAlert class="h-5 w-5 text-[#F59E0B] shrink-0" />
+                        <span class="font-bold text-xs text-[#F59E0B]">Peringatan Batas Plafon Piutang</span>
                     </div>
-                    <p class="text-xs text-amber-800 leading-relaxed">
+                    <p class="text-xs text-[#6B6B6B] leading-relaxed">
                         Total hutang pelanggan akan menjadi <strong>{{ formatRupiah(totalProjectedDebt) }}</strong>
                         (melebihi batas maksimal <strong>{{ formatRupiah(creditCeiling) }}</strong>).
                     </p>
@@ -410,9 +410,9 @@ async function processOrderSubmit() {
                             id="debt-approve"
                             v-model="isDebtApproved"
                             type="checkbox"
-                            class="h-4 w-4 rounded border-amber-400 text-teal-600 focus:ring-teal-500"
+                            class="h-4 w-4 rounded-[4px] border-[#E8E8EC] text-[#6366F1] focus:ring-[#6366F1]/20"
                         />
-                        <label for="debt-approve" class="text-xs font-bold text-amber-950 cursor-pointer">
+                        <label for="debt-approve" class="text-xs font-bold text-[#0A0A0A] cursor-pointer">
                             Saya menyetujui piutang melebihi plafon untuk pesanan ini
                         </label>
                     </div>
@@ -420,22 +420,22 @@ async function processOrderSubmit() {
 
                 <!-- Notes -->
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Catatan Transaksi (Opsional)</label>
+                    <label class="block text-xs font-bold text-[#0A0A0A] mb-1">Catatan Transaksi (Opsional)</label>
                     <input
                         v-model="orderNotes"
                         type="text"
-                        placeholder="Contoh: Titip hanger baju 3 buah, bayar via transfer BCA"
-                        class="min-h-[44px] w-full rounded-lg border border-slate-300 px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                        placeholder="Contoh: Titip hanger 3 buah, bayar lewat QRIS"
+                        class="min-h-[44px] w-full rounded-[6px] border border-[#E8E8EC] bg-white px-3 py-2 text-xs text-[#0A0A0A] placeholder:text-[#9C9C9C] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12"
                     />
                 </div>
             </div>
 
             <!-- Footer Action Buttons -->
-            <div class="p-4 bg-slate-50 border-t border-slate-200 flex items-center space-x-3">
+            <div class="p-4 bg-[#FAFAFA] border-t border-[#E8E8EC] flex items-center space-x-3">
                 <button
                     type="button"
                     @click="closeModal"
-                    class="min-h-[48px] px-5 py-2 rounded-xl border border-slate-300 bg-white text-slate-700 text-xs font-bold hover:bg-slate-100"
+                    class="min-h-[44px] px-5 py-2 rounded-[6px] border border-[#E8E8EC] bg-white text-[#6B6B6B] text-xs font-bold hover:bg-[#FAFAFA] hover:text-[#0A0A0A] cursor-pointer"
                 >
                     Batal
                 </button>
@@ -443,7 +443,7 @@ async function processOrderSubmit() {
                     type="button"
                     :disabled="isSubmitting"
                     @click="processOrderSubmit"
-                    class="min-h-[48px] flex-1 px-5 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 active:scale-98 text-white text-sm font-bold shadow-md disabled:opacity-50 flex items-center justify-center space-x-2"
+                    class="min-h-[44px] flex-1 px-5 py-2 rounded-[6px] bg-[#6366F1] hover:bg-[#4F46E5] active:scale-98 text-white text-sm font-bold shadow-[0_4px_12px_rgba(99,102,241,0.35)] disabled:opacity-50 flex items-center justify-center space-x-2 cursor-pointer transition-all"
                 >
                     <Loader2 v-if="isSubmitting" class="h-5 w-5 animate-spin" />
                     <span v-else>SELESAIKAN & CETAK STRUK [F8]</span>

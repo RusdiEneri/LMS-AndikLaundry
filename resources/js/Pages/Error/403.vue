@@ -17,7 +17,7 @@ withDefaults(
 <template>
     <Head title="403 - Akses Ditolak" />
 
-    <div class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 bg-background motif-dot-grid text-ink">
+    <div class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 bg-background text-ink">
         <div class="max-w-md w-full bg-surface rounded-[12px] border border-line p-6 sm:p-8 text-center space-y-5">
             <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-[6px] bg-error/10 text-error">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

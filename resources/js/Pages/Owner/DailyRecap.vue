@@ -168,16 +168,16 @@ function printDailySlip() {
                 </Card>
 
                 <!-- 4. Hero: Sisa Bersih Kas Tunai di Laci -->
-                <Card class="border-teal-300 bg-teal-50/70 shadow-sm">
+                <Card class="border-[#10B981]/30 bg-[#10B981]/10 shadow-sm rounded-[12px]">
                     <CardHeader class="pb-2">
-                        <CardTitle class="text-xs uppercase font-bold text-teal-800">Sisa Kas Bersih di Laci</CardTitle>
+                        <CardTitle class="text-xs uppercase font-bold text-[#10B981]">Sisa Kas Bersih di Laci</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div class="text-2xl font-bold font-mono text-teal-900">
+                        <div class="text-2xl font-bold font-mono text-[#0A0A0A]">
                             Rp {{ formatNumber(recap.cash_summary.net_cash_on_hand) }}
                         </div>
-                        <div class="flex items-center space-x-1.5 text-xs text-teal-700 mt-1 font-semibold">
-                            <CheckCircle2 class="h-3.5 w-3.5 text-teal-600" />
+                        <div class="flex items-center space-x-1.5 text-xs text-[#10B981] mt-1 font-semibold">
+                            <CheckCircle2 class="h-3.5 w-3.5 text-[#10B981]" />
                             <span>Uang Fisik Kas Toko</span>
                         </div>
                     </CardContent>
@@ -210,7 +210,7 @@ function printDailySlip() {
 
                         <div class="flex items-center justify-between p-3 rounded-lg bg-slate-50 border border-slate-200">
                             <div class="flex items-center space-x-3">
-                                <CreditCard class="h-5 w-5 text-teal-600" />
+                                <CreditCard class="h-5 w-5 text-[#6366F1]" />
                                 <div>
                                     <div class="text-sm font-bold text-slate-800">Transfer Bank</div>
                                     <div class="text-xs text-slate-500">BCA / Mandiri / BRI</div>

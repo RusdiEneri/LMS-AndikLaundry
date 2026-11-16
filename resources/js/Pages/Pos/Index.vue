@@ -281,15 +281,15 @@ onUnmounted(() => {
         <template #catalog>
             <div class="space-y-4">
                 <!-- Search Bar & Category Filter Tabs -->
-                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs space-y-3">
+                <div class="bg-white p-4 rounded-[12px] border border-[#E8E8EC] space-y-3">
                     <div class="relative">
-                        <Search class="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+                        <Search class="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-[#6B6B6B]" />
                         <input
                             ref="searchInputRef"
                             v-model="searchQuery"
                             type="text"
                             placeholder="Cari layanan cucian atau SKU barcode... [F1]"
-                            class="flex min-h-[44px] w-full rounded-xl border border-slate-300 bg-white pl-11 pr-4 py-2 text-sm text-slate-900 shadow-2xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                            class="flex min-h-[44px] w-full rounded-[6px] border border-[#E8E8EC] bg-white pl-11 pr-4 py-2 text-sm text-[#0A0A0A] placeholder:text-[#9C9C9C] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12"
                         />
                     </div>
 
@@ -301,10 +301,10 @@ onUnmounted(() => {
                             type="button"
                             @click="selectedCategory = cat"
                             :class="[
-                                'min-h-[44px] px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all focus:outline-none focus:ring-2 focus:ring-teal-500',
+                                'min-h-[44px] px-4 py-2 rounded-[6px] text-xs font-semibold whitespace-nowrap transition-all border focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12 cursor-pointer',
                                 selectedCategory === cat
-                                    ? 'bg-teal-600 text-white shadow-xs'
-                                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200',
+                                    ? 'bg-[#6366F1] text-white border-[#6366F1] shadow-[0_4px_12px_rgba(99,102,241,0.35)]'
+                                    : 'bg-white text-[#6B6B6B] border-[#E8E8EC] hover:bg-[#FAFAFA] hover:text-[#0A0A0A]',
                             ]"
                         >
                             {{ cat }}
@@ -313,7 +313,7 @@ onUnmounted(() => {
                 </div>
 
                 <!-- Catalog Grid -->
-                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
                     <ServiceCard
                         v-for="service in filteredServices"
                         :key="service.id"
@@ -328,23 +328,23 @@ onUnmounted(() => {
         <template #cart>
             <div class="flex flex-col h-full space-y-4">
                 <!-- CUSTOMER SELECTOR CARD -->
-                <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
+                <div class="p-3.5 bg-[#FAFAFA] rounded-[12px] border border-[#E8E8EC] flex items-center justify-between">
                     <div class="flex items-center space-x-2.5">
-                        <div class="h-9 w-9 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center font-bold text-xs shrink-0">
+                        <div class="h-9 w-9 rounded-[6px] bg-[#6366F1]/10 text-[#6366F1] border border-[#6366F1]/20 flex items-center justify-center font-bold text-xs shrink-0">
                             <UserIcon class="h-4 w-4" />
                         </div>
                         <div>
                             <div class="flex items-center space-x-1.5">
-                                <span class="font-bold text-xs text-slate-900">{{ currentCustomer.name }}</span>
+                                <span class="font-bold text-xs text-[#0A0A0A]">{{ currentCustomer.name }}</span>
                                 <span
                                     v-if="Number(currentCustomer.outstanding_receivables ?? 0) > 0"
-                                    class="inline-flex items-center space-x-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-rose-100 text-rose-800 border border-rose-200"
+                                    class="inline-flex items-center space-x-0.5 px-1.5 py-0.5 rounded-[4px] text-[9px] font-bold bg-[#EF4444]/10 text-[#EF4444] border border-[#EF4444]/20"
                                 >
                                     <AlertCircle class="h-2.5 w-2.5" />
                                     <span>Hutang</span>
                                 </span>
                             </div>
-                            <span class="text-[11px] font-mono text-slate-500 block">
+                            <span class="text-[11px] font-mono text-[#6B6B6B] block">
                                 {{ currentCustomer.phone || 'Pelanggan Umum (Walk-In)' }}
                             </span>
                         </div>
@@ -353,7 +353,7 @@ onUnmounted(() => {
                     <button
                         type="button"
                         @click="isCustomerModalOpen = true"
-                        class="min-h-[36px] px-3 py-1 rounded-lg border border-teal-300 bg-white hover:bg-teal-50 text-teal-800 text-xs font-bold shadow-2xs transition-colors"
+                        class="min-h-[44px] px-3.5 py-1.5 rounded-[6px] border border-[#E8E8EC] bg-white hover:bg-[#FAFAFA] text-[#6366F1] text-xs font-semibold shadow-2xs transition-colors focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12 cursor-pointer"
                     >
                         Cari / Ubah
                     </button>
@@ -383,7 +383,7 @@ onUnmounted(() => {
                         type="button"
                         :disabled="cartItems.length === 0"
                         @click="openCheckoutModal"
-                        class="w-full min-h-[52px] rounded-xl bg-teal-600 hover:bg-teal-700 active:scale-99 text-white font-bold text-sm shadow-md disabled:opacity-40 flex items-center justify-center space-x-2 transition-all"
+                        class="w-full min-h-[48px] rounded-[6px] bg-[#6366F1] hover:bg-[#4F46E5] active:scale-99 text-white font-bold text-sm shadow-[0_4px_12px_rgba(99,102,241,0.35)] disabled:opacity-40 flex items-center justify-center space-x-2 transition-all cursor-pointer"
                     >
                         <CreditCard class="h-5 w-5" />
                         <span>PROSES PEMBAYARAN [F8] ({{ formatRupiah(grandTotal) }})</span>

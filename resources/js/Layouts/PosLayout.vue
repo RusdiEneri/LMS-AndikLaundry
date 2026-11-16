@@ -23,6 +23,7 @@ import {
     LayoutDashboard,
     Shirt,
     Settings,
+    Menu,
 } from 'lucide-vue-next';
 
 interface Props {
@@ -49,8 +50,9 @@ const props = withDefaults(defineProps<Props>(), {
 const page = usePage<PageProps>();
 const user = computed<User | null>(() => page.props.auth?.user ?? null);
 
-// Mobile cart sheet state
+// Mobile cart & nav sheet states
 const isMobileCartOpen = ref(false);
+const isMobileNavOpen = ref(false);
 
 // WhatsApp tooltip
 const showWaTooltip = ref(false);
@@ -93,72 +95,73 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="min-h-screen bg-[#FAFAFA] flex flex-col font-sans text-[#0A0A0A] antialiased select-none pb-20 lg:pb-0">
+    <div class="min-h-screen bg-[#FAFAFA] flex flex-col font-sans text-[#0A0A0A] antialiased select-none pb-[calc(env(safe-area-inset-bottom,0px)+4.5rem)] lg:pb-0">
         <Head :title="`${title} - Andik Laundry POS`" />
 
         <!-- High-Speed POS Header -->
-        <header class="relative z-40 bg-white/90 backdrop-blur-md border-b border-[#E8E8EC]">
-            <div class="px-4 sm:px-6 h-14 flex items-center justify-between">
-                <!-- Left: Home / AL Brand & Store Title + Quick Navigation -->
+        <header class="relative z-40 bg-white border-b border-[#E8E8EC]">
+            <div class="px-3 sm:px-6 h-14 flex items-center justify-between">
+                <!-- Left: Home / AL Brand & Store Title + Desktop Navigation -->
                 <div class="flex items-center space-x-3">
-                    <Link
-                        href="/dashboard"
-                        class="inline-flex min-h-[38px] items-center space-x-1.5 px-3 py-1.5 rounded-[6px] border border-[#E8E8EC] bg-white text-[#6B6B6B] hover:bg-[#FAFAFA] hover:text-[#0A0A0A] hover:-translate-y-px transition-all focus:outline-none focus:ring-3 focus:ring-[#6366F1]/12 text-xs font-semibold"
-                        title="Dashboard & Laporan Usaha"
-                        aria-label="Ke Dashboard"
-                    >
-                        <LayoutDashboard class="h-4 w-4 text-[#6366F1]" />
-                        <span class="hidden sm:inline">Dashboard</span>
-                    </Link>
-
-                    <Link
-                        href="/production/station"
-                        class="inline-flex min-h-[38px] items-center space-x-1.5 px-3 py-1.5 rounded-[6px] border border-[#E8E8EC] bg-white text-[#6B6B6B] hover:bg-[#FAFAFA] hover:text-[#0A0A0A] hover:-translate-y-px transition-all focus:outline-none focus:ring-3 focus:ring-[#6366F1]/12 text-xs font-semibold"
-                        title="Antrean & Status Cucian"
-                        aria-label="Ke Antrean Cucian"
-                    >
-                        <Shirt class="h-4 w-4 text-[#6366F1]" />
-                        <span class="hidden sm:inline">Antrean Cuci</span>
-                    </Link>
-
-                    <Link
-                        href="/owner/expenses"
-                        class="inline-flex min-h-[38px] items-center space-x-1.5 px-3 py-1.5 rounded-[6px] border border-[#E8E8EC] bg-white text-[#6B6B6B] hover:bg-[#FAFAFA] hover:text-[#0A0A0A] hover:-translate-y-px transition-all focus:outline-none focus:ring-3 focus:ring-[#6366F1]/12 text-xs font-semibold"
-                        title="Catat Pengeluaran Toko"
-                        aria-label="Ke Pengeluaran Toko"
-                    >
-                        <Receipt class="h-4 w-4 text-[#EF4444]" />
-                        <span class="hidden lg:inline">Biaya Toko</span>
-                    </Link>
-
-                    <Link
-                        href="/owner/settings"
-                        class="inline-flex min-h-[38px] items-center space-x-1.5 px-3 py-1.5 rounded-[6px] border border-[#E8E8EC] bg-white text-[#6B6B6B] hover:bg-[#FAFAFA] hover:text-[#0A0A0A] hover:-translate-y-px transition-all focus:outline-none focus:ring-3 focus:ring-[#6366F1]/12 text-xs font-semibold"
-                        title="Pengaturan Toko & WhatsApp"
-                        aria-label="Ke Pengaturan Toko"
-                    >
-                        <Settings class="h-4 w-4 text-[#6366F1]" />
-                        <span class="hidden lg:inline">Pengaturan</span>
-                    </Link>
-
-                    <div class="flex items-center space-x-2.5 pl-2 border-l border-[#E8E8EC]">
-                        <div class="h-8 w-8 rounded-[6px] bg-[#6366F1] flex items-center justify-center text-white font-bold text-sm shadow-xs">
+                    <div class="flex items-center space-x-2.5">
+                        <div class="h-8 w-8 rounded-[6px] bg-[#6366F1] flex items-center justify-center text-white font-bold text-sm shadow-xs shrink-0">
                             AL
                         </div>
-                        <div>
+                        <div class="min-w-0">
                             <div class="flex items-center space-x-2">
-                                <span class="font-bold text-sm text-[#0A0A0A] leading-tight">{{ storeName }}</span>
-                                <Badge variant="teal" class="text-[10px] uppercase font-bold py-0 px-2 rounded-[4px]">Owner (Pemilik & Kasir)</Badge>
+                                <span class="font-bold text-sm text-[#0A0A0A] leading-tight truncate">{{ storeName }}</span>
+                                <span class="hidden sm:inline-flex items-center text-[10px] uppercase font-bold py-0.5 px-2 rounded-[4px] bg-[#6366F1]/10 text-[#6366F1] border border-[#6366F1]/20">
+                                    Owner
+                                </span>
                             </div>
-                            <span class="text-xs text-[#6B6B6B] leading-none">Usaha Rumahan Mandiri</span>
+                            <span class="text-xs text-[#6B6B6B] leading-none hidden sm:block">Usaha Rumahan Mandiri</span>
                         </div>
                     </div>
+
+                    <!-- Desktop Nav Links (Hidden on mobile < 1024px) -->
+                    <nav class="hidden lg:flex items-center space-x-1 pl-3 border-l border-[#E8E8EC]">
+                        <Link
+                            href="/dashboard"
+                            class="inline-flex min-h-[36px] items-center space-x-1.5 px-3 py-1.5 rounded-[6px] border border-[#E8E8EC] bg-white text-[#6B6B6B] hover:bg-[#FAFAFA] hover:text-[#0A0A0A] hover:-translate-y-px transition-all focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12 text-xs font-semibold"
+                            title="Dashboard & Laporan Usaha"
+                        >
+                            <LayoutDashboard class="h-4 w-4 text-[#6366F1]" />
+                            <span>Dashboard</span>
+                        </Link>
+
+                        <Link
+                            href="/production/station"
+                            class="inline-flex min-h-[36px] items-center space-x-1.5 px-3 py-1.5 rounded-[6px] border border-[#E8E8EC] bg-white text-[#6B6B6B] hover:bg-[#FAFAFA] hover:text-[#0A0A0A] hover:-translate-y-px transition-all focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12 text-xs font-semibold"
+                            title="Antrean & Status Cucian"
+                        >
+                            <Shirt class="h-4 w-4 text-[#6366F1]" />
+                            <span>Antrean Cuci</span>
+                        </Link>
+
+                        <Link
+                            href="/owner/expenses"
+                            class="inline-flex min-h-[36px] items-center space-x-1.5 px-3 py-1.5 rounded-[6px] border border-[#E8E8EC] bg-white text-[#6B6B6B] hover:bg-[#FAFAFA] hover:text-[#0A0A0A] hover:-translate-y-px transition-all focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12 text-xs font-semibold"
+                            title="Catat Pengeluaran Toko"
+                        >
+                            <Receipt class="h-4 w-4 text-[#EF4444]" />
+                            <span>Biaya Toko</span>
+                        </Link>
+
+                        <Link
+                            href="/owner/settings"
+                            class="inline-flex min-h-[36px] items-center space-x-1.5 px-3 py-1.5 rounded-[6px] border border-[#E8E8EC] bg-white text-[#6B6B6B] hover:bg-[#FAFAFA] hover:text-[#0A0A0A] hover:-translate-y-px transition-all focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12 text-xs font-semibold"
+                            title="Pengaturan Toko & WhatsApp"
+                        >
+                            <Settings class="h-4 w-4 text-[#6366F1]" />
+                            <span>Pengaturan</span>
+                        </Link>
+                    </nav>
                 </div>
 
                 <!-- Center: Operational Status & Realtime Clock (Desktop) -->
                 <div class="hidden md:flex items-center space-x-4">
                     <div class="flex items-center space-x-2 px-3 py-1 rounded-full bg-[#10B981]/10 border border-[#10B981]/20 text-[#10B981] text-xs font-semibold">
-                        <span class="h-2 w-2 rounded-full bg-[#10B981] animate-pulse"></span>
+                        <span class="h-2 w-2 rounded-full bg-[#10B981]"></span>
                         <span>Toko Buka • Kasir: {{ user?.name ?? 'Pemilik' }}</span>
                     </div>
 
@@ -168,17 +171,16 @@ onUnmounted(() => {
                     </div>
                 </div>
 
-                <!-- Right: WhatsApp Fallback Status & Hotkeys Badge -->
-                <div class="flex items-center space-x-2 sm:space-x-3">
+                <!-- Right: Mobile Menu Toggle (< 1024px) & Hotkeys/Status (Desktop) -->
+                <div class="flex items-center space-x-2">
                     <div class="relative hidden sm:flex items-center">
                         <button
                             type="button"
                             @click="showWaTooltip = !showWaTooltip"
-                            class="inline-flex min-h-[44px] items-center space-x-1.5 px-3 py-1.5 rounded-full border border-amber-200/80 bg-amber-50/80 text-amber-900 text-xs font-semibold hover:bg-amber-100 focus:outline-none focus:ring-3 focus:ring-[#6366F1]/12"
+                            class="inline-flex min-h-[38px] items-center space-x-1.5 px-3 py-1.5 rounded-[6px] border border-[#E8E8EC] bg-[#FAFAFA] text-[#6B6B6B] text-xs font-semibold hover:bg-white hover:text-[#0A0A0A] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12"
                         >
-                            <WifiOff class="h-4 w-4 text-amber-700" />
-                            <span class="hidden md:inline">WA Fallback Manual</span>
-                            <HelpCircle class="h-3.5 w-3.5 text-amber-600" />
+                            <WifiOff class="h-4 w-4 text-[#F59E0B]" />
+                            <span class="hidden md:inline">WA Fallback</span>
                         </button>
 
                         <div
@@ -205,6 +207,16 @@ onUnmounted(() => {
                         <kbd class="px-2 py-1 bg-[#FAFAFA] text-[#6B6B6B] font-mono rounded-[4px] border border-[#E8E8EC] text-[11px] font-bold">F1 Cari</kbd>
                         <kbd class="px-2 py-1 bg-[#FAFAFA] text-[#6B6B6B] font-mono rounded-[4px] border border-[#E8E8EC] text-[11px] font-bold">F8 Bayar</kbd>
                     </div>
+
+                    <!-- Mobile Menu Hamburger Button (< 1024px) -->
+                    <button
+                        type="button"
+                        class="lg:hidden inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-[6px] border border-[#E8E8EC] bg-white text-[#0A0A0A] hover:bg-[#FAFAFA] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12"
+                        @click="isMobileNavOpen = true"
+                        aria-label="Buka menu navigasi"
+                    >
+                        <Menu class="h-5 w-5 text-[#0A0A0A]" />
+                    </button>
                 </div>
             </div>
         </header>
@@ -227,7 +239,7 @@ onUnmounted(() => {
         </div>
 
         <!-- Mobile & Tablet (< 1024px) Sticky Bottom Bar (56px) -->
-        <div class="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-white/90 backdrop-blur-md border-t border-[#E8E8EC] px-4 h-14 flex items-center justify-between">
+        <div class="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-[#E8E8EC] px-4 h-14 flex items-center justify-between pb-[env(safe-area-inset-bottom,0px)]">
             <div class="flex items-center space-x-3">
                 <div class="relative flex items-center justify-center h-10 w-10 rounded-[6px] bg-[#6366F1]/10 text-[#6366F1] border border-[#6366F1]/20">
                     <ShoppingBag class="h-5 w-5" />
@@ -247,12 +259,85 @@ onUnmounted(() => {
             <Button
                 type="button"
                 variant="default"
-                class="min-h-[40px] px-5 font-bold text-sm bg-[#6366F1] hover:bg-[#4F46E5] text-white active:scale-95"
+                class="min-h-[44px] px-5 font-bold text-sm bg-[#6366F1] hover:bg-[#4F46E5] text-white active:scale-95 rounded-[6px] shadow-[0_4px_12px_rgba(99,102,241,0.35)]"
                 @click="isMobileCartOpen = true"
             >
                 Lihat Keranjang
             </Button>
         </div>
+
+        <!-- Mobile Navigation Sheet (< 1024px) -->
+        <Sheet v-model:open="isMobileNavOpen">
+            <SheetContent side="left" class="p-0 w-72 flex flex-col bg-white">
+                <SheetHeader class="p-4 border-b border-[#E8E8EC] text-left">
+                    <div class="flex items-center space-x-3">
+                        <div class="h-8 w-8 rounded-[6px] bg-[#6366F1] flex items-center justify-center text-white font-bold text-sm">
+                            AL
+                        </div>
+                        <div>
+                            <SheetTitle class="text-sm font-bold text-[#0A0A0A]">{{ storeName }}</SheetTitle>
+                            <SheetDescription class="text-xs text-[#6B6B6B]">Menu Manajemen Toko</SheetDescription>
+                        </div>
+                    </div>
+                </SheetHeader>
+
+                <nav class="flex-1 overflow-y-auto p-3 space-y-1">
+                    <Link
+                        href="/dashboard"
+                        class="flex items-center space-x-3 px-3 py-2.5 rounded-[6px] text-sm font-medium text-[#6B6B6B] hover:text-[#0A0A0A] hover:bg-[#FAFAFA] min-h-[44px]"
+                        @click="isMobileNavOpen = false"
+                    >
+                        <LayoutDashboard class="h-5 w-5 text-[#6366F1]" />
+                        <span>Dashboard & Laporan</span>
+                    </Link>
+
+                    <Link
+                        href="/pos"
+                        class="flex items-center space-x-3 px-3 py-2.5 rounded-[6px] text-sm font-semibold text-[#6366F1] bg-[#6366F1]/10 min-h-[44px]"
+                        @click="isMobileNavOpen = false"
+                    >
+                        <ShoppingBag class="h-5 w-5 text-[#6366F1]" />
+                        <span>Kasir POS</span>
+                    </Link>
+
+                    <Link
+                        href="/production/station"
+                        class="flex items-center space-x-3 px-3 py-2.5 rounded-[6px] text-sm font-medium text-[#6B6B6B] hover:text-[#0A0A0A] hover:bg-[#FAFAFA] min-h-[44px]"
+                        @click="isMobileNavOpen = false"
+                    >
+                        <Shirt class="h-5 w-5 text-[#6366F1]" />
+                        <span>Antrean Cuci & Progres</span>
+                    </Link>
+
+                    <Link
+                        href="/owner/expenses"
+                        class="flex items-center space-x-3 px-3 py-2.5 rounded-[6px] text-sm font-medium text-[#6B6B6B] hover:text-[#0A0A0A] hover:bg-[#FAFAFA] min-h-[44px]"
+                        @click="isMobileNavOpen = false"
+                    >
+                        <Receipt class="h-5 w-5 text-[#EF4444]" />
+                        <span>Pengeluaran Toko</span>
+                    </Link>
+
+                    <Link
+                        href="/owner/receivables"
+                        class="flex items-center space-x-3 px-3 py-2.5 rounded-[6px] text-sm font-medium text-[#6B6B6B] hover:text-[#0A0A0A] hover:bg-[#FAFAFA] min-h-[44px]"
+                        @click="isMobileNavOpen = false"
+                    >
+                        <Wallet class="h-5 w-5 text-[#F59E0B]" />
+                        <span>Buku Piutang</span>
+                    </Link>
+
+                    <Link
+                        href="/owner/settings"
+                        class="flex items-center space-x-3 px-3 py-2.5 rounded-[6px] text-sm font-medium text-[#6B6B6B] hover:text-[#0A0A0A] hover:bg-[#FAFAFA] min-h-[44px]"
+                        @click="isMobileNavOpen = false"
+                    >
+                        <Settings class="h-5 w-5 text-[#6366F1]" />
+                        <span>Pengaturan Toko & WA</span>
+                    </Link>
+                </nav>
+            </SheetContent>
+        </Sheet>
 
         <!-- Mobile & Tablet Expandable Bottom Sheet for Cart & Checkout -->
         <Sheet v-model:open="isMobileCartOpen">

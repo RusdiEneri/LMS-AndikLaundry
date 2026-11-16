@@ -189,7 +189,7 @@ function getCategoryColor(cat: string) {
                     <Button
                         type="button"
                         @click="isAddModalOpen = true"
-                        class="min-h-[44px] gap-2 font-bold shadow-sm bg-teal-600 hover:bg-teal-700 text-white"
+                        class="min-h-[44px] gap-2 font-bold shadow-[0_4px_12px_rgba(99,102,241,0.35)] bg-[#6366F1] hover:bg-[#4F46E5] text-white rounded-[6px]"
                     >
                         <PlusCircle class="h-4 w-4" />
                         <span>Catat Pengeluaran Baru</span>
@@ -235,37 +235,37 @@ function getCategoryColor(cat: string) {
                     </CardContent>
                 </Card>
 
-                <Card class="border-slate-200 shadow-xs bg-teal-50/50">
+                <Card class="border-[#E8E8EC] shadow-xs bg-[#6366F1]/5">
                     <CardHeader class="pb-2">
-                        <CardTitle class="text-xs uppercase font-bold text-teal-800">Status Buku Kas</CardTitle>
+                        <CardTitle class="text-xs uppercase font-bold text-[#6366F1]">Status Buku Kas</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div class="text-base font-bold text-teal-900 flex items-center space-x-1.5">
-                            <CheckCircle2 class="h-4 w-4 text-teal-600" />
+                        <div class="text-base font-bold text-[#0A0A0A] flex items-center space-x-1.5">
+                            <CheckCircle2 class="h-4 w-4 text-[#10B981]" />
                             <span>Tercatat Otomatis</span>
                         </div>
-                        <p class="text-xs text-teal-700 mt-1">Masuk ke Rekap Kas Harian</p>
+                        <p class="text-xs text-[#6B6B6B] mt-1">Masuk ke Rekap Kas Harian</p>
                     </CardContent>
                 </Card>
             </div>
 
             <!-- Filter Controls -->
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-wrap items-center gap-3">
+            <div class="bg-white p-4 rounded-[12px] border border-[#E8E8EC] shadow-xs flex flex-wrap items-center gap-3">
                 <div class="relative flex-1 min-w-[200px]">
-                    <Search class="h-4 w-4 text-slate-400 absolute left-3 top-3.5" />
+                    <Search class="h-4 w-4 text-[#6B6B6B] absolute left-3 top-3.5" />
                     <input
                         v-model="search"
                         @keydown.enter="applyFilter"
                         type="text"
                         placeholder="Cari nomor nota atau keterangan..."
-                        class="w-full pl-9 pr-4 py-2 border border-slate-300 rounded-lg text-sm min-h-[44px] focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                        class="w-full pl-9 pr-4 py-2 border border-[#E8E8EC] rounded-[6px] text-sm text-[#0A0A0A] min-h-[44px] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12"
                     />
                 </div>
 
                 <select
                     v-model="selectedCategory"
                     @change="applyFilter"
-                    class="border border-slate-300 rounded-lg px-3 py-2 text-sm min-h-[44px] bg-white focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                    class="border border-[#E8E8EC] rounded-[6px] px-3 py-2 text-sm text-[#0A0A0A] min-h-[44px] bg-white focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12"
                 >
                     <option value="">Semua Kategori</option>
                     <option v-for="cat in categories" :key="cat.value" :value="cat.value">
@@ -278,14 +278,14 @@ function getCategoryColor(cat: string) {
                         v-model="startDate"
                         @change="applyFilter"
                         type="date"
-                        class="border border-slate-300 rounded-lg px-3 py-2 text-sm min-h-[44px] bg-white focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                        class="border border-[#E8E8EC] rounded-[6px] px-3 py-2 text-sm text-[#0A0A0A] min-h-[44px] bg-white focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12"
                     />
-                    <span class="text-xs text-slate-400">s/d</span>
+                    <span class="text-xs text-[#6B6B6B]">s/d</span>
                     <input
                         v-model="endDate"
                         @change="applyFilter"
                         type="date"
-                        class="border border-slate-300 rounded-lg px-3 py-2 text-sm min-h-[44px] bg-white focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                        class="border border-[#E8E8EC] rounded-[6px] px-3 py-2 text-sm text-[#0A0A0A] min-h-[44px] bg-white focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12"
                     />
                 </div>
 
@@ -386,7 +386,7 @@ function getCategoryColor(cat: string) {
                     <form @submit.prevent="submitExpense" class="space-y-4">
                         <!-- Nominal -->
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">
+                            <label class="block text-xs font-bold text-[#0A0A0A] uppercase mb-1">
                                 Nominal Pengeluaran (Rp) *
                             </label>
                             <input
@@ -394,9 +394,9 @@ function getCategoryColor(cat: string) {
                                 type="number"
                                 placeholder="Contoh: 44000"
                                 required
-                                class="w-full px-4 py-2.5 rounded-lg border border-slate-300 font-mono text-lg font-bold min-h-[44px] focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                                class="w-full px-4 py-2.5 rounded-[6px] border border-[#E8E8EC] font-mono text-lg font-bold min-h-[44px] text-[#0A0A0A] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12"
                             />
-                            <div v-if="form.errors.amount" class="text-rose-600 text-xs mt-1">
+                            <div v-if="form.errors.amount" class="text-[#EF4444] text-xs mt-1">
                                 {{ form.errors.amount }}
                             </div>
 
@@ -405,28 +405,28 @@ function getCategoryColor(cat: string) {
                                 <button
                                     type="button"
                                     @click="setQuickNominal(22000)"
-                                    class="text-xs px-2.5 py-1 rounded bg-slate-100 text-slate-700 hover:bg-slate-200 font-mono"
+                                    class="text-xs px-2.5 py-1 rounded-[6px] border border-[#E8E8EC] bg-[#FAFAFA] text-[#0A0A0A] hover:bg-white font-mono cursor-pointer"
                                 >
                                     +22.000 (1 Gas)
                                 </button>
                                 <button
                                     type="button"
                                     @click="setQuickNominal(44000)"
-                                    class="text-xs px-2.5 py-1 rounded bg-slate-100 text-slate-700 hover:bg-slate-200 font-mono"
+                                    class="text-xs px-2.5 py-1 rounded-[6px] border border-[#E8E8EC] bg-[#FAFAFA] text-[#0A0A0A] hover:bg-white font-mono cursor-pointer"
                                 >
                                     +44.000 (2 Gas)
                                 </button>
                                 <button
                                     type="button"
                                     @click="setQuickNominal(50000)"
-                                    class="text-xs px-2.5 py-1 rounded bg-slate-100 text-slate-700 hover:bg-slate-200 font-mono"
+                                    class="text-xs px-2.5 py-1 rounded-[6px] border border-[#E8E8EC] bg-[#FAFAFA] text-[#0A0A0A] hover:bg-white font-mono cursor-pointer"
                                 >
                                     +50.000
                                 </button>
                                 <button
                                     type="button"
                                     @click="setQuickNominal(100000)"
-                                    class="text-xs px-2.5 py-1 rounded bg-slate-100 text-slate-700 hover:bg-slate-200 font-mono"
+                                    class="text-xs px-2.5 py-1 rounded-[6px] border border-[#E8E8EC] bg-[#FAFAFA] text-[#0A0A0A] hover:bg-white font-mono cursor-pointer"
                                 >
                                     +100.000
                                 </button>
@@ -435,12 +435,12 @@ function getCategoryColor(cat: string) {
 
                         <!-- Category -->
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">
+                            <label class="block text-xs font-bold text-[#0A0A0A] uppercase mb-1">
                                 Kategori *
                             </label>
                             <select
                                 v-model="form.category"
-                                class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm min-h-[44px] bg-white focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                                class="w-full px-4 py-2.5 rounded-[6px] border border-[#E8E8EC] text-sm text-[#0A0A0A] min-h-[44px] bg-white focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12"
                             >
                                 <option v-for="cat in categories" :key="cat.value" :value="cat.value">
                                     {{ cat.label }}
@@ -450,7 +450,7 @@ function getCategoryColor(cat: string) {
 
                         <!-- Description -->
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">
+                            <label class="block text-xs font-bold text-[#0A0A0A] uppercase mb-1">
                                 Keterangan Pembelian *
                             </label>
                             <input
@@ -458,9 +458,9 @@ function getCategoryColor(cat: string) {
                                 type="text"
                                 placeholder="Contoh: Beli 2 tabung gas LPG 3kg di Toko Bu Joko"
                                 required
-                                class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm min-h-[44px] focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                                class="w-full px-4 py-2.5 rounded-[6px] border border-[#E8E8EC] text-sm text-[#0A0A0A] min-h-[44px] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12"
                             />
-                            <div v-if="form.errors.description" class="text-rose-600 text-xs mt-1">
+                            <div v-if="form.errors.description" class="text-[#EF4444] text-xs mt-1">
                                 {{ form.errors.description }}
                             </div>
                         </div>
@@ -468,12 +468,12 @@ function getCategoryColor(cat: string) {
                         <!-- Payment Method & Date -->
                         <div class="grid grid-cols-2 gap-3">
                             <div>
-                                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">
+                                <label class="block text-xs font-bold text-[#0A0A0A] uppercase mb-1">
                                     Metode Pembayaran
                                 </label>
                                 <select
                                     v-model="form.payment_method"
-                                    class="w-full px-3 py-2.5 rounded-lg border border-slate-300 text-sm min-h-[44px] bg-white focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                                    class="w-full px-3 py-2.5 rounded-[6px] border border-[#E8E8EC] text-sm text-[#0A0A0A] min-h-[44px] bg-white focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12"
                                 >
                                     <option value="cash">Kas Tunai (Laci)</option>
                                     <option value="bank_transfer">Transfer Bank</option>
@@ -481,30 +481,30 @@ function getCategoryColor(cat: string) {
                             </div>
 
                             <div>
-                                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">
+                                <label class="block text-xs font-bold text-[#0A0A0A] uppercase mb-1">
                                     Tanggal
                                 </label>
                                 <input
                                     v-model="form.expense_date"
                                     type="date"
-                                    class="w-full px-3 py-2.5 rounded-lg border border-slate-300 text-sm min-h-[44px] bg-white focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                                    class="w-full px-3 py-2.5 rounded-[6px] border border-[#E8E8EC] text-sm text-[#0A0A0A] min-h-[44px] bg-white focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12"
                                 />
                             </div>
                         </div>
 
-                        <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-3">
+                        <div class="pt-3 border-t border-[#E8E8EC] flex items-center justify-end gap-3">
                             <Button
                                 type="button"
                                 variant="outline"
                                 @click="isAddModalOpen = false"
-                                class="min-h-[44px]"
+                                class="min-h-[44px] rounded-[6px]"
                             >
                                 Batal
                             </Button>
                             <Button
                                 type="submit"
                                 :disabled="form.processing"
-                                class="min-h-[44px] bg-teal-600 hover:bg-teal-700 text-white font-bold"
+                                class="min-h-[44px] bg-[#6366F1] hover:bg-[#4F46E5] text-white font-bold rounded-[6px] shadow-[0_4px_12px_rgba(99,102,241,0.35)]"
                             >
                                 {{ form.processing ? 'Menyimpan...' : 'Simpan Pengeluaran' }}
                             </Button>
