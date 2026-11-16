@@ -254,8 +254,8 @@ describe('Tier 4: Real-World Application Workloads', function () {
             'is_active' => true,
         ]);
 
-        // Step 1: Owner logs in and navigates to User Management
-        $this->post('/login', ['email' => 'owner@andiklaundry.test', 'password' => 'OwnerPass123!'])->assertRedirect('/dashboard');
+        // Step 1: Owner logs in and navigates to User Management (POS-First architecture)
+        $this->post('/login', ['email' => 'owner@andiklaundry.test', 'password' => 'OwnerPass123!'])->assertRedirect('/pos');
         $this->get('/owner/users')->assertOk();
 
         // Step 2: Owner provisions Staff Cashier "Siti Aminah"
@@ -453,7 +453,7 @@ describe('Tier 4: Real-World Application Workloads', function () {
             'email' => 'target.owner@andiklaundry.test',
             'password' => 'LegitimatePassword123!',
         ]);
-        $recoveryResponse->assertRedirect('/dashboard');
+        $recoveryResponse->assertRedirect('/pos');
         $this->assertAuthenticatedAs($owner);
     });
 });

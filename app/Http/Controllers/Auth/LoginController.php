@@ -105,10 +105,9 @@ class LoginController extends Controller
     public function roleHome(User $user): string
     {
         return match ($user->role) {
-            'owner' => '/dashboard',
-            'cashier' => '/pos',
+            'owner', 'cashier' => '/pos',
             'operator' => '/production/station',
-            default => '/dashboard',
+            default => '/pos',
         };
     }
 }

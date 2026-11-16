@@ -121,15 +121,6 @@ onUnmounted(() => {
                     <!-- Desktop Nav Links (Hidden on mobile < 1024px) -->
                     <nav class="hidden lg:flex items-center space-x-1.5 pl-3 border-l-2 border-black">
                         <Link
-                            href="/dashboard"
-                            class="inline-flex min-h-[36px] items-center space-x-1.5 px-3 py-1.5 rounded-[8px] border-2 border-black bg-white text-black hover:bg-[#FFF9D2] hover:-translate-y-0.5 transition-all text-xs font-black shadow-[2px_2px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
-                            title="Dashboard & Laporan Usaha"
-                        >
-                            <LayoutDashboard class="h-4 w-4 text-black" />
-                            <span>Dashboard</span>
-                        </Link>
-
-                        <Link
                             href="/production/station"
                             class="inline-flex min-h-[36px] items-center space-x-1.5 px-3 py-1.5 rounded-[8px] border-2 border-black bg-white text-black hover:bg-[#FFF9D2] hover:-translate-y-0.5 transition-all text-xs font-black shadow-[2px_2px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
                             title="Antrean & Status Cucian"
@@ -139,12 +130,30 @@ onUnmounted(() => {
                         </Link>
 
                         <Link
+                            href="/dashboard"
+                            class="inline-flex min-h-[36px] items-center space-x-1.5 px-3 py-1.5 rounded-[8px] border-2 border-black bg-white text-black hover:bg-[#FFF9D2] hover:-translate-y-0.5 transition-all text-xs font-black shadow-[2px_2px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
+                            title="Laporan Keuangan & Laba Rugi"
+                        >
+                            <LayoutDashboard class="h-4 w-4 text-black" />
+                            <span>Laporan Keuangan</span>
+                        </Link>
+
+                        <Link
                             href="/owner/expenses"
                             class="inline-flex min-h-[36px] items-center space-x-1.5 px-3 py-1.5 rounded-[8px] border-2 border-black bg-white text-black hover:bg-[#FFF9D2] hover:-translate-y-0.5 transition-all text-xs font-black shadow-[2px_2px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
                             title="Catat Pengeluaran Toko"
                         >
                             <Receipt class="h-4 w-4 text-[#FF5252]" />
                             <span>Biaya Toko</span>
+                        </Link>
+
+                        <Link
+                            href="/owner/receivables"
+                            class="inline-flex min-h-[36px] items-center space-x-1.5 px-3 py-1.5 rounded-[8px] border-2 border-black bg-white text-black hover:bg-[#FFF9D2] hover:-translate-y-0.5 transition-all text-xs font-black shadow-[2px_2px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
+                            title="Buku Piutang & Tagihan"
+                        >
+                            <Wallet class="h-4 w-4 text-[#2196F3]" />
+                            <span>Buku Piutang</span>
                         </Link>
 
                         <Link
@@ -287,21 +296,12 @@ onUnmounted(() => {
                     </div>
                     <nav class="space-y-2">
                         <Link
-                            href="/dashboard"
-                            class="flex items-center space-x-3 px-3.5 py-2.5 rounded-[8px] border-2 border-black text-sm font-black text-black hover:bg-[#FFEB3B] shadow-[2px_2px_0px_#000] min-h-[44px] bg-white transition-all cursor-pointer"
-                            @click="isMobileNavOpen = false"
-                        >
-                            <LayoutDashboard class="h-5 w-5 text-black stroke-[2.5]" />
-                            <span>Dashboard & Laporan</span>
-                        </Link>
-
-                        <Link
                             href="/pos"
                             class="flex items-center space-x-3 px-3.5 py-2.5 rounded-[8px] border-2 border-black text-sm font-black text-black bg-[#FFEB3B] shadow-[3px_3px_0px_#000] min-h-[44px] transition-all cursor-pointer"
                             @click="isMobileNavOpen = false"
                         >
                             <ShoppingBag class="h-5 w-5 text-black stroke-[2.5]" />
-                            <span>Kasir POS</span>
+                            <span>Kasir POS (Utama)</span>
                         </Link>
 
                         <Link
@@ -311,6 +311,15 @@ onUnmounted(() => {
                         >
                             <Shirt class="h-5 w-5 text-black stroke-[2.5]" />
                             <span>Antrean Cuci & Progres</span>
+                        </Link>
+
+                        <Link
+                            href="/dashboard"
+                            class="flex items-center space-x-3 px-3.5 py-2.5 rounded-[8px] border-2 border-black text-sm font-black text-black hover:bg-[#FFEB3B] shadow-[2px_2px_0px_#000] min-h-[44px] bg-white transition-all cursor-pointer"
+                            @click="isMobileNavOpen = false"
+                        >
+                            <LayoutDashboard class="h-5 w-5 text-black stroke-[2.5]" />
+                            <span>Laporan Keuangan</span>
                         </Link>
 
                         <Link

@@ -32,9 +32,9 @@ Route::get('/', function () {
         $role = Auth::user()?->role;
 
         return match ($role) {
-            'cashier' => redirect('/pos'),
+            'owner', 'cashier' => redirect('/pos'),
             'operator' => redirect('/production/station'),
-            default => redirect('/dashboard'),
+            default => redirect('/pos'),
         };
     }
 

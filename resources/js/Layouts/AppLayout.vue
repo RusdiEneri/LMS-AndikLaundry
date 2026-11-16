@@ -106,12 +106,6 @@ interface NavItem {
 
 const navigationItems: NavItem[] = [
     {
-        name: 'Dashboard & Laporan',
-        href: '/dashboard',
-        icon: LayoutDashboard,
-        roles: ['owner'],
-    },
-    {
         name: 'Kasir POS',
         href: '/pos',
         icon: Store,
@@ -124,10 +118,22 @@ const navigationItems: NavItem[] = [
         roles: ['owner', 'operator'],
     },
     {
+        name: 'Laporan Keuangan',
+        href: '/dashboard',
+        icon: LayoutDashboard,
+        roles: ['owner'],
+    },
+    {
         name: 'Pengeluaran Toko',
         href: '/owner/expenses',
         icon: Receipt,
         roles: ['owner', 'cashier'],
+    },
+    {
+        name: 'Buku Piutang',
+        href: '/owner/receivables',
+        icon: Wallet,
+        roles: ['owner'],
     },
     {
         name: 'Pengaturan Toko',

@@ -65,17 +65,21 @@ const props = withDefaults(defineProps<Props>(), {
         phone: '',
         outstanding_receivables: 0,
     }),
-    categories: () => ['Semua', 'Kiloan', 'Meteran'],
+    categories: () => ['Semua', 'Kiloan', 'Satuan', 'Karpet'],
     services: () => [
-        { id: 1, name: 'Cuci Basah', category: 'Kiloan', price: 5000, unit: 'kg', min_weight: 2.0, estimated_hours: 48 },
+        { id: 1, name: 'Cuci Basah', category: 'Kiloan', price: 5000, unit: 'kg', min_weight: 2.0, estimated_hours: 24 },
         { id: 2, name: 'Cuci Kering', category: 'Kiloan', price: 6000, unit: 'kg', min_weight: 2.0, estimated_hours: 48 },
-        { id: 3, name: 'Cuci Setrika', category: 'Kiloan', price: 8000, unit: 'kg', min_weight: 2.0, estimated_hours: 24 },
-        { id: 4, name: 'Cuci Karpet', category: 'Meteran', price: 15000, unit: 'm²', min_weight: null, estimated_hours: 72, is_meter_service: true },
+        { id: 3, name: 'Cuci Setrika', category: 'Kiloan', price: 8000, unit: 'kg', min_weight: 2.0, estimated_hours: 48 },
+        { id: 4, name: 'Cuci Karpet', category: 'Karpet', price: 15000, unit: 'meter', min_weight: null, estimated_hours: 72, is_meter_service: true },
+        { id: 5, name: 'Bedcover King (Besar)', category: 'Satuan', price: 25000, unit: 'pcs', min_weight: 1.0, estimated_hours: 48 },
+        { id: 6, name: 'Bedcover Single (Kecil)', category: 'Satuan', price: 20000, unit: 'pcs', min_weight: 1.0, estimated_hours: 48 },
+        { id: 7, name: 'Selimut / Sprei', category: 'Satuan', price: 15000, unit: 'pcs', min_weight: 1.0, estimated_hours: 48 },
+        { id: 8, name: 'Boneka / Bantal', category: 'Satuan', price: 10000, unit: 'pcs', min_weight: 1.0, estimated_hours: 48 },
     ],
     quick_tenders: () => [10000, 20000, 50000, 100000],
     turnaround_tiers: () => [
         { code: 'reguler', label: 'Reguler (2-3 Hari)', surcharge: 0 },
-        { code: 'ekspres', label: 'Ekspres (Same Day)', surcharge: 2000 },
+        { code: 'ekspres', label: 'Ekspres (Pagi Ambil Sore)', surcharge: 2000 },
     ],
 });
 
@@ -190,7 +194,7 @@ function onUpdateQty(index: number, newQty: number) {
     if (!item) return;
     item.actual_qty = newQty;
     const isKg = item.service.unit.toLowerCase() === 'kg';
-    const minWeight = isKg ? (item.service.min_weight ?? props.store_info.default_min_weight ?? 3.0) : 0;
+    const minWeight = isKg ? (item.service.min_weight ?? props.store_info.default_min_weight ?? 2.0) : 0;
     item.billed_qty = Math.max(newQty, minWeight);
 }
 

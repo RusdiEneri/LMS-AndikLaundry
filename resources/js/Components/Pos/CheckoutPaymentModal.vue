@@ -54,6 +54,7 @@ const isSubmitting = ref(false);
 const errorMessage = ref('');
 const orderNotes = ref('');
 const isQrisVerified = ref(false);
+const showPosterImage = ref(false);
 
 // Sync default tender on open
 watch(() => props.isOpen, (open) => {
@@ -349,16 +350,65 @@ async function processOrderSubmit() {
                         <span class="text-[11px] font-bold text-gray-800 block mt-0.5">Harap pastikan pelanggan transfer dengan nominal pas</span>
                     </div>
 
-                    <!-- QRIS SVG Display -->
+                    <!-- QRIS & Transfer Info Card -->
                     <div class="flex flex-col items-center justify-center p-3 bg-[#FFFDF5] rounded-[8px] border-2 border-black shadow-[2px_2px_0px_#000]">
-                        <img
-                            src="/images/qris-andiklaundry.svg"
-                            alt="QRIS Resmi Andik Laundry"
-                            class="max-w-[210px] w-full h-auto rounded-[6px] border border-black shadow-[2px_2px_0px_#000] bg-white p-1.5"
-                        />
-                        <div class="mt-2.5 text-center">
-                            <span class="text-xs font-black text-black block">NMID: ID1020304050607</span>
-                            <span class="text-[11px] font-bold text-gray-700 block">Dukungan: BCA, Mandiri, BRI, BNI, GoPay, OVO, Dana, ShopeePay</span>
+                        <!-- Image Container with Toggle -->
+                        <div class="relative flex justify-center">
+                            <img
+                                :src="showPosterImage ? '/images/qris-andiklaundry-poster.jpg' : '/images/qris-andiklaundry.svg'"
+                                alt="QRIS Resmi Andik Laundry"
+                                class="max-w-[210px] max-h-[250px] w-full object-contain rounded-[6px] border-2 border-black shadow-[2px_2px_0px_#000] bg-white p-1"
+                            />
+                        </div>
+
+                        <!-- Toggle Switch: Vector vs Real Photo Poster -->
+                        <div class="flex items-center space-x-2 mt-2.5">
+                            <button
+                                type="button"
+                                @click="showPosterImage = false"
+                                :class="[
+                                    'px-2 py-1 text-[10px] font-black uppercase tracking-wider rounded-[6px] border-2 border-black transition-all cursor-pointer',
+                                    !showPosterImage ? 'bg-[#FFEB3B] text-black shadow-[2px_2px_0px_#000]' : 'bg-white text-gray-700 hover:bg-gray-100'
+                                ]"
+                            >
+                                QR Scan
+                            </button>
+                            <button
+                                type="button"
+                                @click="showPosterImage = true"
+                                :class="[
+                                    'px-2 py-1 text-[10px] font-black uppercase tracking-wider rounded-[6px] border-2 border-black transition-all cursor-pointer',
+                                    showPosterImage ? 'bg-[#FFEB3B] text-black shadow-[2px_2px_0px_#000]' : 'bg-white text-gray-700 hover:bg-gray-100'
+                                ]"
+                            >
+                                📷 Foto Banner Asli
+                            </button>
+                            <a
+                                href="/images/qris-andiklaundry-poster.jpg"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="px-2 py-1 text-[10px] font-black uppercase tracking-wider rounded-[6px] border-2 border-black bg-white hover:bg-[#FFF9D2] text-black shadow-[1.5px_1.5px_0px_#000] transition-all inline-flex items-center"
+                                title="Buka foto asli resolusi penuh"
+                            >
+                                Penuh ↗
+                            </a>
+                        </div>
+
+                        <!-- Store & Payment Channels Info -->
+                        <div class="mt-2 text-center w-full">
+                            <span class="text-xs font-black text-black block">Andik Laundry, Service</span>
+                            <span class="text-[11px] font-mono font-bold text-gray-900 block">NMID: ID1026636068961 (A01)</span>
+                            <div class="mt-1.5 p-2 bg-white rounded-[6px] border border-black text-left text-[11px] space-y-1">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-bold text-gray-700">E-Wallet DANA:</span>
+                                    <span class="font-mono font-black text-black">Scan QRIS / Akun Toko</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="font-bold text-gray-700">Bank Mandiri:</span>
+                                    <span class="font-mono font-black text-black">Tersedia Transfer Mandiri</span>
+                                </div>
+                            </div>
+                            <span class="text-[10px] font-bold text-gray-600 block mt-1">Dukung Semua E-Wallet (DANA, GoPay, OVO, ShopeePay) & M-Banking GPN</span>
                         </div>
                     </div>
 

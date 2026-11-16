@@ -47,12 +47,12 @@ describe('Feature F1: AUTH_SESSION (Tier 1 - Equivalence Class Happy Paths)', fu
             'is_active' => true,
         ]);
 
-        // 1. Owner Login -> Redirects to /dashboard
+        // 1. Owner Login -> Redirects to /pos (POS-First architecture)
         $responseOwner = $this->post('/login', [
             'email' => 'owner@andiklaundry.test',
             'password' => 'Password123!',
         ]);
-        $responseOwner->assertRedirect('/dashboard');
+        $responseOwner->assertRedirect('/pos');
         $this->assertAuthenticatedAs($owner);
         Auth::logout();
 
@@ -133,7 +133,7 @@ describe('Feature F1: AUTH_SESSION (Tier 1 - Equivalence Class Happy Paths)', fu
             'password' => 'Password123!',
         ]);
 
-        $response->assertRedirect('/dashboard');
+        $response->assertRedirect('/pos');
         $newSessionId = Session::getId();
 
         expect($newSessionId)->not->toBe($initialSessionId);
@@ -341,7 +341,7 @@ describe('Feature F2: AUTH_RATE_LIMIT (Tier 1 - Equivalence Class Happy Paths)',
 
         // 4th attempt succeeds
         $res = $this->post('/login', ['email' => $email, 'password' => 'ValidPass123!']);
-        $res->assertRedirect('/dashboard');
+        $res->assertRedirect('/pos');
 
         // Throttle counter must be cleared
         expect(RateLimiter::attempts($key))->toBe(0);

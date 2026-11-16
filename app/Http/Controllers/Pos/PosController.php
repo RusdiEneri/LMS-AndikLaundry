@@ -19,7 +19,7 @@ class PosController extends Controller
      */
     public function index(Request $request): Response
     {
-        $minWeight = (float) BusinessSetting::get('operational.default_min_weight', 3.0);
+        $minWeight = (float) BusinessSetting::get('operational.default_min_weight', 2.0);
         $creditCeiling = (float) BusinessSetting::get('operational.customer_credit_ceiling', 150000.0);
 
         // Auto-seed catalog if database is fresh/empty to ensure real persisted service IDs
@@ -111,10 +111,8 @@ class PosController extends Controller
             'services' => $services,
             'quick_tenders' => [10000, 20000, 50000, 100000],
             'turnaround_tiers' => [
-                ['code' => 'reguler', 'label' => 'Reguler (48 jam)', 'surcharge' => 0],
-                ['code' => 'kilat', 'label' => 'Kilat (24 jam)', 'surcharge' => 10000],
-                ['code' => 'express', 'label' => 'Express (8 jam)', 'surcharge' => 20000],
-                ['code' => 'flash', 'label' => 'Flash (3 jam)', 'surcharge' => 35000],
+                ['code' => 'reguler', 'label' => 'Reguler (2-3 Hari)', 'surcharge' => 0],
+                ['code' => 'ekspres', 'label' => 'Ekspres (Pagi Ambil Sore)', 'surcharge' => 2000],
             ],
             'perfume_variants' => $perfumeVariants,
         ]);

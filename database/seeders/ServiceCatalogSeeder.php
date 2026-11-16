@@ -13,190 +13,172 @@ class ServiceCatalogSeeder extends Seeder
 {
     public function run(): void
     {
-        $minWeight = (float) BusinessSetting::get('operational.default_min_weight', 3.0);
+        $minWeight = (float) BusinessSetting::get('operational.default_min_weight', 2.0);
 
-        // 1. Service Categories
+        // 1. Service Categories (Real-world: Kiloan, Satuan, Karpet)
         $kategoriKiloan = ServiceCategory::updateOrCreate(
             ['slug' => 'kiloan'],
-            ['name' => 'Kiloan', 'description' => 'Layanan cuci harian berbasis timbangan kilogram dengan batas minimum cas.', 'is_active' => true]
+            [
+                'name' => 'Kiloan',
+                'description' => 'Layanan cuci harian berbasis timbangan kilogram (Min 2 kg).',
+                'is_active' => true,
+            ]
         );
 
         $kategoriSatuan = ServiceCategory::updateOrCreate(
             ['slug' => 'satuan'],
-            ['name' => 'Satuan', 'description' => 'Layanan cuci barang satuan seperti bedcover, selimut, sprei, dan boneka.', 'is_active' => true]
+            [
+                'name' => 'Satuan',
+                'description' => 'Layanan cuci barang satuan seperti bedcover, selimut, sprei, dan boneka.',
+                'is_active' => true,
+            ]
         );
 
-        $kategoriDryClean = ServiceCategory::updateOrCreate(
-            ['slug' => 'dry-clean'],
-            ['name' => 'Dry Clean', 'description' => 'Layanan pencucian khusus jas, gaun, kebaya, dan pakaian formal.', 'is_active' => true]
+        $kategoriKarpet = ServiceCategory::updateOrCreate(
+            ['slug' => 'karpet'],
+            [
+                'name' => 'Karpet',
+                'description' => 'Layanan cuci karpet meteran (Panjang x Lebar).',
+                'is_active' => true,
+            ]
         );
 
-        $kategoriSepatuKarpet = ServiceCategory::updateOrCreate(
-            ['slug' => 'sepatu-karpet'],
-            ['name' => 'Sepatu & Karpet', 'description' => 'Layanan cuci sepatu kanvas/kulit dan cuci karpet meteran.', 'is_active' => true]
-        );
+        // Deactivate unused categories
+        ServiceCategory::whereIn('slug', ['dry-clean', 'sepatu-karpet'])->update(['is_active' => false]);
 
-        // 2. Services Master Data
+        // 2. Services Master Data - Actual Andik Laundry Pricing
         $servicesData = [
-            // KILOAN
+            // KILOAN (Min 2kg, Reguler 2-3 Hari, Ekspres +2.000/kg pagi ambil sore)
             [
                 'category' => $kategoriKiloan,
-                'code' => 'CUCI-KOMPLIT',
-                'name' => 'Cuci Komplit Reguler',
-                'description' => 'Layanan cuci komplit: cuci deterjen premium, pengeringan, setrika uap rapi, dan kemas wangi.',
+                'code' => 'CUCI-SETRIKA',
+                'name' => 'Cuci Setrika',
+                'description' => 'Cuci bersih wangi, pengeringan, dan setrika rapi.',
                 'unit' => ServiceUnit::KG,
-                'base_price' => 7000.00,
+                'base_price' => 8000.00,
                 'min_weight' => $minWeight,
                 'estimated_duration_hours' => 48,
+                'is_active' => true,
                 'tiers' => [
-                    ['tier_name' => 'Reguler (48 Jam)', 'tier_code' => 'reguler', 'multiplier_factor' => 1.00, 'flat_surcharge' => 0.00, 'duration_hours' => 48],
-                    ['tier_name' => 'Kilat (24 Jam)', 'tier_code' => 'kilat', 'multiplier_factor' => 1.25, 'flat_surcharge' => 0.00, 'duration_hours' => 24],
-                    ['tier_name' => 'Ekspres (8 Jam)', 'tier_code' => 'ekspres', 'multiplier_factor' => 1.50, 'flat_surcharge' => 0.00, 'duration_hours' => 8],
+                    ['tier_name' => 'Reguler (2-3 Hari)', 'tier_code' => 'reguler', 'multiplier_factor' => 1.00, 'flat_surcharge' => 0.00, 'duration_hours' => 48],
+                    ['tier_name' => 'Ekspres (Pagi Ambil Sore)', 'tier_code' => 'ekspres', 'multiplier_factor' => 1.00, 'flat_surcharge' => 2000.00, 'duration_hours' => 8],
                 ],
             ],
             [
                 'category' => $kategoriKiloan,
-                'code' => 'CUCI-KERING-LIPAT',
-                'name' => 'Cuci Kering Lipat',
-                'description' => 'Pencucian dan pengeringan higienis, dilipat rapi tanpa setrika uap.',
+                'code' => 'CUCI-KERING',
+                'name' => 'Cuci Kering',
+                'description' => 'Pencucian dan pengeringan higienis, dilipat rapi tanpa setrika.',
                 'unit' => ServiceUnit::KG,
-                'base_price' => 5000.00,
+                'base_price' => 6000.00,
                 'min_weight' => $minWeight,
                 'estimated_duration_hours' => 48,
+                'is_active' => true,
                 'tiers' => [
-                    ['tier_name' => 'Reguler (48 Jam)', 'tier_code' => 'reguler', 'multiplier_factor' => 1.00, 'flat_surcharge' => 0.00, 'duration_hours' => 48],
-                    ['tier_name' => 'Kilat (24 Jam)', 'tier_code' => 'kilat', 'multiplier_factor' => 1.25, 'flat_surcharge' => 0.00, 'duration_hours' => 24],
-                    ['tier_name' => 'Ekspres (8 Jam)', 'tier_code' => 'ekspres', 'multiplier_factor' => 1.50, 'flat_surcharge' => 0.00, 'duration_hours' => 8],
-                ],
-            ],
-            [
-                'category' => $kategoriKiloan,
-                'code' => 'SETRIKA-UAP',
-                'name' => 'Setrika Uap Reguler',
-                'description' => 'Jasa setrika uap presisi boiler untuk pakaian yang sudah dicuci sendiri, rapi dan wangi.',
-                'unit' => ServiceUnit::KG,
-                'base_price' => 4000.00,
-                'min_weight' => $minWeight,
-                'estimated_duration_hours' => 24,
-                'tiers' => [
-                    ['tier_name' => 'Reguler (24 Jam)', 'tier_code' => 'reguler', 'multiplier_factor' => 1.00, 'flat_surcharge' => 0.00, 'duration_hours' => 24],
-                    ['tier_name' => 'Ekspres (6 Jam)', 'tier_code' => 'ekspres', 'multiplier_factor' => 1.50, 'flat_surcharge' => 0.00, 'duration_hours' => 6],
+                    ['tier_name' => 'Reguler (2-3 Hari)', 'tier_code' => 'reguler', 'multiplier_factor' => 1.00, 'flat_surcharge' => 0.00, 'duration_hours' => 48],
+                    ['tier_name' => 'Ekspres (Pagi Ambil Sore)', 'tier_code' => 'ekspres', 'multiplier_factor' => 1.00, 'flat_surcharge' => 2000.00, 'duration_hours' => 8],
                 ],
             ],
             [
                 'category' => $kategoriKiloan,
                 'code' => 'CUCI-BASAH',
                 'name' => 'Cuci Basah',
-                'description' => 'Pencucian mesin dengan deterjen dan pelembut, diperas tanpa pengeringan tuntas.',
+                'description' => 'Pencucian mesin dengan sabun wangi, diperas tanpa pengeringan tuntas.',
                 'unit' => ServiceUnit::KG,
-                'base_price' => 4000.00,
+                'base_price' => 5000.00,
                 'min_weight' => $minWeight,
                 'estimated_duration_hours' => 24,
+                'is_active' => true,
                 'tiers' => [
-                    ['tier_name' => 'Reguler (24 Jam)', 'tier_code' => 'reguler', 'multiplier_factor' => 1.00, 'flat_surcharge' => 0.00, 'duration_hours' => 24],
+                    ['tier_name' => 'Reguler (1 Hari)', 'tier_code' => 'reguler', 'multiplier_factor' => 1.00, 'flat_surcharge' => 0.00, 'duration_hours' => 24],
                 ],
             ],
 
-            // SATUAN
+            // KARPET (Meteran Rp 15.000 / meter)
+            [
+                'category' => $kategoriKarpet,
+                'code' => 'CUCI-KARPET',
+                'name' => 'Cuci Karpet',
+                'description' => 'Pencucian karpet meteran bersih menyeluruh dan anti apek.',
+                'unit' => ServiceUnit::METER,
+                'base_price' => 15000.00,
+                'min_weight' => 1.00,
+                'estimated_duration_hours' => 72,
+                'is_active' => true,
+                'tiers' => [
+                    ['tier_name' => 'Reguler (2-3 Hari)', 'tier_code' => 'reguler', 'multiplier_factor' => 1.00, 'flat_surcharge' => 0.00, 'duration_hours' => 72],
+                ],
+            ],
+
+            // SATUAN (Bedcover, Selimut, Sprei, Boneka)
             [
                 'category' => $kategoriSatuan,
                 'code' => 'BEDCOVER-KING',
-                'name' => 'Bedcover King',
-                'description' => 'Cuci satuan bedcover ukuran besar / king size, bersih menyeluruh dan anti apek.',
+                'name' => 'Bedcover King (Besar)',
+                'description' => 'Cuci bedcover ukuran besar / king size, bersih dan harum.',
                 'unit' => ServiceUnit::PCS,
                 'base_price' => 25000.00,
                 'min_weight' => 1.00,
                 'estimated_duration_hours' => 48,
+                'is_active' => true,
                 'tiers' => [
-                    ['tier_name' => 'Reguler (48 Jam)', 'tier_code' => 'reguler', 'multiplier_factor' => 1.00, 'flat_surcharge' => 0.00, 'duration_hours' => 48],
-                    ['tier_name' => 'Ekspres (24 Jam)', 'tier_code' => 'ekspres', 'multiplier_factor' => 1.40, 'flat_surcharge' => 0.00, 'duration_hours' => 24],
+                    ['tier_name' => 'Reguler (2 Hari)', 'tier_code' => 'reguler', 'multiplier_factor' => 1.00, 'flat_surcharge' => 0.00, 'duration_hours' => 48],
                 ],
             ],
             [
                 'category' => $kategoriSatuan,
                 'code' => 'BEDCOVER-SINGLE',
-                'name' => 'Bedcover Single',
-                'description' => 'Cuci satuan bedcover ukuran single, bersih dan harum.',
+                'name' => 'Bedcover Single (Kecil)',
+                'description' => 'Cuci bedcover ukuran single / kecil.',
                 'unit' => ServiceUnit::PCS,
                 'base_price' => 20000.00,
                 'min_weight' => 1.00,
                 'estimated_duration_hours' => 48,
+                'is_active' => true,
                 'tiers' => [
-                    ['tier_name' => 'Reguler (48 Jam)', 'tier_code' => 'reguler', 'multiplier_factor' => 1.00, 'flat_surcharge' => 0.00, 'duration_hours' => 48],
+                    ['tier_name' => 'Reguler (2 Hari)', 'tier_code' => 'reguler', 'multiplier_factor' => 1.00, 'flat_surcharge' => 0.00, 'duration_hours' => 48],
                 ],
             ],
             [
                 'category' => $kategoriSatuan,
-                'code' => 'SELIMUT-TEBAL',
-                'name' => 'Selimut Tebal',
-                'description' => 'Cuci selimut tebal / fleece / wol lembut tanpa merusak serat kain.',
+                'code' => 'SELIMUT-SPREI',
+                'name' => 'Selimut / Sprei',
+                'description' => 'Cuci selimut tebal atau sprei set kasur.',
                 'unit' => ServiceUnit::PCS,
-                'base_price' => 18000.00,
-                'min_weight' => 1.00,
-                'estimated_duration_hours' => 48,
-                'tiers' => [
-                    ['tier_name' => 'Reguler (48 Jam)', 'tier_code' => 'reguler', 'multiplier_factor' => 1.00, 'flat_surcharge' => 0.00, 'duration_hours' => 48],
-                ],
-            ],
-
-            // DRY CLEAN
-            [
-                'category' => $kategoriDryClean,
-                'code' => 'JAS-PRIA',
-                'name' => 'Jas Pria (Dry Clean)',
-                'description' => 'Perawatan dry clean khusus jas pria, menjaga bentuk bahu dan kain tetap prima.',
-                'unit' => ServiceUnit::PCS,
-                'base_price' => 35000.00,
-                'min_weight' => 1.00,
-                'estimated_duration_hours' => 72,
-                'tiers' => [
-                    ['tier_name' => 'Reguler (72 Jam)', 'tier_code' => 'reguler', 'multiplier_factor' => 1.00, 'flat_surcharge' => 0.00, 'duration_hours' => 72],
-                    ['tier_name' => 'Ekspres (24 Jam)', 'tier_code' => 'ekspres', 'multiplier_factor' => 1.50, 'flat_surcharge' => 0.00, 'duration_hours' => 24],
-                ],
-            ],
-            [
-                'category' => $kategoriDryClean,
-                'code' => 'GAUN-KEBAYA',
-                'name' => 'Gaun / Kebaya',
-                'description' => 'Perawatan dry clean khusus gaun pesta, brokat, dan kebaya berpayet.',
-                'unit' => ServiceUnit::PCS,
-                'base_price' => 40000.00,
-                'min_weight' => 1.00,
-                'estimated_duration_hours' => 72,
-                'tiers' => [
-                    ['tier_name' => 'Reguler (72 Jam)', 'tier_code' => 'reguler', 'multiplier_factor' => 1.00, 'flat_surcharge' => 0.00, 'duration_hours' => 72],
-                ],
-            ],
-
-            // SEPATU & KARPET
-            [
-                'category' => $kategoriSepatuKarpet,
-                'code' => 'SEPATU-CANVAS',
-                'name' => 'Sepatu Canvas',
-                'description' => 'Deep cleaning sepatu sneakers / canvas luar dalam dengan formula khusus.',
-                'unit' => ServiceUnit::PCS,
-                'base_price' => 30000.00,
-                'min_weight' => 1.00,
-                'estimated_duration_hours' => 72,
-                'tiers' => [
-                    ['tier_name' => 'Reguler (72 Jam)', 'tier_code' => 'reguler', 'multiplier_factor' => 1.00, 'flat_surcharge' => 0.00, 'duration_hours' => 72],
-                ],
-            ],
-            [
-                'category' => $kategoriSepatuKarpet,
-                'code' => 'CUCI-KARPET',
-                'name' => 'Cuci Karpet',
-                'description' => 'Layanan cuci karpet berbasis luas area (Panjang x Lebar) dengan mesin ekstraktor.',
-                'unit' => ServiceUnit::METER,
                 'base_price' => 15000.00,
                 'min_weight' => 1.00,
-                'estimated_duration_hours' => 72,
+                'estimated_duration_hours' => 48,
+                'is_active' => true,
                 'tiers' => [
-                    ['tier_name' => 'Reguler (72 Jam)', 'tier_code' => 'reguler', 'multiplier_factor' => 1.00, 'flat_surcharge' => 0.00, 'duration_hours' => 72],
-                    ['tier_name' => 'Ekspres (24 Jam)', 'tier_code' => 'ekspres', 'multiplier_factor' => 1.50, 'flat_surcharge' => 0.00, 'duration_hours' => 24],
+                    ['tier_name' => 'Reguler (2 Hari)', 'tier_code' => 'reguler', 'multiplier_factor' => 1.00, 'flat_surcharge' => 0.00, 'duration_hours' => 48],
+                ],
+            ],
+            [
+                'category' => $kategoriSatuan,
+                'code' => 'BONEKA-BANTAL',
+                'name' => 'Boneka / Bantal',
+                'description' => 'Cuci boneka, bantal tidur, atau guling.',
+                'unit' => ServiceUnit::PCS,
+                'base_price' => 10000.00,
+                'min_weight' => 1.00,
+                'estimated_duration_hours' => 48,
+                'is_active' => true,
+                'tiers' => [
+                    ['tier_name' => 'Reguler (2 Hari)', 'tier_code' => 'reguler', 'multiplier_factor' => 1.00, 'flat_surcharge' => 0.00, 'duration_hours' => 48],
                 ],
             ],
         ];
+
+        // Deactivate obsolete services
+        Service::whereIn('code', [
+            'CUCI-KOMPLIT',
+            'CUCI-KERING-LIPAT',
+            'SETRIKA-UAP',
+            'SELIMUT-TEBAL',
+            'JAS-PRIA',
+            'GAUN-KEBAYA',
+            'SEPATU-CANVAS',
+        ])->update(['is_active' => false]);
 
         foreach ($servicesData as $svcData) {
             $service = Service::updateOrCreate(

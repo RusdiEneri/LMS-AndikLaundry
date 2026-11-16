@@ -43,9 +43,9 @@ describe('Feature F7: Route & Layout Accessibility - Tier 1 Happy Paths', functi
         $cashier = User::factory()->create(['role' => 'cashier', 'is_active' => true]);
         $operator = User::factory()->create(['role' => 'operator', 'is_active' => true]);
 
-        // Owner visiting /login or root -> /dashboard
-        $this->actingAs($owner)->get('/login')->assertRedirect('/dashboard');
-        $this->actingAs($owner)->get('/')->assertRedirect('/dashboard');
+        // Owner visiting /login or root -> /pos (POS-First architecture)
+        $this->actingAs($owner)->get('/login')->assertRedirect('/pos');
+        $this->actingAs($owner)->get('/')->assertRedirect('/pos');
 
         // Cashier visiting /login or root -> /pos
         $this->actingAs($cashier)->get('/login')->assertRedirect('/pos');

@@ -289,7 +289,7 @@ const faqs = [
     },
     {
         q: 'Apakah ada layanan antar jemput cucian?',
-        a: 'Ya, kami melayani antar jemput cucian. Gratis ongkir untuk jarak hingga 3 km dari lokasi outlet Andik Laundry. Cukup hubungi admin kami melalui WhatsApp.',
+        a: 'Ya, kami melayani antar jemput cucian. Gratis ongkir untuk cucian maksimal 3 kg. Cukup hubungi admin kami melalui WhatsApp.',
     },
     {
         q: 'Bagaimana cara melacak progres cucian saya?',
@@ -437,7 +437,7 @@ onBeforeUnmount(() => {
                     <div class="hero-section__copy" data-reveal>
                         <div class="hero-badge">
                             <span class="hero-badge__dot"></span>
-                            <span>1 Mesin 1 Pelanggan • Tidak Dicampur</span>
+                            <span>Berdiri Sejak 2009 • 1 Mesin 1 Pelanggan</span>
                         </div>
 
                         <h1 class="hero-title">
@@ -679,6 +679,41 @@ onBeforeUnmount(() => {
                     </div>
                 </div>
 
+                <!-- Satuan Items Price Grid -->
+                <div class="mt-8 bg-white rounded-xl border-[3px] border-black p-5 shadow-[4px_4px_0px_#000]" data-reveal>
+                    <div class="flex items-center justify-between mb-3 border-b-2 border-black pb-2">
+                        <div>
+                            <h3 class="font-black text-base text-black">Tarif Layanan Satuan (Pcs)</h3>
+                            <p class="text-xs text-gray-700 font-bold">Dicuci teliti satu per satu untuk bedcover, selimut, dan perlengkapan tidur</p>
+                        </div>
+                        <span class="text-[10px] uppercase font-black px-2 py-0.5 rounded bg-[#FFEB3B] border border-black text-black">
+                            Satuan
+                        </span>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <div class="p-3 rounded-lg border-2 border-black bg-[#FFFDF5] shadow-[2px_2px_0px_#000]">
+                            <span class="text-xs font-black text-black block">Bedcover King</span>
+                            <span class="text-[11px] font-bold text-gray-600 block">Ukuran Besar</span>
+                            <span class="text-sm font-mono font-black text-black mt-1 block">Rp 25.000 / pcs</span>
+                        </div>
+                        <div class="p-3 rounded-lg border-2 border-black bg-[#FFFDF5] shadow-[2px_2px_0px_#000]">
+                            <span class="text-xs font-black text-black block">Bedcover Single</span>
+                            <span class="text-[11px] font-bold text-gray-600 block">Ukuran Kecil</span>
+                            <span class="text-sm font-mono font-black text-black mt-1 block">Rp 20.000 / pcs</span>
+                        </div>
+                        <div class="p-3 rounded-lg border-2 border-black bg-[#FFFDF5] shadow-[2px_2px_0px_#000]">
+                            <span class="text-xs font-black text-black block">Selimut / Sprei</span>
+                            <span class="text-[11px] font-bold text-gray-600 block">Tebal / Standar</span>
+                            <span class="text-sm font-mono font-black text-black mt-1 block">Rp 15.000 / pcs</span>
+                        </div>
+                        <div class="p-3 rounded-lg border-2 border-black bg-[#FFFDF5] shadow-[2px_2px_0px_#000]">
+                            <span class="text-xs font-black text-black block">Boneka / Bantal</span>
+                            <span class="text-[11px] font-bold text-gray-600 block">Semua Ukuran</span>
+                            <span class="text-sm font-mono font-black text-black mt-1 block">Rp 10.000 / pcs</span>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Addon Speed & Delivery Notes -->
                 <div class="service-addons-strip mt-8" data-reveal>
                     <div class="service-addon-item">
@@ -692,7 +727,7 @@ onBeforeUnmount(() => {
                         <Truck class="w-5 h-5 text-[#16A34A] mr-2" />
                         <div>
                             <span class="font-semibold text-sm text-[#0A0A0A]">Gratis Ongkir Antar-Jemput:</span>
-                            <span class="text-sm text-[#55555E] ml-1">Bebas biaya antar-jemput untuk jarak maksimal 3 km dari toko.</span>
+                            <span class="text-sm text-[#55555E] ml-1">Bebas biaya antar-jemput untuk cucian maksimal 3 kg.</span>
                         </div>
                     </div>
                 </div>
