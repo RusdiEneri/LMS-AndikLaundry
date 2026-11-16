@@ -399,6 +399,84 @@ describe('Milestone 2: POS API Endpoints', function () {
             ->assertJsonValidationErrors(['items']);
     });
 
+    it('T2-API-02B: Successfully processes POS order checkout with Cash payment method', function () {
+        $cashier = User::factory()->create(['role' => 'cashier']);
+        $customer = Customer::factory()->create(['name' => 'Ikbar', 'phone' => '089686729170']);
+        $service = Service::factory()->create([
+            'name' => 'Cuci Komplit Reguler',
+            'base_price' => 7000.00,
+            'min_weight' => 3.00,
+            'unit' => ServiceUnit::KG,
+        ]);
+
+        $payload = [
+            'customer_id' => $customer->id,
+            'items' => [
+                [
+                    'service_id' => $service->id,
+                    'actual_quantity' => 11.00, // 11 * 7,000 = 77,000
+                    'perfume_variant' => 'Lavender',
+                ],
+            ],
+            'paid_amount' => 77000.00,
+            'payment_method' => 'cash',
+            'payment_status' => 'paid',
+        ];
+
+        $response = $this->actingAs($cashier)->postJson('/pos/orders', $payload);
+
+        $response->assertStatus(201)
+            ->assertJsonPath('transaction.total_amount', '77000.00')
+            ->assertJsonPath('transaction.paid_amount', '77000.00')
+            ->assertJsonPath('transaction.outstanding_balance', '0.00')
+            ->assertJsonPath('transaction.payment_status', PaymentStatus::PAID->value);
+
+        $this->assertDatabaseHas('payments', [
+            'payment_method' => 'cash',
+            'amount' => 77000.00,
+            'payment_status' => 'completed',
+        ]);
+    });
+
+    it('T2-API-02C: Successfully processes POS order checkout with QRIS manual payment method', function () {
+        $cashier = User::factory()->create(['role' => 'cashier']);
+        $customer = Customer::factory()->create(['name' => 'Ikbar', 'phone' => '089686729170']);
+        $service = Service::factory()->create([
+            'name' => 'Cuci Komplit Reguler',
+            'base_price' => 7000.00,
+            'min_weight' => 3.00,
+            'unit' => ServiceUnit::KG,
+        ]);
+
+        $payload = [
+            'customer_id' => $customer->id,
+            'items' => [
+                [
+                    'service_id' => $service->id,
+                    'actual_quantity' => 11.00, // 11 * 7,000 = 77,000
+                    'perfume_variant' => 'Sakura',
+                ],
+            ],
+            'paid_amount' => 77000.00,
+            'payment_method' => 'qris',
+            'payment_status' => 'paid',
+        ];
+
+        $response = $this->actingAs($cashier)->postJson('/pos/orders', $payload);
+
+        $response->assertStatus(201)
+            ->assertJsonPath('transaction.total_amount', '77000.00')
+            ->assertJsonPath('transaction.paid_amount', '77000.00')
+            ->assertJsonPath('transaction.outstanding_balance', '0.00')
+            ->assertJsonPath('transaction.payment_status', PaymentStatus::PAID->value);
+
+        $this->assertDatabaseHas('payments', [
+            'payment_method' => 'qris',
+            'amount' => 77000.00,
+            'payment_status' => 'completed',
+        ]);
+    });
+
     it('T2-API-03: Cashier can retrieve transaction details by ID or invoice number via GET /api/pos/transactions/{id}', function () {
         $cashier = User::factory()->create(['role' => 'cashier']);
         $transaction = Transaction::factory()->create([
