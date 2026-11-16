@@ -192,20 +192,22 @@ function barHeight(value: number): string {
                     </p>
                 </div>
 
-                <div class="flex flex-wrap gap-2">
-                    <Button as="a" :href="csvUrl" variant="outline" class="gap-2 font-black uppercase tracking-wider text-xs">
+                <div class="flex flex-wrap sm:flex-nowrap gap-2.5">
+                    <a
+                        :href="csvUrl"
+                        class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-[8px] border-[2.5px] border-black bg-white hover:bg-slate-100 text-black font-black uppercase tracking-wider text-xs shadow-[3px_3px_0px_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all cursor-pointer min-h-[42px]"
+                    >
                         <Download class="h-4 w-4 stroke-[2.5]" aria-hidden="true" />
                         <span>Unduh CSV</span>
-                    </Button>
-                    <Button
+                    </a>
+                    <button
                         type="button"
-                        variant="default"
-                        class="gap-2 font-black uppercase tracking-wider text-xs"
+                        class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-[8px] border-[2.5px] border-black bg-[#FFEB3B] hover:bg-[#fff066] text-black font-black uppercase tracking-wider text-xs shadow-[3px_3px_0px_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all cursor-pointer min-h-[42px]"
                         @click="printSummary"
                     >
                         <Printer class="h-4 w-4 stroke-[2.5]" aria-hidden="true" />
                         <span>Cetak Ringkasan</span>
-                    </Button>
+                    </button>
                 </div>
             </div>
 
@@ -442,51 +444,179 @@ function barHeight(value: number): string {
             </Card>
         </div>
 
-        <!-- 80mm thermal summary; only rendered by printSummary() -->
-        <div id="finance-slip" class="hidden font-mono text-xs text-black">
-            <div class="border-b border-dashed border-black pb-2 text-center">
-                <div class="text-sm font-bold">{{ store_info?.name ?? 'Andik Laundry' }}</div>
-                <div v-if="store_info?.address">{{ store_info.address }}</div>
-                <div v-if="store_info?.phone">Telp: {{ store_info.phone }}</div>
-            </div>
-            <div class="py-2 text-center font-bold">RINGKASAN LABA RUGI</div>
-            <div class="flex justify-between border-b border-dashed border-black pb-2">
-                <span>Periode</span><span>{{ periodLabel }}</span>
-            </div>
-
-            <div class="space-y-1 border-b border-dashed border-black py-2">
-                <div class="font-bold">LABA USAHA (AKRUAL)</div>
-                <div class="flex justify-between"><span>Omzet selesai</span><span>{{ formatRupiah(accrual.recognized_revenue) }}</span></div>
-                <div class="flex justify-between"><span>Biaya toko</span><span>-{{ formatRupiah(accrual.operating_expenses) }}</span></div>
-                <div class="flex justify-between border-t border-dotted border-black pt-1 font-bold">
-                    <span>LABA BERSIH</span><span>{{ formatRupiah(accrual.net_operating_profit) }}</span>
+        <!-- Full Page Executive Financial Summary (A4 format for printSummary) -->
+        <div id="finance-slip" class="hidden text-black font-sans bg-white leading-normal">
+            <!-- Header: Store Info & Document Title -->
+            <div class="flex items-start justify-between border-b-[3px] border-black pb-4 mb-4">
+                <div class="space-y-1">
+                    <div class="flex items-center gap-2">
+                        <div class="h-8 w-8 rounded-[6px] bg-black text-[#FFEB3B] border-2 border-black flex items-center justify-center font-black text-xs print:text-black print:bg-white print:border-black">
+                            AL
+                        </div>
+                        <h1 class="font-display text-xl font-black tracking-tight text-black">{{ store_info?.name ?? 'Andik Laundry' }}</h1>
+                    </div>
+                    <p class="text-xs text-gray-700 max-w-md font-medium" v-if="store_info?.address">{{ store_info.address }}</p>
+                    <p class="text-xs text-gray-700 font-mono font-medium" v-if="store_info?.phone">WhatsApp: {{ store_info.phone }}</p>
+                </div>
+                <div class="text-right">
+                    <div class="inline-block border-2 border-black bg-white px-3 py-1 text-xs font-black uppercase tracking-wider shadow-[2px_2px_0px_#000] print:shadow-none mb-1">
+                        Ringkasan Keuangan SAK EMKM
+                    </div>
+                    <div class="text-xs font-bold text-gray-900">
+                        Periode: <span class="font-black">{{ periodLabel }}</span>
+                    </div>
+                    <div class="text-[11px] text-gray-600">
+                        Durasi: {{ period.days }} Hari · Dicetak: {{ printedAt }}
+                    </div>
                 </div>
             </div>
 
-            <div class="space-y-1 border-b border-dashed border-black py-2">
-                <div class="font-bold">KAS NYATA</div>
-                <div class="flex justify-between"><span>Tunai</span><span>{{ formatRupiah(cash.cash_in.tunai) }}</span></div>
-                <div class="flex justify-between"><span>Transfer</span><span>{{ formatRupiah(cash.cash_in.transfer) }}</span></div>
-                <div class="flex justify-between"><span>QRIS</span><span>{{ formatRupiah(cash.cash_in.qris) }}</span></div>
-                <div class="flex justify-between"><span>E-wallet</span><span>{{ formatRupiah(cash.cash_in.ewallet) }}</span></div>
-                <div class="flex justify-between"><span>Total masuk</span><span>{{ formatRupiah(cash.cash_in.total) }}</span></div>
-                <div class="flex justify-between"><span>Kas keluar</span><span>-{{ formatRupiah(cash.cash_out) }}</span></div>
-                <div class="flex justify-between border-t border-dotted border-black pt-1 font-bold">
-                    <span>SALDO KAS</span><span>{{ formatRupiah(cash.net_cash_flow) }}</span>
+            <!-- Top Summary Cards (3 Columns) -->
+            <div class="grid grid-cols-3 gap-3 mb-4">
+                <div class="border-2 border-black rounded-[8px] p-3 bg-white">
+                    <div class="text-[10px] font-black uppercase tracking-wider text-gray-600 mb-0.5">Laba Bersih (Akrual)</div>
+                    <div class="text-xl font-mono font-black tabular-nums text-black">{{ formatRupiah(accrual.net_operating_profit) }}</div>
+                    <div class="text-[10px] text-gray-600 mt-1 font-mono">
+                        Omzet: {{ formatRupiah(accrual.recognized_revenue) }} · Biaya: {{ formatRupiah(accrual.operating_expenses) }}
+                    </div>
+                </div>
+                <div class="border-2 border-black rounded-[8px] p-3 bg-white">
+                    <div class="text-[10px] font-black uppercase tracking-wider text-gray-600 mb-0.5">Saldo Kas Bersih (Nyata)</div>
+                    <div class="text-xl font-mono font-black tabular-nums text-black">{{ formatRupiah(cash.net_cash_flow) }}</div>
+                    <div class="text-[10px] text-gray-600 mt-1 font-mono">
+                        Masuk: {{ formatRupiah(cash.cash_in.total) }} · Keluar: {{ formatRupiah(cash.cash_out) }}
+                    </div>
+                </div>
+                <div class="border-2 border-black rounded-[8px] p-3 bg-white">
+                    <div class="text-[10px] font-black uppercase tracking-wider text-gray-600 mb-0.5">Piutang Pelanggan</div>
+                    <div class="text-xl font-mono font-black tabular-nums text-black">{{ formatRupiah(receivables.total_outstanding) }}</div>
+                    <div class="text-[10px] text-gray-600 mt-1">
+                        {{ receivables.orders_count }} Nota Belum Lunas ({{ receivables.customers_count }} Pelanggan)
+                    </div>
                 </div>
             </div>
 
-            <div class="space-y-1 border-b border-dashed border-black py-2">
-                <div class="flex justify-between"><span>Piutang berjalan</span><span>{{ formatRupiah(receivables.total_outstanding) }}</span></div>
-                <div v-if="showGapNote" class="pt-1">Laba tertahan di piutang: {{ formatRupiah(gap) }}</div>
+            <!-- 2-Column Side-by-Side Detailed Breakdown -->
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <!-- Column 1: Akrual SAK EMKM -->
+                <div class="border-2 border-black rounded-[8px] p-3.5 bg-white flex flex-col justify-between">
+                    <div>
+                        <div class="border-b-2 border-black pb-1.5 mb-2.5">
+                            <h2 class="text-xs font-black uppercase tracking-wider text-black">1. Laporan Laba Rugi Operasional (Akrual)</h2>
+                            <p class="text-[10px] text-gray-600">Standar Pengakuan Selesai Cuci (SAK EMKM)</p>
+                        </div>
+                        <div class="space-y-1.5 text-xs">
+                            <div class="flex justify-between py-1 border-b border-dashed border-gray-300">
+                                <span class="font-medium text-gray-800">Pendapatan / Omzet Cucian Selesai</span>
+                                <span class="font-mono font-bold">{{ formatRupiah(accrual.recognized_revenue) }}</span>
+                            </div>
+                            <div class="flex justify-between py-1 border-b border-dashed border-gray-300">
+                                <span class="font-medium text-gray-800">Beban Operasional & Pengeluaran Toko</span>
+                                <span class="font-mono font-bold text-black">− {{ formatRupiah(accrual.operating_expenses) }}</span>
+                            </div>
+                            <div class="flex justify-between py-2 border-t-2 border-black font-black text-sm">
+                                <span>LABA / (RUGI) BERSIH OPERASIONAL</span>
+                                <span class="font-mono">{{ formatRupiah(accrual.net_operating_profit) }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3 pt-2 border-t border-gray-200 text-[9.5px] text-gray-500 italic">
+                        * Omzet diakui secara akrual saat cucian selesai diproduksi dan siap diserahkan kepada pelanggan.
+                    </div>
+                </div>
+
+                <!-- Column 2: Cash Flow (Kas Nyata) -->
+                <div class="border-2 border-black rounded-[8px] p-3.5 bg-white flex flex-col justify-between">
+                    <div>
+                        <div class="border-b-2 border-black pb-1.5 mb-2.5">
+                            <h2 class="text-xs font-black uppercase tracking-wider text-black">2. Laporan Arus Kas Nyata (Cash Flow)</h2>
+                            <p class="text-[10px] text-gray-600">Rincian Penerimaan & Pengeluaran Kas Fisik/Bank</p>
+                        </div>
+                        <div class="space-y-1 text-xs">
+                            <div class="flex justify-between py-0.5">
+                                <span class="text-gray-700">Penerimaan Kas - Tunai (Cash)</span>
+                                <span class="font-mono">{{ formatRupiah(cash.cash_in.tunai) }}</span>
+                            </div>
+                            <div class="flex justify-between py-0.5">
+                                <span class="text-gray-700">Penerimaan Kas - Transfer Bank</span>
+                                <span class="font-mono">{{ formatRupiah(cash.cash_in.transfer) }}</span>
+                            </div>
+                            <div class="flex justify-between py-0.5">
+                                <span class="text-gray-700">Penerimaan Kas - QRIS Manual</span>
+                                <span class="font-mono">{{ formatRupiah(cash.cash_in.qris) }}</span>
+                            </div>
+                            <div class="flex justify-between py-0.5">
+                                <span class="text-gray-700">Penerimaan Kas - E-Wallet</span>
+                                <span class="font-mono">{{ formatRupiah(cash.cash_in.ewallet) }}</span>
+                            </div>
+                            <div class="flex justify-between py-1 border-t border-dashed border-gray-400 font-bold">
+                                <span>Total Kas Nyata Diterima</span>
+                                <span class="font-mono">{{ formatRupiah(cash.cash_in.total) }}</span>
+                            </div>
+                            <div class="flex justify-between py-1 border-b border-dashed border-gray-400 font-bold">
+                                <span>Total Kas Keluar (Pengeluaran)</span>
+                                <span class="font-mono text-black">− {{ formatRupiah(cash.cash_out) }}</span>
+                            </div>
+                            <div class="flex justify-between py-2 border-t-2 border-black font-black text-sm">
+                                <span>SALDO ARUS KAS BERSIH</span>
+                                <span class="font-mono">{{ formatRupiah(cash.net_cash_flow) }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3 pt-2 border-t border-gray-200 text-[9.5px] text-gray-500 italic">
+                        * Kas mencerminkan dana riil yang masuk laci atau rekening operasional toko selama periode ini.
+                    </div>
+                </div>
             </div>
 
-            <div class="pt-2 text-center text-[10px]">Dicetak {{ printedAt }}</div>
+            <!-- Reconciliation Note (if gap exists) -->
+            <div v-if="showGapNote" class="border-2 border-black rounded-[8px] p-3 mb-4 bg-gray-50 text-xs">
+                <div class="font-bold text-black flex items-center gap-1.5 mb-0.5">
+                    <span class="font-black uppercase tracking-wider text-[10px] bg-black text-white px-1.5 py-0.5 rounded-[3px]">Catatan Rekonsiliasi</span>
+                    <span>Selisih Laba vs Arus Kas Nyata</span>
+                </div>
+                <p class="text-gray-700 leading-relaxed text-[11px]">
+                    Terdapat dana senilai <strong class="font-mono font-bold">{{ formatRupiah(gap) }}</strong> dari laba operasional yang saat ini masih berupa piutang berjalan pelanggan. Laba telah sah diakui karena pekerjaan cucian telah selesai, namun kas nyata belum diterima dari pelanggan terkait.
+                </p>
+            </div>
+
+            <!-- Signatures Section -->
+            <div class="grid grid-cols-2 gap-12 pt-4 pb-2 text-center text-xs">
+                <div>
+                    <p class="font-bold text-gray-800">Dibuat & Disiapkan Oleh:</p>
+                    <div class="h-16 flex items-end justify-center">
+                        <div class="border-b-2 border-black w-48 text-center pb-1">
+                            <span class="font-bold text-xs">{{ user?.name ?? 'Petugas Kasir' }}</span>
+                        </div>
+                    </div>
+                    <p class="text-[10px] text-gray-600 mt-1">Petugas Kasir / Operasional</p>
+                </div>
+                <div>
+                    <p class="font-bold text-gray-800">Disetujui & Diperiksa Oleh:</p>
+                    <div class="h-16 flex items-end justify-center">
+                        <div class="border-b-2 border-black w-48 text-center pb-1">
+                            <span class="font-bold text-xs">Andik (Owner)</span>
+                        </div>
+                    </div>
+                    <p class="text-[10px] text-gray-600 mt-1">Pemilik Toko (Owner)</p>
+                </div>
+            </div>
+
+            <!-- Document Footer -->
+            <div class="border-t border-black pt-2 mt-4 text-[10px] text-gray-500 flex items-center justify-between">
+                <span>LMS Andik Laundry • Sistem Manajemen Operasional & Keuangan SAK EMKM</span>
+                <span>Dokumen Sah Internal • Dicetak otomatis pada {{ printedAt }}</span>
+            </div>
         </div>
     </AppLayout>
 </template>
 
 <style>
+@page {
+    size: A4 portrait;
+    margin: 12mm 15mm;
+}
+
 @media print {
     body.printing-finance-slip * {
         visibility: hidden !important;
@@ -498,11 +628,18 @@ function barHeight(value: number): string {
     body.printing-finance-slip #finance-slip {
         display: block !important;
         position: absolute !important;
-        left: 0;
-        top: 0;
-        width: 80mm;
-        padding: 3mm;
-        background: white;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: white !important;
+        color: black !important;
+        font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
 }
 </style>

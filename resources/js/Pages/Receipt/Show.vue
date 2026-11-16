@@ -538,6 +538,11 @@ const isUnpaid = computed(() => props.order && props.order.outstanding_balance >
 </template>
 
 <style>
+@page {
+    size: A4 portrait;
+    margin: 12mm 15mm;
+}
+
 @media print {
     header,
     .no-print {
@@ -545,6 +550,11 @@ const isUnpaid = computed(() => props.order && props.order.outstanding_balance >
     }
     body {
         background-color: white !important;
+    }
+    main {
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
     }
 }
 </style>

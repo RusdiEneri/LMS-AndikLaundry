@@ -341,7 +341,7 @@ onUnmounted(() => {
                                     class="inline-flex items-center space-x-0.5 px-1.5 py-0.5 rounded-[4px] text-[9px] font-black bg-[#FF5252] text-black border border-black shadow-[1px_1px_0px_#000]"
                                 >
                                     <AlertCircle class="h-2.5 w-2.5 stroke-[3]" />
-                                    <span>Hutang</span>
+                                    <span>Tagihan</span>
                                 </span>
                             </div>
                             <span class="text-[11px] font-mono font-bold text-black/70 block">

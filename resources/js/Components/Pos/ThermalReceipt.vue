@@ -160,26 +160,26 @@ function handleNewTransaction() {
 <template>
     <div
         v-if="isOpen && transaction"
-        class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 overflow-y-auto"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-3 sm:p-4 overflow-y-auto"
         @click.self="handleClose"
     >
-        <div class="bg-white rounded-[12px] max-w-lg w-full shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-[#E8E8EC] overflow-hidden flex flex-col my-auto max-h-[95vh]">
+        <div class="bg-white rounded-[12px] max-w-lg w-full shadow-[8px_8px_0px_#000] border-[3.5px] border-black overflow-hidden flex flex-col my-auto max-h-[95vh]">
             <!-- Header & Paper Width Controls -->
-            <div class="px-5 py-3.5 bg-[#FAFAFA] border-b border-[#E8E8EC] flex items-center justify-between no-print">
+            <div class="px-5 py-3.5 bg-[#FFEB3B] border-b-[3px] border-black flex items-center justify-between no-print">
                 <div class="flex items-center space-x-2">
-                    <Printer class="h-4 w-4 text-[#6366F1]" />
-                    <span class="font-bold text-sm text-[#0A0A0A]">Struk Transaksi Kasir</span>
+                    <Printer class="h-5 w-5 text-black stroke-[2.5]" />
+                    <span class="font-black text-sm text-black uppercase tracking-wider">Struk Transaksi Kasir</span>
                 </div>
 
                 <div class="flex items-center space-x-2">
                     <!-- Paper Width Toggle (58mm / 80mm) -->
-                    <div class="flex items-center bg-[#E8E8EC] p-0.5 rounded-[6px] text-xs font-mono font-bold">
+                    <div class="flex items-center bg-white border-2 border-black p-0.5 rounded-[6px] text-xs font-mono font-bold shadow-[2px_2px_0px_#000]">
                         <button
                             type="button"
                             @click="currentPaperWidth = '58mm'"
                             :class="[
-                                'px-2 py-1 rounded-[4px] transition-all cursor-pointer',
-                                currentPaperWidth === '58mm' ? 'bg-white text-[#6366F1] shadow-2xs' : 'text-[#6B6B6B] hover:text-[#0A0A0A]',
+                                'px-2 py-0.5 rounded-[4px] font-black transition-all cursor-pointer',
+                                currentPaperWidth === '58mm' ? 'bg-black text-[#FFEB3B]' : 'text-black hover:bg-slate-100',
                             ]"
                         >
                             58mm
@@ -188,8 +188,8 @@ function handleNewTransaction() {
                             type="button"
                             @click="currentPaperWidth = '80mm'"
                             :class="[
-                                'px-2 py-1 rounded-[4px] transition-all cursor-pointer',
-                                currentPaperWidth === '80mm' ? 'bg-white text-[#6366F1] shadow-2xs' : 'text-[#6B6B6B] hover:text-[#0A0A0A]',
+                                'px-2 py-0.5 rounded-[4px] font-black transition-all cursor-pointer',
+                                currentPaperWidth === '80mm' ? 'bg-black text-[#FFEB3B]' : 'text-black hover:bg-slate-100',
                             ]"
                         >
                             80mm
@@ -199,33 +199,33 @@ function handleNewTransaction() {
                     <button
                         type="button"
                         @click="handleClose"
-                        class="h-8 w-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-200"
+                        class="h-8 w-8 rounded-[6px] border-2 border-black bg-white text-black hover:bg-[#FF5252] hover:text-white shadow-[2px_2px_0px_#000] flex items-center justify-center transition-all cursor-pointer active:translate-x-[1px] active:translate-y-[1px] active:shadow-none"
                         aria-label="Tutup Struk"
                     >
-                        <X class="h-5 w-5" />
+                        <X class="h-4 w-4 stroke-[3]" />
                     </button>
                 </div>
             </div>
 
             <!-- Receipt Preview Area -->
-            <div class="p-6 flex-1 overflow-y-auto bg-slate-100 flex justify-center">
+            <div class="p-4 sm:p-6 flex-1 overflow-y-auto bg-[#FFFDF5] flex justify-center border-b-[3px] border-black">
                 <!-- PRINTABLE RECEIPT CONTAINER -->
                 <div
                     id="thermal-receipt-printable"
                     :class="[
-                        'bg-white text-slate-900 font-mono text-[11px] leading-relaxed p-4 shadow-sm border border-slate-200 transition-all select-text',
+                        'bg-white text-black font-mono text-[11px] leading-relaxed p-4 shadow-[4px_4px_0px_#000] border-2 border-black transition-all select-text',
                         currentPaperWidth === '58mm' ? 'w-[230px] max-w-[230px]' : 'w-[320px] max-w-[320px]',
                     ]"
                 >
                     <!-- Store Header -->
-                    <div class="text-center pb-2 border-b border-dashed border-slate-400 space-y-0.5">
+                    <div class="text-center pb-2 border-b border-dashed border-black space-y-0.5">
                         <h2 class="font-bold text-sm tracking-wider uppercase">{{ storeInfo.name }}</h2>
-                        <p class="text-[10px] text-slate-600 leading-tight">{{ storeInfo.address }}</p>
-                        <p class="text-[10px] text-slate-600">WA: {{ storeInfo.phone }}</p>
+                        <p class="text-[10px] text-gray-700 leading-tight">{{ storeInfo.address }}</p>
+                        <p class="text-[10px] text-gray-700">WA: {{ storeInfo.phone }}</p>
                     </div>
 
                     <!-- Invoice & Cashier Metadata -->
-                    <div class="py-2 border-b border-dashed border-slate-400 text-[10px] space-y-0.5">
+                    <div class="py-2 border-b border-dashed border-black text-[10px] space-y-0.5">
                         <div class="flex justify-between">
                             <span>No. Nota:</span>
                             <span class="font-bold">{{ invoiceNumber }}</span>
@@ -249,7 +249,7 @@ function handleNewTransaction() {
                     </div>
 
                     <!-- Line Items Table -->
-                    <div class="py-2 border-b border-dashed border-slate-400 space-y-1.5">
+                    <div class="py-2 border-b border-dashed border-black space-y-1.5">
                         <div
                             v-for="(item, idx) in items"
                             :key="idx"
@@ -259,7 +259,7 @@ function handleNewTransaction() {
                                 <span class="truncate">{{ item.item_name_snapshot ?? item.name }}</span>
                             </div>
 
-                            <div class="flex justify-between text-[10px] text-slate-600">
+                            <div class="flex justify-between text-[10px] text-gray-700">
                                 <span>
                                     {{ item.actual_quantity }} {{ item.pricing_unit_snapshot ?? item.unit }}
                                     <span v-if="item.billed_quantity && item.billed_quantity > item.actual_quantity">
@@ -267,23 +267,23 @@ function handleNewTransaction() {
                                     </span>
                                     x {{ formatRupiah(item.unit_price_snapshot ?? item.price) }}
                                 </span>
-                                <span class="font-bold text-slate-900">
+                                <span class="font-bold text-black">
                                     {{ formatRupiah(item.subtotal_snapshot ?? (item.billed_quantity * item.unit_price_snapshot)) }}
                                 </span>
                             </div>
 
-                            <div v-if="item.perfume_variant" class="text-[9px] text-slate-500 italic">
+                            <div v-if="item.perfume_variant" class="text-[9px] text-gray-600 italic">
                                 Parfum: {{ item.perfume_variant }}
                             </div>
 
-                            <div v-if="item.item_condition_notes" class="text-[9px] text-amber-900 bg-amber-50 px-1 py-0.5 rounded-sm">
+                            <div v-if="item.item_condition_notes" class="text-[9px] text-black bg-[#FFF9D2] border border-black/30 px-1 py-0.5 rounded-sm">
                                 Catatan: {{ item.item_condition_notes }}
                             </div>
                         </div>
                     </div>
 
                     <!-- Delivery Option -->
-                    <div class="py-2 border-b border-dashed border-slate-400 text-[10px]">
+                    <div class="py-2 border-b border-dashed border-black text-[10px]">
                         <div class="flex justify-between">
                             <span>Pengantaran:</span>
                             <span class="font-bold">
@@ -293,7 +293,7 @@ function handleNewTransaction() {
                     </div>
 
                     <!-- Ledger Summary -->
-                    <div class="py-2 border-b border-dashed border-slate-400 space-y-1 text-[10px]">
+                    <div class="py-2 border-b border-dashed border-black space-y-1 text-[10px]">
                         <div class="flex justify-between">
                             <span>Subtotal:</span>
                             <span>{{ formatRupiah(subtotal) }}</span>
@@ -306,7 +306,7 @@ function handleNewTransaction() {
                             <span>Diskon:</span>
                             <span>-{{ formatRupiah(discount) }}</span>
                         </div>
-                        <div class="flex justify-between font-bold text-xs pt-1 border-t border-dotted border-slate-300">
+                        <div class="flex justify-between font-bold text-xs pt-1 border-t border-dotted border-black">
                             <span>TOTAL:</span>
                             <span>{{ formatRupiah(grandTotal) }}</span>
                         </div>
@@ -318,43 +318,48 @@ function handleNewTransaction() {
                             <span>Kembalian:</span>
                             <span>{{ formatRupiah(changeAmount) }}</span>
                         </div>
-                        <div v-if="outstandingBalance > 0" class="flex justify-between font-bold text-rose-700">
-                            <span>SISA HUTANG:</span>
-                            <span>{{ formatRupiah(outstandingBalance) }}</span>
+                        <div v-if="outstandingBalance > 0" class="flex justify-between font-bold text-black">
+                            <span>SISA TAGIHAN:</span>
+                            <span class="font-mono">{{ formatRupiah(outstandingBalance) }}</span>
                         </div>
                     </div>
 
                     <!-- Payment Status Badge -->
-                    <div class="py-2 text-center border-b border-dashed border-slate-400">
-                        <span class="inline-block px-2 py-0.5 border border-slate-900 font-bold text-[10px] tracking-wider uppercase">
+                    <div class="py-2 text-center border-b border-dashed border-black">
+                        <span
+                            :class="[
+                                'inline-block px-3 py-1 border-2 border-black font-black text-[10px] tracking-wider uppercase shadow-[2px_2px_0px_#000]',
+                                outstandingBalance <= 0 ? 'bg-[#22C55E] text-black' : 'bg-[#FFEB3B] text-black',
+                            ]"
+                        >
                             STATUS: {{ paymentStatusLabel }}
                         </span>
-                        <div v-if="targetCompletion" class="text-[9px] text-slate-600 mt-1">
+                        <div v-if="targetCompletion" class="text-[9px] text-gray-700 font-bold mt-1.5">
                             Estimasi Selesai: {{ targetCompletion }}
                         </div>
                     </div>
 
                     <!-- Public Receipt Link Notice -->
-                    <div class="pt-2 text-center text-[9px] text-slate-500 space-y-1">
-                        <p class="font-bold">Lacak Status Cucian Live:</p>
-                        <p class="break-all font-mono text-[8px] text-slate-700 bg-slate-50 p-1 rounded-sm">
+                    <div class="pt-2 text-center text-[9px] text-gray-600 space-y-1">
+                        <p class="font-bold text-black">Lacak Status Cucian Live:</p>
+                        <p class="break-all font-mono text-[8px] text-black bg-[#FFF9D2] border border-black/40 p-1 rounded-sm">
                             {{ digitalReceiptUrl }}
                         </p>
-                        <p class="pt-1 italic leading-tight">{{ storeInfo.receipt_footer }}</p>
+                        <p class="pt-1 italic leading-tight text-gray-700">{{ storeInfo.receipt_footer }}</p>
                     </div>
                 </div>
             </div>
 
             <!-- Footer Action Buttons (Excluded from print) -->
-            <div class="p-4 bg-slate-50 border-t border-slate-200 space-y-2 no-print">
-                <div class="grid grid-cols-2 gap-2">
+            <div class="p-4 bg-[#FFFDF5] space-y-2.5 no-print">
+                <div class="grid grid-cols-2 gap-2.5">
                     <!-- Print Button -->
                     <button
                         type="button"
                         @click="printReceipt"
-                        class="min-h-[44px] flex items-center justify-center space-x-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-xs transition-all"
+                        class="min-h-[44px] flex items-center justify-center space-x-2 rounded-[8px] bg-black hover:bg-neutral-800 text-white font-black text-xs uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all cursor-pointer"
                     >
-                        <Printer class="h-4 w-4" />
+                        <Printer class="h-4 w-4 stroke-[2.5]" />
                         <span>Cetak Struk [P]</span>
                     </button>
 
@@ -363,23 +368,23 @@ function handleNewTransaction() {
                         :href="whatsappUrl"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="min-h-[44px] flex items-center justify-center space-x-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs transition-all"
+                        class="min-h-[44px] flex items-center justify-center space-x-2 rounded-[8px] bg-[#22C55E] hover:bg-[#16a34a] text-black font-black text-xs uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all cursor-pointer"
                     >
-                        <Send class="h-4 w-4" />
+                        <Send class="h-4 w-4 stroke-[2.5]" />
                         <span>Kirim WhatsApp</span>
                     </a>
                 </div>
 
-                <div class="grid grid-cols-2 gap-2">
+                <div class="grid grid-cols-2 gap-2.5">
                     <!-- Copy WhatsApp Message Text -->
                     <button
                         type="button"
                         @click="copyReceiptText"
-                        class="min-h-[40px] flex items-center justify-center space-x-1.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-bold text-xs transition-all"
+                        class="min-h-[42px] flex items-center justify-center space-x-2 rounded-[8px] border-2 border-black bg-white hover:bg-slate-100 text-black font-black text-xs uppercase tracking-wider shadow-[3px_3px_0px_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all cursor-pointer"
                     >
-                        <Check v-if="isCopied" class="h-4 w-4 text-emerald-600" />
-                        <Copy v-else class="h-4 w-4 text-slate-500" />
-                        <span>{{ isCopied ? 'Teks Tersalin!' : 'Salin Teks Nota' }}</span>
+                        <Check v-if="isCopied" class="h-4 w-4 text-[#22C55E] stroke-[3]" />
+                        <Copy v-else class="h-4 w-4 text-black stroke-[2.5]" />
+                        <span>{{ isCopied ? 'Tersalin!' : 'Salin Teks' }}</span>
                     </button>
 
                     <!-- Open Public Digital Receipt Page -->
@@ -387,10 +392,10 @@ function handleNewTransaction() {
                         :href="digitalReceiptUrl"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="min-h-[44px] flex items-center justify-center space-x-1.5 rounded-[6px] border border-[#E8E8EC] bg-white hover:bg-[#FAFAFA] text-[#0A0A0A] font-bold text-xs transition-all"
+                        class="min-h-[42px] flex items-center justify-center space-x-2 rounded-[8px] border-2 border-black bg-white hover:bg-slate-100 text-black font-black text-xs uppercase tracking-wider shadow-[3px_3px_0px_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all cursor-pointer"
                     >
-                        <ExternalLink class="h-4 w-4 text-[#6B6B6B]" />
-                        <span>Buka Nota Digital</span>
+                        <ExternalLink class="h-4 w-4 text-black stroke-[2.5]" />
+                        <span>Nota Digital</span>
                     </a>
                 </div>
 
@@ -398,9 +403,9 @@ function handleNewTransaction() {
                 <button
                     type="button"
                     @click="handleNewTransaction"
-                    class="min-h-[44px] w-full flex items-center justify-center space-x-1.5 rounded-[6px] bg-[#6366F1] hover:bg-[#4F46E5] text-white font-bold text-xs shadow-[0_4px_12px_rgba(99,102,241,0.35)] transition-all cursor-pointer"
+                    class="min-h-[44px] w-full flex items-center justify-center space-x-2 rounded-[8px] bg-[#FFEB3B] hover:bg-[#FDE047] text-black font-black text-xs uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all cursor-pointer"
                 >
-                    <RotateCcw class="h-4 w-4" />
+                    <RotateCcw class="h-4 w-4 stroke-[2.5]" />
                     <span>Mulai Transaksi Baru</span>
                 </button>
             </div>
