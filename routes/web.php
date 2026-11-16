@@ -16,6 +16,7 @@ use App\Http\Controllers\Pos\ReceiptController;
 use App\Http\Controllers\Pos\TransactionController;
 use App\Http\Controllers\Production\ProductionStatusController;
 use App\Http\Controllers\Production\StationController;
+use App\Models\BusinessSetting;
 use App\Models\Transaction;
 use Illuminate\Foundation\Http\Middleware\TrimStrings;
 use Illuminate\Support\Facades\Auth;
@@ -56,12 +57,29 @@ Route::get('/', function () {
         // Fallback anggun ke basis angka jika tabel belum termigrasi.
     }
 
+    $storeName = 'Andik Laundry';
+    $storePhone = '6281234567890';
+    $storeAddress = 'Jl. Raya Laundry No. 12, Jakarta';
+
+    try {
+        $storeName = BusinessSetting::get('store.name', $storeName);
+        $storePhone = BusinessSetting::get('store.phone', $storePhone);
+        $storeAddress = BusinessSetting::get('store.address', $storeAddress);
+    } catch (Throwable) {
+        // Fallback default jika tabel settings belum termigrasi.
+    }
+
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'stats' => [
             'customers' => 1250 + $customerCount,
             'orders' => 3400 + $orderCount,
             'laundry_kg' => 8200 + (int) floor($laundryKg),
+        ],
+        'store' => [
+            'name' => $storeName,
+            'phone' => $storePhone,
+            'address' => $storeAddress,
         ],
     ]);
 });

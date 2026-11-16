@@ -1,68 +1,96 @@
-# Genesis
+# DESIGN.md — Andik Laundry Modern System
 
-## Overview
-An editorial precision interface for a community platform where developers discover, share, and download design system files. The aesthetic is quietly confident — bold display typography, generous spacing, and gallery-frame card surfaces. The mood is professional and modern without being sterile. High information density balanced by breathing room. 
+## 1. Overview & Brand Identity
+Sistem desain modern, ramah, dan profesional untuk **Andik Laundry** — layanan binatu harian berkualitas tinggi berbasis operasional digital (POS terpadu, nota digital WhatsApp, pelacakan live, dan pembayaran QRIS).
+Terinspirasi dari pendekatan binatu modern terkemuka di Indonesia (*Chingu Laundry, Kago Laundry, Ion Laundry*), mengedepankan prinsip:
+- **Higienis & Transparan**: 1 mesin 1 pelanggan (tidak pernah dicampur), timbangan riil, nota digital transparan.
+- **Modern & Anti-Slop**: Tipografi bersih, spasi bernapas, kartu gallery-frame berborder halus, micro-interaction bermakna tanpa animasi berlebihan atau dekorasi generik AI.
+- **Mobile-First & High-Conversion**: Pelanggan mudah memesan antar-jemput via WhatsApp, mengecek tarif resmi, dan melacak progres cucian secara mandiri tanpa login.
 
-## Colors
-- **Primary** (#6366F1): CTAs, active states, links, focus rings, interactive highlights — indigo
-- **Primary Hover** (#4F46E5): Darker indigo for hover states on primary elements
-- **Secondary** (#20970B): Reserved exclusively for the DESIGN.md brand highlight on the homepage — green
-- **Neutral** (#9C9C9C): Muted text, placeholders, timestamps, disabled states
-- **Background** (#FAFAFA): Page background, light warm gray
-- **Surface** (#FFFFFF): Cards, panels, modals, nav backdrop
-- **Text Primary** (#0A0A0A): Headings, body text, primary labels — near-black
-- **Text Secondary** (#6B6B6B): Descriptions, metadata, secondary labels
-- **Border** (#E8E8EC): Card borders, dividers, input borders — subtle and recessive
-- **Success** (#10B981): Published status, confirmations, positive indicators
-- **Warning** (#F59E0B): Pending states, caution banners
-- **Error** (#EF4444): Destructive actions, validation errors, rejected status
+---
 
-## Typography
-- **Display Font**: General Sans — loaded from Fontshare
-- **Body Font**: DM Sans — loaded from Google Fonts
-- **Code Font**: JetBrains Mono — loaded from Google Fonts
+## 2. Color Palette
+- **Primary Interactive** (`#4F46E5` / `#6366F1`): Tombol aksi utama, tab aktif, link, cincin fokus aksesibilitas.
+- **Primary Hover** (`#4338CA`): Status hover pada tombol utama.
+- **Fresh Clean Accent** (`#0284C7` / `#0EA5E9`): Aksen air bersih, higienitas, dan badge layanan cepat.
+- **Success / Healthy** (`#10B981`): Indikator status selesai/lunas, badge jaminan cucian tidak dicampur.
+- **Rating Gold** (`#F59E0B`): Bintang ulasan kepuasan pelanggan.
+- **Surface Background** (`#FFFFFF`): Kartu layanan, panel input, modal, dan drawer.
+- **Canvas Background** (`#FAFAFA`): Latar belakang halaman bersih dan hangat.
+- **Text Primary** (`#0A0A0A`): Judul display, label penting, kontras tinggi WCAG AAA (>12:1).
+- **Text Secondary** (`#55555E` / `#6B6B6B`): Deskripsi, subjudul, dan metadata (kontras >4.5:1 WCAG AA).
+- **Border Recessive** (`#E8E8EC`): Garis pembatas kartu, separator, dan input halus tanpa bayangan kotor.
 
-Display and heading text uses General Sans at bold weight with tight letter spacing (-0.03em to -0.04em). Body and UI text uses DM Sans at regular and medium weights. The contrast between the geometric display font and the humanist body font creates a refined editorial feel. Code blocks, API keys, and CLI commands use JetBrains Mono at regular weight.
+---
 
-Type scale: Display 72px, Headline 60px, Section heading 32px, Subhead 24px, Body 15px, Small 13px, Caption 12px, Overline 11px uppercase.
+## 3. Typography
+- **Display & Headings**: General Sans / Plus Jakarta Sans / system-ui, weight 600-700, tight tracking (`-0.035em` hingga `-0.045em`).
+- **Body & Controls**: DM Sans / Inter / system-ui, weight 400-500, line-height 1.55 - 1.6.
+- **Numbers / Metrics**: Monospace angka bersih (JetBrains Mono / tabular-nums) untuk harga dan berat timbangan.
+- **Fluid Scale**:
+  - Hero Display: `clamp(2.25rem, 3.8vw, 3.65rem)`
+  - Section Headings: `clamp(1.75rem, 2.8vw, 2.4rem)`
+  - Subheads / Card Titles: `1.15rem - 1.35rem`
+  - Body: `0.9rem - 1rem`
+  - Small / Captions / Badges: `0.72rem - 0.8rem`
 
-## Elevation
-This design uses minimal shadows. Cards rest flat with a 1px border and gain a subtle shadow on hover (0 8px 30px rgba(0,0,0,0.08)) combined with a -2px vertical lift. Primary buttons gain a tinted glow shadow on hover (0 4px 12px rgba(99,102,241,0.35)). The nav uses backdrop-blur rather than a shadow to convey elevation. Dropdowns and popovers use shadow-lg. Focus states use a 3px indigo ring (0 0 0 3px rgba(99,102,241,0.12)) rather than a shadow.
+---
 
-## Components
-- **Buttons**: Primary uses indigo fill with white text, 6px radius, medium weight. Secondary uses transparent bg with 1px border, same radius. Ghost has no border or bg, just text color change on hover. Destructive uses red text with red border. All buttons shift up 1px on hover. Sizes: small (32px), medium (38px), large (44px).
-- **Cards**: White surface, 1px subtle border, 12px radius, overflow hidden. Kit preview cards have a 200px image area on top and a content area below with name, author avatar, and stats. Hover lifts the card 2px and increases shadow. Transition duration 200ms.
-- **Inputs**: 1px subtle border, surface background, 6px radius, 10px vertical and 14px horizontal padding, 14px font size. Focus: border turns indigo with a 3px rgba ring. Error: border turns red. Placeholder text uses muted color.
-- **Chips**: Tag chips use rounded-full (pill shape), gray-100 background, gray-600 text, 4px vertical and 12px horizontal padding, 12px font size. Active state: indigo background with white text. Status chips follow the same shape but use semantic colors (green for published, yellow for pending, red for rejected).
-- **Lists**: Stacked rows with 1px dividers between items. Each row is flex with space-between, 12px vertical and 16px horizontal padding. Hover: subtle background change.
-- **Checkboxes**: 20px size, rounded-full, gray-200 unchecked, indigo checked with white checkmark. Used as toggle switches for preferences.
-- **Tooltips**: Native browser tooltips via title attributes. No custom tooltip component currently.
-- **Navigation**: Sticky top nav with backdrop-blur, 56px height, 1px bottom border. Logo left, links center (desktop) or hamburger drawer (mobile), user avatar dropdown right. Nav links: 14px medium weight, hover shows bg-alt background.
-- **Search**: Global search triggered by ⌘K. Rendered as a rounded-xl bar with magnifying glass icon and keyboard shortcut badge.
+## 4. Components & Micro-Patterns
+- **Buttons**:
+  - Radius: `6px`.
+  - Tap target: Min. `44x44px` untuk tombol interaktif.
+  - Primary: Latar `#4F46E5` dengan teks putih tebal, hover lift `-1px` dengan shadow lembut `0 4px 12px rgba(99,102,241,0.22)`.
+  - Secondary / Outline: Border `1px solid #D7D7DF`, teks `#0A0A0A`, hover border `#6366F1`.
+  - WhatsApp CTA: Latar hijau WhatsApp `#25D366` / `#16A34A` dengan icon SVG resmi.
+- **Cards**:
+  - Surface putih, border halus `1px solid #E8E8EC`, radius `10px` hingga `12px`.
+  - Hover: Subtly lift `-2px` dengan bayangan ringan `0 8px 24px rgba(0,0,0,0.05)`.
+- **Badge & Pills**:
+  - Radius `4px` atau `rounded-full`, padding `4px 10px`, font size `11-12px`, uppercase tracking `0.06em`.
+- **Form & Input Lacak Nota**:
+  - Input field tinggi `44px`, border `#D7D7DF`, focus outline `3px solid rgba(99,102,241,0.18)`.
+  - Tombol submit terintegrasi dalam row yang responsif.
+- **Accordion FAQ**:
+  - Semantic `<details>` dan `<summary>`, expand halus, ikon chevron berotasi `180deg` saat terbuka.
 
-## Spacing
-- Base unit: 4px
-- Scale: 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96px
-- Component padding: small 8×12, medium 10×16, large 12×24
-- Section spacing: 32px mobile, 48px tablet, 64px desktop
-- Container max width: 1280px with 24px horizontal padding
-- Card grid gap: 20-24px
+---
 
-## Border Radius
-- 4px: Tags, chips, badges, inline code
-- 6px: Buttons, inputs, selects
-- 8px: Metadata cards, dropdowns, panels
-- 12px: Kit preview cards, search bar, featured sections
-- 9999px: Avatars, status dots, pill badges
+## 5. Layout Architecture (Landing Page)
+1. **Header Sticky**: Logo wordmark `andik. LAUNDRY`, menu tautan seksi, tombol Lacak Nota cepat, dan tombol "Masuk Staf". Mobile hamburger drawer responsif.
+2. **Hero Modern**:
+   - Headline kuat: Solusi cucian bersih, wangi, dan higienis tanpa dicampur.
+   - Dual Call-to-Action: Form Lacak Pesanan instan & Tombol WhatsApp Antar-Jemput.
+   - Live Social Proof: Counter pelanggan riil, cucian dikerjakan, rating 4.9/5, dan garansi 1 Mesin 1 Pelanggan.
+   - Foto visual berkualitas: Ilustrasi kebersihan cucian tertata rapi.
+3. **Mengapa Memilih Kami (Keunggulan Utama)**:
+   - 4 Kartu USP: 1 Mesin 1 Pelanggan, Tepat Waktu (Pilihan Express & Reguler), Nota Digital Realtime, Gratis Antar Jemput (< 3 km).
+4. **Katalog Layanan & Tarif Transparan**:
+   - 4 Layanan Utama POS:
+     - Cuci Basah (Rp 5.000/kg - Min. 2 kg)
+     - Cuci Kering (Rp 6.000/kg - Min. 2 kg)
+     - Cuci Setrika (Rp 8.000/kg - Min. 2 kg) — *Paling Favorit*
+     - Cuci Karpet (Rp 15.000/m² - Kalkulasi Panjang x Lebar)
+   - Tambahan opsi Express (+Rp 2.000/kg) & Gratis Ongkir Antar Jemput < 3 km.
+5. **Alur Pemesanan (4 Langkah Mudah)**:
+   - Taruh / Chat Jemput -> Timbang & Nota WA -> Proses Higienis -> Siap Diambil / Diantar.
+6. **Pelacak Nota Digital (Online Tracking)**:
+   - Form input langsung nomor nota (contoh: `AL-20261115-001`) atau nomor HP untuk melihat progres live (Diproses -> Selesai -> Sudah Diambil).
+7. **Metode Pembayaran**:
+   - Pembayaran mudah Non-Tunai QRIS (GoPay, OVO, Dana, ShopeePay, BCA, Mandiri) dan Tunai.
+8. **Testimoni & Ulasan Pelanggan**:
+   - Ulasan riil pelanggan sekitar toko dengan bintang kepuasan.
+9. **FAQ (Tanya Jawab Pelanggan)**:
+   - Jawaban lugas atas minimal timbangan (2 kg), jadwal operasional, garansi cucian, dan area gratis ongkir.
+10. **Footer & Kontak Toko**:
+    - Alamat lengkap, jam operasional (07.00 - 21.00 WIB), tautan Google Maps, tombol WhatsApp, dan hak cipta.
+11. **Mobile Floating Action Button**:
+    - Tombol WhatsApp melayang di sudut kanan bawah khusus device mobile untuk kemudahan reservasi antar-jemput 1 ketukan.
 
-## Do's and Don'ts
-- Do use indigo (#6366F1) only for interactive elements — never for decoration or static text
-- Do maintain the 4px spacing grid for all padding, margins, and gaps
-- Do use General Sans for headings and DM Sans for body — never swap them
-- Do keep kit cards at 12px radius and buttons/inputs at 6px — don't mix these values
-- Do provide sufficient contrast in both light and dark modes — test both
-- Don't use pure black (#000000) or pure white (#FFFFFF) for text — use the defined palette values
-- Don't add decorative gradients or illustrations — the interactive dot grid is the only decorative element
-- Don't use shadows on static elements — reserve shadow elevation for hover and focus states
-- Don't use more than two font weights on a single screen
-- Don't place more than one primary (filled indigo) button in the same view section
+---
+
+## 6. Anti-Slop & Mobile Quality Guardrails
+- Dilarang menggunakan pola AI slop: tidak ada dot-grid, tidak ada glow berlebihan, tidak ada emoji dekoratif pada tombol.
+- Semua target sentuh minimal `44x44px`.
+- Bebas overflow horizontal di seluruh lebar layar (320px - 1920px+).
+- Reflow alami: tata letak kolom beradaptasi anggun di layar ponsel, tablet, hingga desktop lebar.
