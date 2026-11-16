@@ -268,74 +268,103 @@ onUnmounted(() => {
 
         <!-- Mobile Navigation Sheet (< 1024px) -->
         <Sheet v-model:open="isMobileNavOpen">
-            <SheetContent side="left" class="p-0 w-72 flex flex-col bg-[#FFFDF5] border-r-[3.5px] border-black">
+            <SheetContent side="left" class="p-0 w-80 max-w-[85vw] flex flex-col bg-[#FFFDF5] border-r-[3.5px] border-black shadow-[6px_0px_0px_#000]">
                 <SheetHeader class="p-4 border-b-[3px] border-black text-left bg-[#FFEB3B]">
-                    <div class="flex items-center space-x-3">
-                        <div class="h-9 w-9 rounded-[8px] bg-black text-[#FFEB3B] border-2 border-black flex items-center justify-center font-black text-sm shadow-[2px_2px_0px_#000]">
+                    <div class="flex items-center space-x-3 pr-8">
+                        <div class="h-9 w-9 rounded-[8px] bg-black text-[#FFEB3B] border-2 border-black flex items-center justify-center font-black text-sm shadow-[2px_2px_0px_#000] shrink-0">
                             AL
                         </div>
-                        <div>
-                            <SheetTitle class="text-sm font-black text-black">{{ storeName }}</SheetTitle>
+                        <div class="truncate">
+                            <SheetTitle class="text-sm font-black text-black leading-tight tracking-tight">{{ storeName }}</SheetTitle>
                             <SheetDescription class="text-xs font-bold text-black/70">Menu Manajemen Toko</SheetDescription>
                         </div>
                     </div>
                 </SheetHeader>
 
-                <nav class="flex-1 overflow-y-auto p-3 space-y-2">
-                    <Link
-                        href="/dashboard"
-                        class="flex items-center space-x-3 px-3 py-2.5 rounded-[8px] border-2 border-black text-sm font-black text-black hover:bg-[#FFEB3B] shadow-[2px_2px_0px_#000] min-h-[44px] bg-white"
-                        @click="isMobileNavOpen = false"
-                    >
-                        <LayoutDashboard class="h-5 w-5 text-black" />
-                        <span>Dashboard & Laporan</span>
-                    </Link>
+                <div class="p-4 space-y-2 flex-1 overflow-y-auto">
+                    <div class="px-2 pb-1 text-[10px] font-black uppercase tracking-wider text-black/70">
+                        Menu Navigasi
+                    </div>
+                    <nav class="space-y-2">
+                        <Link
+                            href="/dashboard"
+                            class="flex items-center space-x-3 px-3.5 py-2.5 rounded-[8px] border-2 border-black text-sm font-black text-black hover:bg-[#FFEB3B] shadow-[2px_2px_0px_#000] min-h-[44px] bg-white transition-all cursor-pointer"
+                            @click="isMobileNavOpen = false"
+                        >
+                            <LayoutDashboard class="h-5 w-5 text-black stroke-[2.5]" />
+                            <span>Dashboard & Laporan</span>
+                        </Link>
+
+                        <Link
+                            href="/pos"
+                            class="flex items-center space-x-3 px-3.5 py-2.5 rounded-[8px] border-2 border-black text-sm font-black text-black bg-[#FFEB3B] shadow-[3px_3px_0px_#000] min-h-[44px] transition-all cursor-pointer"
+                            @click="isMobileNavOpen = false"
+                        >
+                            <ShoppingBag class="h-5 w-5 text-black stroke-[2.5]" />
+                            <span>Kasir POS</span>
+                        </Link>
+
+                        <Link
+                            href="/production/station"
+                            class="flex items-center space-x-3 px-3.5 py-2.5 rounded-[8px] border-2 border-black text-sm font-black text-black hover:bg-[#FFEB3B] shadow-[2px_2px_0px_#000] min-h-[44px] bg-white transition-all cursor-pointer"
+                            @click="isMobileNavOpen = false"
+                        >
+                            <Shirt class="h-5 w-5 text-black stroke-[2.5]" />
+                            <span>Antrean Cuci & Progres</span>
+                        </Link>
+
+                        <Link
+                            href="/owner/expenses"
+                            class="flex items-center space-x-3 px-3.5 py-2.5 rounded-[8px] border-2 border-black text-sm font-black text-black hover:bg-[#FFEB3B] shadow-[2px_2px_0px_#000] min-h-[44px] bg-white transition-all cursor-pointer"
+                            @click="isMobileNavOpen = false"
+                        >
+                            <Receipt class="h-5 w-5 text-[#FF5252] stroke-[2.5]" />
+                            <span>Pengeluaran Toko</span>
+                        </Link>
+
+                        <Link
+                            href="/owner/receivables"
+                            class="flex items-center space-x-3 px-3.5 py-2.5 rounded-[8px] border-2 border-black text-sm font-black text-black hover:bg-[#FFEB3B] shadow-[2px_2px_0px_#000] min-h-[44px] bg-white transition-all cursor-pointer"
+                            @click="isMobileNavOpen = false"
+                        >
+                            <Wallet class="h-5 w-5 text-[#2196F3] stroke-[2.5]" />
+                            <span>Buku Piutang</span>
+                        </Link>
+
+                        <Link
+                            href="/owner/settings"
+                            class="flex items-center space-x-3 px-3.5 py-2.5 rounded-[8px] border-2 border-black text-sm font-black text-black hover:bg-[#FFEB3B] shadow-[2px_2px_0px_#000] min-h-[44px] bg-white transition-all cursor-pointer"
+                            @click="isMobileNavOpen = false"
+                        >
+                            <Settings class="h-5 w-5 text-black stroke-[2.5]" />
+                            <span>Pengaturan Toko & WA</span>
+                        </Link>
+                    </nav>
+                </div>
+
+                <!-- Drawer Footer: User Profile & Logout -->
+                <div class="p-4 border-t-[3px] border-black bg-[#FFFDF5] space-y-2.5">
+                    <div class="flex items-center space-x-2.5 p-2.5 rounded-[8px] border-2 border-black bg-white shadow-[2px_2px_0px_#000]">
+                        <div class="h-8 w-8 rounded-[6px] border-2 border-black bg-[#FFEB3B] text-black flex items-center justify-center font-black text-xs shrink-0">
+                            {{ user?.name ? user.name.slice(0, 2).toUpperCase() : 'OW' }}
+                        </div>
+                        <div class="truncate flex-1">
+                            <span class="block text-xs font-black text-black leading-tight truncate">{{ user?.name ?? 'Andik (Owner)' }}</span>
+                            <span class="block text-[10px] font-bold text-black/60 truncate">Owner (Pemilik & Kasir)</span>
+                        </div>
+                    </div>
 
                     <Link
-                        href="/pos"
-                        class="flex items-center space-x-3 px-3 py-2.5 rounded-[8px] border-2 border-black text-sm font-black text-black bg-[#FFEB3B] shadow-[3px_3px_0px_#000] min-h-[44px]"
+                        href="/logout"
+                        method="post"
+                        as="button"
                         @click="isMobileNavOpen = false"
+                        class="flex w-full items-center justify-center space-x-2 px-4 py-2.5 rounded-[8px] min-h-[44px] text-xs font-black uppercase tracking-wider text-black border-2 border-black bg-[#FF5252] shadow-[3px_3px_0px_#000] hover:bg-[#FF5252]/90 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
                     >
-                        <ShoppingBag class="h-5 w-5 text-black" />
-                        <span>Kasir POS</span>
+                        <LogOut class="h-4 w-4 shrink-0 stroke-[2.5]" />
+                        <span>Keluar dari Aplikasi</span>
                     </Link>
-
-                    <Link
-                        href="/production/station"
-                        class="flex items-center space-x-3 px-3 py-2.5 rounded-[8px] border-2 border-black text-sm font-black text-black hover:bg-[#FFEB3B] shadow-[2px_2px_0px_#000] min-h-[44px] bg-white"
-                        @click="isMobileNavOpen = false"
-                    >
-                        <Shirt class="h-5 w-5 text-black" />
-                        <span>Antrean Cuci & Progres</span>
-                    </Link>
-
-                    <Link
-                        href="/owner/expenses"
-                        class="flex items-center space-x-3 px-3 py-2.5 rounded-[8px] border-2 border-black text-sm font-black text-black hover:bg-[#FFEB3B] shadow-[2px_2px_0px_#000] min-h-[44px] bg-white"
-                        @click="isMobileNavOpen = false"
-                    >
-                        <Receipt class="h-5 w-5 text-[#FF5252]" />
-                        <span>Pengeluaran Toko</span>
-                    </Link>
-
-                    <Link
-                        href="/owner/receivables"
-                        class="flex items-center space-x-3 px-3 py-2.5 rounded-[8px] border-2 border-black text-sm font-black text-black hover:bg-[#FFEB3B] shadow-[2px_2px_0px_#000] min-h-[44px] bg-white"
-                        @click="isMobileNavOpen = false"
-                    >
-                        <Wallet class="h-5 w-5 text-[#2196F3]" />
-                        <span>Buku Piutang</span>
-                    </Link>
-
-                    <Link
-                        href="/owner/settings"
-                        class="flex items-center space-x-3 px-3 py-2.5 rounded-[8px] border-2 border-black text-sm font-black text-black hover:bg-[#FFEB3B] shadow-[2px_2px_0px_#000] min-h-[44px] bg-white"
-                        @click="isMobileNavOpen = false"
-                    >
-                        <Settings class="h-5 w-5 text-black" />
-                        <span>Pengaturan Toko & WA</span>
-                    </Link>
-                </nav>
+                </div>
             </SheetContent>
         </Sheet>
 

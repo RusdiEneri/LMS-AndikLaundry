@@ -42,9 +42,9 @@ const forwarded = useForwardPropsEmits(props, emits);
             <slot />
 
             <DialogClose
-                class="absolute right-4 top-4 inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-[6px] p-2 text-[#6B6B6B] hover:bg-[#FAFAFA] hover:text-[#0A0A0A] focus:outline-none focus:ring-3 focus:ring-[#6366F1]/12 disabled:pointer-events-none transition-colors"
+                class="absolute right-3.5 top-3.5 inline-flex min-h-[36px] min-w-[36px] items-center justify-center rounded-[8px] border-2 border-black bg-white text-black shadow-[2px_2px_0px_#000] hover:bg-[#FF5252] hover:text-white active:translate-x-0.5 active:translate-y-0.5 active:shadow-none focus:outline-none disabled:pointer-events-none transition-all cursor-pointer z-50"
             >
-                <X class="h-5 w-5" />
+                <X class="h-4 w-4 stroke-[3]" />
                 <span class="sr-only">Tutup</span>
             </DialogClose>
         </DialogContent>

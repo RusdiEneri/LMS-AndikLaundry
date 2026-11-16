@@ -408,49 +408,65 @@ const roleLabel = computed(() => {
 
         <!-- 3. Mobile Sliding Navigation Drawer (< 1024px) -->
         <Sheet v-model:open="isMobileMenuOpen">
-            <SheetContent side="left" class="w-72 bg-white text-[#0A0A0A] border-r border-[#E8E8EC] p-0 flex flex-col">
-                <SheetHeader class="p-5 border-b border-[#E8E8EC] text-left">
-                    <div class="flex items-center space-x-3">
-                        <div class="h-8 w-8 rounded-[6px] bg-[#6366F1] flex items-center justify-center text-white font-bold text-sm shadow-xs">
+            <SheetContent side="left" class="w-80 max-w-[85vw] bg-[#FFFDF5] text-black border-r-[3.5px] border-black p-0 flex flex-col h-full shadow-[6px_0px_0px_#000]">
+                <!-- Mobile Drawer Header -->
+                <SheetHeader class="p-4 bg-[#FFEB3B] border-b-[3px] border-black text-left">
+                    <div class="flex items-center space-x-3 pr-8">
+                        <div class="h-9 w-9 rounded-[8px] bg-black border-2 border-black text-[#FFEB3B] flex items-center justify-center font-black text-sm shadow-[2px_2px_0px_#000] shrink-0">
                             AL
                         </div>
-                        <div>
-                            <SheetTitle class="text-[#0A0A0A] text-base font-bold leading-tight">Andik Laundry</SheetTitle>
-                            <SheetDescription class="text-[#6B6B6B] text-xs">Menu Navigasi</SheetDescription>
+                        <div class="truncate">
+                            <SheetTitle class="text-black text-base font-black leading-tight tracking-tight">Andik Laundry</SheetTitle>
+                            <SheetDescription class="text-black/70 text-xs font-bold">Sistem Manajemen Toko</SheetDescription>
                         </div>
                     </div>
                 </SheetHeader>
 
-                <div class="p-4 space-y-1 flex-1 overflow-y-auto">
-                    <nav class="space-y-1">
+                <!-- Navigation List -->
+                <div class="p-4 space-y-2 flex-1 overflow-y-auto">
+                    <div class="px-2 pb-1 text-[10px] font-black uppercase tracking-wider text-black/70">
+                        Menu Navigasi
+                    </div>
+                    <nav class="space-y-2">
                         <Link
                             v-for="item in filteredNav"
                             :key="item.href"
                             :href="item.href"
                             @click="isMobileMenuOpen = false"
                             :class="[
-                                'flex items-center space-x-3 px-3 py-3 rounded-[6px] min-h-[44px] text-sm font-medium transition-colors',
+                                'flex items-center space-x-3 px-3.5 py-2.5 rounded-[8px] min-h-[44px] text-sm font-black transition-all cursor-pointer',
                                 isCurrentRoute(item.href)
-                                    ? 'bg-[#6366F1] text-white font-medium hover:bg-[#4F46E5]'
-                                    : 'text-[#6B6B6B] hover:bg-[#FAFAFA] hover:text-[#0A0A0A]',
+                                    ? 'bg-[#FFEB3B] text-black border-2 border-black shadow-[3px_3px_0px_#000]'
+                                    : 'bg-white text-black border-2 border-black/40 hover:bg-[#FFF9D2] hover:border-black hover:shadow-[2px_2px_0px_#000]',
                             ]"
                         >
-                            <component :is="item.icon" class="h-5 w-5 shrink-0" />
-                            <span>{{ item.name }}</span>
+                            <component :is="item.icon" class="h-5 w-5 shrink-0 stroke-[2.5]" />
+                            <span class="truncate">{{ item.name }}</span>
                         </Link>
                     </nav>
                 </div>
 
-                <div class="p-4 border-t border-[#E8E8EC]">
+                <!-- Drawer Footer: User Profile & Logout -->
+                <div class="p-4 border-t-[3px] border-black bg-[#FFFDF5] space-y-2.5">
+                    <div class="flex items-center space-x-2.5 p-2.5 rounded-[8px] border-2 border-black bg-white shadow-[2px_2px_0px_#000]">
+                        <div class="h-8 w-8 rounded-[6px] border-2 border-black bg-[#FFEB3B] text-black flex items-center justify-center font-black text-xs shrink-0">
+                            {{ user?.name ? user.name.slice(0, 2).toUpperCase() : 'OW' }}
+                        </div>
+                        <div class="truncate flex-1">
+                            <span class="block text-xs font-black text-black leading-tight truncate">{{ user?.name ?? 'Andik (Owner)' }}</span>
+                            <span class="block text-[10px] font-bold text-black/60 truncate">{{ roleLabel }}</span>
+                        </div>
+                    </div>
+
                     <Link
                         href="/logout"
                         method="post"
                         as="button"
                         @click="isMobileMenuOpen = false"
-                        class="flex w-full items-center space-x-3 px-3 py-3 rounded-[6px] min-h-[44px] text-sm font-medium text-[#EF4444] hover:bg-[#EF4444]/10 transition-colors"
+                        class="flex w-full items-center justify-center space-x-2 px-4 py-2.5 rounded-[8px] min-h-[44px] text-xs font-black uppercase tracking-wider text-black border-2 border-black bg-[#FF5252] shadow-[3px_3px_0px_#000] hover:bg-[#FF5252]/90 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
                     >
-                        <LogOut class="h-5 w-5 shrink-0" />
-                        <span>Keluar Aplikasi</span>
+                        <LogOut class="h-4 w-4 shrink-0 stroke-[2.5]" />
+                        <span>Keluar dari Aplikasi</span>
                     </Link>
                 </div>
             </SheetContent>
