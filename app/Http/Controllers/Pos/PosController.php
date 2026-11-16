@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Pos;
 use App\Http\Controllers\Controller;
 use App\Models\BusinessSetting;
 use App\Models\Customer;
+use App\Models\Service;
 use App\Models\ServiceCategory;
+use Database\Seeders\ServiceCatalogSeeder;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -20,6 +22,11 @@ class PosController extends Controller
         $minWeight = (float) BusinessSetting::get('operational.default_min_weight', 3.0);
         $creditCeiling = (float) BusinessSetting::get('operational.customer_credit_ceiling', 150000.0);
 
+        // Auto-seed catalog if database is fresh/empty to ensure real persisted service IDs
+        if (ServiceCategory::where('is_active', true)->count() === 0 || Service::where('is_active', true)->count() === 0) {
+            (new ServiceCatalogSeeder)->run();
+        }
+
         // Fetch categories with services and tiers
         $categoryModels = ServiceCategory::where('is_active', true)
             ->with(['services' => function ($query) {
@@ -28,42 +35,30 @@ class PosController extends Controller
             ->orderBy('id')
             ->get();
 
-        if ($categoryModels->isNotEmpty()) {
-            $categories = array_merge(['Semua'], $categoryModels->pluck('name')->toArray());
-            $services = [];
-            foreach ($categoryModels as $cat) {
-                foreach ($cat->services as $svc) {
-                    $services[] = [
-                        'id' => $svc->id,
-                        'name' => $svc->name,
-                        'category' => $cat->name,
-                        'category_slug' => $cat->slug,
-                        'price' => (float) $svc->base_price,
-                        'unit' => is_string($svc->unit) ? $svc->unit : ($svc->unit?->value ?? 'kg'),
-                        'min_weight' => $svc->min_weight !== null ? (float) $svc->min_weight : null,
-                        'estimated_hours' => $svc->estimated_duration_hours ?? 48,
-                        'code' => $svc->code,
-                        'tiers' => $svc->tiers->map(fn ($tier) => [
-                            'id' => $tier->id,
-                            'tier_name' => $tier->tier_name,
-                            'tier_code' => $tier->tier_code,
-                            'multiplier_factor' => (float) $tier->multiplier_factor,
-                            'flat_surcharge' => (float) $tier->flat_surcharge,
-                            'duration_hours' => (int) $tier->duration_hours,
-                        ])->values()->all(),
-                    ];
-                }
+        $categories = array_merge(['Semua'], $categoryModels->pluck('name')->toArray());
+        $services = [];
+        foreach ($categoryModels as $cat) {
+            foreach ($cat->services as $svc) {
+                $services[] = [
+                    'id' => $svc->id,
+                    'name' => $svc->name,
+                    'category' => $cat->name,
+                    'category_slug' => $cat->slug,
+                    'price' => (float) $svc->base_price,
+                    'unit' => is_string($svc->unit) ? $svc->unit : ($svc->unit?->value ?? 'kg'),
+                    'min_weight' => $svc->min_weight !== null ? (float) $svc->min_weight : null,
+                    'estimated_hours' => $svc->estimated_duration_hours ?? 48,
+                    'code' => $svc->code,
+                    'tiers' => $svc->tiers->map(fn ($tier) => [
+                        'id' => $tier->id,
+                        'tier_name' => $tier->tier_name,
+                        'tier_code' => $tier->tier_code,
+                        'multiplier_factor' => (float) $tier->multiplier_factor,
+                        'flat_surcharge' => (float) $tier->flat_surcharge,
+                        'duration_hours' => (int) $tier->duration_hours,
+                    ])->values()->all(),
+                ];
             }
-        } else {
-            $categories = ['Semua', 'Kiloan', 'Satuan', 'Dry Clean', 'Sepatu & Karpet'];
-            $services = [
-                ['id' => 1, 'name' => 'Cuci Komplit Reguler', 'category' => 'Kiloan', 'price' => 7000, 'unit' => 'kg', 'min_weight' => $minWeight, 'estimated_hours' => 48],
-                ['id' => 2, 'name' => 'Cuci Kering Lipat', 'category' => 'Kiloan', 'price' => 5000, 'unit' => 'kg', 'min_weight' => $minWeight, 'estimated_hours' => 48],
-                ['id' => 3, 'name' => 'Setrika Uap Reguler', 'category' => 'Kiloan', 'price' => 4000, 'unit' => 'kg', 'min_weight' => $minWeight, 'estimated_hours' => 24],
-                ['id' => 4, 'name' => 'Bedcover King', 'category' => 'Satuan', 'price' => 25000, 'unit' => 'pcs', 'min_weight' => null, 'estimated_hours' => 48],
-                ['id' => 5, 'name' => 'Jas Pria (Dry Clean)', 'category' => 'Dry Clean', 'price' => 35000, 'unit' => 'pcs', 'min_weight' => null, 'estimated_hours' => 72],
-                ['id' => 6, 'name' => 'Sepatu Canvas', 'category' => 'Sepatu & Karpet', 'price' => 30000, 'unit' => 'pasang', 'min_weight' => null, 'estimated_hours' => 72],
-            ];
         }
 
         $perfumeVariants = BusinessSetting::get('catalog.perfume_variants');
