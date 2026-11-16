@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
-import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
+import { Head, Link, useForm, usePage, router } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import {
     Store,
@@ -24,6 +24,16 @@ import {
     Smartphone,
     KeyRound,
     LogOut,
+    Shirt,
+    Plus,
+    Pencil,
+    Trash2,
+    Power,
+    Clock,
+    Tag,
+    X,
+    Search,
+    Zap,
 } from 'lucide-vue-next';
 import Button from '@/Components/ui/button/Button.vue';
 import type { PageProps } from '@/types';
@@ -37,8 +47,44 @@ interface SettingsDictionary {
     [key: string]: Record<string, any> | undefined;
 }
 
+export interface ServiceCategoryItem {
+    id: number;
+    name: string;
+    slug: string;
+    description?: string;
+    is_active: boolean;
+}
+
+export interface ServiceTierItem {
+    id: number;
+    service_id: number;
+    tier_name: string;
+    tier_code: string;
+    multiplier_factor: string | number;
+    flat_surcharge: string | number;
+    duration_hours: number;
+    is_active: boolean;
+}
+
+export interface ServiceItem {
+    id: number;
+    category_id: number;
+    code: string;
+    name: string;
+    description?: string;
+    unit: string;
+    base_price: string | number;
+    min_weight?: string | number | null;
+    estimated_duration_hours: number;
+    is_active: boolean;
+    category?: ServiceCategoryItem;
+    tiers?: ServiceTierItem[];
+}
+
 const props = defineProps<{
     settings: SettingsDictionary;
+    services?: ServiceItem[];
+    categories?: ServiceCategoryItem[];
 }>();
 
 const page = usePage<PageProps>();
@@ -46,10 +92,13 @@ const flashSuccess = computed(() => page.props.flash?.success);
 const flashError = computed(() => page.props.flash?.error);
 
 // Active Tab state
-type TabKey = 'store' | 'operational' | 'financial' | 'printer' | 'whatsapp';
-const activeTab = ref<TabKey>('store');
+type TabKey = 'services' | 'store' | 'operational' | 'financial' | 'printer' | 'whatsapp';
+const activeTab = ref<TabKey>(
+    (typeof window !== 'undefined' && (new URLSearchParams(window.location.search).get('tab') as TabKey)) || 'services'
+);
 
 const tabs = [
+    { key: 'services' as TabKey, label: 'Layanan & Tarif', icon: Shirt, desc: 'Katalog harga, varian & durasi' },
     { key: 'store' as TabKey, label: 'Identitas Outlet', icon: Store, desc: 'Profil toko & footer cetak' },
     { key: 'operational' as TabKey, label: 'Operasional', icon: Sliders, desc: 'Batas kas, cas & cuci ulang' },
     { key: 'financial' as TabKey, label: 'Finansial & Pajak', icon: Coins, desc: 'PPN & mata uang' },
@@ -541,6 +590,134 @@ async function runTestMessage() {
     }
 }
 
+// -------------------------------------------------------------
+// Service Catalog & Pricing Management State (Owner Control)
+// -------------------------------------------------------------
+const selectedCategory = ref<string>('all');
+const serviceSearchQuery = ref<string>('');
+
+const formatRupiah = (val: number | string) => {
+    const num = Number(val) || 0;
+    return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        maximumFractionDigits: 0,
+    }).format(num);
+};
+
+const formatUnitLabel = (unit: string) => {
+    switch (unit) {
+        case 'kg': return 'kg';
+        case 'pcs': return 'pcs';
+        case 'meter': return 'meter';
+        case 'm2': return 'm²';
+        default: return unit;
+    }
+};
+
+const filteredServices = computed(() => {
+    let list = props.services ?? [];
+    if (selectedCategory.value !== 'all') {
+        list = list.filter(s => s.category?.slug === selectedCategory.value || s.category_id === Number(selectedCategory.value));
+    }
+    if (serviceSearchQuery.value.trim()) {
+        const q = serviceSearchQuery.value.toLowerCase();
+        list = list.filter(s => s.name.toLowerCase().includes(q) || s.code.toLowerCase().includes(q));
+    }
+    return list;
+});
+
+const isServiceModalOpen = ref(false);
+const isEditingService = ref(false);
+const editingServiceId = ref<number | null>(null);
+
+const serviceForm = useForm({
+    name: '',
+    category_id: props.categories?.[0]?.id ?? 1,
+    unit: 'kg',
+    base_price: 6000,
+    min_weight: 2.0,
+    estimated_duration_hours: 48,
+    description: '',
+    is_active: true,
+    has_express: true,
+    express_surcharge: 2000,
+    express_duration_hours: 12,
+});
+
+const openCreateServiceModal = () => {
+    isEditingService.value = false;
+    editingServiceId.value = null;
+    serviceForm.reset();
+    serviceForm.clearErrors();
+    serviceForm.name = '';
+    serviceForm.category_id = props.categories?.[0]?.id ?? 1;
+    serviceForm.unit = 'kg';
+    serviceForm.base_price = 6000;
+    serviceForm.min_weight = 2.0;
+    serviceForm.estimated_duration_hours = 48;
+    serviceForm.description = '';
+    serviceForm.is_active = true;
+    serviceForm.has_express = true;
+    serviceForm.express_surcharge = 2000;
+    serviceForm.express_duration_hours = 12;
+    isServiceModalOpen.value = true;
+};
+
+const openEditServiceModal = (svc: ServiceItem) => {
+    isEditingService.value = true;
+    editingServiceId.value = svc.id;
+    serviceForm.clearErrors();
+
+    const ekspresTier = svc.tiers?.find(t => t.tier_code === 'ekspres');
+
+    serviceForm.name = svc.name;
+    serviceForm.category_id = svc.category_id;
+    serviceForm.unit = svc.unit;
+    serviceForm.base_price = Number(svc.base_price);
+    serviceForm.min_weight = svc.min_weight ? Number(svc.min_weight) : (svc.unit === 'kg' ? 2.0 : 1.0);
+    serviceForm.estimated_duration_hours = svc.estimated_duration_hours || 48;
+    serviceForm.description = svc.description || '';
+    serviceForm.is_active = Boolean(svc.is_active);
+    serviceForm.has_express = Boolean(ekspresTier && ekspresTier.is_active);
+    serviceForm.express_surcharge = ekspresTier ? Number(ekspresTier.flat_surcharge) : 2000;
+    serviceForm.express_duration_hours = ekspresTier ? Number(ekspresTier.duration_hours) : 12;
+
+    isServiceModalOpen.value = true;
+};
+
+const saveService = () => {
+    if (isEditingService.value && editingServiceId.value) {
+        serviceForm.put(`/owner/services/${editingServiceId.value}`, {
+            preserveScroll: true,
+            onSuccess: () => {
+                isServiceModalOpen.value = false;
+            },
+        });
+    } else {
+        serviceForm.post('/owner/services', {
+            preserveScroll: true,
+            onSuccess: () => {
+                isServiceModalOpen.value = false;
+            },
+        });
+    }
+};
+
+const toggleServiceStatus = (svc: ServiceItem) => {
+    router.patch(`/owner/services/${svc.id}/toggle-status`, {}, {
+        preserveScroll: true,
+    });
+};
+
+const confirmDeleteService = (svc: ServiceItem) => {
+    if (confirm(`Yakin ingin menonaktifkan/menghapus layanan "${svc.name}" dari katalog?`)) {
+        router.delete(`/owner/services/${svc.id}`, {
+            preserveScroll: true,
+        });
+    }
+};
+
 const submitSettings = () => {
     // Transform flat form keys into required backend batch array: [{ key, value }]
     const payload = Object.entries(form.data()).map(([key, value]) => ({
@@ -634,9 +811,218 @@ const submitSettings = () => {
                     </div>
                 </aside>
 
-                <!-- Form Panel -->
+                <!-- Form & Content Panel -->
                 <div class="lg:col-span-3">
-                    <form @submit.prevent="submitSettings" class="space-y-6">
+                    <!-- Tab 0: Layanan & Tarif (POS Master Catalog CRUD) -->
+                    <div v-show="activeTab === 'services'" class="space-y-6">
+                        <!-- Header Card -->
+                        <div class="bg-white rounded-[12px] border-[3.5px] border-black p-5 sm:p-6 shadow-[6px_6px_0px_#000]">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-[2.5px] border-black pb-4 mb-4">
+                                <div>
+                                    <div class="flex items-center gap-2">
+                                        <h2 class="text-lg sm:text-xl font-black text-black tracking-tight">
+                                            Katalog Layanan & Tarif
+                                        </h2>
+                                        <span class="px-2 py-0.5 rounded-[4px] text-[10px] font-black uppercase tracking-wider bg-[#FFEB3B] text-black border-[1.5px] border-black shadow-[1.5px_1.5px_0px_#000]">
+                                            POS Realtime
+                                        </span>
+                                    </div>
+                                    <p class="text-xs sm:text-sm font-bold text-black/70 mt-0.5">
+                                        Kelola varian cuci, harga per kg/pcs, batas minimal timbangan, serta biaya kilat ekspres kasir.
+                                    </p>
+                                </div>
+                                <button
+                                    type="button"
+                                    @click="openCreateServiceModal"
+                                    class="bg-[#FFEB3B] hover:bg-[#fff066] text-black border-[3px] border-black rounded-[8px] min-h-[44px] px-4 font-black uppercase tracking-wider text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer shadow-[3px_3px_0px_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all shrink-0"
+                                >
+                                    <Plus class="w-4 h-4 stroke-[3]" />
+                                    <span>+ Tambah Layanan</span>
+                                </button>
+                            </div>
+
+                            <!-- Filter & Search Toolbar -->
+                            <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-1">
+                                <!-- Category Pills -->
+                                <div class="flex flex-wrap items-center gap-1.5">
+                                    <button
+                                        type="button"
+                                        @click="selectedCategory = 'all'"
+                                        :class="[
+                                            'px-3 py-1.5 rounded-[6px] text-xs font-black border-2 border-black transition-all cursor-pointer',
+                                            selectedCategory === 'all'
+                                                ? 'bg-[#FFEB3B] text-black shadow-[2px_2px_0px_#000]'
+                                                : 'bg-white text-black/70 hover:bg-[#FFFDF5]'
+                                        ]"
+                                    >
+                                        Semua ({{ props.services?.length ?? 0 }})
+                                    </button>
+                                    <button
+                                        v-for="cat in props.categories"
+                                        :key="cat.id"
+                                        type="button"
+                                        @click="selectedCategory = cat.slug"
+                                        :class="[
+                                            'px-3 py-1.5 rounded-[6px] text-xs font-black border-2 border-black transition-all cursor-pointer',
+                                            selectedCategory === cat.slug
+                                                ? 'bg-[#FFEB3B] text-black shadow-[2px_2px_0px_#000]'
+                                                : 'bg-white text-black/70 hover:bg-[#FFFDF5]'
+                                        ]"
+                                    >
+                                        {{ cat.name }}
+                                    </button>
+                                </div>
+
+                                <!-- Search Bar -->
+                                <div class="relative w-full sm:w-64">
+                                    <Search class="w-4 h-4 text-black/60 absolute left-3 top-1/2 -translate-y-1/2 stroke-[2.5]" />
+                                    <input
+                                        v-model="serviceSearchQuery"
+                                        type="text"
+                                        placeholder="Cari layanan / kode..."
+                                        class="w-full pl-9 pr-3 py-1.5 text-xs font-bold rounded-[6px] border-[2px] border-black bg-white shadow-[2px_2px_0px_#000] focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_#000]"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Empty State -->
+                        <div
+                            v-if="filteredServices.length === 0"
+                            class="bg-white rounded-[12px] border-[3.5px] border-black p-8 text-center shadow-[6px_6px_0px_#000] space-y-3"
+                        >
+                            <Shirt class="w-12 h-12 mx-auto text-black/30 stroke-[1.5]" />
+                            <h3 class="text-base font-black text-black">Tidak ada layanan ditemukan</h3>
+                            <p class="text-xs font-bold text-black/60 max-w-sm mx-auto">
+                                Belum ada varian layanan yang cocok dengan kata kunci atau filter kategori yang dipilih.
+                            </p>
+                            <button
+                                type="button"
+                                @click="openCreateServiceModal"
+                                class="inline-flex items-center gap-2 px-4 py-2 bg-[#FFEB3B] text-black border-2 border-black rounded-[6px] font-black text-xs shadow-[2px_2px_0px_#000]"
+                            >
+                                <Plus class="w-4 h-4 stroke-[2.5]" />
+                                Tambah Layanan Baru Sekarang
+                            </button>
+                        </div>
+
+                        <!-- Services Grid Cards -->
+                        <div v-else class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                            <div
+                                v-for="svc in filteredServices"
+                                :key="svc.id"
+                                :class="[
+                                    'bg-white rounded-[12px] border-[3px] border-black p-4 shadow-[4px_4px_0px_#000] flex flex-col justify-between transition-all relative',
+                                    !svc.is_active ? 'opacity-70 bg-[#F9F9F9]' : ''
+                                ]"
+                            >
+                                <!-- Card Header: Badges & Title -->
+                                <div>
+                                    <div class="flex items-center justify-between gap-2 mb-2">
+                                        <span class="px-2 py-0.5 rounded-[4px] border-[1.5px] border-black bg-[#E0F2FE] text-black text-[10px] font-black uppercase tracking-wider">
+                                            {{ svc.category?.name ?? 'Layanan' }}
+                                        </span>
+                                        <span
+                                            :class="[
+                                                'px-2 py-0.5 rounded-[4px] border-[1.5px] border-black text-[10px] font-black uppercase tracking-wider flex items-center gap-1',
+                                                svc.is_active ? 'bg-[#4CAF50] text-black' : 'bg-gray-200 text-black/60'
+                                            ]"
+                                        >
+                                            <span class="w-1.5 h-1.5 rounded-full bg-black"></span>
+                                            {{ svc.is_active ? 'Aktif di POS' : 'Nonaktif' }}
+                                        </span>
+                                    </div>
+
+                                    <h3 class="text-base font-black text-black leading-snug">{{ svc.name }}</h3>
+                                    <div class="text-[11px] font-mono font-bold text-black/50 mt-0.5">Kode: {{ svc.code }}</div>
+                                    
+                                    <p v-if="svc.description" class="text-xs font-medium text-black/70 mt-2 line-clamp-2">
+                                        {{ svc.description }}
+                                    </p>
+                                </div>
+
+                                <!-- Price & Specs Box -->
+                                <div class="my-3 p-3 bg-[#FFFDF5] border-[2px] border-black rounded-[8px] space-y-1.5 shadow-[2px_2px_0px_#000]">
+                                    <div class="flex items-baseline justify-between">
+                                        <span class="text-xs font-bold text-black/70 uppercase">Tarif Dasar:</span>
+                                        <span class="text-base font-black text-black">
+                                            {{ formatRupiah(svc.base_price) }} <span class="text-xs font-bold text-black/60">/ {{ formatUnitLabel(svc.unit) }}</span>
+                                        </span>
+                                    </div>
+
+                                    <div class="flex items-center justify-between text-xs font-bold text-black/80 pt-1 border-t border-black/10">
+                                        <span class="flex items-center gap-1">
+                                            <Tag class="w-3.5 h-3.5 text-black/60 stroke-[2.5]" />
+                                            Min. Order:
+                                        </span>
+                                        <span>{{ svc.min_weight ? Number(svc.min_weight) : (svc.unit === 'kg' ? 2 : 1) }} {{ formatUnitLabel(svc.unit) }}</span>
+                                    </div>
+
+                                    <div class="flex items-center justify-between text-xs font-bold text-black/80">
+                                        <span class="flex items-center gap-1">
+                                            <Clock class="w-3.5 h-3.5 text-black/60 stroke-[2.5]" />
+                                            Durasi Reguler:
+                                        </span>
+                                        <span>{{ svc.estimated_duration_hours }} Jam ({{ Math.round(svc.estimated_duration_hours / 24) }} Hari)</span>
+                                    </div>
+
+                                    <!-- Ekspres Tier Indicator -->
+                                    <div class="pt-1.5 border-t border-black/10">
+                                        <div
+                                            v-if="svc.tiers?.some(t => t.tier_code === 'ekspres' && t.is_active)"
+                                            class="bg-[#FFEB3B]/60 border border-black rounded-[4px] p-1.5 text-[11px] font-bold text-black flex items-center justify-between"
+                                        >
+                                            <span class="flex items-center gap-1">
+                                                <Zap class="w-3.5 h-3.5 text-amber-700 fill-amber-500 stroke-[2]" />
+                                                Kilat Ekspres:
+                                            </span>
+                                            <span class="font-black">
+                                                +{{ formatRupiah(svc.tiers?.find(t => t.tier_code === 'ekspres')?.flat_surcharge ?? 2000) }}
+                                                <span class="text-[10px] font-normal">({{ svc.tiers?.find(t => t.tier_code === 'ekspres')?.duration_hours ?? 12 }} Jam)</span>
+                                            </span>
+                                        </div>
+                                        <div v-else class="text-[11px] font-bold text-black/40 italic">
+                                            Tanpa opsi pengerjaan ekspres
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="flex items-center gap-2 pt-1 border-t-[1.5px] border-black/10">
+                                    <button
+                                        type="button"
+                                        @click="openEditServiceModal(svc)"
+                                        class="flex-1 py-1.5 px-2 bg-white hover:bg-[#FFFDF5] border-[2px] border-black rounded-[6px] text-xs font-black text-black shadow-[2px_2px_0px_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none flex items-center justify-center gap-1.5 cursor-pointer"
+                                    >
+                                        <Pencil class="w-3.5 h-3.5 stroke-[2.5]" />
+                                        Edit
+                                    </button>
+                                    <button
+                                        type="button"
+                                        @click="toggleServiceStatus(svc)"
+                                        :title="svc.is_active ? 'Nonaktifkan dari POS' : 'Aktifkan di POS'"
+                                        :class="[
+                                            'py-1.5 px-2.5 border-[2px] border-black rounded-[6px] text-xs font-black shadow-[2px_2px_0px_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none flex items-center justify-center cursor-pointer',
+                                            svc.is_active ? 'bg-amber-200 hover:bg-amber-300 text-black' : 'bg-[#4CAF50] hover:bg-[#45a049] text-black'
+                                        ]"
+                                    >
+                                        <Power class="w-3.5 h-3.5 stroke-[2.5]" />
+                                    </button>
+                                    <button
+                                        type="button"
+                                        @click="confirmDeleteService(svc)"
+                                        title="Hapus Layanan"
+                                        class="py-1.5 px-2.5 bg-[#FF5252]/20 hover:bg-[#FF5252] border-[2px] border-black rounded-[6px] text-xs font-black text-black shadow-[2px_2px_0px_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none flex items-center justify-center cursor-pointer"
+                                    >
+                                        <Trash2 class="w-3.5 h-3.5 stroke-[2.5]" />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- General Settings Form -->
+                    <form v-show="activeTab !== 'services'" @submit.prevent="submitSettings" class="space-y-6">
                         <!-- Tab 1: Identitas Toko -->
                         <div v-show="activeTab === 'store'" class="bg-white rounded-[12px] border-[3.5px] border-black p-6 shadow-[6px_6px_0px_#000] space-y-6">
                             <div class="border-b-[2.5px] border-black pb-4">
@@ -1679,6 +2065,230 @@ const submitSettings = () => {
                         </div>
                     </form>
                 </div>
+            </div>
+        </div>
+
+        <!-- Modal Add / Edit Service (Neo-Brutalism) -->
+        <div
+            v-if="isServiceModalOpen"
+            class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs overflow-y-auto"
+        >
+            <div
+                class="bg-white border-[3.5px] border-black rounded-[14px] w-full max-w-lg shadow-[8px_8px_0px_#000] my-8 overflow-hidden animate-in fade-in zoom-in-95 duration-150"
+            >
+                <!-- Modal Header -->
+                <div class="bg-[#FFEB3B] p-4 border-b-[3px] border-black flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <Shirt class="w-5 h-5 text-black stroke-[2.5]" />
+                        <h3 class="font-black text-lg text-black">
+                            {{ isEditingService ? 'Edit Layanan & Harga' : 'Tambah Layanan Baru' }}
+                        </h3>
+                    </div>
+                    <button
+                        type="button"
+                        @click="isServiceModalOpen = false"
+                        class="w-8 h-8 rounded-[6px] border-2 border-black bg-white hover:bg-[#FF5252] hover:text-white flex items-center justify-center font-black cursor-pointer shadow-[2px_2px_0px_#000]"
+                    >
+                        <X class="w-4 h-4 stroke-[3]" />
+                    </button>
+                </div>
+
+                <!-- Modal Form Body -->
+                <form @submit.prevent="saveService" class="p-5 space-y-4 max-h-[75vh] overflow-y-auto">
+                    <!-- Nama Layanan -->
+                    <div>
+                        <label class="block text-xs font-black text-black mb-1 uppercase tracking-wider">
+                            Nama Layanan / Varian <span class="text-[#FF5252]">*</span>
+                        </label>
+                        <input
+                            v-model="serviceForm.name"
+                            type="text"
+                            required
+                            placeholder="Contoh: Cuci Setrika Komplit"
+                            class="w-full px-3 py-2 rounded-[8px] border-[2px] border-black bg-white text-black font-bold text-sm shadow-[2px_2px_0px_#000] focus:outline-none focus:bg-[#FFFDF5]"
+                        />
+                        <span v-if="serviceForm.errors.name" class="text-xs font-bold text-[#FF5252] mt-1 block">
+                            {{ serviceForm.errors.name }}
+                        </span>
+                    </div>
+
+                    <!-- Kategori & Satuan Hitung -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-black text-black mb-1 uppercase tracking-wider">
+                                Kategori <span class="text-[#FF5252]">*</span>
+                            </label>
+                            <select
+                                v-model="serviceForm.category_id"
+                                required
+                                class="w-full px-3 py-2 rounded-[8px] border-[2px] border-black bg-white text-black font-bold text-sm shadow-[2px_2px_0px_#000] focus:outline-none"
+                            >
+                                <option v-for="cat in props.categories" :key="cat.id" :value="cat.id">
+                                    {{ cat.name }}
+                                </option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-black text-black mb-1 uppercase tracking-wider">
+                                Satuan Hitung <span class="text-[#FF5252]">*</span>
+                            </label>
+                            <select
+                                v-model="serviceForm.unit"
+                                required
+                                class="w-full px-3 py-2 rounded-[8px] border-[2px] border-black bg-white text-black font-bold text-sm shadow-[2px_2px_0px_#000] focus:outline-none"
+                            >
+                                <option value="kg">Kilogram (kg)</option>
+                                <option value="pcs">Satuan (pcs)</option>
+                                <option value="meter">Meter Persegi (meter / m²)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Harga Dasar & Min Order -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-black text-black mb-1 uppercase tracking-wider">
+                                Harga Dasar (Rp) <span class="text-[#FF5252]">*</span>
+                            </label>
+                            <input
+                                v-model.number="serviceForm.base_price"
+                                type="number"
+                                min="0"
+                                step="500"
+                                required
+                                placeholder="Contoh: 8000"
+                                class="w-full px-3 py-2 rounded-[8px] border-[2px] border-black bg-white text-black font-bold text-sm shadow-[2px_2px_0px_#000] focus:outline-none"
+                            />
+                            <span v-if="serviceForm.errors.base_price" class="text-xs font-bold text-[#FF5252] mt-1 block">
+                                {{ serviceForm.errors.base_price }}
+                            </span>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-black text-black mb-1 uppercase tracking-wider">
+                                Minimal Order (Qty)
+                            </label>
+                            <input
+                                v-model.number="serviceForm.min_weight"
+                                type="number"
+                                min="0.1"
+                                step="0.5"
+                                placeholder="Contoh: 2.0"
+                                class="w-full px-3 py-2 rounded-[8px] border-[2px] border-black bg-white text-black font-bold text-sm shadow-[2px_2px_0px_#000] focus:outline-none"
+                            />
+                            <p class="text-[10px] font-bold text-black/50 mt-1">Default 2 kg untuk kiloan, 1 pcs untuk satuan.</p>
+                        </div>
+                    </div>
+
+                    <!-- Estimasi Durasi Reguler -->
+                    <div>
+                        <label class="block text-xs font-black text-black mb-1 uppercase tracking-wider">
+                            Estimasi Waktu Pengerjaan Reguler (Jam) <span class="text-[#FF5252]">*</span>
+                        </label>
+                        <div class="flex items-center gap-2">
+                            <input
+                                v-model.number="serviceForm.estimated_duration_hours"
+                                type="number"
+                                min="1"
+                                required
+                                placeholder="48"
+                                class="w-full px-3 py-2 rounded-[8px] border-[2px] border-black bg-white text-black font-bold text-sm shadow-[2px_2px_0px_#000] focus:outline-none"
+                            />
+                            <span class="text-xs font-bold text-black/70 shrink-0">
+                                = {{ Math.round(serviceForm.estimated_duration_hours / 24) }} Hari
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Opsi Layanan Kilat / Ekspres -->
+                    <div class="p-3.5 bg-[#FFFDF5] border-[2px] border-black rounded-[8px] space-y-3">
+                        <label class="flex items-center gap-2.5 cursor-pointer">
+                            <input
+                                v-model="serviceForm.has_express"
+                                type="checkbox"
+                                class="w-4 h-4 rounded border-2 border-black text-[#FFEB3B] focus:ring-0 cursor-pointer"
+                            />
+                            <span class="text-xs font-black text-black flex items-center gap-1">
+                                <Zap class="w-3.5 h-3.5 text-amber-600 fill-amber-400" />
+                                Aktifkan Pilihan Kilat / Ekspres untuk Layanan Ini
+                            </span>
+                        </label>
+
+                        <div v-if="serviceForm.has_express" class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-black/10">
+                            <div>
+                                <label class="block text-[11px] font-black text-black mb-1">
+                                    Biaya Tambahan Kilat (+Rp)
+                                </label>
+                                <input
+                                    v-model.number="serviceForm.express_surcharge"
+                                    type="number"
+                                    min="0"
+                                    step="500"
+                                    placeholder="2000"
+                                    class="w-full px-2.5 py-1.5 text-xs font-bold rounded-[6px] border-[1.5px] border-black bg-white"
+                                />
+                                <p class="text-[10px] font-bold text-black/50 mt-0.5">Biaya tambahan flat atau per kg</p>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-black text-black mb-1">
+                                    Durasi Kilat (Jam)
+                                </label>
+                                <input
+                                    v-model.number="serviceForm.express_duration_hours"
+                                    type="number"
+                                    min="1"
+                                    placeholder="12"
+                                    class="w-full px-2.5 py-1.5 text-xs font-bold rounded-[6px] border-[1.5px] border-black bg-white"
+                                />
+                                <p class="text-[10px] font-bold text-black/50 mt-0.5">Misal 12 jam (pagi ambil sore)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Deskripsi Singkat -->
+                    <div>
+                        <label class="block text-xs font-black text-black mb-1 uppercase tracking-wider">
+                            Deskripsi / Catatan Layanan (Opsional)
+                        </label>
+                        <textarea
+                            v-model="serviceForm.description"
+                            rows="2"
+                            placeholder="Contoh: Cuci bersih, pengeringan mesin tumbler, parfum wangi, packing rapi."
+                            class="w-full px-3 py-2 rounded-[8px] border-[2px] border-black bg-white text-black font-bold text-xs shadow-[2px_2px_0px_#000] focus:outline-none"
+                        ></textarea>
+                    </div>
+
+                    <!-- Checkbox Aktif -->
+                    <label class="flex items-center gap-2 cursor-pointer pt-1">
+                        <input
+                            v-model="serviceForm.is_active"
+                            type="checkbox"
+                            class="w-4 h-4 rounded border-2 border-black text-[#FFEB3B] focus:ring-0 cursor-pointer"
+                        />
+                        <span class="text-xs font-black text-black">
+                            Layanan aktif dan langsung dapat dipilih kasir di menu POS
+                        </span>
+                    </label>
+
+                    <!-- Modal Action Buttons -->
+                    <div class="flex items-center justify-end gap-3 pt-3 border-t-[2px] border-black">
+                        <button
+                            type="button"
+                            @click="isServiceModalOpen = false"
+                            class="px-4 py-2 border-[2px] border-black rounded-[6px] text-xs font-black bg-white hover:bg-gray-100 text-black shadow-[2px_2px_0px_#000] active:translate-x-[1px] active:translate-y-[1px] cursor-pointer"
+                        >
+                            Batal
+                        </button>
+                        <button
+                            type="submit"
+                            :disabled="serviceForm.processing"
+                            class="px-5 py-2 border-[2px] border-black rounded-[6px] text-xs font-black bg-[#FFEB3B] hover:bg-[#fff066] text-black shadow-[3px_3px_0px_#000] active:translate-x-[1px] active:translate-y-[1px] cursor-pointer disabled:opacity-50"
+                        >
+                            {{ serviceForm.processing ? 'Menyimpan...' : (isEditingService ? 'Simpan Perubahan' : 'Tambahkan Layanan') }}
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </AppLayout>

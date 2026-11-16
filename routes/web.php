@@ -7,6 +7,7 @@ use App\Http\Controllers\Owner\DailyRecapController;
 use App\Http\Controllers\Owner\DashboardController;
 use App\Http\Controllers\Owner\ExpenseController;
 use App\Http\Controllers\Owner\ReceivableController;
+use App\Http\Controllers\Owner\ServiceController;
 use App\Http\Controllers\Owner\SettingController;
 use App\Http\Controllers\Owner\UserController;
 use App\Http\Controllers\Pos\CustomerController;
@@ -118,6 +119,11 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/owner/settings/whatsapp/test-message', [SettingController::class, 'sendWhatsAppTestMessage'])->name('owner.settings.whatsapp.test-message');
         Route::post('/owner/settings/whatsapp/connect-session', [SettingController::class, 'connectWhatsAppSession'])->name('owner.settings.whatsapp.connect-session');
         Route::post('/owner/settings/whatsapp/disconnect-session', [SettingController::class, 'disconnectWhatsAppSession'])->name('owner.settings.whatsapp.disconnect-session');
+
+        Route::post('/owner/services', [ServiceController::class, 'store'])->name('owner.services.store');
+        Route::put('/owner/services/{service}', [ServiceController::class, 'update'])->name('owner.services.update');
+        Route::patch('/owner/services/{service}/toggle-status', [ServiceController::class, 'toggleStatus'])->name('owner.services.toggle-status');
+        Route::delete('/owner/services/{service}', [ServiceController::class, 'destroy'])->name('owner.services.destroy');
 
         Route::get('/owner/expenses', [ExpenseController::class, 'index'])->name('owner.expenses.index');
         Route::get('/expenses', [ExpenseController::class, 'index'])->name('expenses.index');

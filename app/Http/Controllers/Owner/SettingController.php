@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Owner\UpdateSettingsRequest;
 use App\Models\AuditLog;
 use App\Models\BusinessSetting;
+use App\Models\Service;
+use App\Models\ServiceCategory;
 use App\Services\WhatsAppNotificationService;
 use App\Support\PhoneFormatter;
 use Illuminate\Http\JsonResponse;
@@ -68,6 +70,8 @@ class SettingController extends Controller
 
         return Inertia::render('Owner/Settings/Index', [
             'settings' => $groupedSettings,
+            'services' => Service::with(['category', 'tiers'])->orderBy('category_id')->orderBy('id')->get(),
+            'categories' => ServiceCategory::where('is_active', true)->orderBy('id')->get(),
         ]);
     }
 
