@@ -8,7 +8,7 @@ export interface CartLineItem {
     service: ServiceItem;
     actual_qty: number;
     billed_qty: number;
-    perfume: string;
+    perfume?: string;
     item_condition_notes?: string;
     special_instructions?: string;
     discount_amount?: number;
@@ -27,7 +27,6 @@ interface Props {
     items: CartLineItem[];
     turnaroundTiers: TurnaroundTier[];
     selectedTierCode: string;
-    perfumeVariants: string[];
     defaultMinWeight?: number;
     orderDiscount?: number;
     deliveryOption?: 'pickup' | 'delivery';
@@ -37,7 +36,6 @@ const props = withDefaults(defineProps<Props>(), {
     items: () => [],
     turnaroundTiers: () => [],
     selectedTierCode: 'reguler',
-    perfumeVariants: () => ['Lavender', 'Sakura', 'Ocean Fresh', 'Non-Parfum'],
     defaultMinWeight: 2.0,
     orderDiscount: 0,
     deliveryOption: 'pickup',
@@ -48,7 +46,6 @@ const emits = defineEmits<{
     (e: 'update:orderDiscount', discount: number): void;
     (e: 'update:deliveryOption', option: 'pickup' | 'delivery'): void;
     (e: 'update-qty', index: number, newQty: number): void;
-    (e: 'update-perfume', index: number, perfume: string): void;
     (e: 'remove-item', index: number): void;
     (e: 'clear-cart'): void;
 }>();
@@ -144,16 +141,6 @@ function isKarpetService(item: CartLineItem): boolean {
                         <span class="font-black text-xs text-black block">{{ item.service.name }}</span>
                         <div class="flex items-center space-x-2 text-[11px] text-black/70">
                             <span class="font-mono font-bold">{{ formatRupiah(item.service.price) }}/{{ item.service.unit }}</span>
-                            <span>•</span>
-                            <!-- Perfume selector -->
-                            <select
-                                :value="item.perfume"
-                                @change="emits('update-perfume', idx, ($event.target as HTMLSelectElement).value)"
-                                class="text-[11px] font-black bg-white border border-black rounded-[4px] px-2 py-1 text-black shadow-[1px_1px_0px_#000] focus:outline-none min-h-[36px]"
-                                aria-label="Pilih varian parfum"
-                            >
-                                <option v-for="p in perfumeVariants" :key="p" :value="p">{{ p }}</option>
-                            </select>
                         </div>
 
                         <!-- Defect notes alert pill if any -->

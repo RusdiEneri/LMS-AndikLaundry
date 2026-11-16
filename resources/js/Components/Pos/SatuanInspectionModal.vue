@@ -7,15 +7,11 @@ import type { ServiceItem } from './ServiceCard.vue';
 interface Props {
     isOpen: boolean;
     service: ServiceItem | null;
-    perfumeVariants: string[];
-    defaultPerfume?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
     isOpen: false,
     service: null,
-    perfumeVariants: () => ['Lavender', 'Sakura', 'Ocean Fresh', 'Akasia', 'Non-Parfum'],
-    defaultPerfume: 'Lavender',
 });
 
 const emits = defineEmits<{
@@ -24,14 +20,12 @@ const emits = defineEmits<{
         service: ServiceItem;
         actual_qty: number;
         billed_qty: number;
-        perfume: string;
         item_condition_notes: string;
         special_instructions: string;
     }): void;
 }>();
 
 const quantity = ref(1);
-const selectedPerfume = ref(props.defaultPerfume);
 const conditionNotes = ref('');
 const specialInstructions = ref('');
 
@@ -48,7 +42,6 @@ const commonDefects = [
 watch(() => props.isOpen, (newVal) => {
     if (newVal) {
         quantity.value = 1;
-        selectedPerfume.value = props.defaultPerfume || props.perfumeVariants[0] || 'Lavender';
         conditionNotes.value = '';
         specialInstructions.value = '';
     }
@@ -78,7 +71,6 @@ function handleConfirm() {
         service: props.service,
         actual_qty: quantity.value,
         billed_qty: quantity.value,
-        perfume: selectedPerfume.value,
         item_condition_notes: conditionNotes.value.trim(),
         special_instructions: specialInstructions.value.trim(),
     });
@@ -143,20 +135,6 @@ function closeModal() {
                             <Plus class="h-4 w-4" />
                         </button>
                     </div>
-                </div>
-
-                <!-- Perfume Selection -->
-                <div>
-                    <label class="block text-xs font-bold text-[#0A0A0A] mb-1.5 flex items-center space-x-1.5">
-                        <Sparkles class="h-3.5 w-3.5 text-[#F59E0B]" />
-                        <span>Varian Parfum</span>
-                    </label>
-                    <select
-                        v-model="selectedPerfume"
-                        class="min-h-[44px] w-full rounded-[6px] border border-[#E8E8EC] bg-white px-3 py-2 text-sm text-[#0A0A0A] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12"
-                    >
-                        <option v-for="p in perfumeVariants" :key="p" :value="p">{{ p }}</option>
-                    </select>
                 </div>
 
                 <!-- Defect / Condition Notes with Quick Chips -->

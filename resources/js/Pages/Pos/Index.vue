@@ -39,7 +39,6 @@ interface Props {
     services?: ServiceItem[];
     quick_tenders?: number[];
     turnaround_tiers?: TurnaroundTier[];
-    perfume_variants?: string[];
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -78,7 +77,6 @@ const props = withDefaults(defineProps<Props>(), {
         { code: 'reguler', label: 'Reguler (2-3 Hari)', surcharge: 0 },
         { code: 'ekspres', label: 'Ekspres (Same Day)', surcharge: 2000 },
     ],
-    perfume_variants: () => ['Lavender', 'Sakura', 'Ocean Fresh', 'Akasia', 'Non-Parfum'],
 });
 
 // Search & Catalog State
@@ -99,7 +97,6 @@ const cartItems = ref<CartLineItem[]>([]);
 const selectedTierCode = ref(props.turnaround_tiers[0]?.code ?? 'reguler');
 const orderDiscount = ref<number>(0);
 const deliveryOption = ref<'pickup' | 'delivery'>('pickup');
-const defaultPerfume = computed(() => props.perfume_variants[0] ?? 'Lavender');
 
 // Checkout & Receipt Modal State
 const isCheckoutModalOpen = ref(false);
@@ -160,7 +157,6 @@ function onSelectService(service: ServiceItem) {
                 service,
                 actual_qty: defaultQty,
                 billed_qty: isKg ? defaultQty : defaultQty,
-                perfume: defaultPerfume.value,
                 item_condition_notes: '',
                 special_instructions: '',
                 length: isMeterService ? 0 : undefined,
@@ -176,7 +172,6 @@ function onConfirmInspection(data: {
     service: ServiceItem;
     actual_qty: number;
     billed_qty: number;
-    perfume: string;
     item_condition_notes: string;
     special_instructions: string;
 }) {
@@ -184,7 +179,6 @@ function onConfirmInspection(data: {
         service: data.service,
         actual_qty: data.actual_qty,
         billed_qty: data.billed_qty,
-        perfume: data.perfume,
         item_condition_notes: data.item_condition_notes,
         special_instructions: data.special_instructions,
     });
@@ -198,12 +192,6 @@ function onUpdateQty(index: number, newQty: number) {
     const isKg = item.service.unit.toLowerCase() === 'kg';
     const minWeight = isKg ? (item.service.min_weight ?? props.store_info.default_min_weight ?? 3.0) : 0;
     item.billed_qty = Math.max(newQty, minWeight);
-}
-
-function onUpdatePerfume(index: number, perfume: string) {
-    if (cartItems.value[index]) {
-        cartItems.value[index].perfume = perfume;
-    }
 }
 
 function onRemoveItem(index: number) {
@@ -364,7 +352,6 @@ onUnmounted(() => {
                     :items="cartItems"
                     :turnaround-tiers="turnaround_tiers"
                     :selected-tier-code="selectedTierCode"
-                    :perfume-variants="perfume_variants"
                     :default-min-weight="store_info.default_min_weight"
                     :order-discount="orderDiscount"
                     :delivery-option="deliveryOption"
@@ -372,7 +359,6 @@ onUnmounted(() => {
                     @update:order-discount="orderDiscount = $event"
                     @update:delivery-option="deliveryOption = $event"
                     @update-qty="onUpdateQty"
-                    @update-perfume="onUpdatePerfume"
                     @remove-item="onRemoveItem"
                     @clear-cart="onClearCart"
                 />
@@ -406,8 +392,6 @@ onUnmounted(() => {
     <SatuanInspectionModal
         v-model:is-open="isInspectionModalOpen"
         :service="inspectingService"
-        :perfume-variants="perfume_variants"
-        :default-perfume="defaultPerfume"
         @confirm="onConfirmInspection"
     />
 

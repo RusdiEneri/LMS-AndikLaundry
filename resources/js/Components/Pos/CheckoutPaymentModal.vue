@@ -146,7 +146,7 @@ async function processOrderSubmit() {
                 service_id: item.service.id,
                 actual_quantity: item.calculated_area ?? item.actual_qty,
                 billed_quantity: item.calculated_area ?? item.billed_qty,
-                perfume_variant: item.perfume || 'Lavender',
+                perfume_variant: item.perfume || null,
                 item_condition_notes: item.item_condition_notes || null,
                 special_instructions: item.special_instructions || null,
                 discount_amount: item.discount_amount || 0,

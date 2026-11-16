@@ -272,10 +272,6 @@ function handleNewTransaction() {
                                 </span>
                             </div>
 
-                            <div v-if="item.perfume_variant" class="text-[9px] text-gray-600 italic">
-                                Parfum: {{ item.perfume_variant }}
-                            </div>
-
                             <div v-if="item.item_condition_notes" class="text-[9px] text-black bg-[#FFF9D2] border border-black/30 px-1 py-0.5 rounded-sm">
                                 Catatan: {{ item.item_condition_notes }}
                             </div>

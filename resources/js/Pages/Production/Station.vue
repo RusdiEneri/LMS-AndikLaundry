@@ -311,12 +311,9 @@ function getPerfumeBadgeVariant(perfume?: string): 'teal' | 'rose' | 'amber' | '
                                 </Badge>
                             </div>
 
-                            <!-- Perfume Scent Badge & Tier -->
-                            <div class="flex flex-wrap items-center gap-1.5 pt-1">
-                                <Badge variant="default" class="text-[11px] font-black">
-                                    Parfum: {{ order.perfume ?? 'Standar' }}
-                                </Badge>
-                                <Badge v-if="order.tier === 'Kilat'" variant="destructive" class="text-[11px] font-black">
+                            <!-- Tier Badge (if any) -->
+                            <div v-if="order.tier === 'Kilat'" class="flex flex-wrap items-center gap-1.5 pt-1">
+                                <Badge variant="destructive" class="text-[11px] font-black">
                                     Kilat (24 Jam)
                                 </Badge>
                             </div>
@@ -444,10 +441,7 @@ function getPerfumeBadgeVariant(perfume?: string): 'teal' | 'rose' | 'amber' | '
                             </div>
 
                             <!-- Target Rack / Hanger Badge -->
-                            <div class="flex items-center justify-between text-xs pt-1">
-                                <Badge variant="default" class="text-[11px] font-black">
-                                    Parfum: {{ order.perfume ?? 'Sakura' }}
-                                </Badge>
+                            <div class="flex items-center justify-end text-xs pt-1">
                                 <span class="font-mono font-black text-black bg-[#FFEB3B] border border-black px-2 py-0.5 rounded-[4px] text-xs shadow-[1px_1px_0px_#000]">
                                     Target: {{ order.rack_target }}
                                 </span>

@@ -433,11 +433,8 @@ const isUnpaid = computed(() => props.order && props.order.outstanding_balance >
                                 <tr v-for="item in order.items" :key="item.id" class="hover:bg-[#FFF9D2]/30">
                                     <td class="py-3 px-3">
                                         <span class="font-black text-black block">{{ item.item_name }}</span>
-                                        <div class="flex flex-wrap items-center gap-1.5 mt-1 text-[11px]">
-                                            <span v-if="item.perfume_variant" class="inline-flex items-center text-black bg-[#FFEB3B] border border-black px-1.5 py-0.5 rounded-[4px] font-bold shadow-[1px_1px_0px_#000]">
-                                                Wangi: {{ item.perfume_variant }}
-                                            </span>
-                                            <span v-if="item.item_condition_notes" class="inline-flex items-center text-black bg-[#FF5252]/20 border border-black px-1.5 py-0.5 rounded-[4px] font-bold">
+                                        <div v-if="item.item_condition_notes" class="flex flex-wrap items-center gap-1.5 mt-1 text-[11px]">
+                                            <span class="inline-flex items-center text-black bg-[#FF5252]/20 border border-black px-1.5 py-0.5 rounded-[4px] font-bold">
                                                 Catatan: {{ item.item_condition_notes }}
                                             </span>
                                         </div>
