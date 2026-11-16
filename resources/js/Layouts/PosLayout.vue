@@ -95,11 +95,11 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="min-h-screen bg-[#FFFDF5] flex flex-col font-sans text-black antialiased select-none pb-[calc(env(safe-area-inset-bottom,0px)+4.5rem)] lg:pb-0">
+    <div class="fixed inset-0 flex flex-col overflow-hidden bg-[#FFFDF5] font-sans text-black antialiased select-none pb-[calc(env(safe-area-inset-bottom,0px)+4.5rem)] lg:pb-0">
         <Head :title="`${title} - Andik Laundry POS`" />
 
-        <!-- High-Speed POS Header -->
-        <header class="relative z-40 bg-[#FFEB3B] border-b-[3.5px] border-black shadow-[0_4px_0px_#000]">
+        <!-- High-Speed POS Header (Pinned / Sticky Top) -->
+        <header class="h-14 shrink-0 bg-[#FFEB3B] border-b-[3.5px] border-black shadow-[0_4px_0px_#000] z-40">
             <div class="px-3 sm:px-6 h-14 flex items-center justify-between">
                 <!-- Left: Home / AL Brand & Store Title + Desktop Navigation -->
                 <div class="flex items-center space-x-3">
@@ -222,21 +222,21 @@ onUnmounted(() => {
         </header>
 
         <!-- 60/40 Horizontal Split Desktop / Stacked Mobile Layout -->
-        <div class="flex-1 max-w-[1920px] w-full mx-auto p-3 sm:p-4 lg:p-6 lg:h-[calc(100vh-3.5rem)] lg:overflow-hidden">
-            <div class="h-full lg:grid lg:grid-cols-12 lg:gap-6">
+        <main class="flex-1 min-h-0 max-w-[1920px] w-full mx-auto p-3 sm:p-4 lg:p-6 overflow-hidden">
+            <div class="h-full lg:grid lg:grid-cols-12 lg:gap-6 min-h-0">
                 <!-- Left 60% Panel: Catalog & Order Builder (Columns 1-7 = ~58.3%) -->
-                <div class="lg:col-span-7 flex flex-col h-full overflow-y-auto pr-0 lg:pr-2">
+                <div class="lg:col-span-7 flex flex-col h-full overflow-y-auto pr-0 lg:pr-2 min-h-0">
                     <slot name="catalog">
                         <slot />
                     </slot>
                 </div>
 
                 <!-- Right 40% Panel: Persistent Cart & Checkout Summary (Columns 8-12 = ~41.7%) -->
-                <div class="hidden lg:flex lg:col-span-5 flex-col h-full bg-white rounded-[12px] border-[3.5px] border-black shadow-[6px_6px_0px_#000] overflow-hidden p-4">
+                <div class="hidden lg:flex lg:col-span-5 flex-col h-full bg-white rounded-[12px] border-[3.5px] border-black shadow-[6px_6px_0px_#000] overflow-hidden p-4 min-h-0">
                     <slot name="cart" />
                 </div>
             </div>
-        </div>
+        </main>
 
         <!-- Mobile & Tablet (< 1024px) Sticky Bottom Bar (56px) -->
         <div class="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-[#FFEB3B] border-t-[3.5px] border-black px-4 h-16 flex items-center justify-between pb-[env(safe-area-inset-bottom,0px)] shadow-[0_-4px_0px_#000]">
