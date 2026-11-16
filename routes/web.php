@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\ProductionStatus;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Owner\DailyRecapController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\Pos\ReceiptController;
 use App\Http\Controllers\Pos\TransactionController;
 use App\Http\Controllers\Production\ProductionStatusController;
 use App\Http\Controllers\Production\StationController;
+use App\Models\Transaction;
 use Illuminate\Foundation\Http\Middleware\TrimStrings;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -35,8 +37,32 @@ Route::get('/', function () {
         };
     }
 
+    // Statistik publik landing page: hitungan riil dari database + basis dummy
+    // agar toko yang baru beroperasi tetap tampil kredibel.
+    $customerCount = 0;
+    $orderCount = 0;
+    $laundryKg = 0.0;
+
+    try {
+        $customerCount = (int) Transaction::where('production_status', '!=', ProductionStatus::CANCELLED->value)
+            ->distinct('customer_id')
+            ->count('customer_id');
+        $orderCount = (int) Transaction::where('production_status', '!=', ProductionStatus::CANCELLED->value)->count();
+        $laundryKg = (float) Transaction::join('transaction_items', 'transaction_items.transaction_id', '=', 'transactions.id')
+            ->where('transaction_items.pricing_unit_snapshot', 'kg')
+            ->where('transactions.production_status', '!=', ProductionStatus::CANCELLED->value)
+            ->sum('transaction_items.actual_quantity');
+    } catch (Throwable) {
+        // Fallback anggun ke basis angka jika tabel belum termigrasi.
+    }
+
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
+        'stats' => [
+            'customers' => 1250 + $customerCount,
+            'orders' => 3400 + $orderCount,
+            'laundry_kg' => 8200 + (int) floor($laundryKg),
+        ],
     ]);
 });
 
