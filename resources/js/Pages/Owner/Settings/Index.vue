@@ -867,7 +867,7 @@ const submitSettings = () => {
                                     <div class="grid grid-cols-2 gap-3 max-w-md">
                                         <label
                                             :class="[
-                                                'flex items-center justify-center gap-2 p-3.5 rounded-xl border cursor-pointer min-h-[44px] transition',
+                                                'relative flex items-center justify-center gap-2 p-3.5 rounded-xl border cursor-pointer min-h-[44px] transition',
                                                 form['printer.paper_width'] === '58mm'
                                                     ? 'border-teal-600 bg-teal-50/50 text-teal-900 font-semibold ring-1 ring-teal-600'
                                                     : 'border-slate-300 hover:bg-slate-50 text-slate-700'
@@ -884,7 +884,7 @@ const submitSettings = () => {
 
                                         <label
                                             :class="[
-                                                'flex items-center justify-center gap-2 p-3.5 rounded-xl border cursor-pointer min-h-[44px] transition',
+                                                'relative flex items-center justify-center gap-2 p-3.5 rounded-xl border cursor-pointer min-h-[44px] transition',
                                                 form['printer.paper_width'] === '80mm'
                                                     ? 'border-teal-600 bg-teal-50/50 text-teal-900 font-semibold ring-1 ring-teal-600'
                                                     : 'border-slate-300 hover:bg-slate-50 text-slate-700'

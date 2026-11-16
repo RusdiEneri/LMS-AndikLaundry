@@ -183,7 +183,7 @@ const roleLabel = computed(() => {
 </script>
 
 <template>
-    <div class="h-screen w-full flex overflow-hidden bg-[#FFFDF5] font-sans text-black antialiased">
+    <div class="fixed inset-0 flex overflow-hidden bg-[#FFFDF5] font-sans text-black antialiased">
         <Head :title="title ? `${title} - Andik Laundry` : 'Andik Laundry'" />
 
         <!-- 1. Left Desktop Sidebar (>= 1024px) - Pinned Full Viewport Height -->
@@ -375,7 +375,7 @@ const roleLabel = computed(() => {
             </div>
 
             <!-- Independently Scrollable Content Canvas -->
-            <div class="flex-1 overflow-y-auto bg-[#FFFDF5]">
+            <div class="flex-1 overflow-y-auto bg-[#FFFDF5] relative">
                 <!-- Global Flash Toast Notification Banners -->
                 <div v-if="flashMessages.length > 0" class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-4 space-y-2">
                     <div

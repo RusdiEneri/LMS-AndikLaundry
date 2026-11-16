@@ -422,7 +422,7 @@ function barHeight(value: number): string {
                             <li
                                 v-for="point in trend.points"
                                 :key="point.key"
-                                class="flex h-full flex-1 items-end justify-center gap-0.5"
+                                class="relative flex h-full flex-1 items-end justify-center gap-0.5"
                                 :title="`${point.label}: omzet ${formatRupiah(point.revenue)}, biaya ${formatRupiah(point.expenses)}`"
                             >
                                 <span class="sr-only">
