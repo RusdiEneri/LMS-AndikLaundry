@@ -184,29 +184,29 @@ function getPerfumeBadgeVariant(perfume?: string): 'teal' | 'rose' | 'amber' | '
     <AppLayout title="Stasiun Produksi">
         <div class="space-y-6">
             <!-- Header & Telemetry Status -->
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white p-5 rounded-[12px] border-[3.5px] border-black shadow-[6px_6px_0px_#000]">
                 <div>
                     <div class="flex items-center space-x-2">
-                        <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Stasiun Produksi & Antrean Cuci</h1>
-                        <Badge variant="teal" class="text-xs">Produksi & Antrean</Badge>
+                        <h1 class="text-2xl font-black text-black tracking-tight">Stasiun Produksi & Antrean Cuci</h1>
+                        <Badge variant="default" class="text-xs uppercase font-black">Produksi</Badge>
                     </div>
-                    <p class="text-sm text-slate-500 mt-1">
+                    <p class="text-sm font-bold text-black/70 mt-1">
                         Pelacakan proses cucian fisik, waktu putar mesin cuci & dryer, serta penempatan rak.
                     </p>
                 </div>
 
                 <!-- Machine Telemetry Status Summary -->
                 <div class="flex flex-wrap items-center gap-3">
-                    <div class="flex items-center space-x-2 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs">
-                        <Cpu class="h-4 w-4 text-teal-600" />
-                        <span class="font-bold text-slate-700">Mesin Cuci:</span>
-                        <span class="font-mono text-teal-700 font-bold">2/3 Berjalan</span>
+                    <div class="flex items-center space-x-2 bg-white border-2 border-black rounded-[8px] px-3 py-2 text-xs shadow-[2px_2px_0px_#000]">
+                        <Cpu class="h-4 w-4 text-black stroke-[2.5]" />
+                        <span class="font-black text-black">Mesin Cuci:</span>
+                        <span class="font-mono text-black font-black">2/3 Berjalan</span>
                     </div>
 
-                    <div class="flex items-center space-x-2 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs">
-                        <Wind class="h-4 w-4 text-cyan-600" />
-                        <span class="font-bold text-slate-700">Dryer:</span>
-                        <span class="font-mono text-cyan-700 font-bold">2/2 Berjalan</span>
+                    <div class="flex items-center space-x-2 bg-white border-2 border-black rounded-[8px] px-3 py-2 text-xs shadow-[2px_2px_0px_#000]">
+                        <Wind class="h-4 w-4 text-black stroke-[2.5]" />
+                        <span class="font-black text-black">Dryer:</span>
+                        <span class="font-mono text-black font-black">2/2 Berjalan</span>
                     </div>
                 </div>
             </div>
@@ -214,15 +214,15 @@ function getPerfumeBadgeVariant(perfume?: string): 'teal' | 'rose' | 'amber' | '
             <!-- Operator Action Notice Banner -->
             <div
                 v-if="activeNotice"
-                class="p-4 rounded-xl bg-teal-50 border border-teal-300 text-teal-900 flex items-center justify-between shadow-xs animate-in fade-in-0"
+                class="p-4 rounded-[10px] bg-[#22C55E]/20 border-[2.5px] border-black text-black flex items-center justify-between shadow-[3px_3px_0px_#000] animate-in fade-in-0"
             >
                 <div class="flex items-center space-x-2.5">
-                    <CheckCircle2 class="h-5 w-5 text-teal-600 shrink-0" />
-                    <span class="text-sm font-bold">{{ activeNotice }}</span>
+                    <CheckCircle2 class="h-5 w-5 text-black stroke-[2.5] shrink-0" />
+                    <span class="text-sm font-black">{{ activeNotice }}</span>
                 </div>
                 <button
                     type="button"
-                    class="text-teal-700 hover:text-teal-900 min-h-[44px] min-w-[44px] inline-flex items-center justify-center font-bold text-xs"
+                    class="text-black hover:underline min-h-[44px] min-w-[44px] inline-flex items-center justify-center font-black text-xs cursor-pointer"
                     @click="activeNotice = null"
                 >
                     Tutup
@@ -234,21 +234,21 @@ function getPerfumeBadgeVariant(perfume?: string): 'teal' | 'rose' | 'amber' | '
                 <div
                     v-for="washer in machines.washers"
                     :key="washer.id"
-                    class="p-3 rounded-[8px] border bg-white shadow-2xs space-y-1.5"
-                    :class="washer.status === 'running' ? 'border-[#6366F1]/30 bg-[#6366F1]/5' : 'border-[#E8E8EC]'"
+                    class="p-3 rounded-[8px] border-2 border-black bg-white shadow-[3px_3px_0px_#000] space-y-1.5"
+                    :class="washer.status === 'running' ? 'bg-[#FFF9D2]' : 'bg-white'"
                 >
                     <div class="flex items-center justify-between">
-                        <span class="text-xs font-bold text-[#0A0A0A]">{{ washer.name }}</span>
+                        <span class="text-xs font-black text-black">{{ washer.name }}</span>
                         <span
-                            class="h-2 w-2 rounded-full"
-                            :class="washer.status === 'running' ? 'bg-[#10B981]' : 'bg-[#9C9C9C]'"
+                            class="h-2.5 w-2.5 rounded-full border border-black"
+                            :class="washer.status === 'running' ? 'bg-[#22C55E]' : 'bg-black/30'"
                         ></span>
                     </div>
                     <div class="flex items-center justify-between text-xs">
-                        <Badge :variant="washer.status === 'running' ? 'teal' : 'secondary'" class="text-[10px]">
+                        <Badge :variant="washer.status === 'running' ? 'default' : 'outline'" class="text-[10px]">
                             {{ washer.status_label }}
                         </Badge>
-                        <span v-if="washer.status === 'running'" class="font-mono text-xs font-bold text-[#6366F1]">
+                        <span v-if="washer.status === 'running'" class="font-mono text-xs font-black text-black">
                             {{ washer.remaining_minutes }}m
                         </span>
                     </div>
@@ -257,21 +257,21 @@ function getPerfumeBadgeVariant(perfume?: string): 'teal' | 'rose' | 'amber' | '
                 <div
                     v-for="dryer in machines.dryers"
                     :key="dryer.id"
-                    class="p-3 rounded-[8px] border bg-white shadow-2xs space-y-1.5"
-                    :class="dryer.status === 'running' ? 'border-[#6366F1]/30 bg-[#6366F1]/5' : 'border-[#E8E8EC]'"
+                    class="p-3 rounded-[8px] border-2 border-black bg-white shadow-[3px_3px_0px_#000] space-y-1.5"
+                    :class="dryer.status === 'running' ? 'bg-[#FFF9D2]' : 'bg-white'"
                 >
                     <div class="flex items-center justify-between">
-                        <span class="text-xs font-bold text-[#0A0A0A]">{{ dryer.name }}</span>
+                        <span class="text-xs font-black text-black">{{ dryer.name }}</span>
                         <span
-                            class="h-2 w-2 rounded-full"
-                            :class="dryer.status === 'running' ? 'bg-[#10B981]' : 'bg-[#9C9C9C]'"
+                            class="h-2.5 w-2.5 rounded-full border border-black"
+                            :class="dryer.status === 'running' ? 'bg-[#22C55E]' : 'bg-black/30'"
                         ></span>
                     </div>
                     <div class="flex items-center justify-between text-xs">
-                        <Badge :variant="dryer.status === 'running' ? 'teal' : 'secondary'" class="text-[10px]">
+                        <Badge :variant="dryer.status === 'running' ? 'default' : 'outline'" class="text-[10px]">
                             {{ dryer.status_label }}
                         </Badge>
-                        <span v-if="dryer.status === 'running'" class="font-mono text-xs font-bold text-[#6366F1]">
+                        <span v-if="dryer.status === 'running'" class="font-mono text-xs font-black text-black">
                             {{ dryer.remaining_minutes }}m
                         </span>
                     </div>
@@ -281,15 +281,15 @@ function getPerfumeBadgeVariant(perfume?: string): 'teal' | 'rose' | 'amber' | '
             <!-- 3-Column Workstation Kanban Queues -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                 <!-- Column 1: Antrian Cuci (Washing Queue) -->
-                <div class="flex flex-col space-y-3 bg-slate-200/50 p-4 rounded-xl border border-slate-200">
-                    <div class="flex items-center justify-between pb-2 border-b border-slate-300">
+                <div class="flex flex-col space-y-3 bg-[#FFFDF5] p-4 rounded-[12px] border-[3px] border-black shadow-[4px_4px_0px_#000]">
+                    <div class="flex items-center justify-between pb-2 border-b-2 border-black">
                         <div class="flex items-center space-x-2">
-                            <div class="h-7 w-7 rounded-md bg-teal-600 text-white flex items-center justify-center">
-                                <Shirt class="h-4 w-4" />
+                            <div class="h-8 w-8 rounded-[6px] border-2 border-black bg-[#FFEB3B] text-black flex items-center justify-center shadow-[1px_1px_0px_#000]">
+                                <Shirt class="h-4 w-4 stroke-[2.5]" />
                             </div>
-                            <h3 class="font-bold text-sm text-slate-900">1. Antrian Cuci</h3>
+                            <h3 class="font-black text-sm text-black">1. Antrian Cuci</h3>
                         </div>
-                        <Badge variant="teal" class="text-xs font-mono font-bold">
+                        <Badge variant="default" class="text-xs font-mono font-black">
                             {{ workstation_queues.washing_queue.length }} Nota
                         </Badge>
                     </div>
@@ -298,55 +298,55 @@ function getPerfumeBadgeVariant(perfume?: string): 'teal' | 'rose' | 'amber' | '
                         <div
                             v-for="order in workstation_queues.washing_queue"
                             :key="order.order_code"
-                            class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs space-y-3 hover:shadow-md transition-shadow"
+                            class="bg-white p-4 rounded-[10px] border-2 border-black shadow-[3px_3px_0px_#000] space-y-3 hover:shadow-[5px_5px_0px_#000] transition-shadow"
                         >
                             <div class="flex items-start justify-between">
                                 <div>
-                                    <span class="font-mono font-bold text-xs text-slate-900">{{ order.order_code }}</span>
-                                    <h4 class="font-bold text-sm text-slate-800">{{ order.customer_name }}</h4>
-                                    <span class="text-xs text-slate-500">{{ order.service }}</span>
+                                    <span class="font-mono font-black text-xs text-black">{{ order.order_code }}</span>
+                                    <h4 class="font-black text-sm text-black">{{ order.customer_name }}</h4>
+                                    <span class="text-xs font-bold text-black/60">{{ order.service }}</span>
                                 </div>
-                                <Badge variant="secondary" class="font-mono font-bold text-xs">
+                                <Badge variant="outline" class="font-mono font-black text-xs">
                                     {{ order.weight_or_qty }}
                                 </Badge>
                             </div>
 
                             <!-- Perfume Scent Badge & Tier -->
                             <div class="flex flex-wrap items-center gap-1.5 pt-1">
-                                <Badge :variant="getPerfumeBadgeVariant(order.perfume)" class="text-[11px] font-bold">
+                                <Badge variant="default" class="text-[11px] font-black">
                                     Parfum: {{ order.perfume ?? 'Standar' }}
                                 </Badge>
-                                <Badge v-if="order.tier === 'Kilat'" variant="amber" class="text-[11px] font-bold">
+                                <Badge v-if="order.tier === 'Kilat'" variant="destructive" class="text-[11px] font-black">
                                     Kilat (24 Jam)
                                 </Badge>
                             </div>
 
                             <!-- Special Notes / Defect Warning -->
-                            <div v-if="order.notes" class="p-2 rounded bg-amber-50 border border-amber-200 text-amber-900 text-xs font-semibold flex items-center space-x-1.5">
-                                <AlertTriangle class="h-4 w-4 text-amber-600 shrink-0" />
+                            <div v-if="order.notes" class="p-2 rounded-[6px] bg-[#FFF9D2] border border-black text-black text-xs font-bold flex items-center space-x-1.5 shadow-[1px_1px_0px_#000]">
+                                <AlertTriangle class="h-4 w-4 text-black shrink-0 stroke-[2.5]" />
                                 <span>{{ order.notes }}</span>
                             </div>
 
                             <!-- Big Touch Action Button (min-h-[44px]) -->
-                            <div class="pt-2 border-t border-slate-100 flex items-center gap-2">
+                            <div class="pt-2 border-t-2 border-black/10 flex items-center gap-2">
                                 <Button
                                     type="button"
                                     variant="default"
-                                    class="flex-1 min-h-[44px] bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs shadow-xs"
+                                    class="flex-1 min-h-[44px] bg-[#22C55E] hover:bg-[#16A34A] text-black font-black text-xs shadow-[2px_2px_0px_#000] uppercase tracking-wider"
                                     @click="triggerProgress(order.order_code, order.next_action)"
                                 >
-                                    <Play class="h-4 w-4 mr-1.5" />
+                                    <Play class="h-4 w-4 mr-1.5 stroke-[3]" />
                                     <span>{{ order.next_action }}</span>
                                 </Button>
 
                                 <button
                                     type="button"
                                     title="Jadwalkan Cuci Ulang"
-                                    class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg border border-slate-200 p-2 text-slate-600 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 focus:outline-none"
+                                    class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-[8px] border-2 border-black bg-white p-2 text-black hover:bg-[#FF5252] shadow-[2px_2px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
                                     @click="triggerRewash(order.order_code)"
                                     aria-label="Cuci ulang"
                                 >
-                                    <RotateCcw class="h-4 w-4" />
+                                    <RotateCcw class="h-4 w-4 stroke-[2.5]" />
                                 </button>
                             </div>
                         </div>
@@ -354,15 +354,15 @@ function getPerfumeBadgeVariant(perfume?: string): 'teal' | 'rose' | 'amber' | '
                 </div>
 
                 <!-- Column 2: Proses Pengeringan (Drying Queue) -->
-                <div class="flex flex-col space-y-3 bg-slate-200/50 p-4 rounded-xl border border-slate-200">
-                    <div class="flex items-center justify-between pb-2 border-b border-slate-300">
+                <div class="flex flex-col space-y-3 bg-[#FFFDF5] p-4 rounded-[12px] border-[3px] border-black shadow-[4px_4px_0px_#000]">
+                    <div class="flex items-center justify-between pb-2 border-b-2 border-black">
                         <div class="flex items-center space-x-2">
-                            <div class="h-7 w-7 rounded-md bg-cyan-600 text-white flex items-center justify-center">
-                                <Wind class="h-4 w-4" />
+                            <div class="h-8 w-8 rounded-[6px] border-2 border-black bg-[#2196F3] text-black flex items-center justify-center shadow-[1px_1px_0px_#000]">
+                                <Wind class="h-4 w-4 stroke-[2.5]" />
                             </div>
-                            <h3 class="font-bold text-sm text-slate-900">2. Proses Pengeringan</h3>
+                            <h3 class="font-black text-sm text-black">2. Proses Pengeringan</h3>
                         </div>
-                        <Badge variant="cyan" class="text-xs font-mono font-bold">
+                        <Badge variant="outline" class="text-xs font-mono font-black">
                             {{ workstation_queues.drying_queue.length }} Mesin
                         </Badge>
                     </div>
@@ -371,40 +371,40 @@ function getPerfumeBadgeVariant(perfume?: string): 'teal' | 'rose' | 'amber' | '
                         <div
                             v-for="order in workstation_queues.drying_queue"
                             :key="order.order_code"
-                            class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs space-y-3 hover:shadow-md transition-shadow"
+                            class="bg-white p-4 rounded-[10px] border-2 border-black shadow-[3px_3px_0px_#000] space-y-3 hover:shadow-[5px_5px_0px_#000] transition-shadow"
                         >
                             <div class="flex items-start justify-between">
                                 <div>
-                                    <span class="font-mono font-bold text-xs text-slate-900">{{ order.order_code }}</span>
-                                    <h4 class="font-bold text-sm text-slate-800">{{ order.customer_name }}</h4>
-                                    <span class="text-xs text-slate-500">{{ order.service }}</span>
+                                    <span class="font-mono font-black text-xs text-black">{{ order.order_code }}</span>
+                                    <h4 class="font-black text-sm text-black">{{ order.customer_name }}</h4>
+                                    <span class="text-xs font-bold text-black/60">{{ order.service }}</span>
                                 </div>
-                                <Badge variant="secondary" class="font-mono font-bold text-xs">
+                                <Badge variant="outline" class="font-mono font-black text-xs">
                                     {{ order.weight_or_qty }}
                                 </Badge>
                             </div>
 
                             <!-- Machine Assignment & Timer -->
-                            <div class="p-2.5 rounded-lg bg-cyan-50 border border-cyan-200 flex items-center justify-between text-xs text-cyan-900 font-semibold">
+                            <div class="p-2.5 rounded-[6px] bg-[#2196F3]/20 border border-black flex items-center justify-between text-xs text-black font-bold shadow-[1px_1px_0px_#000]">
                                 <span class="flex items-center space-x-1.5">
-                                    <Wind class="h-4 w-4 text-cyan-600" />
+                                    <Wind class="h-4 w-4 text-black stroke-[2.5]" />
                                     <span>{{ order.machine }}</span>
                                 </span>
-                                <span class="font-mono font-bold text-cyan-800 flex items-center space-x-1">
-                                    <Clock class="h-3.5 w-3.5 text-cyan-600" />
+                                <span class="font-mono font-black text-black flex items-center space-x-1">
+                                    <Clock class="h-3.5 w-3.5 text-black stroke-[2.5]" />
                                     <span>Sisa {{ order.remaining_minutes }} Menit</span>
                                 </span>
                             </div>
 
                             <!-- Big Touch Action Button (min-h-[44px]) -->
-                            <div class="pt-2 border-t border-slate-100">
+                            <div class="pt-2 border-t-2 border-black/10">
                                 <Button
                                     type="button"
                                     variant="default"
-                                    class="w-full min-h-[44px] bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-xs shadow-xs"
+                                    class="w-full min-h-[44px] bg-[#2196F3] hover:bg-[#1E88E5] text-black font-black text-xs shadow-[2px_2px_0px_#000] uppercase tracking-wider"
                                     @click="triggerProgress(order.order_code, order.next_action)"
                                 >
-                                    <ArrowRight class="h-4 w-4 mr-1.5" />
+                                    <ArrowRight class="h-4 w-4 mr-1.5 stroke-[3]" />
                                     <span>{{ order.next_action }}</span>
                                 </Button>
                             </div>
@@ -413,15 +413,15 @@ function getPerfumeBadgeVariant(perfume?: string): 'teal' | 'rose' | 'amber' | '
                 </div>
 
                 <!-- Column 3: Setrika & Packing / Rak (Ironing & Packing Queue) -->
-                <div class="flex flex-col space-y-3 bg-slate-200/50 p-4 rounded-xl border border-slate-200">
-                    <div class="flex items-center justify-between pb-2 border-b border-slate-300">
+                <div class="flex flex-col space-y-3 bg-[#FFFDF5] p-4 rounded-[12px] border-[3px] border-black shadow-[4px_4px_0px_#000]">
+                    <div class="flex items-center justify-between pb-2 border-b-2 border-black">
                         <div class="flex items-center space-x-2">
-                            <div class="h-7 w-7 rounded-md bg-emerald-600 text-white flex items-center justify-center">
-                                <CheckCircle2 class="h-4 w-4" />
+                            <div class="h-8 w-8 rounded-[6px] border-2 border-black bg-[#22C55E] text-black flex items-center justify-center shadow-[1px_1px_0px_#000]">
+                                <CheckCircle2 class="h-4 w-4 stroke-[2.5]" />
                             </div>
-                            <h3 class="font-bold text-sm text-slate-900">3. Setrika & Packing</h3>
+                            <h3 class="font-black text-sm text-black">3. Setrika & Packing</h3>
                         </div>
-                        <Badge variant="success" class="text-xs font-mono font-bold">
+                        <Badge variant="default" class="text-xs font-mono font-black">
                             {{ workstation_queues.ironing_packing_queue.length }} Nota
                         </Badge>
                     </div>
@@ -430,38 +430,38 @@ function getPerfumeBadgeVariant(perfume?: string): 'teal' | 'rose' | 'amber' | '
                         <div
                             v-for="order in workstation_queues.ironing_packing_queue"
                             :key="order.order_code"
-                            class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs space-y-3 hover:shadow-md transition-shadow"
+                            class="bg-white p-4 rounded-[10px] border-2 border-black shadow-[3px_3px_0px_#000] space-y-3 hover:shadow-[5px_5px_0px_#000] transition-shadow"
                         >
                             <div class="flex items-start justify-between">
                                 <div>
-                                    <span class="font-mono font-bold text-xs text-slate-900">{{ order.order_code }}</span>
-                                    <h4 class="font-bold text-sm text-slate-800">{{ order.customer_name }}</h4>
-                                    <span class="text-xs text-slate-500">{{ order.service }}</span>
+                                    <span class="font-mono font-black text-xs text-black">{{ order.order_code }}</span>
+                                    <h4 class="font-black text-sm text-black">{{ order.customer_name }}</h4>
+                                    <span class="text-xs font-bold text-black/60">{{ order.service }}</span>
                                 </div>
-                                <Badge variant="secondary" class="font-mono font-bold text-xs">
+                                <Badge variant="outline" class="font-mono font-black text-xs">
                                     {{ order.weight_or_qty }}
                                 </Badge>
                             </div>
 
                             <!-- Target Rack / Hanger Badge -->
                             <div class="flex items-center justify-between text-xs pt-1">
-                                <Badge :variant="getPerfumeBadgeVariant(order.perfume)" class="text-[11px] font-bold">
+                                <Badge variant="default" class="text-[11px] font-black">
                                     Parfum: {{ order.perfume ?? 'Sakura' }}
                                 </Badge>
-                                <span class="font-mono font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded text-xs">
+                                <span class="font-mono font-black text-black bg-[#FFEB3B] border border-black px-2 py-0.5 rounded-[4px] text-xs shadow-[1px_1px_0px_#000]">
                                     Target: {{ order.rack_target }}
                                 </span>
                             </div>
 
                             <!-- Big Touch Action Button (min-h-[44px]) -->
-                            <div class="pt-2 border-t border-slate-100">
+                            <div class="pt-2 border-t-2 border-black/10">
                                 <Button
                                     type="button"
                                     variant="default"
-                                    class="w-full min-h-[44px] bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs"
+                                    class="w-full min-h-[44px] bg-[#22C55E] hover:bg-[#16A34A] text-black font-black text-xs shadow-[2px_2px_0px_#000] uppercase tracking-wider"
                                     @click="triggerProgress(order.order_code, order.next_action)"
                                 >
-                                    <Check class="h-4 w-4 mr-1.5" />
+                                    <Check class="h-4 w-4 mr-1.5 stroke-[3]" />
                                     <span>{{ order.next_action }}</span>
                                 </Button>
                             </div>

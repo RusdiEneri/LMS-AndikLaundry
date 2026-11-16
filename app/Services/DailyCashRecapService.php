@@ -64,6 +64,7 @@ class DailyCashRecapService
         // 5. Receivables (Piutang) Settled Today
         $debtSettledToday = (float) $payments->filter(function ($payment) use ($targetDate) {
             $txn = $payment->transaction;
+
             return $txn && Carbon::parse($txn->intake_at)->toDateString() < $targetDate;
         })->sum('amount');
 
@@ -114,4 +115,3 @@ class DailyCashRecapService
         ];
     }
 }
-

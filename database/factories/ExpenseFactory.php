@@ -30,7 +30,7 @@ class ExpenseFactory extends Factory
         $date = Carbon::today();
 
         return [
-            'expense_number' => Expense::generateExpenseNumber($date) . '-' . fake()->unique()->numerify('####'),
+            'expense_number' => Expense::generateExpenseNumber($date).'-'.fake()->unique()->numerify('####'),
             'user_id' => User::factory(),
             'amount' => fake()->randomElement([22000, 44000, 75000, 120000, 250000]),
             'category' => fake()->randomElement([
@@ -47,4 +47,3 @@ class ExpenseFactory extends Factory
         ];
     }
 }
-

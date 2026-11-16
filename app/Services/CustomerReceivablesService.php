@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\Customer;
 use App\Models\Transaction;
 use Illuminate\Support\Carbon;
 
@@ -83,4 +82,3 @@ class CustomerReceivablesService
         ];
     }
 }
-

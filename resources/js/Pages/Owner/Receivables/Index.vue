@@ -83,20 +83,20 @@ function openWhatsAppReminder(debtor: DebtorItem) {
     <AppLayout title="Buku Piutang Pelanggan">
         <div class="space-y-6">
             <!-- Header Title -->
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-5 rounded-[12px] border-[3.5px] border-black shadow-[6px_6px_0px_#000]">
                 <div>
                     <div class="flex items-center space-x-2">
-                        <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Buku Piutang Pelanggan</h1>
-                        <Badge variant="amber" class="text-xs">Bayar Nanti</Badge>
+                        <h1 class="text-2xl font-black text-black tracking-tight">Buku Piutang Pelanggan</h1>
+                        <Badge variant="default" class="text-xs uppercase font-black">Bayar Nanti</Badge>
                     </div>
-                    <p class="text-sm text-slate-500 mt-1">
+                    <p class="text-sm font-bold text-black/70 mt-1">
                         Daftar pelanggan yang masih memiliki tagihan belum lunas dan pengingat via WhatsApp.
                     </p>
                 </div>
 
                 <div class="flex items-center gap-3">
                     <Link href="/pos">
-                        <Button variant="default" class="min-h-[44px] gap-2 font-bold bg-[#6366F1] hover:bg-[#4F46E5] text-white rounded-[6px] shadow-[0_4px_12px_rgba(99,102,241,0.35)]">
+                        <Button variant="default" class="min-h-[44px] gap-2 font-black uppercase tracking-wider text-xs shadow-[3px_3px_0px_#000]">
                             <span>Buka Kasir POS</span>
                         </Button>
                     </Link>
@@ -106,85 +106,85 @@ function openWhatsAppReminder(debtor: DebtorItem) {
             <!-- Aging & Totals KPI Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <!-- Total Piutang -->
-                <Card class="border-[#E8E8EC] shadow-xs rounded-[12px]">
+                <Card class="border-[3px] border-black shadow-[5px_5px_0px_#000] rounded-[10px] bg-white">
                     <CardHeader class="pb-2">
-                        <CardTitle class="text-xs uppercase font-bold text-[#6B6B6B]">Total Piutang Belum Lunas</CardTitle>
+                        <CardTitle class="text-xs uppercase font-black text-black/70">Total Piutang Belum Lunas</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div class="text-2xl font-bold font-mono text-[#F59E0B]">
+                        <div class="text-2xl font-black font-mono text-[#FF5252]">
                             Rp {{ formatNumber(summary.total_receivables) }}
                         </div>
-                        <p class="text-xs text-[#6B6B6B] mt-1">
+                        <p class="text-xs font-bold text-black/60 mt-1">
                             {{ summary.debtors_count }} orang • {{ summary.unpaid_orders_count }} nota
                         </p>
                     </CardContent>
                 </Card>
 
                 <!-- 0-7 Hari -->
-                <Card class="border-[#E8E8EC] shadow-xs bg-[#10B981]/10 rounded-[12px]">
+                <Card class="border-[3px] border-black shadow-[5px_5px_0px_#000] bg-[#FFF9D2] rounded-[10px]">
                     <CardHeader class="pb-2">
-                        <CardTitle class="text-xs uppercase font-bold text-[#10B981]">Lancar (0 - 7 Hari)</CardTitle>
+                        <CardTitle class="text-xs uppercase font-black text-black">Lancar (0 - 7 Hari)</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div class="text-2xl font-bold font-mono text-[#0A0A0A]">
+                        <div class="text-2xl font-black font-mono text-black">
                             Rp {{ formatNumber(summary.aging_breakdown.current) }}
                         </div>
-                        <p class="text-xs text-[#10B981] mt-1">Masih dalam batas wajar</p>
+                        <p class="text-xs font-bold text-black/70 mt-1">Masih dalam batas wajar</p>
                     </CardContent>
                 </Card>
 
                 <!-- 8-14 Hari -->
-                <Card class="border-slate-200 shadow-xs bg-amber-50/40">
+                <Card class="border-[3px] border-black shadow-[5px_5px_0px_#000] bg-[#2196F3]/20 rounded-[10px]">
                     <CardHeader class="pb-2">
-                        <CardTitle class="text-xs uppercase font-bold text-amber-800">Jatuh Tempo (8 - 14 Hari)</CardTitle>
+                        <CardTitle class="text-xs uppercase font-black text-black">Jatuh Tempo (8 - 14 Hari)</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div class="text-2xl font-bold font-mono text-amber-800">
+                        <div class="text-2xl font-black font-mono text-black">
                             Rp {{ formatNumber(summary.aging_breakdown.overdue) }}
                         </div>
-                        <p class="text-xs text-amber-600 mt-1">Waktunya diingatkan via WA</p>
+                        <p class="text-xs font-bold text-black/70 mt-1">Waktunya diingatkan via WA</p>
                     </CardContent>
                 </Card>
 
                 <!-- > 14 Hari -->
-                <Card class="border-slate-200 shadow-xs bg-rose-50/40">
+                <Card class="border-[3px] border-black shadow-[5px_5px_0px_#000] bg-[#FF5252]/20 rounded-[10px]">
                     <CardHeader class="pb-2">
-                        <CardTitle class="text-xs uppercase font-bold text-rose-800">Menunggak (> 14 Hari)</CardTitle>
+                        <CardTitle class="text-xs uppercase font-black text-black">Menunggak (> 14 Hari)</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div class="text-2xl font-bold font-mono text-rose-700">
+                        <div class="text-2xl font-black font-mono text-[#FF5252]">
                             Rp {{ formatNumber(summary.aging_breakdown.delinquent) }}
                         </div>
-                        <p class="text-xs text-rose-600 mt-1">Perlu konfirmasi ke pelanggan</p>
+                        <p class="text-xs font-bold text-black/70 mt-1">Perlu konfirmasi ke pelanggan</p>
                     </CardContent>
                 </Card>
             </div>
 
             <!-- Search Bar -->
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex items-center">
+            <div class="bg-white p-4 rounded-[12px] border-[3px] border-black shadow-[5px_5px_0px_#000] flex items-center">
                 <div class="relative flex-1 max-w-md">
-                    <Search class="h-4 w-4 text-slate-400 absolute left-3.5 top-3.5" />
+                    <Search class="h-4 w-4 text-black stroke-[2.5] absolute left-3.5 top-3.5" />
                     <input
                         v-model="search"
                         type="text"
                         placeholder="Cari nama pelanggan, nomor nota, atau telepon..."
-                        class="w-full pl-10 pr-4 py-2 border border-[#E8E8EC] rounded-[6px] text-sm text-[#0A0A0A] min-h-[44px] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12"
+                        class="w-full pl-10 pr-4 py-2 border-2 border-black rounded-[8px] text-sm font-bold text-black min-h-[44px] shadow-[2px_2px_0px_#000] focus:outline-none focus:shadow-[3px_3px_0px_#000]"
                     />
                 </div>
             </div>
 
             <!-- Table of Debtors -->
-            <Card class="border-slate-200 shadow-xs">
+            <Card class="border-[3.5px] border-black shadow-[6px_6px_0px_#000] rounded-[12px] overflow-hidden">
                 <CardHeader>
-                    <CardTitle class="text-base font-bold text-slate-900">Rincian Nota Belum Lunas</CardTitle>
-                    <CardDescription class="text-xs text-slate-500">
+                    <CardTitle class="text-base font-black text-black">Rincian Nota Belum Lunas</CardTitle>
+                    <CardDescription class="text-xs font-bold text-black/60">
                         Total {{ filteredDebtors.length }} nota piutang terdaftar
                     </CardDescription>
                 </CardHeader>
                 <CardContent class="p-0">
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm text-slate-700">
-                            <thead class="bg-slate-50 border-y border-slate-200 text-[11px] uppercase tracking-wider text-slate-500 font-bold">
+                        <table class="w-full text-left text-sm text-black">
+                            <thead class="bg-[#FFEB3B] border-y-2 border-black text-xs uppercase tracking-wider text-black font-black">
                                 <tr>
                                     <th class="px-5 py-3">No. Nota</th>
                                     <th class="px-5 py-3">Pelanggan</th>

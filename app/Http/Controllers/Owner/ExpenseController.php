@@ -66,7 +66,7 @@ class ExpenseController extends Controller
             $request->user()
         );
 
-        return redirect()->back()->with('success', "Pengeluaran {$expense->expense_number} sebesar Rp " . number_format($expense->amount, 0, ',', '.') . " berhasil dicatat.");
+        return redirect()->back()->with('success', "Pengeluaran {$expense->expense_number} sebesar Rp ".number_format($expense->amount, 0, ',', '.').' berhasil dicatat.');
     }
 
     /**
@@ -80,4 +80,3 @@ class ExpenseController extends Controller
         return redirect()->back()->with('success', "Catatan pengeluaran {$number} berhasil dihapus.");
     }
 }
-

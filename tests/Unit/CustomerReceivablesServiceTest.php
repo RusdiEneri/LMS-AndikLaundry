@@ -47,4 +47,3 @@ describe('CustomerReceivablesService Unit Tests', function () {
             ->and($summary['aging_breakdown']['delinquent'])->toBe(100000.0);
     });
 });
-

@@ -54,4 +54,3 @@ describe('Daily Cash Recap Feature Tests', function () {
         ]);
     });
 });
-

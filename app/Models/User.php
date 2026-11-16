@@ -83,12 +83,14 @@ class User extends Authenticatable
     {
         $roleModel = is_string($role) ? Role::where('name', $role)->firstOrFail() : $role;
         $this->roles()->syncWithPivotValues([$roleModel->id], ['model_type' => self::class], false);
+
         return $this;
     }
 
     public function hasRole(Role|string $role): bool
     {
         $roleName = is_string($role) ? $role : $role->name;
+
         return $this->role === $roleName || $this->roles->contains('name', $roleName);
     }
 
@@ -131,29 +133,29 @@ class User extends Authenticatable
     public static function canonicalPermissions(): array
     {
         return [
-            'pos.orders.create'          => ['owner', 'cashier'],
-            'pos.orders.view'            => ['owner', 'cashier', 'operator'],
-            'pos.orders.cancel'          => ['owner'],
-            'pos.orders.override_price'  => ['owner'],
-            'pos.orders.release_unpaid'  => ['owner'],
-            'payments.create'            => ['owner', 'cashier'],
-            'payments.refund'            => ['owner'],
-            'shifts.open'                => ['owner', 'cashier'],
-            'shifts.close'               => ['owner', 'cashier'],
-            'shifts.cash_drop'           => ['owner', 'cashier'],
-            'shifts.petty_expense'       => ['owner', 'cashier'],
-            'shifts.view_all'            => ['owner'],
-            'production.status.update'   => ['owner', 'cashier', 'operator'],
-            'production.rewash.flag'     => ['owner', 'operator'],
-            'production.rack.assign'     => ['owner', 'cashier', 'operator'],
-            'customers.manage'           => ['owner', 'cashier'],
-            'catalog.manage'             => ['owner'],
-            'expenses.create'            => ['owner', 'cashier'],
-            'expenses.manage'            => ['owner'],
-            'reports.financial.view'     => ['owner'],
-            'reports.operational.view'   => ['owner', 'cashier'],
-            'system.settings.manage'     => ['owner'],
-            'system.audit.view'          => ['owner'],
+            'pos.orders.create' => ['owner', 'cashier'],
+            'pos.orders.view' => ['owner', 'cashier', 'operator'],
+            'pos.orders.cancel' => ['owner'],
+            'pos.orders.override_price' => ['owner'],
+            'pos.orders.release_unpaid' => ['owner'],
+            'payments.create' => ['owner', 'cashier'],
+            'payments.refund' => ['owner'],
+            'shifts.open' => ['owner', 'cashier'],
+            'shifts.close' => ['owner', 'cashier'],
+            'shifts.cash_drop' => ['owner', 'cashier'],
+            'shifts.petty_expense' => ['owner', 'cashier'],
+            'shifts.view_all' => ['owner'],
+            'production.status.update' => ['owner', 'cashier', 'operator'],
+            'production.rewash.flag' => ['owner', 'operator'],
+            'production.rack.assign' => ['owner', 'cashier', 'operator'],
+            'customers.manage' => ['owner', 'cashier'],
+            'catalog.manage' => ['owner'],
+            'expenses.create' => ['owner', 'cashier'],
+            'expenses.manage' => ['owner'],
+            'reports.financial.view' => ['owner'],
+            'reports.operational.view' => ['owner', 'cashier'],
+            'system.settings.manage' => ['owner'],
+            'system.audit.view' => ['owner'],
         ];
     }
 

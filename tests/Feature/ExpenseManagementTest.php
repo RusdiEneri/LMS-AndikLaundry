@@ -68,4 +68,3 @@ describe('Expense Management Feature Tests', function () {
         $this->assertDatabaseMissing('expenses', ['id' => $expense->id]);
     });
 });
-

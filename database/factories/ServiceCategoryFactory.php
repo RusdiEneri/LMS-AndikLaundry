@@ -21,11 +21,11 @@ class ServiceCategoryFactory extends Factory
     public function definition(): array
     {
         $name = fake()->unique()->randomElement([
-            'Kiloan ' . fake()->numerify('##'),
-            'Satuan ' . fake()->numerify('##'),
-            'Dry Clean ' . fake()->numerify('##'),
-            'Sepatu & Karpet ' . fake()->numerify('##'),
-            'Bedding ' . fake()->numerify('##'),
+            'Kiloan '.fake()->numerify('##'),
+            'Satuan '.fake()->numerify('##'),
+            'Dry Clean '.fake()->numerify('##'),
+            'Sepatu & Karpet '.fake()->numerify('##'),
+            'Bedding '.fake()->numerify('##'),
         ]);
 
         return [

@@ -61,6 +61,7 @@ class Service extends Model
 
         if ($isKg) {
             $threshold = (float) ($this->min_weight ?? 3.00);
+
             return max($actualWeight, $threshold);
         }
 

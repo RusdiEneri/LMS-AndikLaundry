@@ -26,7 +26,7 @@ describe('DailyCashRecapService Unit Tests', function () {
         $txn = Transaction::factory()->create([
             'customer_id' => $this->customer->id,
             'cashier_id' => $this->user->id,
-            'intake_at' => $today . ' 09:00:00',
+            'intake_at' => $today.' 09:00:00',
             'total_amount' => 150000,
             'paid_amount' => 150000,
         ]);
@@ -38,7 +38,7 @@ describe('DailyCashRecapService Unit Tests', function () {
             'payment_method' => 'cash',
             'amount' => 100000,
             'payment_status' => 'completed',
-            'paid_at' => $today . ' 09:15:00',
+            'paid_at' => $today.' 09:15:00',
         ]);
 
         // QRIS payment in: 50,000
@@ -48,7 +48,7 @@ describe('DailyCashRecapService Unit Tests', function () {
             'payment_method' => 'qris',
             'amount' => 50000,
             'payment_status' => 'completed',
-            'paid_at' => $today . ' 09:30:00',
+            'paid_at' => $today.' 09:30:00',
         ]);
 
         // Cash expense out: 40,000 (LPG)
@@ -90,7 +90,7 @@ describe('DailyCashRecapService Unit Tests', function () {
         $txn = Transaction::factory()->create([
             'customer_id' => $this->customer->id,
             'cashier_id' => $this->user->id,
-            'intake_at' => $today . ' 10:00:00',
+            'intake_at' => $today.' 10:00:00',
         ]);
 
         // Kiloan item 4.5 kg
@@ -114,4 +114,3 @@ describe('DailyCashRecapService Unit Tests', function () {
             ->and($recap['operational_volume']['total_pieces'])->toBe(2);
     });
 });
-

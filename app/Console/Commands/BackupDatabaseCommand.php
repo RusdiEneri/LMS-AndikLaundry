@@ -42,28 +42,28 @@ class BackupDatabaseCommand extends Command
         $backupDir = storage_path('app/backups');
         File::ensureDirectoryExists($backupDir);
 
-        $gitignorePath = $backupDir . DIRECTORY_SEPARATOR . '.gitignore';
-        if (!File::exists($gitignorePath)) {
+        $gitignorePath = $backupDir.DIRECTORY_SEPARATOR.'.gitignore';
+        if (! File::exists($gitignorePath)) {
             File::put($gitignorePath, "*\n!.gitignore\n");
         }
 
         $customFilename = $this->option('filename');
         if ($customFilename) {
             $filename = (string) $customFilename;
-            if (!str_ends_with($filename, '.gz')) {
-                $filename = str_ends_with($filename, '.sql') ? $filename . '.gz' : $filename . '.sql.gz';
+            if (! str_ends_with($filename, '.gz')) {
+                $filename = str_ends_with($filename, '.sql') ? $filename.'.gz' : $filename.'.sql.gz';
             }
         } else {
             $timestamp = Carbon::now()->format('Y-m-d_His');
             $filename = "backup-{$timestamp}.sql.gz";
         }
 
-        $backupPath = $backupDir . DIRECTORY_SEPARATOR . $filename;
+        $backupPath = $backupDir.DIRECTORY_SEPARATOR.$filename;
 
         // Debug
         // echo "BACKUP PATH: " . $backupPath . "\n";
 
-        $this->info("Initiating database backup...");
+        $this->info('Initiating database backup...');
 
         try {
             $driver = DB::connection()->getDriverName();
@@ -84,7 +84,7 @@ class BackupDatabaseCommand extends Command
                 'pruned_count' => $prunedCount,
             ]);
 
-            $this->info("Database backup created successfully!");
+            $this->info('Database backup created successfully!');
             $this->line("  <comment>Location:</comment> {$backupPath}");
             $this->line("  <comment>Size:</comment>     {$formattedSize}");
             $this->line("  <comment>Driver:</comment>   {$driver}");
@@ -130,6 +130,7 @@ class BackupDatabaseCommand extends Command
             }
 
             $dbName = (string) config('database.connections.mysql.database', 'laravel');
+
             return $this->dumpMysqlPdo($pdo, $dbName);
         }
 
@@ -143,10 +144,10 @@ class BackupDatabaseCommand extends Command
     protected function dumpSqlite(PDO $pdo): string
     {
         $lines = [];
-        $lines[] = "-- LMS Andik Laundry Database Backup (SQLite)";
-        $lines[] = "-- Backup Date: " . Carbon::now()->toIso8601String();
-        $lines[] = "PRAGMA foreign_keys = OFF;";
-        $lines[] = "";
+        $lines[] = '-- LMS Andik Laundry Database Backup (SQLite)';
+        $lines[] = '-- Backup Date: '.Carbon::now()->toIso8601String();
+        $lines[] = 'PRAGMA foreign_keys = OFF;';
+        $lines[] = '';
 
         $stmt = $pdo->query("SELECT name, sql FROM sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite_%' ORDER BY name");
         $tables = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -161,13 +162,13 @@ class BackupDatabaseCommand extends Command
 
             $lines[] = "-- Table structure for table \"{$tableName}\"";
             $lines[] = "DROP TABLE IF EXISTS \"{$tableName}\";";
-            $lines[] = $createSql . ";";
-            $lines[] = "";
+            $lines[] = $createSql.';';
+            $lines[] = '';
 
             $rowsStmt = $pdo->query("SELECT * FROM \"{$tableName}\"");
             $rows = $rowsStmt->fetchAll(PDO::FETCH_ASSOC);
 
-            if (!empty($rows)) {
+            if (! empty($rows)) {
                 $lines[] = "-- Dumping data for table \"{$tableName}\"";
                 foreach ($rows as $row) {
                     $cols = array_map(fn ($c) => "\"{$c}\"", array_keys($row));
@@ -175,19 +176,20 @@ class BackupDatabaseCommand extends Command
                         if ($val === null) {
                             return 'NULL';
                         }
-                        if (is_numeric($val) && !is_string($val)) {
+                        if (is_numeric($val) && ! is_string($val)) {
                             return $val;
                         }
+
                         return $pdo->quote((string) $val);
                     }, array_values($row));
 
-                    $lines[] = "INSERT INTO \"{$tableName}\" (" . implode(', ', $cols) . ") VALUES (" . implode(', ', $vals) . ");";
+                    $lines[] = "INSERT INTO \"{$tableName}\" (".implode(', ', $cols).') VALUES ('.implode(', ', $vals).');';
                 }
-                $lines[] = "";
+                $lines[] = '';
             }
         }
 
-        $lines[] = "PRAGMA foreign_keys = ON;";
+        $lines[] = 'PRAGMA foreign_keys = ON;';
 
         return implode("\n", $lines);
     }
@@ -198,12 +200,12 @@ class BackupDatabaseCommand extends Command
     protected function dumpMysqlPdo(PDO $pdo, string $database): string
     {
         $lines = [];
-        $lines[] = "-- LMS Andik Laundry Database Backup (MySQL PDO Engine)";
+        $lines[] = '-- LMS Andik Laundry Database Backup (MySQL PDO Engine)';
         $lines[] = "-- Database: `{$database}`";
-        $lines[] = "-- Backup Date: " . Carbon::now()->toIso8601String();
-        $lines[] = "SET FOREIGN_KEY_CHECKS=0;";
-        $lines[] = "SET SQL_MODE = \"NO_AUTO_VALUE_ON_ZERO\";";
-        $lines[] = "";
+        $lines[] = '-- Backup Date: '.Carbon::now()->toIso8601String();
+        $lines[] = 'SET FOREIGN_KEY_CHECKS=0;';
+        $lines[] = 'SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";';
+        $lines[] = '';
 
         $tablesStmt = $pdo->query("SHOW FULL TABLES WHERE Table_type = 'BASE TABLE'");
         $tables = $tablesStmt->fetchAll(PDO::FETCH_NUM);
@@ -216,13 +218,13 @@ class BackupDatabaseCommand extends Command
 
             $createStmt = $pdo->query("SHOW CREATE TABLE `{$tableName}`");
             $createRow = $createStmt->fetch(PDO::FETCH_NUM);
-            $lines[] = $createRow[1] . ";";
-            $lines[] = "";
+            $lines[] = $createRow[1].';';
+            $lines[] = '';
 
             $rowsStmt = $pdo->query("SELECT * FROM `{$tableName}`");
             $rows = $rowsStmt->fetchAll(PDO::FETCH_ASSOC);
 
-            if (!empty($rows)) {
+            if (! empty($rows)) {
                 $lines[] = "-- Dumping data for table `{$tableName}`";
                 $chunks = array_chunk($rows, 100);
                 foreach ($chunks as $chunk) {
@@ -235,21 +237,22 @@ class BackupDatabaseCommand extends Command
                             if ($val === null) {
                                 return 'NULL';
                             }
-                            if (is_numeric($val) && !is_string($val)) {
+                            if (is_numeric($val) && ! is_string($val)) {
                                 return $val;
                             }
+
                             return $pdo->quote((string) $val);
                         }, array_values($row));
-                        $valueRows[] = "(" . implode(', ', $values) . ")";
+                        $valueRows[] = '('.implode(', ', $values).')';
                     }
 
-                    $lines[] = "INSERT INTO `{$tableName}` (" . implode(', ', $columns) . ") VALUES\n" . implode(",\n", $valueRows) . ";";
+                    $lines[] = "INSERT INTO `{$tableName}` (".implode(', ', $columns).") VALUES\n".implode(",\n", $valueRows).';';
                 }
-                $lines[] = "";
+                $lines[] = '';
             }
         }
 
-        $lines[] = "SET FOREIGN_KEY_CHECKS=1;";
+        $lines[] = 'SET FOREIGN_KEY_CHECKS=1;';
 
         return implode("\n", $lines);
     }
@@ -326,7 +329,7 @@ class BackupDatabaseCommand extends Command
         $process->setTimeout(300);
         $process->run();
 
-        if (!$process->isSuccessful()) {
+        if (! $process->isSuccessful()) {
             throw new \RuntimeException($process->getErrorOutput());
         }
 
@@ -390,6 +393,6 @@ class BackupDatabaseCommand extends Command
         $pow = min($pow, count($units) - 1);
         $bytes /= (1 << (10 * $pow));
 
-        return round($bytes, $precision) . ' ' . $units[$pow];
+        return round($bytes, $precision).' '.$units[$pow];
     }
 }

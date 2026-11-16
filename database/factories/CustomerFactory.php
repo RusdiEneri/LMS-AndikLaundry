@@ -20,7 +20,7 @@ class CustomerFactory extends Factory
      */
     public function definition(): array
     {
-        $rawPhone = '08' . fake()->unique()->numerify('##########');
+        $rawPhone = '08'.fake()->unique()->numerify('##########');
 
         return [
             'name' => fake()->name(),

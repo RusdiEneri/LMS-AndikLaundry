@@ -73,7 +73,7 @@ class PosController extends Controller
                 $perfumeVariants = $decoded;
             }
         }
-        if (!is_array($perfumeVariants) || empty($perfumeVariants)) {
+        if (! is_array($perfumeVariants) || empty($perfumeVariants)) {
             $perfumeVariants = ['Lavender', 'Sakura', 'Ocean Fresh', 'Akasia', 'Cherry Blossom', 'Snappy', 'Downy', 'Non-Parfum'];
         }
 

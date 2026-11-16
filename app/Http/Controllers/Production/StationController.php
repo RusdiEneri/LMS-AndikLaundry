@@ -36,7 +36,7 @@ class StationController extends Controller
 
             $totalQty = $order->items->sum('actual_quantity');
             $unit = $firstItem?->pricing_unit_snapshot ?? 'kg';
-            $weightOrQty = number_format($totalQty, 2, ',', '.') . ' ' . $unit;
+            $weightOrQty = number_format($totalQty, 2, ',', '.').' '.$unit;
 
             $perfume = 'Standar';
             if (! empty($order->notes) && str_contains(strtolower($order->notes), 'parfum:')) {

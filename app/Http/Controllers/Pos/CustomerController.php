@@ -51,7 +51,7 @@ class CustomerController extends Controller
     {
         $validated = $request->validated();
 
-        if (!isset($validated['whatsapp_consent'])) {
+        if (! isset($validated['whatsapp_consent'])) {
             $validated['whatsapp_consent'] = true;
         }
 

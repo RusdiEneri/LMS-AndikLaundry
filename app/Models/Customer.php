@@ -56,13 +56,13 @@ class Customer extends Model
     protected static function booted(): void
     {
         static::saving(function (Customer $customer): void {
-            if (!empty($customer->phone)) {
+            if (! empty($customer->phone)) {
                 $customer->phone_normalized = PhoneFormatter::normalizeToE164($customer->phone);
             }
 
             if ($customer->whatsapp_consent && is_null($customer->consent_at)) {
                 $customer->consent_at = now();
-            } elseif (!$customer->whatsapp_consent) {
+            } elseif (! $customer->whatsapp_consent) {
                 $customer->consent_at = null;
             }
         });
@@ -96,7 +96,7 @@ class Customer extends Model
                 ->orWhere('phone', 'like', "%{$term}%")
                 ->orWhere('phone_normalized', 'like', "%{$term}%");
 
-            if (!empty($normalizedTerm)) {
+            if (! empty($normalizedTerm)) {
                 $subQuery->orWhere('phone_normalized', 'like', "%{$normalizedTerm}%");
             }
         });

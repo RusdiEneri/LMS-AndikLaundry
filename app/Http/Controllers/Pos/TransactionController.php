@@ -39,7 +39,7 @@ class TransactionController extends Controller
             ? $query->find($id)
             : $query->where('invoice_number', $id)->first();
 
-        if (!$transaction) {
+        if (! $transaction) {
             return response()->json([
                 'message' => 'Transaksi tidak ditemukan.',
             ], 404);

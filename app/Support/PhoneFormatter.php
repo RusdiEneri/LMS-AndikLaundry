@@ -20,11 +20,11 @@ class PhoneFormatter
         $digits = preg_replace('/[^\d]/', '', $phone);
 
         if (str_starts_with($digits, '620')) {
-            $digits = '62' . substr($digits, 3);
+            $digits = '62'.substr($digits, 3);
         } elseif (str_starts_with($digits, '0')) {
-            $digits = '62' . substr($digits, 1);
+            $digits = '62'.substr($digits, 1);
         } elseif (str_starts_with($digits, '8')) {
-            $digits = '62' . $digits;
+            $digits = '62'.$digits;
         }
 
         return $digits;

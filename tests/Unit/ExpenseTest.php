@@ -11,10 +11,10 @@ uses(RefreshDatabase::class);
 describe('Expense Model Unit Tests', function () {
     it('generates sequential expense numbers with EXP-YYYYMMDD-XXXX format', function () {
         $today = Carbon::today();
-        $expectedPrefix = 'EXP-' . $today->format('Ymd') . '-';
+        $expectedPrefix = 'EXP-'.$today->format('Ymd').'-';
 
         $number1 = Expense::generateExpenseNumber($today);
-        expect($number1)->toBe($expectedPrefix . '0001');
+        expect($number1)->toBe($expectedPrefix.'0001');
 
         Expense::factory()->create([
             'expense_number' => $number1,
@@ -22,7 +22,7 @@ describe('Expense Model Unit Tests', function () {
         ]);
 
         $number2 = Expense::generateExpenseNumber($today);
-        expect($number2)->toBe($expectedPrefix . '0002');
+        expect($number2)->toBe($expectedPrefix.'0002');
     });
 
     it('correctly casts amount to decimal and date to carbon date', function () {
@@ -51,4 +51,3 @@ describe('Expense Model Unit Tests', function () {
             ->and(Expense::dateBetween('2026-11-11', '2026-11-15')->count())->toBe(2);
     });
 });
-

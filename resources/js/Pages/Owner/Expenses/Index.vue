@@ -235,37 +235,37 @@ function getCategoryColor(cat: string) {
                     </CardContent>
                 </Card>
 
-                <Card class="border-[#E8E8EC] shadow-xs bg-[#6366F1]/5">
+                <Card class="border-[3px] border-black shadow-[5px_5px_0px_#000] bg-[#FFF9D2] rounded-[10px]">
                     <CardHeader class="pb-2">
-                        <CardTitle class="text-xs uppercase font-bold text-[#6366F1]">Status Buku Kas</CardTitle>
+                        <CardTitle class="text-xs uppercase font-black text-black">Status Buku Kas</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div class="text-base font-bold text-[#0A0A0A] flex items-center space-x-1.5">
-                            <CheckCircle2 class="h-4 w-4 text-[#10B981]" />
+                        <div class="text-base font-black text-black flex items-center space-x-1.5">
+                            <CheckCircle2 class="h-4 w-4 text-[#22C55E] stroke-[2.5]" />
                             <span>Tercatat Otomatis</span>
                         </div>
-                        <p class="text-xs text-[#6B6B6B] mt-1">Masuk ke Rekap Kas Harian</p>
+                        <p class="text-xs font-bold text-black/70 mt-1">Masuk ke Rekap Kas Harian</p>
                     </CardContent>
                 </Card>
             </div>
 
             <!-- Filter Controls -->
-            <div class="bg-white p-4 rounded-[12px] border border-[#E8E8EC] shadow-xs flex flex-wrap items-center gap-3">
+            <div class="bg-white p-4 rounded-[12px] border-[3px] border-black shadow-[5px_5px_0px_#000] flex flex-wrap items-center gap-3">
                 <div class="relative flex-1 min-w-[200px]">
-                    <Search class="h-4 w-4 text-[#6B6B6B] absolute left-3 top-3.5" />
+                    <Search class="h-4 w-4 text-black absolute left-3 top-3.5 stroke-[2.5]" />
                     <input
                         v-model="search"
                         @keydown.enter="applyFilter"
                         type="text"
                         placeholder="Cari nomor nota atau keterangan..."
-                        class="w-full pl-9 pr-4 py-2 border border-[#E8E8EC] rounded-[6px] text-sm text-[#0A0A0A] min-h-[44px] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12"
+                        class="w-full pl-9 pr-4 py-2 border-2 border-black rounded-[8px] text-sm font-bold text-black min-h-[44px] shadow-[2px_2px_0px_#000] focus:outline-none focus:shadow-[3px_3px_0px_#000]"
                     />
                 </div>
 
                 <select
                     v-model="selectedCategory"
                     @change="applyFilter"
-                    class="border border-[#E8E8EC] rounded-[6px] px-3 py-2 text-sm text-[#0A0A0A] min-h-[44px] bg-white focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12"
+                    class="border-2 border-black rounded-[8px] px-3 py-2 text-sm font-bold text-black min-h-[44px] bg-white shadow-[2px_2px_0px_#000] focus:outline-none"
                 >
                     <option value="">Semua Kategori</option>
                     <option v-for="cat in categories" :key="cat.value" :value="cat.value">
@@ -278,34 +278,34 @@ function getCategoryColor(cat: string) {
                         v-model="startDate"
                         @change="applyFilter"
                         type="date"
-                        class="border border-[#E8E8EC] rounded-[6px] px-3 py-2 text-sm text-[#0A0A0A] min-h-[44px] bg-white focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12"
+                        class="border-2 border-black rounded-[8px] px-3 py-2 text-sm font-bold text-black min-h-[44px] bg-white shadow-[2px_2px_0px_#000] focus:outline-none"
                     />
-                    <span class="text-xs text-[#6B6B6B]">s/d</span>
+                    <span class="text-xs font-black text-black">s/d</span>
                     <input
                         v-model="endDate"
                         @change="applyFilter"
                         type="date"
-                        class="border border-[#E8E8EC] rounded-[6px] px-3 py-2 text-sm text-[#0A0A0A] min-h-[44px] bg-white focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12"
+                        class="border-2 border-black rounded-[8px] px-3 py-2 text-sm font-bold text-black min-h-[44px] bg-white shadow-[2px_2px_0px_#000] focus:outline-none"
                     />
                 </div>
 
-                <Button type="button" variant="outline" @click="resetFilter" class="min-h-[44px] text-xs">
+                <Button type="button" variant="outline" @click="resetFilter" class="min-h-[44px] text-xs font-black uppercase tracking-wider">
                     Reset
                 </Button>
             </div>
 
             <!-- Table of Expenses -->
-            <Card class="border-slate-200 shadow-xs">
+            <Card class="border-[3.5px] border-black shadow-[6px_6px_0px_#000] rounded-[12px] overflow-hidden">
                 <CardHeader>
-                    <CardTitle class="text-base font-bold text-slate-900">Daftar Pengeluaran Operasional</CardTitle>
-                    <CardDescription class="text-xs text-slate-500">
+                    <CardTitle class="text-base font-black text-black">Daftar Pengeluaran Operasional</CardTitle>
+                    <CardDescription class="text-xs font-bold text-black/60">
                         Total {{ expenses.total }} catatan transaksi
                     </CardDescription>
                 </CardHeader>
                 <CardContent class="p-0">
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm text-slate-700">
-                            <thead class="bg-slate-50 border-y border-slate-200 text-[11px] uppercase tracking-wider text-slate-500 font-bold">
+                        <table class="w-full text-left text-sm text-black">
+                            <thead class="bg-[#FFEB3B] border-y-2 border-black text-xs uppercase tracking-wider text-black font-black">
                                 <tr>
                                     <th class="px-5 py-3">No. Pengeluaran</th>
                                     <th class="px-5 py-3">Tanggal</th>

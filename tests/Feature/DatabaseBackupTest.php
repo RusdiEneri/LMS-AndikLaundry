@@ -1,6 +1,7 @@
 <?php
 
-use App\Console\Commands\BackupDatabaseCommand;
+use App\Http\Controllers\Owner\DashboardController;
+use App\Http\Controllers\Owner\OwnerDashboardController;
 use App\Models\BusinessSetting;
 use App\Models\Customer;
 use App\Models\Transaction;
@@ -55,7 +56,7 @@ describe('Phase 7: Database Backup Command & Retention', function () {
 
         $latestBackup = array_values($backupFiles)[0];
         expect(File::size($latestBackup->getPathname()))->toBeGreaterThan(0);
-        expect(File::exists($this->backupDir . '/.gitignore'))->toBeTrue();
+        expect(File::exists($this->backupDir.'/.gitignore'))->toBeTrue();
     });
 
     it('T-BAK-02: uncompresses backup using gzdecode and asserts valid SQL schema and table text content', function () {
@@ -65,7 +66,7 @@ describe('Phase 7: Database Backup Command & Retention', function () {
         $exitCode = $this->artisan('db:backup', ['--filename' => 'test-schema-verify.sql.gz'])->run();
         expect($exitCode)->toBe(0);
 
-        $backupPath = $this->backupDir . '/test-schema-verify.sql.gz';
+        $backupPath = $this->backupDir.'/test-schema-verify.sql.gz';
         expect(File::exists($backupPath))->toBeTrue();
 
         $compressedData = File::get($backupPath);
@@ -80,8 +81,8 @@ describe('Phase 7: Database Backup Command & Retention', function () {
     });
 
     it('T-BAK-03: cleans up backups older than retention days while preserving recent ones', function () {
-        $oldFile = $this->backupDir . '/backup-old-test.sql.gz';
-        $recentFile = $this->backupDir . '/backup-recent-test.sql.gz';
+        $oldFile = $this->backupDir.'/backup-old-test.sql.gz';
+        $recentFile = $this->backupDir.'/backup-recent-test.sql.gz';
 
         // Create dummy gzipped files
         File::put($oldFile, gzencode('-- old backup', 9));
@@ -199,7 +200,7 @@ describe('Phase 7: Public Digital Receipt Rate Limiting & Aliasing', function ()
 describe('OwnerDashboardController compatibility alias', function () {
 
     it('instantiates OwnerDashboardController and extends DashboardController', function () {
-        $controller = new \App\Http\Controllers\Owner\OwnerDashboardController();
-        expect($controller)->toBeInstanceOf(\App\Http\Controllers\Owner\DashboardController::class);
+        $controller = new OwnerDashboardController;
+        expect($controller)->toBeInstanceOf(DashboardController::class);
     });
 });

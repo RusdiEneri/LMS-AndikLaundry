@@ -12,7 +12,7 @@ class EnsureUserIsActive
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -21,7 +21,7 @@ class EnsureUserIsActive
         if ($user) {
             $freshUser = $user->fresh();
 
-            if (!$freshUser || !$freshUser->is_active) {
+            if (! $freshUser || ! $freshUser->is_active) {
                 Auth::guard('web')->logout();
                 $request->session()->invalidate();
                 $request->session()->regenerateToken();

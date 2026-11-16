@@ -11,4 +11,3 @@ Artisan::command('inspire', function () {
 Schedule::command('db:backup')
     ->dailyAt('02:00')
     ->description('Daily database backup with 30-day retention');
-

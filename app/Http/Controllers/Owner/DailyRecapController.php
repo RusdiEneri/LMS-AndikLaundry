@@ -43,4 +43,3 @@ class DailyRecapController extends Controller
         ]);
     }
 }
-

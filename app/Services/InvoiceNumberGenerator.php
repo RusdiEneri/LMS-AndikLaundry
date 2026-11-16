@@ -14,26 +14,26 @@ class InvoiceNumberGenerator
     public function generate(?DateTimeInterface $date = null): string
     {
         $targetDate = $date ?? now();
-        $prefix = 'INV-' . $targetDate->format('Ymd') . '-';
+        $prefix = 'INV-'.$targetDate->format('Ymd').'-';
 
         // Query the latest invoice number for the date prefix
         $latest = DB::table('transactions')
-            ->where('invoice_number', 'like', $prefix . '%')
+            ->where('invoice_number', 'like', $prefix.'%')
             ->lockForUpdate()
             ->orderByDesc('invoice_number')
             ->value('invoice_number');
 
         $nextSequence = 1;
-        if ($latest && preg_match('/' . preg_quote($prefix, '/') . '(\d+)$/', $latest, $matches)) {
+        if ($latest && preg_match('/'.preg_quote($prefix, '/').'(\d+)$/', $latest, $matches)) {
             $nextSequence = ((int) $matches[1]) + 1;
         }
 
-        $candidate = $prefix . str_pad((string) $nextSequence, 4, '0', STR_PAD_LEFT);
+        $candidate = $prefix.str_pad((string) $nextSequence, 4, '0', STR_PAD_LEFT);
 
         // Safeguard to guarantee absolute uniqueness even under high concurrency
         while (DB::table('transactions')->where('invoice_number', $candidate)->exists()) {
             $nextSequence++;
-            $candidate = $prefix . str_pad((string) $nextSequence, 4, '0', STR_PAD_LEFT);
+            $candidate = $prefix.str_pad((string) $nextSequence, 4, '0', STR_PAD_LEFT);
         }
 
         return $candidate;

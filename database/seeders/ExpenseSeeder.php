@@ -51,7 +51,7 @@ class ExpenseSeeder extends Seeder
 
         foreach ($expenses as $idx => $data) {
             $date = Carbon::parse($data['expense_date']);
-            $number = 'EXP-' . $date->format('Ymd') . '-' . str_pad((string) ($idx + 1), 4, '0', STR_PAD_LEFT);
+            $number = 'EXP-'.$date->format('Ymd').'-'.str_pad((string) ($idx + 1), 4, '0', STR_PAD_LEFT);
 
             Expense::updateOrCreate(
                 ['expense_number' => $number],
@@ -62,4 +62,3 @@ class ExpenseSeeder extends Seeder
         }
     }
 }
-

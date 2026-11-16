@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Customer;
 
 use App\Support\PhoneFormatter;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -31,7 +32,7 @@ class StoreCustomerRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
@@ -42,7 +43,7 @@ class StoreCustomerRequest extends FormRequest
                 'string',
                 'max:20',
                 function (string $attribute, mixed $value, \Closure $fail): void {
-                    if (!PhoneFormatter::isValid((string) $value)) {
+                    if (! PhoneFormatter::isValid((string) $value)) {
                         $fail('Nomor WhatsApp/telepon tidak valid untuk format Indonesia (minimal 10 digit).');
                     }
                 },

@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\AuditLog;
 use App\Models\BusinessSetting;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -1048,4 +1047,3 @@ describe('WhatsApp Session Pairing & Disconnection (R4)', function () {
             ->assertJsonPath('message', 'Sesi WhatsApp berhasil diputuskan (logout).');
     });
 });
-

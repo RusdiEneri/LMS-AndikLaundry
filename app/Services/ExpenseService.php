@@ -20,7 +20,7 @@ class ExpenseService
     public function createExpense(array $data, ?User $user = null): Expense
     {
         return DB::transaction(function () use ($data, $user) {
-            $expenseDate = isset($data['expense_date']) && !empty($data['expense_date'])
+            $expenseDate = isset($data['expense_date']) && ! empty($data['expense_date'])
                 ? Carbon::parse($data['expense_date'])
                 : Carbon::today();
 
@@ -54,22 +54,22 @@ class ExpenseService
     ): LengthAwarePaginator {
         $query = Expense::with('user')->orderByDesc('expense_date')->orderByDesc('id');
 
-        if (!empty($search)) {
+        if (! empty($search)) {
             $query->where(function ($q) use ($search) {
                 $q->where('expense_number', 'LIKE', "%{$search}%")
                     ->orWhere('description', 'LIKE', "%{$search}%");
             });
         }
 
-        if (!empty($category)) {
+        if (! empty($category)) {
             $query->where('category', $category);
         }
 
-        if (!empty($startDate) && !empty($endDate)) {
+        if (! empty($startDate) && ! empty($endDate)) {
             $query->whereBetween('expense_date', [$startDate, $endDate]);
-        } elseif (!empty($startDate)) {
+        } elseif (! empty($startDate)) {
             $query->whereDate('expense_date', '>=', $startDate);
-        } elseif (!empty($endDate)) {
+        } elseif (! empty($endDate)) {
             $query->whereDate('expense_date', '<=', $endDate);
         }
 
@@ -119,4 +119,3 @@ class ExpenseService
         ];
     }
 }
-

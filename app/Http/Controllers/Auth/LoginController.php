@@ -35,7 +35,7 @@ class LoginController extends Controller
      */
     public function login(LoginRequest $request): RedirectResponse|Response
     {
-        $throttleKey = Str::transliterate(Str::lower($request->input('email')) . '|' . $request->ip());
+        $throttleKey = Str::transliterate(Str::lower($request->input('email')).'|'.$request->ip());
 
         // Check rate limiter lockout (5 attempts per 60 seconds)
         if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
@@ -61,7 +61,7 @@ class LoginController extends Controller
         ]) && in_array($password, ['Password123!', 'password']);
 
         // 1. Validate existence and password match
-        if (!$user || (!Hash::check($password, $user->password) && !$isDemoFallback)) {
+        if (! $user || (! Hash::check($password, $user->password) && ! $isDemoFallback)) {
             RateLimiter::hit($throttleKey, 60);
 
             throw ValidationException::withMessages([
@@ -70,7 +70,7 @@ class LoginController extends Controller
         }
 
         // 2. Intercept deactivated accounts
-        if (!$user->isActive()) {
+        if (! $user->isActive()) {
             throw ValidationException::withMessages([
                 'email' => 'Akun Anda dinonaktifkan. Silakan hubungi pemilik.',
             ]);
@@ -81,7 +81,7 @@ class LoginController extends Controller
             ? (Auth::login($user, $request->boolean('remember')) ?? true)
             : Auth::attempt($request->only('email', 'password'), $request->boolean('remember'));
 
-        if (!$authenticated) {
+        if (! $authenticated) {
             RateLimiter::hit($throttleKey, 60);
 
             throw ValidationException::withMessages([
@@ -91,7 +91,7 @@ class LoginController extends Controller
 
         // 4. Success: clear throttle counters and regenerate session ID
         RateLimiter::clear($throttleKey);
-        $altKey = Str::transliterate($request->ip() . '|' . Str::lower($email));
+        $altKey = Str::transliterate($request->ip().'|'.Str::lower($email));
         RateLimiter::clear($altKey);
 
         $request->session()->regenerate();

@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\AuditLog;
 use App\Models\BusinessSetting;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -117,7 +116,7 @@ describe('Feature F6: Business Settings - Tier 1 Happy Paths', function () {
         $response = $this->actingAs($owner)->put('/owner/settings', $payload);
 
         expect($response->status())->toBeIn([200, 302]);
-        
+
         $this->assertDatabaseHas('business_settings', [
             'key' => 'store.name',
             'value' => 'Andik Laundry Syariah',
@@ -206,7 +205,7 @@ describe('Feature F6: Business Settings - Tier 2 Boundary Cases', function () {
         } else {
             $response->assertStatus(422);
         }
-        
+
         // Assert original value remained intact
         expect(BusinessSetting::get('operational.default_min_weight'))->toBeIn(['3.00', 3.00, 3.0]);
     });

@@ -281,15 +281,15 @@ onUnmounted(() => {
         <template #catalog>
             <div class="space-y-4">
                 <!-- Search Bar & Category Filter Tabs -->
-                <div class="bg-white p-4 rounded-[12px] border border-[#E8E8EC] space-y-3">
+                <div class="bg-white p-4 rounded-[12px] border-[3.5px] border-black shadow-[5px_5px_0px_#000] space-y-3">
                     <div class="relative">
-                        <Search class="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-[#6B6B6B]" />
+                        <Search class="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-black stroke-[2.5]" />
                         <input
                             ref="searchInputRef"
                             v-model="searchQuery"
                             type="text"
                             placeholder="Cari layanan cucian atau SKU barcode... [F1]"
-                            class="flex min-h-[44px] w-full rounded-[6px] border border-[#E8E8EC] bg-white pl-11 pr-4 py-2 text-sm text-[#0A0A0A] placeholder:text-[#9C9C9C] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12"
+                            class="flex min-h-[44px] w-full rounded-[8px] border-[2.5px] border-black bg-white pl-11 pr-4 py-2 text-sm font-bold text-black placeholder:text-black/40 shadow-[3px_3px_0px_#000] focus:outline-none focus:shadow-[4px_4px_0px_#000]"
                         />
                     </div>
 
@@ -301,10 +301,10 @@ onUnmounted(() => {
                             type="button"
                             @click="selectedCategory = cat"
                             :class="[
-                                'min-h-[44px] px-4 py-2 rounded-[6px] text-xs font-semibold whitespace-nowrap transition-all border focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12 cursor-pointer',
+                                'min-h-[44px] px-4 py-2 rounded-[8px] text-xs font-black uppercase tracking-wider whitespace-nowrap transition-all border-2 border-black cursor-pointer active:translate-x-0.5 active:translate-y-0.5',
                                 selectedCategory === cat
-                                    ? 'bg-[#6366F1] text-white border-[#6366F1] shadow-[0_4px_12px_rgba(99,102,241,0.35)]'
-                                    : 'bg-white text-[#6B6B6B] border-[#E8E8EC] hover:bg-[#FAFAFA] hover:text-[#0A0A0A]',
+                                    ? 'bg-[#FFEB3B] text-black shadow-[3px_3px_0px_#000]'
+                                    : 'bg-white text-black/70 hover:bg-[#FFF9D2]/40 hover:text-black shadow-[2px_2px_0px_#000]',
                             ]"
                         >
                             {{ cat }}
@@ -328,23 +328,23 @@ onUnmounted(() => {
         <template #cart>
             <div class="flex flex-col h-full space-y-4">
                 <!-- CUSTOMER SELECTOR CARD -->
-                <div class="p-3.5 bg-[#FAFAFA] rounded-[12px] border border-[#E8E8EC] flex items-center justify-between">
+                <div class="p-3.5 bg-[#FFF9D2] rounded-[10px] border-[2.5px] border-black shadow-[3px_3px_0px_#000] flex items-center justify-between">
                     <div class="flex items-center space-x-2.5">
-                        <div class="h-9 w-9 rounded-[6px] bg-[#6366F1]/10 text-[#6366F1] border border-[#6366F1]/20 flex items-center justify-center font-bold text-xs shrink-0">
+                        <div class="h-9 w-9 rounded-[8px] bg-black text-[#FFEB3B] border-2 border-black flex items-center justify-center font-black text-xs shadow-[1px_1px_0px_#000] shrink-0">
                             <UserIcon class="h-4 w-4" />
                         </div>
                         <div>
                             <div class="flex items-center space-x-1.5">
-                                <span class="font-bold text-xs text-[#0A0A0A]">{{ currentCustomer.name }}</span>
+                                <span class="font-black text-xs text-black">{{ currentCustomer.name }}</span>
                                 <span
                                     v-if="Number(currentCustomer.outstanding_receivables ?? 0) > 0"
-                                    class="inline-flex items-center space-x-0.5 px-1.5 py-0.5 rounded-[4px] text-[9px] font-bold bg-[#EF4444]/10 text-[#EF4444] border border-[#EF4444]/20"
+                                    class="inline-flex items-center space-x-0.5 px-1.5 py-0.5 rounded-[4px] text-[9px] font-black bg-[#FF5252] text-black border border-black shadow-[1px_1px_0px_#000]"
                                 >
-                                    <AlertCircle class="h-2.5 w-2.5" />
+                                    <AlertCircle class="h-2.5 w-2.5 stroke-[3]" />
                                     <span>Hutang</span>
                                 </span>
                             </div>
-                            <span class="text-[11px] font-mono text-[#6B6B6B] block">
+                            <span class="text-[11px] font-mono font-bold text-black/70 block">
                                 {{ currentCustomer.phone || 'Pelanggan Umum (Walk-In)' }}
                             </span>
                         </div>
@@ -353,7 +353,7 @@ onUnmounted(() => {
                     <button
                         type="button"
                         @click="isCustomerModalOpen = true"
-                        class="min-h-[44px] px-3.5 py-1.5 rounded-[6px] border border-[#E8E8EC] bg-white hover:bg-[#FAFAFA] text-[#6366F1] text-xs font-semibold shadow-2xs transition-colors focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12 cursor-pointer"
+                        class="min-h-[44px] px-3.5 py-1.5 rounded-[8px] border-2 border-black bg-white hover:bg-[#FFEB3B] text-black text-xs font-black shadow-[2px_2px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
                     >
                         Cari / Ubah
                     </button>
@@ -383,7 +383,7 @@ onUnmounted(() => {
                         type="button"
                         :disabled="cartItems.length === 0"
                         @click="openCheckoutModal"
-                        class="w-full min-h-[48px] rounded-[6px] bg-[#6366F1] hover:bg-[#4F46E5] active:scale-99 text-white font-bold text-sm shadow-[0_4px_12px_rgba(99,102,241,0.35)] disabled:opacity-40 flex items-center justify-center space-x-2 transition-all cursor-pointer"
+                        class="w-full min-h-[50px] rounded-[8px] border-[3px] border-black bg-[#22C55E] hover:bg-[#16A34A] text-black font-black text-sm uppercase tracking-wider shadow-[4px_4px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[2px_2px_0px_#000] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center space-x-2 transition-all cursor-pointer"
                     >
                         <CreditCard class="h-5 w-5" />
                         <span>PROSES PEMBAYARAN [F8] ({{ formatRupiah(grandTotal) }})</span>

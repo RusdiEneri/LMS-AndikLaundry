@@ -78,7 +78,7 @@ class TransactionItem extends Model
         $subtotal = max(0.00, round(($billedQty * $unitPrice) - $discountAmount, 2));
 
         $unitValue = is_string($service->unit) ? $service->unit : ($service->unit?->value ?? 'kg');
-        $itemName = $service->name . ($tier ? " ({$tier->tier_name})" : '');
+        $itemName = $service->name.($tier ? " ({$tier->tier_name})" : '');
 
         return [
             'service_id' => $service->id,

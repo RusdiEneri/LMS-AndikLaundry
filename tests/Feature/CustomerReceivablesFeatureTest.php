@@ -59,4 +59,3 @@ describe('Customer Receivables Feature Tests', function () {
         ]);
     });
 });
-

@@ -54,4 +54,3 @@ class ReceivableController extends Controller
         ]);
     }
 }
-
