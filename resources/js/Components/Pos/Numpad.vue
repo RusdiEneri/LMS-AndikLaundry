@@ -44,25 +44,25 @@ function onKeyClick(key: string) {
 </script>
 
 <template>
-    <div class="grid grid-cols-3 gap-2 select-none w-full">
+    <div class="grid grid-cols-3 gap-1.5 select-none w-full">
         <!-- Row 1: 7, 8, 9 -->
         <button
             type="button"
-            class="btn-numpad focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12 cursor-pointer"
+            class="btn-numpad cursor-pointer"
             @click="onKeyClick('7')"
         >
             7
         </button>
         <button
             type="button"
-            class="btn-numpad focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12 cursor-pointer"
+            class="btn-numpad cursor-pointer"
             @click="onKeyClick('8')"
         >
             8
         </button>
         <button
             type="button"
-            class="btn-numpad focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12 cursor-pointer"
+            class="btn-numpad cursor-pointer"
             @click="onKeyClick('9')"
         >
             9
@@ -71,21 +71,21 @@ function onKeyClick(key: string) {
         <!-- Row 2: 4, 5, 6 -->
         <button
             type="button"
-            class="btn-numpad focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12 cursor-pointer"
+            class="btn-numpad cursor-pointer"
             @click="onKeyClick('4')"
         >
             4
         </button>
         <button
             type="button"
-            class="btn-numpad focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12 cursor-pointer"
+            class="btn-numpad cursor-pointer"
             @click="onKeyClick('5')"
         >
             5
         </button>
         <button
             type="button"
-            class="btn-numpad focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12 cursor-pointer"
+            class="btn-numpad cursor-pointer"
             @click="onKeyClick('6')"
         >
             6
@@ -94,21 +94,21 @@ function onKeyClick(key: string) {
         <!-- Row 3: 1, 2, 3 -->
         <button
             type="button"
-            class="btn-numpad focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12 cursor-pointer"
+            class="btn-numpad cursor-pointer"
             @click="onKeyClick('1')"
         >
             1
         </button>
         <button
             type="button"
-            class="btn-numpad focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12 cursor-pointer"
+            class="btn-numpad cursor-pointer"
             @click="onKeyClick('2')"
         >
             2
         </button>
         <button
             type="button"
-            class="btn-numpad focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12 cursor-pointer"
+            class="btn-numpad cursor-pointer"
             @click="onKeyClick('3')"
         >
             3
@@ -117,7 +117,7 @@ function onKeyClick(key: string) {
         <!-- Row 4: 0, ., backspace -->
         <button
             type="button"
-            class="btn-numpad focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12 cursor-pointer"
+            class="btn-numpad cursor-pointer"
             @click="onKeyClick('0')"
         >
             0
@@ -125,7 +125,7 @@ function onKeyClick(key: string) {
         <button
             type="button"
             :disabled="!allowDecimal"
-            class="btn-numpad focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12 disabled:opacity-40 cursor-pointer text-2xl"
+            class="btn-numpad disabled:opacity-30 cursor-pointer text-xl"
             @click="onKeyClick('.')"
             aria-label="Titik desimal"
         >
@@ -133,11 +133,11 @@ function onKeyClick(key: string) {
         </button>
         <button
             type="button"
-            class="btn-numpad focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#EF4444]/20 border-[#EF4444]/30 bg-[#EF4444]/10 text-[#EF4444] hover:bg-[#EF4444]/20 cursor-pointer"
+            class="btn-numpad border-2 border-black bg-[#FF5252] text-white hover:bg-[#E02424] cursor-pointer shadow-[2px_2px_0px_#000]"
             @click="onKeyClick('backspace')"
             aria-label="Hapus digit terakhir"
         >
-            <Delete class="h-6 w-6" />
+            <Delete class="h-5 w-5" />
         </button>
     </div>
 </template>

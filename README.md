@@ -33,18 +33,18 @@ Sistem ini memecahkan berbagai masalah nyata dalam operasional laundry:
   - **Layanan Kiloan (Ambang Batas Berat Minimal)**: Jika pelanggan mencuci 1.2 kg sementara batas minimal toko adalah 2.0 kg, sistem otomatis menagih tarif 2.0 kg agar operasional mesin tidak merugi.
   - **Layanan Satuan & Inspeksi Cacat**: Input potong/item dengan formulir kondisi pakaian (noda kerah, kancing hilang, luntur) dan pemilihan aroma parfum.
   - **Layanan Meteran / Luas Area (Karpet)**: Input panjang dan lebar (meter), sistem langsung menghitung luas ($m^2$) dan biaya total otomatis.
-  - **Multi-Metode Pembayaran**: Tunai (Cash), QRIS dinamis/statis, Transfer Bank, dan Saldo e-Wallet.
+  - **Metode Pembayaran Kasir**: Wajib lunas (tanpa utang-piutang/kasbon). Mendukung Tunai (Cash) dengan hitung kembalian instan dan QRIS Manual dengan pemindaian barcode toko serta verifikasi mutasi langsung oleh kasir.
 - 🏭 **Pelacakan Progres Produksi 3 Tahap**:
   - **Diproses**: Sedang dicuci, dikeringkan, atau disetrika.
   - **Selesai**: Cucian siap diambil / diantar, lengkap dengan lokasi rak penyimpanan (*staging rack*).
   - **Sudah Diambil**: Cucian telah diterima oleh pelanggan.
 - 📱 **Notifikasi WhatsApp & Manual Fallback**:
-  - Konfirmasi pakaian masuk (*intake message*), notifikasi cucian selesai (*ready for pickup*), dan pengingat tagihan ramah (*receivable reminder*).
+  - Konfirmasi pakaian masuk (*intake message*) dan notifikasi cucian selesai (*ready for pickup*).
   - Jika WhatsApp Gateway offline, sistem kasir menyediakan tombol fallback resmi **wa.me** yang langsung mengisi nomor tujuan dan format teks nota secara otomatis.
 - 📊 **Akuntansi SAK EMKM & Rekap Kas Harian**:
   - **Accrual Basis**: Pendapatan diakui sah saat nota selesai diproduksi.
   - **Cash Basis**: Mengaudit uang fisik laci kasir per metode pembayaran.
-  - **Buku Piutang & Pengeluaran Toko**: Pencatatan belanja operasional (deterjen, gas LPG, parfum) dan daftar piutang pelanggan berjalan.
+  - **Pengeluaran Toko**: Pencatatan belanja operasional harian (deterjen, gas LPG, parfum, listrik, dsb.).
 
 ### Arsitektur & Teknologi:
 - **Backend Framework**: [Laravel 13.x](https://laravel.com) pada **PHP 8.4**
@@ -179,7 +179,7 @@ Database telah dilengkapi dengan akun bawaan resmi untuk pemilik usaha:
 
 | Peran (Role) | Nama Akun | Email Login | Nomor WhatsApp | Kata Sandi (Password) | Hak Akses |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Owner** | Andik (Owner) | `owner@andiklaundry.test` | `6281234567001` | `Password123!` | Akses penuh seluruh sistem: Kasir POS, Manajemen Pelanggan, Stasiun Produksi, Pengeluaran Toko, Buku Piutang, Dashboard SAK EMKM, dan Pengaturan. |
+| **Owner** | Andik (Owner) | `owner@andiklaundry.test` | `6281234567001` | `Password123!` | Akses penuh seluruh sistem: Kasir POS, Manajemen Pelanggan, Stasiun Produksi, Pengeluaran Toko, Dashboard SAK EMKM, dan Pengaturan. |
 
 > **Catatan Login Cepat**: Di halaman `/login`, tersedia tombol instan **"Isi Kredensial Demo: Akun Owner (Andik)"** untuk mempermudah pengujian.
 
@@ -199,9 +199,11 @@ Jika komputer gateway mati atau jaringan bermasalah:
 - Di sebelah nota atau keranjang kasir, klik tombol **Kirim via WhatsApp (wa.me)**.
 - Aplikasi langsung membuka tautan resmi `https://wa.me/` dengan isi nota dan nomor pelanggan yang sudah otomatis terisi.
 
-### 6.3 Pembayaran QRIS
-- Sistem mendukung pembayaran QRIS langsung di layar kasir POS dan nota digital pelanggan.
-- Gambar QRIS default tersimpan di `public/images/qris-andiklaundry.svg` dan dapat disesuaikan melalui menu Pengaturan Toko.
+### 6.3 Kebijakan Pembayaran & Panduan QRIS Manual
+- **Kebijakan Tanpa Utang-Piutang (No Receivables)**: Andik Laundry memberlakukan aturan pembayaran wajib lunas saat transaksi di kasir POS. Sistem tidak mengizinkan pembayaran tertunda, kasbon, atau piutang.
+- **Metode Pembayaran Kasir**:
+  1. **Tunai (Cash)**: Kasir memasukkan uang tunai yang diterima (menggunakan numpad/preset), sistem menghitung uang kembalian secara real-time. Transaksi tidak dapat diselesaikan jika uang tunai kurang dari total tagihan.
+  2. **QRIS Manual**: Layar kasir menampilkan kode QRIS resmi toko (`public/images/qris-andiklaundry.svg`) beserta nominal pas yang wajib ditransfer pelanggan. Pelanggan dapat memindai melalui seluruh m-Banking (BCA, Mandiri, BRI, BNI) dan E-Wallet (GoPay, OVO, Dana, ShopeePay). Kasir memverifikasi mutasi/bukti transfer, lalu mencentang konfirmasi verifikasi sebelum mencetak struk.
 
 ---
 

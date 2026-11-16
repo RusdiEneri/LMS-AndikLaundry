@@ -240,7 +240,7 @@ function closeModal() {
                         </div>
                         <div>
                             <span class="font-bold text-sm text-[#0A0A0A] block">Pelanggan Umum (Walk-in)</span>
-                            <span class="text-xs text-[#6B6B6B]">Tanpa pencatatan nomor telepon / piutang</span>
+                            <span class="text-xs text-[#6B6B6B]">Pelanggan langsung / tanpa simpan kontak</span>
                         </div>
                     </div>
                     <span class="text-xs font-semibold text-[#6366F1] px-2.5 py-1 rounded-[4px] bg-white border border-[#E8E8EC]">

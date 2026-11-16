@@ -130,12 +130,6 @@ const navigationItems: NavItem[] = [
         roles: ['owner', 'cashier'],
     },
     {
-        name: 'Buku Piutang',
-        href: '/owner/receivables',
-        icon: AlertCircle,
-        roles: ['owner', 'cashier'],
-    },
-    {
         name: 'Pengaturan Toko',
         href: '/owner/settings',
         icon: Settings,
