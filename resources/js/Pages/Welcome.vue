@@ -925,7 +925,7 @@ onBeforeUnmount(() => {
                                 <span>Hubungi WhatsApp Toko</span>
                             </a>
                             <a
-                                href="https://maps.app.goo.gl/BF9BFLKf67e4CV3Y7"
+                                href="https://www.google.com/maps/place/Andik+Laundry/@-7.2392419,112.581764,21z/data=!4m12!1m5!3m4!2zN8KwMTQnMjEuMyJTIDExMsKwMzQnNTQuMyJF!8m2!3d-7.2392469!4d112.5817531!3m5!1s0x2e7800f99a230c6b:0xb287a654290078e9!8m2!3d-7.239213!4d112.5817581!16s%2Fg%2F11gdlxnlmk?hl=id-ID"
                                 target="_blank"
                                 rel="noopener"
                                 class="btn-cta-secondary text-xs sm:text-sm font-black py-2.5 px-4 rounded-[8px] border-2 border-black bg-[#FFEB3B] text-black hover:bg-[#FDE047] shadow-[3px_3px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center"
@@ -945,7 +945,7 @@ onBeforeUnmount(() => {
                                     <span>Peta Outlet (Bisa Digeser &amp; Di-zoom)</span>
                                 </span>
                                 <a
-                                    href="https://maps.app.goo.gl/BF9BFLKf67e4CV3Y7"
+                                    href="https://www.google.com/maps/place/Andik+Laundry/@-7.2392419,112.581764,21z/data=!4m12!1m5!3m4!2zN8KwMTQnMjEuMyJTIDExMsKwMzQnNTQuMyJF!8m2!3d-7.2392469!4d112.5817531!3m5!1s0x2e7800f99a230c6b:0xb287a654290078e9!8m2!3d-7.239213!4d112.5817581!16s%2Fg%2F11gdlxnlmk?hl=id-ID"
                                     target="_blank"
                                     rel="noopener"
                                     class="text-[11px] font-bold text-white hover:text-[#FFEB3B] underline transition-colors"
@@ -954,7 +954,7 @@ onBeforeUnmount(() => {
                                 </a>
                             </div>
                             <iframe
-                                src="https://maps.google.com/maps?q=-7.2392469,112.5817531+(Andik+Laundry)&amp;t=&amp;z=17&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
+                                src="https://maps.google.com/maps?q=Andik+Laundry,+Hendrosari,+Menganti,+Gresik&amp;t=&amp;z=18&amp;ie=UTF8&amp;iwloc=&amp;output=embed"
                                 class="w-full h-[260px] sm:h-[300px] border-0 block"
                                 loading="lazy"
                                 allowfullscreen
