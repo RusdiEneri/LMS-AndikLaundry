@@ -286,114 +286,143 @@ onBeforeUnmount(() => {
         </header>
 
         <main id="main-content">
-            <!-- Hero Section -->
-            <section id="hero" class="hero-section">
-                <div class="hero-section__copy" data-reveal>
-                    <div class="hero-badge">
-                        <span class="hero-badge__dot"></span>
-                        <span>1 Mesin 1 Pelanggan • Tidak Dicampur</span>
-                    </div>
-
-                    <h1 class="hero-title">
-                        Pakaian Bersih, Wangi & Rapi.<br />
-                        <span class="text-[#4F46E5]">Dirawat Teliti Tanpa Dicampur.</span>
-                    </h1>
-
-                    <p class="hero-description">
-                        Layanan binatu modern harian kiloan & karpet profesional. Terima nota digital resmi dan pantau progres cucian Anda secara live via WhatsApp tanpa perlu login.
-                    </p>
-
-                    <!-- Dual Call To Action -->
-                    <div class="hero-cta-group">
-                        <a
-                            :href="whatsappUrl"
-                            target="_blank"
-                            rel="noopener"
-                            class="btn-cta-primary"
-                        >
-                            <MessageCircle class="w-5 h-5 mr-2" />
-                            <span>Pesan Antar-Jemput</span>
-                        </a>
-                        <a href="#tarif" class="btn-cta-secondary">
-                            <span>Lihat Tarif Layanan</span>
-                            <ArrowRight class="w-4 h-4 ml-1.5" />
-                        </a>
-                    </div>
-
-                    <!-- Form Lacak Nota Cepat -->
-                    <form class="hero-track-card" aria-label="Cek pesanan nota" @submit.prevent="submitOrderCheck">
-                        <div class="hero-track-card__header">
-                            <Search class="w-4 h-4 text-[#4F46E5] mr-1.5" />
-                            <span class="font-semibold text-xs tracking-wider uppercase text-[#55555E]">Lacak Progres Cucian</span>
+            <!-- Hero Section Wrapper with background -->
+            <div class="hero-wrapper">
+                <section id="hero" class="hero-section">
+                    <div class="hero-section__copy" data-reveal>
+                        <div class="hero-badge">
+                            <span class="hero-badge__dot"></span>
+                            <span>1 Mesin 1 Pelanggan • Tidak Dicampur</span>
                         </div>
-                        <div class="hero-track-card__row">
-                            <input
-                                id="hero-order-query"
-                                v-model="orderQuery"
-                                class="hero-track-card__input"
-                                type="text"
-                                name="q"
-                                inputmode="text"
-                                autocomplete="off"
-                                placeholder="Nomor nota (AL-...) atau No. HP"
-                                aria-label="Nomor nota atau nomor HP"
-                            />
-                            <button class="hero-track-card__submit" type="submit" :disabled="isCheckingOrder">
-                                {{ isCheckingOrder ? 'Mencari…' : 'Cek Status' }}
-                            </button>
-                        </div>
-                        <p v-if="orderQueryError" class="hero-track-card__error" role="alert">
-                            {{ orderQueryError }}
+
+                        <h1 class="hero-title">
+                            Pakaian Bersih, Wangi & Rapi.<br />
+                            <span class="text-[#4F46E5]">Dirawat Teliti Tanpa Dicampur.</span>
+                        </h1>
+
+                        <p class="hero-description">
+                            Layanan binatu modern harian kiloan & karpet profesional. Nikmati pencucian higienis dengan nota digital otomatis terkirim ke WhatsApp Anda dan pelacakan progres secara live tanpa perlu login.
                         </p>
-                        <p v-else class="hero-track-card__hint">
-                            Contoh: AL-20261115-001 atau 08123456789. Tanpa perlu login.
-                        </p>
-                    </form>
 
-                    <!-- Trust Stats Bar -->
-                    <dl class="hero-stats-row" aria-label="Statistik Andik Laundry">
-                        <div class="hero-stats-col">
-                            <dt>Pelanggan Setia</dt>
-                            <dd>{{ customersLabel }}</dd>
+                        <!-- Dual Call To Action -->
+                        <div class="hero-cta-group">
+                            <a
+                                :href="whatsappUrl"
+                                target="_blank"
+                                rel="noopener"
+                                class="btn-cta-primary"
+                            >
+                                <MessageCircle class="w-5 h-5 mr-2" />
+                                <span>Pesan Antar-Jemput (WA)</span>
+                            </a>
+                            <a href="#tarif" class="btn-cta-secondary">
+                                <span>Lihat Tarif Layanan</span>
+                                <ArrowRight class="w-4 h-4 ml-1.5" />
+                            </a>
                         </div>
-                        <div class="hero-stats-col">
-                            <dt>Pesanan Tuntas</dt>
-                            <dd>{{ ordersLabel }}</dd>
-                        </div>
-                        <div class="hero-stats-col">
-                            <dt>Cucian Bersih</dt>
-                            <dd>{{ laundryKgLabel }}</dd>
-                        </div>
-                        <div class="hero-stats-col">
-                            <dt>Rating Pelanggan</dt>
-                            <dd class="text-[#D97706]">
-                                ★ {{ ratingScore }}<span class="text-xs text-[#6B6B6B] font-normal">/5</span>
-                            </dd>
-                        </div>
-                    </dl>
-                </div>
 
-                <!-- Hero Visual Media -->
-                <div class="hero-section__visual" data-reveal>
-                    <div class="hero-visual-card">
-                        <img
-                            src="/images/hero-laundry.jpg"
-                            alt="Pakaian bersih rapi tergantung segar di bawah sinar matahari"
-                            width="960"
-                            height="640"
-                            loading="eager"
-                            class="hero-visual-img"
-                        />
-                        <div class="hero-visual-overlay">
-                            <div class="flex items-center gap-2">
-                                <ShieldCheck class="w-5 h-5 text-[#10B981]" />
-                                <span class="text-xs font-semibold text-[#0A0A0A]">Higienis Terjamin • 1 Mesin 1 Pelanggan</span>
+                        <!-- Quick Key Guarantees -->
+                        <div class="hero-guarantees">
+                            <div class="hero-guarantee-item">
+                                <Check class="w-4 h-4 text-[#16A34A] mr-1.5 flex-shrink-0" />
+                                <span>Deterjen & Pewangi Ramah Serat</span>
                             </div>
-                            <span class="text-[11px] text-[#55555E]">Dicuci terpisah dengan deterjen ramah serat kain.</span>
+                            <div class="hero-guarantee-item">
+                                <Check class="w-4 h-4 text-[#16A34A] mr-1.5 flex-shrink-0" />
+                                <span>Opsi Ekspres Selesai Hari Ini</span>
+                            </div>
+                            <div class="hero-guarantee-item">
+                                <Check class="w-4 h-4 text-[#16A34A] mr-1.5 flex-shrink-0" />
+                                <span>Garansi Cuci Ulang 1x24 Jam</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </section>
+
+                    <!-- Right Column: Interactive Hub (Form Lacak + Counter Grid) -->
+                    <div class="hero-section__interactive" data-reveal>
+                        <!-- Card 1: Form Lacak Progres Cucian -->
+                        <form class="hero-track-panel" aria-label="Cek pesanan nota" @submit.prevent="submitOrderCheck">
+                            <div class="hero-track-panel__header">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-7 h-7 rounded-md bg-[#EEF2FF] text-[#4F46E5] flex items-center justify-center">
+                                        <Search class="w-4 h-4" />
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-xs uppercase tracking-wider text-[#0A0A0A]">Lacak Progres Cucian</h3>
+                                        <p class="text-[11px] text-[#6B6B6B]">Pantau status cucian & nota digital</p>
+                                    </div>
+                                </div>
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-[#ECFDF5] text-[#059669]">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-[#10B981]"></span>
+                                    Live Realtime
+                                </span>
+                            </div>
+
+                            <div class="hero-track-panel__row mt-3.5">
+                                <input
+                                    id="hero-order-query"
+                                    v-model="orderQuery"
+                                    class="hero-track-panel__input"
+                                    type="text"
+                                    name="q"
+                                    inputmode="text"
+                                    autocomplete="off"
+                                    placeholder="Nomor nota (AL-...) atau No. HP"
+                                    aria-label="Nomor nota atau nomor HP"
+                                />
+                                <button class="hero-track-panel__submit" type="submit" :disabled="isCheckingOrder">
+                                    {{ isCheckingOrder ? 'Mencari…' : 'Cek Status' }}
+                                </button>
+                            </div>
+
+                            <p v-if="orderQueryError" class="hero-track-panel__error" role="alert">
+                                {{ orderQueryError }}
+                            </p>
+                            <p v-else class="hero-track-panel__hint">
+                                Contoh: AL-20261115-001 atau 08123456789. Tanpa perlu login.
+                            </p>
+                        </form>
+
+                        <!-- Card 2: Counter / Stats 4-Grid -->
+                        <dl class="hero-stats-panel" aria-label="Statistik Andik Laundry">
+                            <div class="hero-stats-panel__item">
+                                <dt>Pelanggan Setia</dt>
+                                <dd>{{ customersLabel }}</dd>
+                            </div>
+                            <div class="hero-stats-panel__item">
+                                <dt>Pesanan Tuntas</dt>
+                                <dd>{{ ordersLabel }}</dd>
+                            </div>
+                            <div class="hero-stats-panel__item">
+                                <dt>Cucian Bersih</dt>
+                                <dd>{{ laundryKgLabel }}</dd>
+                            </div>
+                            <div class="hero-stats-panel__item">
+                                <dt>Rating Pelanggan</dt>
+                                <dd class="text-[#D97706]">
+                                    ★ {{ ratingScore }}<span class="text-xs text-[#6B6B6B] font-normal">/5</span>
+                                </dd>
+                            </div>
+                        </dl>
+
+                        <!-- Trust Badges Footer -->
+                        <div class="hero-trust-pills">
+                            <div class="trust-pill-item">
+                                <ShieldCheck class="w-3.5 h-3.5 text-[#10B981] mr-1.5" />
+                                <span>1 Mesin 1 Pelanggan</span>
+                            </div>
+                            <div class="trust-pill-item">
+                                <QrCode class="w-3.5 h-3.5 text-[#4F46E5] mr-1.5" />
+                                <span>QRIS & Tunai</span>
+                            </div>
+                            <div class="trust-pill-item">
+                                <Truck class="w-3.5 h-3.5 text-[#16A34A] mr-1.5" />
+                                <span>Gratis Antar &lt; 3 km</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
 
             <!-- Mengapa Memilih Kami (USP Section) -->
             <section id="keunggulan" class="section-container">
@@ -934,15 +963,25 @@ onBeforeUnmount(() => {
     transition: all 180ms ease;
 }
 
-/* Hero Section */
+/* Hero Wrapper with background */
+.hero-wrapper {
+    position: relative;
+    background: 
+        radial-gradient(85% 100% at 85% 15%, rgba(79, 70, 229, 0.08) 0%, rgba(240, 244, 255, 0) 65%),
+        radial-gradient(75% 80% at 15% 85%, rgba(14, 165, 233, 0.06) 0%, rgba(240, 249, 255, 0) 55%),
+        linear-gradient(180deg, #F8FAFD 0%, #FAFAFA 100%);
+    border-bottom: 1px solid #E8E8EC;
+    overflow: hidden;
+}
+
 .hero-section {
     display: grid;
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
     align-items: center;
-    gap: clamp(1.5rem, 3.5vw, 3rem);
+    gap: clamp(1.75rem, 3.5vw, 3.5rem);
     width: min(100% - 2rem, 1200px);
     margin-inline: auto;
-    padding-block: clamp(1.5rem, 3vh, 2.5rem);
+    padding-block: clamp(2.5rem, 5vh, 4.25rem);
 }
 
 .hero-section__copy {
@@ -1038,29 +1077,54 @@ onBeforeUnmount(() => {
     transform: translateY(-1px);
 }
 
-/* Hero Track Card */
-.hero-track-card {
-    background: #fff;
-    border: 1px solid #E8E8EC;
-    border-radius: 8px;
-    padding: 0.85rem 1rem;
-    margin-top: 1.25rem;
-    max-width: 520px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+.hero-guarantees {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.25rem;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(232, 232, 236, 0.8);
 }
 
-.hero-track-card__header {
+.hero-guarantee-item {
     display: flex;
     align-items: center;
-    margin-bottom: 0.45rem;
+    font-size: 0.78rem;
+    color: #55555E;
+    font-weight: 500;
 }
 
-.hero-track-card__row {
+/* Hero Right Column: Interactive Hub */
+.hero-section__interactive {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    align-self: center;
+    max-width: 480px;
+    width: 100%;
+}
+
+/* Card 1: Form Lacak Panel */
+.hero-track-panel {
+    background: #fff;
+    border: 1px solid #E8E8EC;
+    border-radius: 12px;
+    padding: 1.25rem 1.35rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+.hero-track-panel__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.hero-track-panel__row {
     display: flex;
     gap: 0.5rem;
 }
 
-.hero-track-card__input {
+.hero-track-panel__input {
     flex: 1;
     min-width: 0;
     min-height: 44px;
@@ -1069,16 +1133,18 @@ onBeforeUnmount(() => {
     border-radius: 6px;
     font-size: 0.875rem;
     color: #0A0A0A;
-    background: #fff;
+    background: #FAFAFA;
+    transition: all 150ms ease;
 }
 
-.hero-track-card__input:focus {
+.hero-track-panel__input:focus {
     outline: none;
+    background: #fff;
     border-color: #4F46E5;
     box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
 }
 
-.hero-track-card__submit {
+.hero-track-panel__submit {
     flex-shrink: 0;
     min-height: 44px;
     padding: 0.45rem 1.15rem;
@@ -1089,95 +1155,86 @@ onBeforeUnmount(() => {
     font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 150ms ease;
+    transition: all 150ms ease;
 }
 
-.hero-track-card__submit:hover {
+.hero-track-panel__submit:hover {
     background: #4338CA;
+    transform: translateY(-1px);
 }
 
-.hero-track-card__submit:disabled {
+.hero-track-panel__submit:disabled {
     background: #A5B4FC;
     cursor: wait;
 }
 
-.hero-track-card__hint,
-.hero-track-card__error {
+.hero-track-panel__hint,
+.hero-track-panel__error {
     font-size: 0.72rem;
-    margin-top: 0.35rem;
+    margin-top: 0.45rem;
+    line-height: 1.45;
 }
 
-.hero-track-card__hint {
+.hero-track-panel__hint {
     color: #6B6B6B;
 }
 
-.hero-track-card__error {
+.hero-track-panel__error {
     color: #DC2626;
     font-weight: 500;
 }
 
-/* Hero Stats Row */
-.hero-stats-row {
+/* Card 2: Stats Panel (2x2 Grid) */
+.hero-stats-panel {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1px;
     background: #E8E8EC;
     border: 1px solid #E8E8EC;
-    border-radius: 6px;
+    border-radius: 12px;
     overflow: hidden;
-    margin-top: 1.25rem;
-    max-width: 520px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
 }
 
-.hero-stats-col {
+.hero-stats-panel__item {
     background: #fff;
-    padding: 0.65rem 0.75rem;
+    padding: 0.85rem 1.1rem;
 }
 
-.hero-stats-col dt {
-    font-size: 0.65rem;
-    font-weight: 600;
+.hero-stats-panel__item dt {
+    font-size: 0.68rem;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: #6B6B6B;
 }
 
-.hero-stats-col dd {
-    font-size: 1.15rem;
+.hero-stats-panel__item dd {
+    font-size: 1.25rem;
     font-weight: 700;
     color: #0A0A0A;
     margin: 0.2rem 0 0;
     letter-spacing: -0.03em;
 }
 
-/* Hero Visual Media */
-.hero-section__visual {
-    align-self: center;
-}
-
-.hero-visual-card {
-    position: relative;
-    border: 1px solid #E8E8EC;
-    border-radius: 12px;
-    overflow: hidden;
-    background: #fff;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-}
-
-.hero-visual-img {
-    display: block;
-    width: 100%;
-    height: clamp(240px, 28vw, 360px);
-    object-fit: cover;
-}
-
-.hero-visual-overlay {
-    padding: 0.65rem 0.9rem;
-    background: #fff;
-    border-top: 1px solid #E8E8EC;
+/* Trust Pills Row */
+.hero-trust-pills {
     display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.trust-pill-item {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.65rem;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid #E8E8EC;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #41414A;
+    backdrop-filter: blur(4px);
 }
 
 /* Sections Shared */
