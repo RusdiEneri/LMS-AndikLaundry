@@ -318,11 +318,11 @@ onUnmounted(() => {
 
         <!-- RIGHT PANEL / BOTTOM SHEET: Customer Bar, Cart Drawer & Checkout Action -->
         <template #cart>
-            <div class="flex flex-col h-full space-y-4">
-                <!-- CUSTOMER SELECTOR CARD -->
-                <div class="p-3.5 bg-[#FFF9D2] rounded-[10px] border-[2.5px] border-black shadow-[3px_3px_0px_#000] flex items-center justify-between">
+            <div class="flex flex-col h-full min-h-0">
+                <!-- CUSTOMER SELECTOR CARD (Fixed at Top, shrink-0) -->
+                <div class="shrink-0 mb-2.5 p-3 bg-[#FFF9D2] rounded-[10px] border-[2.5px] border-black shadow-[3px_3px_0px_#000] flex items-center justify-between">
                     <div class="flex items-center space-x-2.5">
-                        <div class="h-9 w-9 rounded-[8px] bg-black text-[#FFEB3B] border-2 border-black flex items-center justify-center font-black text-xs shadow-[1px_1px_0px_#000] shrink-0">
+                        <div class="h-8 w-8 rounded-[8px] bg-black text-[#FFEB3B] border-2 border-black flex items-center justify-center font-black text-xs shadow-[1px_1px_0px_#000] shrink-0">
                             <UserIcon class="h-4 w-4" />
                         </div>
                         <div>
@@ -345,35 +345,37 @@ onUnmounted(() => {
                     <button
                         type="button"
                         @click="isCustomerModalOpen = true"
-                        class="min-h-[44px] px-3.5 py-1.5 rounded-[8px] border-2 border-black bg-white hover:bg-[#FFEB3B] text-black text-xs font-black shadow-[2px_2px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
+                        class="min-h-[38px] px-3.5 py-1.5 rounded-[8px] border-2 border-black bg-white hover:bg-[#FFEB3B] text-black text-xs font-black shadow-[2px_2px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
                     >
                         Cari / Ubah
                     </button>
                 </div>
 
-                <!-- CART DRAWER (ITEMS, STEPS, TOTALS) -->
-                <CartDrawer
-                    :items="cartItems"
-                    :turnaround-tiers="turnaround_tiers"
-                    :selected-tier-code="selectedTierCode"
-                    :default-min-weight="store_info.default_min_weight"
-                    :order-discount="orderDiscount"
-                    :delivery-option="deliveryOption"
-                    @update:selected-tier-code="selectedTierCode = $event"
-                    @update:order-discount="orderDiscount = $event"
-                    @update:delivery-option="deliveryOption = $event"
-                    @update-qty="onUpdateQty"
-                    @remove-item="onRemoveItem"
-                    @clear-cart="onClearCart"
-                />
+                <!-- SCROLLABLE CART DRAWER (flex-1 min-h-0 overflow-y-auto) -->
+                <div class="flex-1 min-h-0 overflow-y-auto pr-1">
+                    <CartDrawer
+                        :items="cartItems"
+                        :turnaround-tiers="turnaround_tiers"
+                        :selected-tier-code="selectedTierCode"
+                        :default-min-weight="store_info.default_min_weight"
+                        :order-discount="orderDiscount"
+                        :delivery-option="deliveryOption"
+                        @update:selected-tier-code="selectedTierCode = $event"
+                        @update:order-discount="orderDiscount = $event"
+                        @update:delivery-option="deliveryOption = $event"
+                        @update-qty="onUpdateQty"
+                        @remove-item="onRemoveItem"
+                        @clear-cart="onClearCart"
+                    />
+                </div>
 
-                <!-- CHECKOUT BUTTON -->
-                <div class="pt-2">
+                <!-- CHECKOUT BUTTON (Fixed at Bottom, shrink-0) -->
+                <div class="shrink-0 pt-2.5">
                     <button
                         type="button"
                         :disabled="cartItems.length === 0"
                         @click="openCheckoutModal"
-                        class="w-full min-h-[50px] rounded-[8px] border-[3px] border-black bg-[#22C55E] hover:bg-[#16A34A] text-black font-black text-sm uppercase tracking-wider shadow-[4px_4px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[2px_2px_0px_#000] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center space-x-2 transition-all cursor-pointer"
+                        class="w-full min-h-[48px] rounded-[8px] border-[3px] border-black bg-[#22C55E] hover:bg-[#16A34A] text-black font-black text-sm uppercase tracking-wider shadow-[4px_4px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[2px_2px_0px_#000] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center space-x-2 transition-all cursor-pointer"
                     >
                         <CreditCard class="h-5 w-5" />
                         <span>PROSES PEMBAYARAN [F8] ({{ formatRupiah(grandTotal) }})</span>

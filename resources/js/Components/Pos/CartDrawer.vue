@@ -101,7 +101,7 @@ function isKarpetService(item: CartLineItem): boolean {
 </script>
 
 <template>
-    <div class="flex flex-col h-full space-y-4">
+    <div class="space-y-3 pb-1">
         <!-- Cart Items List Header -->
         <div class="flex items-center justify-between">
             <span class="text-xs font-bold uppercase tracking-wider text-[#6B6B6B] flex items-center space-x-1.5">
@@ -112,22 +112,22 @@ function isKarpetService(item: CartLineItem): boolean {
                 v-if="items.length > 0"
                 type="button"
                 @click="emits('clear-cart')"
-                class="text-[11px] font-semibold text-[#EF4444] hover:underline transition-colors min-h-[44px] inline-flex items-center"
+                class="text-[11px] font-semibold text-[#EF4444] hover:underline transition-colors min-h-[36px] inline-flex items-center cursor-pointer"
             >
                 Kosongkan
             </button>
         </div>
 
-        <!-- Scrollable Items Container -->
-        <div class="flex-1 overflow-y-auto space-y-2.5 pr-1 min-h-[140px] max-h-[300px] lg:max-h-[340px]">
+        <!-- Items Container -->
+        <div class="space-y-2">
             <!-- Empty State -->
             <div
                 v-if="items.length === 0"
-                class="h-36 flex flex-col items-center justify-center text-black/60 text-xs text-center border-[2.5px] border-dashed border-black rounded-[10px] p-4 bg-[#FFF9D2]/30"
+                class="py-4 px-3 flex flex-col items-center justify-center text-black/60 text-xs text-center border-[2.5px] border-dashed border-black rounded-[10px] bg-[#FFF9D2]/30"
             >
-                <Scale class="h-8 w-8 text-black/40 mb-2 stroke-[2.5]" />
-                <span class="font-black text-black">Keranjang cucian masih kosong</span>
-                <span class="text-[11px] font-bold text-black/60 mt-0.5">Pilih layanan di sebelah kiri untuk mulai menimbang / mencatat</span>
+                <Scale class="h-6 w-6 text-black/40 mb-1 stroke-[2.5]" />
+                <span class="font-black text-black text-xs">Keranjang cucian masih kosong</span>
+                <span class="text-[10px] font-bold text-black/60 mt-0.5">Pilih layanan di sebelah kiri untuk mulai menimbang / mencatat</span>
             </div>
 
             <!-- Item Cards -->
@@ -157,7 +157,7 @@ function isKarpetService(item: CartLineItem): boolean {
                     <button
                         type="button"
                         @click="emits('remove-item', idx)"
-                        class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-[6px] border border-black/30 text-[#FF5252] hover:bg-[#FF5252]/20 hover:border-black active:translate-x-0.5 active:translate-y-0.5 transition-all"
+                        class="inline-flex min-h-[38px] min-w-[38px] items-center justify-center rounded-[6px] border border-black/30 text-[#FF5252] hover:bg-[#FF5252]/20 hover:border-black active:translate-x-0.5 active:translate-y-0.5 transition-all cursor-pointer"
                         aria-label="Hapus item cucian"
                     >
                         <Trash2 class="h-4 w-4" />
@@ -165,7 +165,7 @@ function isKarpetService(item: CartLineItem): boolean {
                 </div>
 
                 <!-- Meter Input for Karpet Service -->
-                <div v-if="isKarpetService(item)" class="meter-input p-3 bg-[#FFF9D2] rounded-[8px] border-[2px] border-black space-y-2 shadow-[2px_2px_0px_#000]">
+                <div v-if="isKarpetService(item)" class="meter-input p-2.5 bg-[#FFF9D2] rounded-[8px] border-[2px] border-black space-y-2 shadow-[2px_2px_0px_#000]">
                     <div class="flex items-center space-x-2">
                         <MapPin class="h-4 w-4 text-black" />
                         <span class="text-xs font-black text-black">Input Ukuran Karpet</span>
@@ -179,7 +179,7 @@ function isKarpetService(item: CartLineItem): boolean {
                                 min="0"
                                 :value="item.length || 0"
                                 @input="(e) => { item.length = parseFloat((e.target as HTMLInputElement).value) || 0; calculateArea(item); }"
-                                class="w-full min-h-[44px] rounded-[6px] border-2 border-black bg-white px-2.5 py-1 text-xs font-mono font-bold text-black shadow-[1px_1px_0px_#000] focus:outline-none"
+                                class="w-full min-h-[38px] rounded-[6px] border-2 border-black bg-white px-2 py-1 text-xs font-mono font-bold text-black shadow-[1px_1px_0px_#000] focus:outline-none"
                                 placeholder="0.0"
                             />
                         </div>
@@ -191,7 +191,7 @@ function isKarpetService(item: CartLineItem): boolean {
                                 min="0"
                                 :value="item.width || 0"
                                 @input="(e) => { item.width = parseFloat((e.target as HTMLInputElement).value) || 0; calculateArea(item); }"
-                                class="w-full min-h-[44px] rounded-[6px] border-2 border-black bg-white px-2.5 py-1 text-xs font-mono font-bold text-black shadow-[1px_1px_0px_#000] focus:outline-none"
+                                class="w-full min-h-[38px] rounded-[6px] border-2 border-black bg-white px-2 py-1 text-xs font-mono font-bold text-black shadow-[1px_1px_0px_#000] focus:outline-none"
                                 placeholder="0.0"
                             />
                         </div>
@@ -212,20 +212,20 @@ function isKarpetService(item: CartLineItem): boolean {
                         <button
                             type="button"
                             @click="handleQtyStep(idx, -1)"
-                            class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-[6px] border-2 border-black bg-white text-black hover:bg-[#FFEB3B] active:translate-x-0.5 active:translate-y-0.5 shadow-[1px_1px_0px_#000]"
+                            class="inline-flex min-h-[38px] min-w-[38px] items-center justify-center rounded-[6px] border-2 border-black bg-white text-black hover:bg-[#FFEB3B] active:translate-x-0.5 active:translate-y-0.5 shadow-[1px_1px_0px_#000] cursor-pointer"
                             aria-label="Kurangi berat / jumlah"
                         >
-                            <Minus class="h-4 w-4 stroke-[3]" />
+                            <Minus class="h-3.5 w-3.5 stroke-[3]" />
                         </button>
 
-                        <div class="flex items-center bg-white border-2 border-black rounded-[6px] px-2 py-1 min-h-[44px] shadow-[1px_1px_0px_#000]">
+                        <div class="flex items-center bg-white border-2 border-black rounded-[6px] px-2 py-1 min-h-[38px] shadow-[1px_1px_0px_#000]">
                             <input
                                 type="number"
                                 step="0.1"
                                 min="0.01"
                                 :value="item.actual_qty"
                                 @change="handleDirectQtyChange(idx, $event)"
-                                class="w-14 text-center font-mono font-black text-xs text-black bg-transparent focus:outline-none"
+                                class="w-12 text-center font-mono font-black text-xs text-black bg-transparent focus:outline-none"
                             />
                             <span class="text-[11px] font-black text-black/70 ml-0.5">{{ item.service.unit }}</span>
                         </div>
@@ -233,10 +233,10 @@ function isKarpetService(item: CartLineItem): boolean {
                         <button
                             type="button"
                             @click="handleQtyStep(idx, 1)"
-                            class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-[6px] border-2 border-black bg-white text-black hover:bg-[#FFEB3B] active:translate-x-0.5 active:translate-y-0.5 shadow-[1px_1px_0px_#000]"
+                            class="inline-flex min-h-[38px] min-w-[38px] items-center justify-center rounded-[6px] border-2 border-black bg-white text-black hover:bg-[#FFEB3B] active:translate-x-0.5 active:translate-y-0.5 shadow-[1px_1px_0px_#000] cursor-pointer"
                             aria-label="Tambah berat / jumlah"
                         >
-                            <Plus class="h-4 w-4 stroke-[3]" />
+                            <Plus class="h-3.5 w-3.5 stroke-[3]" />
                         </button>
                     </div>
 
@@ -256,8 +256,8 @@ function isKarpetService(item: CartLineItem): boolean {
         </div>
 
         <!-- Delivery Option Selector -->
-        <div class="p-3.5 bg-white rounded-[10px] border-[2.5px] border-black shadow-[3px_3px_0px_#000] space-y-2">
-            <span class="text-[11px] font-black uppercase tracking-wider text-black block flex items-center space-x-1.5">
+        <div class="p-3 bg-white rounded-[10px] border-[2.5px] border-black shadow-[2.5px_2.5px_0px_#000] space-y-1.5">
+            <span class="text-[10px] font-black uppercase tracking-wider text-black block flex items-center space-x-1.5">
                 <Truck class="h-3.5 w-3.5 text-black" />
                 <span>Pilihan Pengantaran</span>
             </span>
@@ -266,34 +266,34 @@ function isKarpetService(item: CartLineItem): boolean {
                     type="button"
                     @click="emits('update:deliveryOption', 'pickup')"
                     :class="[
-                        'min-h-[44px] p-2.5 text-left rounded-[8px] border-2 border-black text-xs font-black transition-all cursor-pointer active:translate-x-0.5 active:translate-y-0.5',
+                        'min-h-[40px] p-2 text-left rounded-[8px] border-2 border-black text-xs font-black transition-all cursor-pointer active:translate-x-0.5 active:translate-y-0.5',
                         deliveryOption === 'pickup'
                             ? 'bg-[#FFEB3B] text-black shadow-[2px_2px_0px_#000]'
                             : 'bg-white text-black/70 hover:bg-[#FFF9D2]/30',
                     ]"
                 >
-                    <span class="block truncate font-black">Ambil Sendiri</span>
+                    <span class="block truncate font-black text-xs">Ambil Sendiri</span>
                     <span class="block text-[10px] opacity-80 font-bold">Datang ke lokasi</span>
                 </button>
                 <button
                     type="button"
                     @click="emits('update:deliveryOption', 'delivery')"
                     :class="[
-                        'min-h-[44px] p-2.5 text-left rounded-[8px] border-2 border-black text-xs font-black transition-all cursor-pointer active:translate-x-0.5 active:translate-y-0.5',
+                        'min-h-[40px] p-2 text-left rounded-[8px] border-2 border-black text-xs font-black transition-all cursor-pointer active:translate-x-0.5 active:translate-y-0.5',
                         deliveryOption === 'delivery'
                             ? 'bg-[#FFEB3B] text-black shadow-[2px_2px_0px_#000]'
                             : 'bg-white text-black/70 hover:bg-[#FFF9D2]/30',
                     ]"
                 >
-                    <span class="block truncate font-black">Antar Jemput</span>
+                    <span class="block truncate font-black text-xs">Antar Jemput</span>
                     <span class="block text-[10px] opacity-80 font-bold">Free Ongkir Maks 3 kg</span>
                 </button>
             </div>
         </div>
 
         <!-- Turnaround Tier Selector (Reguler / Ekspres) -->
-        <div class="p-3.5 bg-white rounded-[10px] border-[2.5px] border-black shadow-[3px_3px_0px_#000] space-y-2">
-            <span class="text-[11px] font-black uppercase tracking-wider text-black block flex items-center space-x-1.5">
+        <div class="p-3 bg-white rounded-[10px] border-[2.5px] border-black shadow-[2.5px_2.5px_0px_#000] space-y-1.5">
+            <span class="text-[10px] font-black uppercase tracking-wider text-black block flex items-center space-x-1.5">
                 <Clock class="h-3.5 w-3.5 text-black" />
                 <span>Kecepatan Pengerjaan</span>
             </span>
@@ -304,13 +304,13 @@ function isKarpetService(item: CartLineItem): boolean {
                     type="button"
                     @click="emits('update:selectedTierCode', tier.code)"
                     :class="[
-                        'min-h-[44px] p-2.5 text-left rounded-[8px] border-2 border-black text-xs font-black transition-all cursor-pointer active:translate-x-0.5 active:translate-y-0.5',
+                        'min-h-[40px] p-2 text-left rounded-[8px] border-2 border-black text-xs font-black transition-all cursor-pointer active:translate-x-0.5 active:translate-y-0.5',
                         selectedTierCode === tier.code
                             ? 'bg-[#FFEB3B] text-black shadow-[2px_2px_0px_#000]'
                             : 'bg-white text-black/70 hover:bg-[#FFF9D2]/30',
                     ]"
                 >
-                    <span class="block truncate font-black">{{ tier.label }}</span>
+                    <span class="block truncate font-black text-xs">{{ tier.label }}</span>
                     <span class="block text-[10px] opacity-80 font-mono font-bold">
                         {{ tier.surcharge > 0 ? `+${formatRupiah(tier.surcharge)}` : 'Tarif Standar' }}
                     </span>
@@ -319,7 +319,7 @@ function isKarpetService(item: CartLineItem): boolean {
         </div>
 
         <!-- Calculation Ledger Summary -->
-        <div class="p-4 bg-[#FFEB3B] text-black rounded-[10px] border-[2.5px] border-black space-y-2 select-none shadow-[4px_4px_0px_#000]">
+        <div class="p-3 bg-[#FFEB3B] text-black rounded-[10px] border-[2.5px] border-black space-y-1.5 select-none shadow-[3px_3px_0px_#000]">
             <div class="flex justify-between text-xs font-bold text-black/70">
                 <span>Subtotal Cucian</span>
                 <span class="font-mono font-black text-black">{{ formatRupiah(subtotal) }}</span>
@@ -335,9 +335,9 @@ function isKarpetService(item: CartLineItem): boolean {
                 <span class="font-mono font-black">-{{ formatRupiah(discountTotal) }}</span>
             </div>
 
-            <div class="pt-2.5 border-t-2 border-black flex justify-between items-baseline">
+            <div class="pt-2 border-t-2 border-black flex justify-between items-baseline">
                 <span class="font-black text-xs uppercase tracking-wider text-black">Total Tagihan</span>
-                <span class="font-mono font-black text-2xl text-black">{{ formatRupiah(grandTotal) }}</span>
+                <span class="font-mono font-black text-xl text-black">{{ formatRupiah(grandTotal) }}</span>
             </div>
         </div>
     </div>

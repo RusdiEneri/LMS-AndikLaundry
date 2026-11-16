@@ -231,8 +231,8 @@ onUnmounted(() => {
         </header>
 
         <!-- 60/40 Horizontal Split Desktop / Stacked Mobile Layout -->
-        <main class="flex-1 min-h-0 max-w-[1920px] w-full mx-auto p-3 sm:p-4 lg:p-6 overflow-hidden">
-            <div class="h-full lg:grid lg:grid-cols-12 lg:gap-6 min-h-0">
+        <main class="flex-1 min-h-0 max-w-[1920px] w-full mx-auto p-3 sm:p-4 lg:p-4 overflow-hidden">
+            <div class="h-full lg:grid lg:grid-cols-12 lg:gap-5 min-h-0">
                 <!-- Left 60% Panel: Catalog & Order Builder (Columns 1-7 = ~58.3%) -->
                 <div class="lg:col-span-7 flex flex-col h-full overflow-y-auto pr-0 lg:pr-2 min-h-0">
                     <slot name="catalog">
@@ -241,7 +241,7 @@ onUnmounted(() => {
                 </div>
 
                 <!-- Right 40% Panel: Persistent Cart & Checkout Summary (Columns 8-12 = ~41.7%) -->
-                <div class="hidden lg:flex lg:col-span-5 flex-col h-full bg-white rounded-[12px] border-[3.5px] border-black shadow-[6px_6px_0px_#000] overflow-hidden p-4 min-h-0">
+                <div class="hidden lg:flex lg:col-span-5 flex-col h-full bg-white rounded-[12px] border-[3.5px] border-black shadow-[6px_6px_0px_#000] overflow-hidden p-3.5 min-h-0">
                     <slot name="cart" />
                 </div>
             </div>
