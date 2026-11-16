@@ -55,7 +55,7 @@ export function generateWhatsAppReceiptLink(options: WhatsAppReceiptOptions): st
 
     const paymentStatusText = debt <= 0
         ? '✅ Lunas'
-        : `⚠️ Sisa Tagihan: ${formatRupiah(debt)}`;
+        : `⏳ Belum Lunas (Bayar Pas Ambil: ${formatRupiah(debt)})`;
 
     const itemsSummary = options.items.length > 0
         ? options.items

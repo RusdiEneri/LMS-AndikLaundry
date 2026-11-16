@@ -10,6 +10,7 @@ import {
     User as UserIcon,
     ShieldCheck,
     Coins,
+    Clock,
 } from 'lucide-vue-next';
 import Numpad from './Numpad.vue';
 import { formatRupiah } from '@/Support/whatsapp';
@@ -47,7 +48,8 @@ const emits = defineEmits<{
     (e: 'checkout-success', transaction: any): void;
 }>();
 
-// Payment Options - Strict Policy: Cash & QRIS Manual Only (No Utang / Piutang)
+// Payment Options: Bayar Sekarang (Lunas) vs Bayar Nanti (Pas Ambil)
+const paymentTiming = ref<'paid' | 'unpaid'>('paid');
 const paymentMethod = ref<'cash' | 'qris'>('cash');
 const tenderInput = ref<string>('');
 const isSubmitting = ref(false);
@@ -59,11 +61,13 @@ const showPosterImage = ref(false);
 // Sync default tender on open
 watch(() => props.isOpen, (open) => {
     if (open) {
+        paymentTiming.value = 'paid';
         paymentMethod.value = 'cash';
         tenderInput.value = String(props.grandTotal);
         errorMessage.value = '';
         orderNotes.value = '';
         isQrisVerified.value = false;
+        showPosterImage.value = false;
     }
 });
 
@@ -113,7 +117,7 @@ function closeModal() {
     emits('update:isOpen', false);
 }
 
-// Order Submission: Always fully settled (PaymentStatus::PAID)
+// Order Submission: Settle Now (PAID) or Pay on Pickup (UNPAID)
 async function processOrderSubmit() {
     if (props.cartItems.length === 0) {
         errorMessage.value = 'Keranjang cucian tidak boleh kosong.';
@@ -125,14 +129,18 @@ async function processOrderSubmit() {
         return;
     }
 
-    if (paymentMethod.value === 'cash' && tenderNumber.value < props.grandTotal) {
-        errorMessage.value = `Nominal uang tunai (${formatRupiah(tenderNumber.value)}) kurang dari total tagihan (${formatRupiah(props.grandTotal)}). Andik Laundry tidak menerima utang/piutang.`;
-        return;
-    }
+    const isPaid = paymentTiming.value === 'paid';
 
-    if (paymentMethod.value === 'qris' && !isQrisVerified.value) {
-        errorMessage.value = 'Kasir wajib memverifikasi pembayaran QRIS masuk sebelum menyelesaikan pesanan.';
-        return;
+    if (isPaid) {
+        if (paymentMethod.value === 'cash' && tenderNumber.value < props.grandTotal) {
+            errorMessage.value = `Nominal uang tunai (${formatRupiah(tenderNumber.value)}) kurang dari total tagihan (${formatRupiah(props.grandTotal)}).`;
+            return;
+        }
+
+        if (paymentMethod.value === 'qris' && !isQrisVerified.value) {
+            errorMessage.value = 'Kasir wajib memverifikasi pembayaran QRIS masuk sebelum menyelesaikan pesanan.';
+            return;
+        }
     }
 
     isSubmitting.value = true;
@@ -147,7 +155,7 @@ async function processOrderSubmit() {
                 service_id: item.service.id,
                 actual_quantity: item.calculated_area ?? item.actual_qty,
                 billed_quantity: item.calculated_area ?? item.billed_qty,
-                perfume_variant: item.perfume || null,
+                perfume_variant: null,
                 item_condition_notes: item.item_condition_notes || null,
                 special_instructions: item.special_instructions || null,
                 discount_amount: item.discount_amount || 0,
@@ -156,13 +164,13 @@ async function processOrderSubmit() {
             })),
             discount_amount: props.orderDiscount || 0,
             surcharge_amount: props.tierSurcharge || 0,
-            paid_amount: paymentMethod.value === 'cash' ? tenderNumber.value : props.grandTotal,
-            payment_method: paymentMethod.value,
-            payment_status: 'paid', // Always Lunas - Strict No Receivables Policy
+            paid_amount: isPaid ? (paymentMethod.value === 'cash' ? tenderNumber.value : props.grandTotal) : 0,
+            payment_method: isPaid ? paymentMethod.value : 'cash',
+            payment_status: isPaid ? 'paid' : 'unpaid',
             notes: orderNotes.value.trim() || null,
             delivery_option: props.deliveryOption || 'pickup',
-            is_debt_approved: false,
-            debt_notes: null,
+            is_debt_approved: !isPaid,
+            debt_notes: !isPaid ? 'Bayar saat ambil cucian' : null,
         };
 
         const res = await fetch('/pos/orders', {
@@ -203,8 +211,13 @@ async function processOrderSubmit() {
             <div class="px-5 py-3.5 bg-[#FFEB3B] border-b-[3.5px] border-black flex items-center justify-between">
                 <div>
                     <div class="flex items-center space-x-2">
-                        <span class="text-[10px] font-black uppercase tracking-wider bg-black text-[#FFEB3B] px-2 py-0.5 rounded-[4px] border border-black">
-                            Wajib Lunas • Tanpa Utang
+                        <span
+                            :class="[
+                                'text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-[4px] border border-black',
+                                paymentTiming === 'paid' ? 'bg-[#22C55E] text-black' : 'bg-black text-[#FFEB3B]'
+                            ]"
+                        >
+                            {{ paymentTiming === 'paid' ? 'LUNAS DI AWAL' : 'BAYAR PAS AMBIL' }}
                         </span>
                     </div>
                     <h3 class="font-black text-lg text-black tracking-tight mt-1">Pembayaran Kasir</h3>
@@ -230,9 +243,15 @@ async function processOrderSubmit() {
                             <span class="text-[11px] font-mono font-bold text-gray-700 block truncate">{{ customer?.phone || 'Pelanggan Walk-In' }}</span>
                         </div>
                     </div>
-                    <div class="shrink-0 flex items-center space-x-1 px-2 py-1 rounded-[6px] bg-[#22C55E]/15 border-2 border-[#22C55E] text-black text-[11px] font-black">
-                        <ShieldCheck class="h-3.5 w-3.5 text-[#16A34A]" />
-                        <span>Langsung Lunas</span>
+                    <div
+                        :class="[
+                            'shrink-0 flex items-center space-x-1 px-2.5 py-1 rounded-[6px] border-2 border-black text-[11px] font-black shadow-[1.5px_1.5px_0px_#000]',
+                            paymentTiming === 'paid' ? 'bg-[#22C55E]/20 text-black' : 'bg-[#FFEB3B] text-black'
+                        ]"
+                    >
+                        <ShieldCheck v-if="paymentTiming === 'paid'" class="h-3.5 w-3.5 text-[#16A34A]" />
+                        <Clock v-else class="h-3.5 w-3.5 text-black" />
+                        <span>{{ paymentTiming === 'paid' ? 'Langsung Lunas' : 'Bayar Nanti' }}</span>
                     </div>
                 </div>
 
@@ -242,40 +261,82 @@ async function processOrderSubmit() {
                     <span class="font-bold">{{ errorMessage }}</span>
                 </div>
 
-                <!-- Payment Method Selector: Cash vs QRIS Manual -->
+                <!-- OPSI WAKTU PEMBAYARAN: BAYAR SEKARANG vs BAYAR PAS AMBIL -->
                 <div>
                     <label class="block text-xs font-black uppercase tracking-wider text-black mb-1.5">
-                        Pilih Metode Pembayaran
+                        Pilihan Waktu Pembayaran
                     </label>
                     <div class="grid grid-cols-2 gap-2.5">
                         <button
                             type="button"
-                            @click="paymentMethod = 'cash'"
+                            @click="paymentTiming = 'paid'"
                             :class="[
-                                'min-h-[50px] p-3 rounded-[8px] border-2 border-black text-xs font-black flex items-center justify-center space-x-2 transition-all cursor-pointer',
-                                paymentMethod === 'cash'
-                                    ? 'bg-[#FFEB3B] text-black shadow-[3px_3px_0px_#000] scale-[1.01]'
-                                    : 'bg-white text-gray-800 shadow-[1.5px_1.5px_0px_#000] hover:bg-[#FFF9D2]',
+                                'min-h-[52px] p-2.5 rounded-[8px] border-2 border-black text-xs font-black flex items-center space-x-2.5 transition-all cursor-pointer',
+                                paymentTiming === 'paid'
+                                    ? 'bg-[#22C55E] text-black shadow-[3px_3px_0px_#000] scale-[1.01]'
+                                    : 'bg-white text-gray-800 shadow-[1.5px_1.5px_0px_#000] hover:bg-[#EAFFEA]',
                             ]"
                         >
-                            <Banknote class="h-5 w-5 shrink-0" />
-                            <span>Tunai (Cash)</span>
+                            <CheckCircle2 class="h-5 w-5 shrink-0" />
+                            <div class="text-left">
+                                <span class="block font-black leading-tight text-xs">Bayar Sekarang</span>
+                                <span class="block text-[10px] opacity-80 font-bold">Langsung Lunas</span>
+                            </div>
                         </button>
                         <button
                             type="button"
-                            @click="paymentMethod = 'qris'"
+                            @click="paymentTiming = 'unpaid'"
                             :class="[
-                                'min-h-[50px] p-3 rounded-[8px] border-2 border-black text-xs font-black flex items-center justify-center space-x-2 transition-all cursor-pointer',
-                                paymentMethod === 'qris'
+                                'min-h-[52px] p-2.5 rounded-[8px] border-2 border-black text-xs font-black flex items-center space-x-2.5 transition-all cursor-pointer',
+                                paymentTiming === 'unpaid'
                                     ? 'bg-[#FFEB3B] text-black shadow-[3px_3px_0px_#000] scale-[1.01]'
                                     : 'bg-white text-gray-800 shadow-[1.5px_1.5px_0px_#000] hover:bg-[#FFF9D2]',
                             ]"
                         >
-                            <QrCode class="h-5 w-5 shrink-0" />
-                            <span>QRIS Manual</span>
+                            <Clock class="h-5 w-5 shrink-0" />
+                            <div class="text-left">
+                                <span class="block font-black leading-tight text-xs">Bayar Pas Ambil</span>
+                                <span class="block text-[10px] opacity-80 font-bold">Belum Bayar (Nanti)</span>
+                            </div>
                         </button>
                     </div>
                 </div>
+
+                <!-- JIKA BAYAR SEKARANG: PILIH METODE TUNAI ATAU QRIS -->
+                <div v-if="paymentTiming === 'paid'" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-black uppercase tracking-wider text-black mb-1.5">
+                            Pilih Metode Pembayaran
+                        </label>
+                        <div class="grid grid-cols-2 gap-2.5">
+                            <button
+                                type="button"
+                                @click="paymentMethod = 'cash'"
+                                :class="[
+                                    'min-h-[50px] p-3 rounded-[8px] border-2 border-black text-xs font-black flex items-center justify-center space-x-2 transition-all cursor-pointer',
+                                    paymentMethod === 'cash'
+                                        ? 'bg-[#FFEB3B] text-black shadow-[3px_3px_0px_#000] scale-[1.01]'
+                                        : 'bg-white text-gray-800 shadow-[1.5px_1.5px_0px_#000] hover:bg-[#FFF9D2]',
+                                ]"
+                            >
+                                <Banknote class="h-5 w-5 shrink-0" />
+                                <span>Tunai (Cash)</span>
+                            </button>
+                            <button
+                                type="button"
+                                @click="paymentMethod = 'qris'"
+                                :class="[
+                                    'min-h-[50px] p-3 rounded-[8px] border-2 border-black text-xs font-black flex items-center justify-center space-x-2 transition-all cursor-pointer',
+                                    paymentMethod === 'qris'
+                                        ? 'bg-[#FFEB3B] text-black shadow-[3px_3px_0px_#000] scale-[1.01]'
+                                        : 'bg-white text-gray-800 shadow-[1.5px_1.5px_0px_#000] hover:bg-[#FFF9D2]',
+                                ]"
+                            >
+                                <QrCode class="h-5 w-5 shrink-0" />
+                                <span>QRIS Manual</span>
+                            </button>
+                        </div>
+                    </div>
 
                 <!-- MODE 1: CASH TENDER & NUMPAD -->
                 <div v-if="paymentMethod === 'cash'" class="space-y-3 p-4 bg-white rounded-[8px] border-2 border-black shadow-[3px_3px_0px_#000]">
@@ -430,6 +491,46 @@ async function processOrderSubmit() {
                         </div>
                     </label>
                 </div>
+            </div>
+
+            <!-- JIKA BAYAR PAS AMBIL (BELUM BAYAR) -->
+            <div v-else class="space-y-3.5 p-4 bg-white rounded-[8px] border-2 border-black shadow-[3px_3px_0px_#000]">
+                    <!-- Amount to pay header -->
+                    <div class="p-3.5 bg-[#FFF9D2] rounded-[8px] border-2 border-black shadow-[2px_2px_0px_#000] space-y-1.5">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[11px] font-black uppercase tracking-wider text-black flex items-center space-x-1.5">
+                                <Clock class="h-3.5 w-3.5" />
+                                <span>Status: Belum Lunas (Bayar Nanti)</span>
+                            </span>
+                            <span class="text-[10px] font-black uppercase tracking-wider bg-black text-[#FFEB3B] px-2 py-0.5 rounded-[4px]">
+                                Bayar Pas Ambil
+                            </span>
+                        </div>
+                        <div class="flex items-baseline justify-between pt-1 border-t border-black/20">
+                            <span class="text-xs font-bold text-gray-800">Total Tagihan Saat Pengambilan:</span>
+                            <span class="text-2xl font-mono font-black text-black">{{ formatRupiah(grandTotal) }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Flow Information for Cashier & Customer -->
+                    <div class="p-3.5 bg-[#FFFDF5] rounded-[8px] border border-black text-xs space-y-2">
+                        <span class="font-black text-black block">Alur Pembayaran Pas Ambil:</span>
+                        <ul class="space-y-1.5 text-gray-800 font-bold text-[11px] leading-relaxed">
+                            <li class="flex items-start space-x-2">
+                                <span class="text-black font-black">1.</span>
+                                <span>Cucian langsung masuk antrean cuci dan diproses oleh tim laundry.</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <span class="text-black font-black">2.</span>
+                                <span>Pelanggan menerima nota digital WhatsApp dengan status <strong>BELUM LUNAS</strong> dan QRIS resmi.</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <span class="text-black font-black">3.</span>
+                                <span>Saat cucian selesai & diambil, pelanggan cukup <strong>menunjukkan nota digital</strong> ke kasir untuk pelunasan via Tunai atau QRIS.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
 
                 <!-- Notes (Optional) -->
                 <div>
@@ -454,13 +555,20 @@ async function processOrderSubmit() {
                 </button>
                 <button
                     type="button"
-                    :disabled="isSubmitting || isCashUnderpaid || (paymentMethod === 'qris' && !isQrisVerified)"
+                    :disabled="isSubmitting || (paymentTiming === 'paid' && (isCashUnderpaid || (paymentMethod === 'qris' && !isQrisVerified)))"
                     @click="processOrderSubmit"
-                    class="min-h-[46px] flex-1 px-5 py-2 rounded-[8px] border-[3px] border-black bg-[#22C55E] text-black text-sm font-black uppercase tracking-wider shadow-[4px_4px_0px_#000] hover:bg-[#16A34A] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#000] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center space-x-2 cursor-pointer transition-all"
+                    :class="[
+                        'min-h-[46px] flex-1 px-5 py-2 rounded-[8px] border-[3px] border-black text-black text-sm font-black uppercase tracking-wider shadow-[4px_4px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#000] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center space-x-2 cursor-pointer transition-all',
+                        paymentTiming === 'unpaid' ? 'bg-[#FFEB3B] hover:bg-[#FDE047]' : 'bg-[#22C55E] hover:bg-[#16A34A]'
+                    ]"
                 >
                     <Loader2 v-if="isSubmitting" class="h-5 w-5 animate-spin" />
                     <span v-else>
-                        {{ paymentMethod === 'qris' ? 'KONFIRMASI QRIS & CETAK STRUK [F8]' : 'LUNAS TUNAI & CETAK STRUK [F8]' }}
+                        {{
+                            paymentTiming === 'unpaid'
+                                ? 'SIMPAN ORDER (BAYAR PAS AMBIL) & CETAK STRUK [F8]'
+                                : (paymentMethod === 'qris' ? 'KONFIRMASI QRIS & CETAK STRUK [F8]' : 'LUNAS TUNAI & CETAK STRUK [F8]')
+                        }}
                     </span>
                 </button>
             </div>

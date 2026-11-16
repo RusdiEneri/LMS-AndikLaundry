@@ -24,7 +24,7 @@ class ReceiptController extends Controller
         $storeInfo = [
             'name' => BusinessSetting::get('store.name', 'Andik Laundry'),
             'phone' => BusinessSetting::get('store.phone', '6281234567890'),
-            'address' => BusinessSetting::get('store.address', 'Jl. Raya Laundry No. 12, Jakarta'),
+            'address' => BusinessSetting::get('store.address', 'Hendrosari, RT.06/RW.03, Hendrosari, Kec. Menganti, Kabupaten Gresik, Jawa Timur 61174'),
             'default_min_weight' => (float) BusinessSetting::get('operational.default_min_weight', 2.0),
             'paper_width' => BusinessSetting::get('printer.paper_width', '58mm'),
             'receipt_footer' => BusinessSetting::get('store.receipt_footer', 'Terima kasih telah mencuci di Andik Laundry. Bersih, Wangi, Rapi!'),
@@ -148,7 +148,7 @@ class ReceiptController extends Controller
         $storeInfo = [
             'name' => BusinessSetting::get('store.name', 'Andik Laundry'),
             'phone' => BusinessSetting::get('store.phone', '6281234567890'),
-            'address' => BusinessSetting::get('store.address', 'Jl. Raya Laundry No. 12, Jakarta'),
+            'address' => BusinessSetting::get('store.address', 'Hendrosari, RT.06/RW.03, Hendrosari, Kec. Menganti, Kabupaten Gresik, Jawa Timur 61174'),
             'default_min_weight' => $minWeight,
             'paper_width' => BusinessSetting::get('printer.paper_width', '58mm'),
             'receipt_footer' => BusinessSetting::get('store.receipt_footer', 'Terima kasih telah mencuci di Andik Laundry. Bersih, Wangi, Rapi!'),

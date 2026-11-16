@@ -76,7 +76,7 @@ const deliveryOption = computed(() => props.transaction?.delivery_option ?? 'pic
 
 const paymentStatusLabel = computed(() => {
     if (outstandingBalance.value <= 0) return 'LUNAS';
-    return 'BELUM LUNAS';
+    return 'BELUM LUNAS (BAYAR PAS AMBIL)';
 });
 
 const digitalReceiptUrl = computed(() => {

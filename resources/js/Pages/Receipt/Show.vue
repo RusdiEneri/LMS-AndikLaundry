@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, router, usePage } from '@inertiajs/vue3';
 import {
     CheckCircle2,
     Clock,
@@ -16,9 +16,13 @@ import {
     ShieldCheck,
     Search,
     Truck,
+    Banknote,
+    QrCode,
+    Coins,
+    Loader2,
+    X,
 } from 'lucide-vue-next';
 import { formatRupiah, formatDateTimeIndo } from '@/Support/whatsapp';
-import { router } from '@inertiajs/vue3';
 
 interface OrderItem {
     id: number;
@@ -131,7 +135,7 @@ const paymentBadge = computed(() => {
     if (debt <= 0) {
         return { text: 'LUNAS', bg: 'bg-[#22C55E] text-black border-2 border-black shadow-[2px_2px_0px_#000]' };
     }
-    return { text: 'BELUM LUNAS', bg: 'bg-[#FF5252] text-black border-2 border-black shadow-[2px_2px_0px_#000]' };
+    return { text: 'BELUM LUNAS (BAYAR PAS AMBIL)', bg: 'bg-[#FFEB3B] text-black border-2 border-black shadow-[2px_2px_0px_#000]' };
 });
 
 // WhatsApp Link
@@ -157,6 +161,63 @@ function searchOrder() {
 
 function printReceipt() {
     window.print();
+}
+
+// Staff / Cashier Settlement State
+const page = usePage();
+const authUser = computed(() => (page.props as any).auth?.user);
+
+const isSettling = ref(false);
+const settleErrorMessage = ref('');
+const showSettleModal = ref(false);
+const settleMethod = ref<'cash' | 'qris'>('cash');
+const settleTender = ref<string>('');
+
+function openSettleModal(method: 'cash' | 'qris') {
+    settleMethod.value = method;
+    settleTender.value = String(props.order?.outstanding_balance || 0);
+    settleErrorMessage.value = '';
+    showSettleModal.value = true;
+}
+
+async function confirmSettlement() {
+    if (!props.order) return;
+    isSettling.value = true;
+    settleErrorMessage.value = '';
+
+    try {
+        const csrfToken = (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content;
+        const tenderVal = settleMethod.value === 'cash'
+            ? (Number(settleTender.value.replace(/[^0-9]/g, '')) || props.order.outstanding_balance)
+            : props.order.outstanding_balance;
+
+        const res = await fetch(`/pos/orders/${props.order.id}/payments`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': csrfToken || '',
+            },
+            body: JSON.stringify({
+                amount: props.order.outstanding_balance,
+                tender_amount: tenderVal,
+                payment_method: settleMethod.value,
+                notes: 'Pelunasan saat pengambilan pakaian',
+            }),
+        });
+
+        if (res.ok) {
+            showSettleModal.value = false;
+            router.reload();
+        } else {
+            const data = await res.json();
+            settleErrorMessage.value = data.message || 'Gagal memproses pelunasan kasir.';
+        }
+    } catch {
+        settleErrorMessage.value = 'Terjadi kesalahan sistem saat menghubungi server.';
+    } finally {
+        isSettling.value = false;
+    }
 }
 
 // Map production status to step index for 3-step workflow
@@ -394,21 +455,69 @@ const isUnpaid = computed(() => props.order && props.order.outstanding_balance >
                     </div>
                 </div>
 
-                <!-- QRIS Payment Section for Unpaid Orders -->
-                <div v-if="isUnpaid && order.outstanding_balance > 0" class="bg-white rounded-[12px] p-5 sm:p-6 border-[3.5px] border-black shadow-[6px_6px_0px_#000] text-center space-y-4">
-                    <div class="flex items-center justify-center space-x-2 text-black">
-                        <span class="font-black text-base uppercase tracking-wider">Pembayaran Non-Tunai (QRIS)</span>
+                <!-- Customer & Cashier Pickup Payment Section for Unpaid Orders -->
+                <div v-if="isUnpaid && order.outstanding_balance > 0" class="space-y-4">
+                    <!-- Customer Pickup Instruction Card -->
+                    <div class="bg-white rounded-[12px] p-5 sm:p-6 border-[3.5px] border-black shadow-[6px_6px_0px_#000] space-y-3">
+                        <div class="p-3.5 bg-[#FFF9D2] rounded-[8px] border-2 border-black shadow-[2px_2px_0px_#000] text-left">
+                            <div class="flex items-center space-x-2 text-black font-black text-xs uppercase tracking-wider">
+                                <Clock class="h-4 w-4" />
+                                <span>Bayar Pas Ambil Cucian</span>
+                            </div>
+                            <p class="text-xs text-black/80 font-bold mt-1.5 leading-relaxed">
+                                Pakaian Anda sedang kami rawat & cuci. Saat pakaian bersih siap diambil, cukup <strong>tunjukkan bukti nota digital ini</strong> ke meja kasir Andik Laundry untuk pelunasan via Tunai (Cash) atau QRIS.
+                            </p>
+                        </div>
+
+                        <!-- Cashier Settlement Card (Visible to Logged-in Staff) -->
+                        <div v-if="authUser" class="p-4 bg-[#22C55E]/15 rounded-[10px] border-[2.5px] border-black shadow-[3px_3px_0px_#000] space-y-2.5 text-left">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-2">
+                                    <Coins class="h-4 w-4 text-black" />
+                                    <span class="font-black text-xs uppercase tracking-wider text-black">Aksi Kasir: Pelunasan Nota</span>
+                                </div>
+                                <span class="text-[11px] font-bold text-gray-700 font-mono">Staf: {{ authUser.name }}</span>
+                            </div>
+                            <p class="text-[11px] text-black/70 font-bold">
+                                Pelanggan datang ke kasir untuk mengambil pakaian? Pilih metode pelunasan di bawah:
+                            </p>
+                            <div class="grid grid-cols-2 gap-2 pt-1">
+                                <button
+                                    type="button"
+                                    @click="openSettleModal('cash')"
+                                    class="min-h-[44px] px-3 py-2 bg-[#22C55E] text-black font-black text-xs uppercase tracking-wider rounded-[8px] border-2 border-black shadow-[2px_2px_0px_#000] hover:bg-[#16A34A] active:translate-x-0.5 active:translate-y-0.5 cursor-pointer flex items-center justify-center space-x-1.5 transition-all"
+                                >
+                                    <Banknote class="h-4 w-4" />
+                                    <span>Lunas Tunai</span>
+                                </button>
+                                <button
+                                    type="button"
+                                    @click="openSettleModal('qris')"
+                                    class="min-h-[44px] px-3 py-2 bg-[#FFEB3B] text-black font-black text-xs uppercase tracking-wider rounded-[8px] border-2 border-black shadow-[2px_2px_0px_#000] hover:bg-[#FDE047] active:translate-x-0.5 active:translate-y-0.5 cursor-pointer flex items-center justify-center space-x-1.5 transition-all"
+                                >
+                                    <QrCode class="h-4 w-4" />
+                                    <span>Lunas QRIS</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="p-5 bg-[#FFF9D2] rounded-[10px] border-[2.5px] border-black shadow-[4px_4px_0px_#000] max-w-sm mx-auto">
-                        <img 
-                            src="/images/qris-andiklaundry.svg" 
-                            alt="QRIS Payment Andik Laundry" 
-                            class="qris-image mx-auto max-w-[200px] border-[2.5px] border-black rounded-[8px] shadow-[3px_3px_0px_#000] bg-white p-2"
-                        />
-                        <p class="text-xs font-bold text-black/70 mt-3">Scan QRIS melalui mobile banking atau aplikasi e-wallet Anda</p>
-                        <p class="text-2xl font-black font-mono text-black mt-2">
-                            {{ formatRupiah(order.outstanding_balance) }}
-                        </p>
+
+                    <!-- QRIS Payment Card for Unpaid Orders -->
+                    <div class="bg-white rounded-[12px] p-5 sm:p-6 border-[3.5px] border-black shadow-[6px_6px_0px_#000] text-center space-y-4">
+                        <div class="flex items-center justify-center space-x-2 text-black">
+                            <span class="font-black text-base uppercase tracking-wider">Pembayaran Non-Tunai (QRIS)</span>
+                        </div>
+                        <div class="p-5 bg-[#FFF9D2] rounded-[10px] border-[2.5px] border-black shadow-[4px_4px_0px_#000] max-w-sm mx-auto">
+                            <img 
+                                src="/images/qris-andiklaundry.svg" 
+                                alt="QRIS Payment Andik Laundry" 
+                                class="qris-image mx-auto max-w-[200px] border-[2.5px] border-black rounded-[8px] shadow-[3px_3px_0px_#000] bg-white p-2"
+                            />
+                            <p class="text-xs font-bold text-black/70 mt-3">Scan QRIS melalui mobile banking atau aplikasi e-wallet Anda</p>
+                            <p class="text-2xl font-black font-mono text-black mt-2">
+                                {{ formatRupiah(order.outstanding_balance) }}
+                            </p>
+                        </div>
                     </div>
                 </div>
 
@@ -531,6 +640,118 @@ const isUnpaid = computed(() => props.order && props.order.outstanding_balance >
                 </div>
             </template>
         </main>
+
+        <!-- Cashier Settlement Confirmation Modal -->
+        <div
+            v-if="showSettleModal && order"
+            class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 no-print"
+            @click.self="showSettleModal = false"
+        >
+            <div class="bg-[#FFFDF5] rounded-[12px] max-w-md w-full border-[3.5px] border-black shadow-[8px_8px_0px_#000] overflow-hidden flex flex-col">
+                <div class="px-5 py-3.5 bg-[#FFEB3B] border-b-[3.5px] border-black flex items-center justify-between">
+                    <div>
+                        <span class="text-[10px] font-black uppercase tracking-wider bg-black text-[#FFEB3B] px-2 py-0.5 rounded-[4px]">
+                            Kasir • Pelunasan Nota
+                        </span>
+                        <h3 class="font-black text-lg text-black tracking-tight mt-1">Konfirmasi Pembayaran</h3>
+                    </div>
+                    <button
+                        type="button"
+                        @click="showSettleModal = false"
+                        class="h-8 w-8 rounded-[6px] border-2 border-black bg-white flex items-center justify-center text-black hover:bg-[#FF5252] hover:text-white transition-all cursor-pointer shadow-[1.5px_1.5px_0px_#000]"
+                    >
+                        <X class="h-4 w-4" />
+                    </button>
+                </div>
+
+                <div class="p-5 space-y-4">
+                    <!-- Error Alert -->
+                    <div v-if="settleErrorMessage" class="p-3 rounded-[8px] bg-[#FF5252]/15 border-2 border-black text-xs text-black font-bold flex items-center space-x-2">
+                        <AlertCircle class="h-4 w-4 text-[#FF5252] shrink-0" />
+                        <span>{{ settleErrorMessage }}</span>
+                    </div>
+
+                    <!-- Customer & Invoice Info -->
+                    <div class="p-3 bg-white rounded-[8px] border-2 border-black shadow-[2px_2px_0px_#000] text-xs space-y-1">
+                        <div class="flex justify-between">
+                            <span class="font-bold text-gray-600">No. Nota:</span>
+                            <span class="font-mono font-black text-black">{{ order.invoice_number }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="font-bold text-gray-600">Pelanggan:</span>
+                            <span class="font-black text-black">{{ order.customer?.name ?? 'Pelanggan Umum' }}</span>
+                        </div>
+                        <div class="flex justify-between pt-1 border-t border-black/10">
+                            <span class="font-bold text-gray-700">Sisa Tagihan:</span>
+                            <span class="font-mono font-black text-base text-black">{{ formatRupiah(order.outstanding_balance) }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Payment Method Toggle -->
+                    <div>
+                        <label class="block text-xs font-black uppercase tracking-wider text-black mb-1.5">
+                            Metode Pelunasan
+                        </label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button
+                                type="button"
+                                @click="settleMethod = 'cash'"
+                                :class="[
+                                    'p-2.5 rounded-[8px] border-2 border-black text-xs font-black flex items-center justify-center space-x-2 transition-all cursor-pointer',
+                                    settleMethod === 'cash' ? 'bg-[#22C55E] text-black shadow-[2px_2px_0px_#000]' : 'bg-white text-gray-700 hover:bg-[#EAFFEA]'
+                                ]"
+                            >
+                                <Banknote class="h-4 w-4" />
+                                <span>Tunai (Cash)</span>
+                            </button>
+                            <button
+                                type="button"
+                                @click="settleMethod = 'qris'"
+                                :class="[
+                                    'p-2.5 rounded-[8px] border-2 border-black text-xs font-black flex items-center justify-center space-x-2 transition-all cursor-pointer',
+                                    settleMethod === 'qris' ? 'bg-[#FFEB3B] text-black shadow-[2px_2px_0px_#000]' : 'bg-white text-gray-700 hover:bg-[#FFF9D2]'
+                                ]"
+                            >
+                                <QrCode class="h-4 w-4" />
+                                <span>QRIS Manual</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Cash Tender (if cash) -->
+                    <div v-if="settleMethod === 'cash'" class="space-y-1.5">
+                        <label class="block text-xs font-black uppercase tracking-wider text-black">
+                            Uang Tunai Diterima (Rp)
+                        </label>
+                        <input
+                            v-model="settleTender"
+                            type="text"
+                            class="min-h-[44px] w-full rounded-[8px] border-2 border-black bg-white px-3 py-2 text-base font-mono font-black text-black shadow-[2px_2px_0px_#000] focus:outline-none"
+                            placeholder="Ketik nominal tunai"
+                        />
+                    </div>
+                </div>
+
+                <div class="p-4 bg-[#FFEB3B]/20 border-t-[3.5px] border-black flex items-center space-x-2.5">
+                    <button
+                        type="button"
+                        @click="showSettleModal = false"
+                        class="min-h-[44px] px-4 rounded-[8px] border-2 border-black bg-white text-black text-xs font-black hover:bg-gray-100 cursor-pointer shadow-[2px_2px_0px_#000]"
+                    >
+                        Batal
+                    </button>
+                    <button
+                        type="button"
+                        :disabled="isSettling"
+                        @click="confirmSettlement"
+                        class="min-h-[44px] flex-1 px-4 rounded-[8px] border-[2.5px] border-black bg-[#22C55E] text-black text-xs font-black uppercase tracking-wider hover:bg-[#16A34A] shadow-[3px_3px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 disabled:opacity-50 cursor-pointer flex items-center justify-center space-x-1.5 transition-all"
+                    >
+                        <Loader2 v-if="isSettling" class="h-4 w-4 animate-spin" />
+                        <span v-else>Konfirmasi Lunas & Simpan</span>
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 

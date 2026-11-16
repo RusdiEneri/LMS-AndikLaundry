@@ -5,6 +5,7 @@ use App\Enums\ProductionStatus;
 use App\Enums\ServiceUnit;
 use App\Models\Customer;
 use App\Models\Order;
+use App\Models\Payment;
 use App\Models\Service;
 use App\Models\ServiceCategory;
 use App\Models\ServiceTier;
@@ -588,5 +589,67 @@ describe('Milestone 2: ProductionStatus and PaymentStatus Enums', function () {
             ->and(PaymentStatus::PAID->label())->toBe('Lunas')
             ->and(PaymentStatus::PARTIALLY_PAID->label())->toBe('Bayar Sebagian (DP)')
             ->and(PaymentStatus::UNPAID->label())->toBe('Belum Lunas');
+    });
+
+    it('T2-POS-UNPAID: Cashier can create an order with payment_status unpaid (Bayar Pas Ambil) and settle it later upon pickup', function () {
+        $cashier = User::factory()->create(['role' => 'cashier', 'is_active' => true]);
+        $customer = Customer::factory()->create();
+        $service = Service::factory()->create([
+            'base_price' => 8000.00,
+            'min_weight' => 2.00,
+            'is_active' => true,
+        ]);
+
+        // Step 1: Create unpaid order (Bayar Pas Ambil)
+        $payload = [
+            'customer_id' => $customer->id,
+            'items' => [
+                [
+                    'service_id' => $service->id,
+                    'actual_quantity' => 3.00, // 3 * 8,000 = 24,000
+                ],
+            ],
+            'paid_amount' => 0.00,
+            'payment_method' => 'cash',
+            'payment_status' => 'unpaid',
+            'notes' => 'Bayar saat ambil cucian',
+        ];
+
+        $response = $this->actingAs($cashier)->postJson('/pos/orders', $payload);
+
+        $response->assertStatus(201)
+            ->assertJsonPath('transaction.total_amount', '24000.00')
+            ->assertJsonPath('transaction.paid_amount', '0.00')
+            ->assertJsonPath('transaction.outstanding_balance', '24000.00')
+            ->assertJsonPath('transaction.payment_status', PaymentStatus::UNPAID->value);
+
+        $transactionId = $response->json('transaction.id');
+
+        // Verify zero payments created initially
+        expect(Payment::where('transaction_id', $transactionId)->count())->toBe(0);
+
+        // Step 2: Customer returns to pick up and cashier settles the bill
+        $settleResponse = $this->actingAs($cashier)->postJson("/pos/orders/{$transactionId}/payments", [
+            'amount' => 24000.00,
+            'tender_amount' => 50000.00,
+            'payment_method' => 'cash',
+            'notes' => 'Pelunasan saat pengambilan pakaian',
+        ]);
+
+        $settleResponse->assertStatus(201);
+
+        $this->assertDatabaseHas('payments', [
+            'transaction_id' => $transactionId,
+            'amount' => 24000.00,
+            'tender_amount' => 50000.00,
+            'change_amount' => 26000.00,
+            'payment_method' => 'cash',
+            'payment_status' => 'completed',
+        ]);
+
+        $refreshed = Transaction::findOrFail($transactionId);
+        expect($refreshed->payment_status)->toBe(PaymentStatus::PAID)
+            ->and((float) $refreshed->outstanding_balance)->toBe(0.00)
+            ->and((float) $refreshed->paid_amount)->toBe(24000.00);
     });
 });
