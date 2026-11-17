@@ -2,7 +2,6 @@
 import { computed, ref, onMounted, onUnmounted } from 'vue';
 import { Head, Link, usePage } from '@inertiajs/vue3';
 import type { PageProps, User } from '@/types';
-import { Badge } from '@/Components/ui/badge';
 import { Button } from '@/Components/ui/button';
 import {
     Sheet,
@@ -12,7 +11,6 @@ import {
     SheetDescription,
 } from '@/Components/ui/sheet';
 import {
-    ArrowLeft,
     Clock,
     ShoppingBag,
     WifiOff,
@@ -95,73 +93,75 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="fixed inset-0 flex flex-col overflow-hidden bg-[#FFFDF5] font-sans text-black antialiased select-none pb-[calc(env(safe-area-inset-bottom,0px)+4.5rem)] lg:pb-0">
+    <div class="fixed inset-0 flex flex-col overflow-hidden bg-[#F8FAFC] font-sans text-slate-900 antialiased select-none pb-[calc(env(safe-area-inset-bottom,0px)+4.5rem)] lg:pb-0">
         <Head :title="`${title} - Andik Laundry POS`" />
 
         <!-- High-Speed POS Header (Pinned / Sticky Top) -->
-        <header class="h-14 shrink-0 bg-[#FFEB3B] border-b-[3.5px] border-black shadow-[0_4px_0px_#000] z-40">
-            <div class="px-3 sm:px-6 h-14 flex items-center justify-between">
+        <header class="h-16 shrink-0 bg-[#10194D] text-white border-b border-[#1E293B] shadow-sm z-40">
+            <div class="px-4 sm:px-6 h-16 flex items-center justify-between">
                 <!-- Left: Home / AL Brand & Store Title + Desktop Navigation -->
-                <div class="flex items-center space-x-3">
-                    <div class="flex items-center space-x-2.5">
-                        <div class="h-9 w-9 rounded-[8px] bg-black text-[#FFEB3B] border-2 border-black flex items-center justify-center font-black text-sm shadow-[2px_2px_0px_#000] shrink-0">
+                <div class="flex items-center space-x-4">
+                    <Link href="/" class="flex items-center space-x-2.5 group">
+                        <div class="h-9 w-9 rounded-xl bg-gradient-to-br from-[#6577F0] to-[#4F5FE8] text-white flex items-center justify-center font-heading font-extrabold text-sm shadow-sm shrink-0 transition-transform group-hover:scale-105">
                             AL
                         </div>
                         <div class="min-w-0">
                             <div class="flex items-center space-x-2">
-                                <span class="font-black text-sm text-black leading-tight truncate">{{ storeName }}</span>
-                                <span class="hidden sm:inline-flex items-center text-[10px] uppercase font-black py-0.5 px-2 rounded-[4px] bg-black text-[#FFEB3B] border border-black shadow-[1px_1px_0px_#000]">
-                                    Owner
+                                <span class="font-heading font-extrabold text-sm text-white leading-tight truncate">
+                                    andik<span class="text-[#FF8A5B]">.</span>
+                                </span>
+                                <span class="hidden sm:inline-flex items-center text-[10px] uppercase font-bold py-0.5 px-2 rounded-full bg-[#4F5FE8] text-white">
+                                    POS Kasir
                                 </span>
                             </div>
-                            <span class="text-xs font-bold text-black/70 leading-none hidden sm:block">Usaha Rumahan Mandiri</span>
+                            <span class="text-[11px] text-slate-400 font-medium leading-none hidden sm:block">Usaha Rumahan Mandiri</span>
                         </div>
-                    </div>
+                    </Link>
 
                     <!-- Desktop Nav Links (Hidden on mobile < 1024px) -->
-                    <nav class="hidden lg:flex items-center space-x-1.5 pl-3 border-l-2 border-black">
+                    <nav class="hidden lg:flex items-center space-x-1.5 pl-4 border-l border-white/10">
                         <Link
                             href="/production/station"
-                            class="inline-flex min-h-[36px] items-center space-x-1.5 px-3 py-1.5 rounded-[8px] border-2 border-black bg-white text-black hover:bg-[#FFF9D2] hover:-translate-y-0.5 transition-all text-xs font-black shadow-[2px_2px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
+                            class="inline-flex min-h-[36px] items-center space-x-1.5 px-3 py-1.5 rounded-full text-slate-200 hover:text-white hover:bg-white/10 transition-all text-xs font-semibold"
                             title="Antrean & Status Cucian"
                         >
-                            <Shirt class="h-4 w-4 text-black" />
+                            <Shirt class="h-4 w-4" />
                             <span>Antrean Cuci</span>
                         </Link>
 
                         <Link
                             href="/dashboard"
-                            class="inline-flex min-h-[36px] items-center space-x-1.5 px-3 py-1.5 rounded-[8px] border-2 border-black bg-white text-black hover:bg-[#FFF9D2] hover:-translate-y-0.5 transition-all text-xs font-black shadow-[2px_2px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
+                            class="inline-flex min-h-[36px] items-center space-x-1.5 px-3 py-1.5 rounded-full text-slate-200 hover:text-white hover:bg-white/10 transition-all text-xs font-semibold"
                             title="Laporan Keuangan & Laba Rugi"
                         >
-                            <LayoutDashboard class="h-4 w-4 text-black" />
+                            <LayoutDashboard class="h-4 w-4" />
                             <span>Laporan Keuangan</span>
                         </Link>
 
                         <Link
                             href="/owner/expenses"
-                            class="inline-flex min-h-[36px] items-center space-x-1.5 px-3 py-1.5 rounded-[8px] border-2 border-black bg-white text-black hover:bg-[#FFF9D2] hover:-translate-y-0.5 transition-all text-xs font-black shadow-[2px_2px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
+                            class="inline-flex min-h-[36px] items-center space-x-1.5 px-3 py-1.5 rounded-full text-slate-200 hover:text-white hover:bg-white/10 transition-all text-xs font-semibold"
                             title="Catat Pengeluaran Toko"
                         >
-                            <Receipt class="h-4 w-4 text-[#FF5252]" />
+                            <Receipt class="h-4 w-4 text-[#FF8A5B]" />
                             <span>Biaya Toko</span>
                         </Link>
 
                         <Link
                             href="/owner/receivables"
-                            class="inline-flex min-h-[36px] items-center space-x-1.5 px-3 py-1.5 rounded-[8px] border-2 border-black bg-white text-black hover:bg-[#FFF9D2] hover:-translate-y-0.5 transition-all text-xs font-black shadow-[2px_2px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
+                            class="inline-flex min-h-[36px] items-center space-x-1.5 px-3 py-1.5 rounded-full text-slate-200 hover:text-white hover:bg-white/10 transition-all text-xs font-semibold"
                             title="Buku Piutang & Tagihan"
                         >
-                            <Wallet class="h-4 w-4 text-[#2196F3]" />
+                            <Wallet class="h-4 w-4 text-[#38BDF8]" />
                             <span>Buku Piutang</span>
                         </Link>
 
                         <Link
                             href="/owner/settings"
-                            class="inline-flex min-h-[36px] items-center space-x-1.5 px-3 py-1.5 rounded-[8px] border-2 border-black bg-white text-black hover:bg-[#FFF9D2] hover:-translate-y-0.5 transition-all text-xs font-black shadow-[2px_2px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
+                            class="inline-flex min-h-[36px] items-center space-x-1.5 px-3 py-1.5 rounded-full text-slate-200 hover:text-white hover:bg-white/10 transition-all text-xs font-semibold"
                             title="Pengaturan Toko & WhatsApp"
                         >
-                            <Settings class="h-4 w-4 text-black" />
+                            <Settings class="h-4 w-4" />
                             <span>Pengaturan</span>
                         </Link>
                     </nav>
@@ -169,62 +169,62 @@ onUnmounted(() => {
 
                 <!-- Center: Operational Status & Realtime Clock (Desktop) -->
                 <div class="hidden md:flex items-center space-x-3">
-                    <div class="flex items-center space-x-2 px-3 py-1 rounded-[6px] bg-[#22C55E] border-2 border-black text-black text-xs font-black shadow-[2px_2px_0px_#000]">
-                        <span class="h-2.5 w-2.5 rounded-full bg-black"></span>
+                    <div class="flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-semibold">
+                        <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
                         <span>Toko Buka • Kasir: {{ user?.name ?? 'Pemilik' }}</span>
                     </div>
 
-                    <div class="flex items-center space-x-1.5 text-xs text-black font-mono font-black bg-white px-3 py-1 rounded-[6px] border-2 border-black shadow-[2px_2px_0px_#000]">
-                        <Clock class="h-4 w-4 text-black" />
+                    <div class="flex items-center space-x-1.5 text-xs text-slate-200 font-mono font-medium bg-[#1A2566] px-3 py-1.5 rounded-full border border-white/10">
+                        <Clock class="h-3.5 w-3.5 text-[#FFE14D]" />
                         <span>{{ currentTime }}</span>
                     </div>
                 </div>
 
                 <!-- Right: Mobile Menu Toggle (< 1024px) & Hotkeys/Status (Desktop) -->
-                <div class="flex items-center space-x-2">
+                <div class="flex items-center space-x-2.5">
                     <div class="relative hidden sm:flex items-center">
                         <button
                             type="button"
                             @click="showWaTooltip = !showWaTooltip"
-                            class="inline-flex min-h-[38px] items-center space-x-1.5 px-3 py-1.5 rounded-[8px] border-2 border-black bg-white text-black text-xs font-black shadow-[2px_2px_0px_#000] hover:bg-[#FFF9D2] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none cursor-pointer"
+                            class="inline-flex min-h-[36px] items-center space-x-1.5 px-3 py-1.5 rounded-full border border-white/15 bg-white/10 text-white text-xs font-medium hover:bg-white/20 transition-all cursor-pointer"
                         >
-                            <WifiOff class="h-4 w-4 text-black" />
-                            <span class="hidden md:inline">WA Fallback</span>
+                            <WifiOff class="h-3.5 w-3.5 text-amber-300" />
+                            <span class="hidden md:inline">WA Manual</span>
                         </button>
 
                         <div
                             v-if="showWaTooltip"
-                            class="absolute right-0 top-12 z-50 w-72 rounded-[10px] bg-white p-3.5 text-xs text-black shadow-[5px_5px_0px_#000] border-[2.5px] border-black"
+                            class="absolute right-0 top-12 z-50 w-72 rounded-2xl bg-white p-4 text-xs text-slate-700 shadow-2xl border border-slate-200"
                         >
-                            <div class="flex justify-between items-start mb-1">
-                                <span class="font-black text-black uppercase tracking-wider">Mode Fallback Aktif</span>
+                            <div class="flex justify-between items-start mb-1.5">
+                                <span class="font-bold text-[#10194D] uppercase tracking-wide">Mode WhatsApp Manual</span>
                                 <button
                                     type="button"
-                                    class="text-black hover:text-[#FF5252] min-h-[44px] min-w-[44px] -m-2 flex items-center justify-center font-bold"
+                                    class="text-slate-400 hover:text-slate-700 -m-1 p-1"
                                     @click="showWaTooltip = false"
                                 >
-                                    <X class="h-4 w-4 stroke-[3]" />
+                                    <X class="h-4 w-4" />
                                 </button>
                             </div>
-                            <p class="text-black/80 font-bold leading-relaxed">
-                                Gateway WuzAPI offline. Notifikasi struk dapat dikirim manual via tombol wa.me yang otomatis mengisi nomor customer & format struk.
+                            <p class="text-slate-600 leading-relaxed font-normal">
+                                Notifikasi struk dan status cucian dapat dikirim manual via tombol wa.me yang otomatis mengisi nomor customer & format struk.
                             </p>
                         </div>
                     </div>
 
                     <div class="hidden lg:flex items-center space-x-1.5 text-xs">
-                        <kbd class="px-2.5 py-1 bg-white text-black font-mono rounded-[6px] border-2 border-black text-xs font-black shadow-[2px_2px_0px_#000]">F1 Cari</kbd>
-                        <kbd class="px-2.5 py-1 bg-[#FFEB3B] text-black font-mono rounded-[6px] border-2 border-black text-xs font-black shadow-[2px_2px_0px_#000]">F8 Bayar</kbd>
+                        <kbd class="px-2.5 py-1 bg-white/10 text-slate-200 font-mono rounded-lg border border-white/15 text-xs font-semibold">F1 Cari</kbd>
+                        <kbd class="px-2.5 py-1 bg-[#FF8A5B] text-[#0A1033] font-mono rounded-lg text-xs font-bold shadow-xs">F8 Bayar</kbd>
                     </div>
 
                     <!-- Mobile Menu Hamburger Button (< 1024px) -->
                     <button
                         type="button"
-                        class="lg:hidden inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-[8px] border-2 border-black bg-white text-black hover:bg-[#FFF9D2] shadow-[2px_2px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none cursor-pointer"
+                        class="lg:hidden inline-flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 text-white hover:bg-white/20 cursor-pointer"
                         @click="isMobileNavOpen = true"
                         aria-label="Buka menu navigasi"
                     >
-                        <Menu class="h-5 w-5 text-black stroke-[2.5]" />
+                        <Menu class="h-5 w-5" />
                     </button>
                 </div>
             </div>
@@ -241,34 +241,34 @@ onUnmounted(() => {
                 </div>
 
                 <!-- Right 40% Panel: Persistent Cart & Checkout Summary (Columns 8-12 = ~41.7%) -->
-                <div class="hidden lg:flex lg:col-span-5 flex-col h-full bg-white rounded-[12px] border-[3.5px] border-black shadow-[6px_6px_0px_#000] overflow-hidden p-3.5 min-h-0">
+                <div class="hidden lg:flex lg:col-span-5 flex-col h-full bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden p-4 min-h-0">
                     <slot name="cart" />
                 </div>
             </div>
         </main>
 
         <!-- Mobile & Tablet (< 1024px) Sticky Bottom Bar (56px) -->
-        <div class="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-[#FFEB3B] border-t-[3.5px] border-black px-4 h-16 flex items-center justify-between pb-[env(safe-area-inset-bottom,0px)] shadow-[0_-4px_0px_#000]">
+        <div class="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-[#10194D] text-white border-t border-[#1E293B] px-4 h-16 flex items-center justify-between pb-[env(safe-area-inset-bottom,0px)] shadow-2xl">
             <div class="flex items-center space-x-3">
-                <div class="relative flex items-center justify-center h-10 w-10 rounded-[8px] bg-black text-[#FFEB3B] border-2 border-black shadow-[2px_2px_0px_#000]">
+                <div class="relative flex items-center justify-center h-10 w-10 rounded-xl bg-[#4F5FE8] text-white shadow-sm">
                     <ShoppingBag class="h-5 w-5" />
                     <span
                         v-if="cartCount > 0"
-                        class="absolute -top-2 -right-2 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-[#FF5252] border border-black px-1 text-[11px] font-black text-black shadow-[1px_1px_0px_#000]"
+                        class="absolute -top-1.5 -right-1.5 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-[#FF8A5B] px-1 text-[11px] font-bold text-[#0A1033] shadow-xs"
                     >
                         {{ cartCount }}
                     </span>
                 </div>
                 <div>
-                    <span class="block text-[11px] text-black uppercase tracking-wider font-black leading-none">Total Tagihan</span>
-                    <span class="block text-base font-black font-mono text-black leading-tight">{{ cartTotalFormatted }}</span>
+                    <span class="block text-[10px] text-slate-400 uppercase tracking-wider font-semibold leading-none">Total Tagihan</span>
+                    <span class="block text-base font-bold font-mono text-white leading-tight">{{ cartTotalFormatted }}</span>
                 </div>
             </div>
 
             <Button
                 type="button"
                 variant="default"
-                class="min-h-[44px] px-5 font-black text-sm bg-black hover:bg-black/90 text-[#FFEB3B] active:translate-x-0.5 active:translate-y-0.5 rounded-[8px] border-2 border-black shadow-[3px_3px_0px_#000] uppercase tracking-wider"
+                class="min-h-[42px] px-5 font-bold text-sm bg-[#FF8A5B] hover:bg-[#F26B3A] text-[#0A1033] rounded-xl shadow-sm uppercase tracking-wider"
                 @click="isMobileCartOpen = true"
             >
                 Lihat Keranjang
@@ -277,89 +277,89 @@ onUnmounted(() => {
 
         <!-- Mobile Navigation Sheet (< 1024px) -->
         <Sheet v-model:open="isMobileNavOpen">
-            <SheetContent side="left" class="p-0 w-80 max-w-[85vw] flex flex-col bg-[#FFFDF5] border-r-[3.5px] border-black shadow-[6px_0px_0px_#000]">
-                <SheetHeader class="p-4 border-b-[3px] border-black text-left bg-[#FFEB3B]">
+            <SheetContent side="left" class="p-0 w-80 max-w-[85vw] flex flex-col bg-[#10194D] text-white border-r border-[#1E293B] shadow-2xl">
+                <SheetHeader class="p-5 border-b border-[#1E293B] text-left bg-[#0A1033]">
                     <div class="flex items-center space-x-3 pr-8">
-                        <div class="h-9 w-9 rounded-[8px] bg-black text-[#FFEB3B] border-2 border-black flex items-center justify-center font-black text-sm shadow-[2px_2px_0px_#000] shrink-0">
+                        <div class="h-9 w-9 rounded-xl bg-gradient-to-br from-[#6577F0] to-[#4F5FE8] text-white flex items-center justify-center font-heading font-extrabold text-sm shadow-sm shrink-0">
                             AL
                         </div>
                         <div class="truncate">
-                            <SheetTitle class="text-sm font-black text-black leading-tight tracking-tight">{{ storeName }}</SheetTitle>
-                            <SheetDescription class="text-xs font-bold text-black/70">Menu Manajemen Toko</SheetDescription>
+                            <SheetTitle class="text-sm font-heading font-bold text-white leading-tight tracking-tight">{{ storeName }}</SheetTitle>
+                            <SheetDescription class="text-xs font-medium text-slate-400">Menu Manajemen Toko</SheetDescription>
                         </div>
                     </div>
                 </SheetHeader>
 
                 <div class="p-4 space-y-2 flex-1 overflow-y-auto">
-                    <div class="px-2 pb-1 text-[10px] font-black uppercase tracking-wider text-black/70">
+                    <div class="px-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">
                         Menu Navigasi
                     </div>
-                    <nav class="space-y-2">
+                    <nav class="space-y-1">
                         <Link
                             href="/pos"
-                            class="flex items-center space-x-3 px-3.5 py-2.5 rounded-[8px] border-2 border-black text-sm font-black text-black bg-[#FFEB3B] shadow-[3px_3px_0px_#000] min-h-[44px] transition-all cursor-pointer"
+                            class="flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-sm font-bold text-white bg-[#4F5FE8] shadow-sm shadow-[#4F5FE8]/30 min-h-[42px] transition-all cursor-pointer"
                             @click="isMobileNavOpen = false"
                         >
-                            <ShoppingBag class="h-5 w-5 text-black stroke-[2.5]" />
+                            <ShoppingBag class="h-5 w-5 shrink-0" />
                             <span>Kasir POS (Utama)</span>
                         </Link>
 
                         <Link
                             href="/production/station"
-                            class="flex items-center space-x-3 px-3.5 py-2.5 rounded-[8px] border-2 border-black text-sm font-black text-black hover:bg-[#FFEB3B] shadow-[2px_2px_0px_#000] min-h-[44px] bg-white transition-all cursor-pointer"
+                            class="flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 min-h-[42px] transition-all cursor-pointer"
                             @click="isMobileNavOpen = false"
                         >
-                            <Shirt class="h-5 w-5 text-black stroke-[2.5]" />
+                            <Shirt class="h-5 w-5 shrink-0" />
                             <span>Antrean Cuci & Progres</span>
                         </Link>
 
                         <Link
                             href="/dashboard"
-                            class="flex items-center space-x-3 px-3.5 py-2.5 rounded-[8px] border-2 border-black text-sm font-black text-black hover:bg-[#FFEB3B] shadow-[2px_2px_0px_#000] min-h-[44px] bg-white transition-all cursor-pointer"
+                            class="flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 min-h-[42px] transition-all cursor-pointer"
                             @click="isMobileNavOpen = false"
                         >
-                            <LayoutDashboard class="h-5 w-5 text-black stroke-[2.5]" />
+                            <LayoutDashboard class="h-5 w-5 shrink-0" />
                             <span>Laporan Keuangan</span>
                         </Link>
 
                         <Link
                             href="/owner/expenses"
-                            class="flex items-center space-x-3 px-3.5 py-2.5 rounded-[8px] border-2 border-black text-sm font-black text-black hover:bg-[#FFEB3B] shadow-[2px_2px_0px_#000] min-h-[44px] bg-white transition-all cursor-pointer"
+                            class="flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 min-h-[42px] transition-all cursor-pointer"
                             @click="isMobileNavOpen = false"
                         >
-                            <Receipt class="h-5 w-5 text-[#FF5252] stroke-[2.5]" />
+                            <Receipt class="h-5 w-5 text-[#FF8A5B] shrink-0" />
                             <span>Pengeluaran Toko</span>
                         </Link>
 
                         <Link
                             href="/owner/receivables"
-                            class="flex items-center space-x-3 px-3.5 py-2.5 rounded-[8px] border-2 border-black text-sm font-black text-black hover:bg-[#FFEB3B] shadow-[2px_2px_0px_#000] min-h-[44px] bg-white transition-all cursor-pointer"
+                            class="flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 min-h-[42px] transition-all cursor-pointer"
                             @click="isMobileNavOpen = false"
                         >
-                            <Wallet class="h-5 w-5 text-[#2196F3] stroke-[2.5]" />
+                            <Wallet class="h-5 w-5 text-[#38BDF8] shrink-0" />
                             <span>Buku Piutang</span>
                         </Link>
 
                         <Link
                             href="/owner/settings"
-                            class="flex items-center space-x-3 px-3.5 py-2.5 rounded-[8px] border-2 border-black text-sm font-black text-black hover:bg-[#FFEB3B] shadow-[2px_2px_0px_#000] min-h-[44px] bg-white transition-all cursor-pointer"
+                            class="flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 min-h-[42px] transition-all cursor-pointer"
                             @click="isMobileNavOpen = false"
                         >
-                            <Settings class="h-5 w-5 text-black stroke-[2.5]" />
+                            <Settings class="h-5 w-5 shrink-0" />
                             <span>Pengaturan Toko & WA</span>
                         </Link>
                     </nav>
                 </div>
 
                 <!-- Drawer Footer: User Profile & Logout -->
-                <div class="p-4 border-t-[3px] border-black bg-[#FFFDF5] space-y-2.5">
-                    <div class="flex items-center space-x-2.5 p-2.5 rounded-[8px] border-2 border-black bg-white shadow-[2px_2px_0px_#000]">
-                        <div class="h-8 w-8 rounded-[6px] border-2 border-black bg-[#FFEB3B] text-black flex items-center justify-center font-black text-xs shrink-0">
+                <div class="p-4 border-t border-[#1E293B] bg-[#0A1033] space-y-2.5">
+                    <div class="flex items-center space-x-2.5 p-2.5 rounded-xl bg-[#1A2566] text-white">
+                        <div class="h-8 w-8 rounded-lg bg-[#4F5FE8] text-white flex items-center justify-center font-bold text-xs shrink-0">
                             {{ user?.name ? user.name.slice(0, 2).toUpperCase() : 'OW' }}
                         </div>
                         <div class="truncate flex-1">
-                            <span class="block text-xs font-black text-black leading-tight truncate">{{ user?.name ?? 'Andik (Owner)' }}</span>
-                            <span class="block text-[10px] font-bold text-black/60 truncate">Owner (Pemilik & Kasir)</span>
+                            <span class="block text-xs font-bold text-white leading-tight truncate">{{ user?.name ?? 'Andik' }}</span>
+                            <span class="block text-[10px] text-slate-400 truncate">Owner (Pemilik & Kasir)</span>
                         </div>
                     </div>
 
@@ -368,9 +368,9 @@ onUnmounted(() => {
                         method="post"
                         as="button"
                         @click="isMobileNavOpen = false"
-                        class="flex w-full items-center justify-center space-x-2 px-4 py-2.5 rounded-[8px] min-h-[44px] text-xs font-black uppercase tracking-wider text-black border-2 border-black bg-[#FF5252] shadow-[3px_3px_0px_#000] hover:bg-[#FF5252]/90 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
+                        class="flex w-full items-center justify-center space-x-2 px-4 py-2.5 rounded-xl min-h-[40px] text-xs font-bold text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-all cursor-pointer"
                     >
-                        <LogOut class="h-4 w-4 shrink-0 stroke-[2.5]" />
+                        <LogOut class="h-4 w-4 shrink-0" />
                         <span>Keluar dari Aplikasi</span>
                     </Link>
                 </div>
@@ -379,12 +379,12 @@ onUnmounted(() => {
 
         <!-- Mobile & Tablet Expandable Bottom Sheet for Cart & Checkout -->
         <Sheet v-model:open="isMobileCartOpen">
-            <SheetContent side="bottom" class="p-0 max-h-[92vh] flex flex-col bg-white border-t-[3.5px] border-black">
-                <SheetHeader class="p-4 border-b-2 border-black text-left bg-[#FFEB3B]">
+            <SheetContent side="bottom" class="p-0 max-h-[92vh] flex flex-col bg-white border-t border-slate-200">
+                <SheetHeader class="p-4 border-b border-slate-200 text-left bg-slate-50">
                     <div class="flex items-center justify-between">
                         <div>
-                            <SheetTitle class="text-base font-black text-black">Keranjang & Pembayaran</SheetTitle>
-                            <SheetDescription class="text-xs font-bold text-black/70">
+                            <SheetTitle class="text-base font-bold text-slate-900">Keranjang & Pembayaran</SheetTitle>
+                            <SheetDescription class="text-xs font-medium text-slate-500">
                                 {{ cartCount }} item cucian | Total: {{ cartTotalFormatted }}
                             </SheetDescription>
                         </div>

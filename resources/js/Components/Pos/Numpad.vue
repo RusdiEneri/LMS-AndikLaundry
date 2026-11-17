@@ -133,7 +133,7 @@ function onKeyClick(key: string) {
         </button>
         <button
             type="button"
-            class="btn-numpad border-2 border-black bg-[#FF5252] text-white hover:bg-[#E02424] cursor-pointer shadow-[2px_2px_0px_#000]"
+            class="btn-numpad bg-rose-500 text-white hover:bg-rose-600 cursor-pointer shadow-xs border border-rose-500"
             @click="onKeyClick('backspace')"
             aria-label="Hapus digit terakhir"
         >

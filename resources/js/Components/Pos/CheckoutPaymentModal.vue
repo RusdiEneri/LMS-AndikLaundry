@@ -203,100 +203,100 @@ async function processOrderSubmit() {
 <template>
     <div
         v-if="isOpen"
-        class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-3 sm:p-4"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-[#0A1033]/60 backdrop-blur-xs p-3 sm:p-4"
         @click.self="closeModal"
     >
-        <div class="bg-[#FFFDF5] rounded-[12px] max-w-xl w-full border-[3.5px] border-black shadow-[8px_8px_0px_#000] overflow-hidden flex flex-col max-h-[94vh]">
-            <!-- Header: Neubrutalism Yellow Banner -->
-            <div class="px-5 py-3.5 bg-[#FFEB3B] border-b-[3.5px] border-black flex items-center justify-between">
+        <div class="bg-white rounded-3xl max-w-xl w-full border border-slate-200 shadow-2xl overflow-hidden flex flex-col max-h-[94vh]">
+            <!-- Header -->
+            <div class="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
                 <div>
                     <div class="flex items-center space-x-2">
                         <span
                             :class="[
-                                'text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-[4px] border border-black',
-                                paymentTiming === 'paid' ? 'bg-[#22C55E] text-black' : 'bg-black text-[#FFEB3B]'
+                                'text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full',
+                                paymentTiming === 'paid' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-[#E6E9FD] text-[#26338A] border border-[#26338A]/20'
                             ]"
                         >
                             {{ paymentTiming === 'paid' ? 'LUNAS DI AWAL' : 'BAYAR PAS AMBIL' }}
                         </span>
                     </div>
-                    <h3 class="font-black text-lg text-black tracking-tight mt-1">Pembayaran Kasir</h3>
+                    <h3 class="font-heading font-extrabold text-lg text-slate-900 tracking-tight mt-1">Pembayaran Kasir</h3>
                 </div>
                 <div class="text-right">
-                    <span class="text-[10px] font-bold text-black uppercase tracking-wider block">Total Tagihan</span>
-                    <span class="font-mono font-black text-xl text-black bg-white px-2.5 py-0.5 rounded-[6px] border-2 border-black shadow-[2px_2px_0px_#000] inline-block">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Total Tagihan</span>
+                    <span class="font-mono font-extrabold text-xl text-[#0A1033] bg-[#E6E9FD] text-[#26338A] px-3 py-1 rounded-xl inline-block mt-0.5">
                         {{ formatRupiah(grandTotal) }}
                     </span>
                 </div>
             </div>
 
             <!-- Content Area -->
-            <div class="p-4 sm:p-5 flex-1 overflow-y-auto space-y-4">
+            <div class="p-4 sm:p-6 flex-1 overflow-y-auto space-y-4">
                 <!-- Customer Snapshot Banner -->
-                <div class="p-3 bg-white rounded-[8px] border-2 border-black shadow-[3px_3px_0px_#000] flex items-center justify-between">
-                    <div class="flex items-center space-x-2.5 min-w-0">
-                        <div class="h-9 w-9 rounded-[6px] bg-[#FFEB3B] text-black border-2 border-black shadow-[1.5px_1.5px_0px_#000] flex items-center justify-center font-black text-xs shrink-0">
+                <div class="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 flex items-center justify-between">
+                    <div class="flex items-center space-x-3 min-w-0">
+                        <div class="h-9 w-9 rounded-xl bg-[#E6E9FD] text-[#4F5FE8] flex items-center justify-center font-bold text-xs shrink-0">
                             <UserIcon class="h-4 w-4" />
                         </div>
                         <div class="truncate">
-                            <span class="font-black text-xs text-black block truncate">{{ customer?.name ?? 'Pelanggan Umum' }}</span>
-                            <span class="text-[11px] font-mono font-bold text-gray-700 block truncate">{{ customer?.phone || 'Pelanggan Walk-In' }}</span>
+                            <span class="font-heading font-bold text-xs text-slate-900 block truncate">{{ customer?.name ?? 'Pelanggan Umum' }}</span>
+                            <span class="text-[11px] font-mono text-slate-500 block truncate mt-0.5">{{ customer?.phone || 'Pelanggan Walk-In' }}</span>
                         </div>
                     </div>
                     <div
                         :class="[
-                            'shrink-0 flex items-center space-x-1 px-2.5 py-1 rounded-[6px] border-2 border-black text-[11px] font-black shadow-[1.5px_1.5px_0px_#000]',
-                            paymentTiming === 'paid' ? 'bg-[#22C55E]/20 text-black' : 'bg-[#FFEB3B] text-black'
+                            'shrink-0 flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-semibold',
+                            paymentTiming === 'paid' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-amber-50 text-amber-800 border border-amber-200'
                         ]"
                     >
-                        <ShieldCheck v-if="paymentTiming === 'paid'" class="h-3.5 w-3.5 text-[#16A34A]" />
-                        <Clock v-else class="h-3.5 w-3.5 text-black" />
+                        <ShieldCheck v-if="paymentTiming === 'paid'" class="h-3.5 w-3.5" />
+                        <Clock v-else class="h-3.5 w-3.5" />
                         <span>{{ paymentTiming === 'paid' ? 'Langsung Lunas' : 'Bayar Nanti' }}</span>
                     </div>
                 </div>
 
                 <!-- Error Alert -->
-                <div v-if="errorMessage" class="p-3 rounded-[8px] bg-[#FF5252]/15 border-2 border-black shadow-[3px_3px_0px_#000] text-black text-xs flex items-start space-x-2">
-                    <AlertTriangle class="h-4 w-4 shrink-0 mt-0.5 text-[#FF5252]" />
-                    <span class="font-bold">{{ errorMessage }}</span>
+                <div v-if="errorMessage" class="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-900 text-xs flex items-start space-x-2">
+                    <AlertTriangle class="h-4 w-4 shrink-0 mt-0.5 text-rose-600" />
+                    <span class="font-medium">{{ errorMessage }}</span>
                 </div>
 
                 <!-- OPSI WAKTU PEMBAYARAN: BAYAR SEKARANG vs BAYAR PAS AMBIL -->
                 <div>
-                    <label class="block text-xs font-black uppercase tracking-wider text-black mb-1.5">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
                         Pilihan Waktu Pembayaran
                     </label>
-                    <div class="grid grid-cols-2 gap-2.5">
+                    <div class="grid grid-cols-2 gap-3">
                         <button
                             type="button"
                             @click="paymentTiming = 'paid'"
                             :class="[
-                                'min-h-[52px] p-2.5 rounded-[8px] border-2 border-black text-xs font-black flex items-center space-x-2.5 transition-all cursor-pointer',
+                                'min-h-[52px] p-3 rounded-2xl border text-xs font-bold flex items-center space-x-3 transition-all cursor-pointer',
                                 paymentTiming === 'paid'
-                                    ? 'bg-[#22C55E] text-black shadow-[3px_3px_0px_#000] scale-[1.01]'
-                                    : 'bg-white text-gray-800 shadow-[1.5px_1.5px_0px_#000] hover:bg-[#EAFFEA]',
+                                    ? 'bg-emerald-50 border-emerald-500 text-emerald-900 shadow-xs'
+                                    : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50',
                             ]"
                         >
-                            <CheckCircle2 class="h-5 w-5 shrink-0" />
+                            <CheckCircle2 class="h-5 w-5 shrink-0 text-emerald-600" />
                             <div class="text-left">
-                                <span class="block font-black leading-tight text-xs">Bayar Sekarang</span>
-                                <span class="block text-[10px] opacity-80 font-bold">Langsung Lunas</span>
+                                <span class="block font-bold leading-tight text-xs">Bayar Sekarang</span>
+                                <span class="block text-[10px] text-slate-500 font-normal mt-0.5">Langsung Lunas</span>
                             </div>
                         </button>
                         <button
                             type="button"
                             @click="paymentTiming = 'unpaid'"
                             :class="[
-                                'min-h-[52px] p-2.5 rounded-[8px] border-2 border-black text-xs font-black flex items-center space-x-2.5 transition-all cursor-pointer',
+                                'min-h-[52px] p-3 rounded-2xl border text-xs font-bold flex items-center space-x-3 transition-all cursor-pointer',
                                 paymentTiming === 'unpaid'
-                                    ? 'bg-[#FFEB3B] text-black shadow-[3px_3px_0px_#000] scale-[1.01]'
-                                    : 'bg-white text-gray-800 shadow-[1.5px_1.5px_0px_#000] hover:bg-[#FFF9D2]',
+                                    ? 'bg-[#E6E9FD] border-[#4F5FE8] text-[#26338A] shadow-xs'
+                                    : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50',
                             ]"
                         >
-                            <Clock class="h-5 w-5 shrink-0" />
+                            <Clock class="h-5 w-5 shrink-0 text-[#4F5FE8]" />
                             <div class="text-left">
-                                <span class="block font-black leading-tight text-xs">Bayar Pas Ambil</span>
-                                <span class="block text-[10px] opacity-80 font-bold">Belum Bayar (Nanti)</span>
+                                <span class="block font-bold leading-tight text-xs">Bayar Pas Ambil</span>
+                                <span class="block text-[10px] text-slate-500 font-normal mt-0.5">Belum Bayar (Nanti)</span>
                             </div>
                         </button>
                     </div>
@@ -305,51 +305,51 @@ async function processOrderSubmit() {
                 <!-- JIKA BAYAR SEKARANG: PILIH METODE TUNAI ATAU QRIS -->
                 <div v-if="paymentTiming === 'paid'" class="space-y-4">
                     <div>
-                        <label class="block text-xs font-black uppercase tracking-wider text-black mb-1.5">
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
                             Pilih Metode Pembayaran
                         </label>
-                        <div class="grid grid-cols-2 gap-2.5">
+                        <div class="grid grid-cols-2 gap-3">
                             <button
                                 type="button"
                                 @click="paymentMethod = 'cash'"
                                 :class="[
-                                    'min-h-[50px] p-3 rounded-[8px] border-2 border-black text-xs font-black flex items-center justify-center space-x-2 transition-all cursor-pointer',
+                                    'min-h-[48px] p-3 rounded-2xl border text-xs font-bold flex items-center justify-center space-x-2 transition-all cursor-pointer',
                                     paymentMethod === 'cash'
-                                        ? 'bg-[#FFEB3B] text-black shadow-[3px_3px_0px_#000] scale-[1.01]'
-                                        : 'bg-white text-gray-800 shadow-[1.5px_1.5px_0px_#000] hover:bg-[#FFF9D2]',
+                                        ? 'bg-[#4F5FE8] border-[#4F5FE8] text-white shadow-xs'
+                                        : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50',
                                 ]"
                             >
-                                <Banknote class="h-5 w-5 shrink-0" />
+                                <Banknote class="h-4 w-4 shrink-0" />
                                 <span>Tunai (Cash)</span>
                             </button>
                             <button
                                 type="button"
                                 @click="paymentMethod = 'qris'"
                                 :class="[
-                                    'min-h-[50px] p-3 rounded-[8px] border-2 border-black text-xs font-black flex items-center justify-center space-x-2 transition-all cursor-pointer',
+                                    'min-h-[48px] p-3 rounded-2xl border text-xs font-bold flex items-center justify-center space-x-2 transition-all cursor-pointer',
                                     paymentMethod === 'qris'
-                                        ? 'bg-[#FFEB3B] text-black shadow-[3px_3px_0px_#000] scale-[1.01]'
-                                        : 'bg-white text-gray-800 shadow-[1.5px_1.5px_0px_#000] hover:bg-[#FFF9D2]',
+                                        ? 'bg-[#4F5FE8] border-[#4F5FE8] text-white shadow-xs'
+                                        : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50',
                                 ]"
                             >
-                                <QrCode class="h-5 w-5 shrink-0" />
-                                <span>QRIS Manual</span>
+                                <QrCode class="h-4 w-4 shrink-0" />
+                                <span>QRIS Toko</span>
                             </button>
                         </div>
                     </div>
 
                 <!-- MODE 1: CASH TENDER & NUMPAD -->
-                <div v-if="paymentMethod === 'cash'" class="space-y-3 p-4 bg-white rounded-[8px] border-2 border-black shadow-[3px_3px_0px_#000]">
+                <div v-if="paymentMethod === 'cash'" class="space-y-3.5 p-4 bg-slate-50 rounded-2xl border border-slate-200">
                     <div class="flex items-center justify-between text-xs">
-                        <span class="font-black text-black uppercase tracking-wider">Uang Diterima:</span>
+                        <span class="font-bold text-slate-700 uppercase tracking-wider">Uang Diterima:</span>
                         <div class="flex items-center space-x-1.5">
-                            <span class="text-gray-700 font-bold text-[11px]">Kembalian:</span>
+                            <span class="text-slate-500 font-medium text-[11px]">Kembalian:</span>
                             <span
                                 :class="[
-                                    'font-mono font-black text-sm px-2 py-0.5 rounded-[4px] border-2 border-black',
+                                    'font-mono font-bold text-sm px-2.5 py-0.5 rounded-lg border',
                                     changeAmount > 0
-                                        ? 'bg-[#22C55E] text-black shadow-[2px_2px_0px_#000]'
-                                        : 'bg-gray-100 text-gray-800',
+                                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                        : 'bg-white text-slate-600 border-slate-200',
                                 ]"
                             >
                                 {{ formatRupiah(changeAmount) }}
@@ -364,22 +364,22 @@ async function processOrderSubmit() {
                             type="text"
                             placeholder="Ketik uang tunai diterima"
                             :class="[
-                                'min-h-[48px] w-full rounded-[8px] border-2 border-black bg-white px-3.5 py-2 text-lg font-mono font-black text-black shadow-[2px_2px_0px_#000] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#2196F3]',
-                                isCashUnderpaid ? 'border-[#FF5252] bg-[#FF5252]/10' : '',
+                                'min-h-[46px] w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-lg font-mono font-bold text-slate-900 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#4F5FE8]/20 focus-visible:border-[#4F5FE8] transition-all shadow-xs',
+                                isCashUnderpaid ? 'border-rose-400 bg-rose-50/50' : '',
                             ]"
                         />
-                        <div v-if="isCashUnderpaid" class="mt-1 text-[11px] font-bold text-[#FF5252] flex items-center space-x-1">
+                        <div v-if="isCashUnderpaid" class="mt-1 text-[11px] font-medium text-rose-600 flex items-center space-x-1">
                             <AlertTriangle class="h-3.5 w-3.5" />
                             <span>Uang tunai kurang {{ formatRupiah(grandTotal - tenderNumber) }} (Tidak boleh utang)</span>
                         </div>
                     </div>
 
                     <!-- Quick Cash Buttons -->
-                    <div class="grid grid-cols-4 gap-1.5">
+                    <div class="grid grid-cols-4 gap-2">
                         <button
                             type="button"
                             @click="setExactCash"
-                            class="min-h-[42px] px-2 py-1 rounded-[6px] border-2 border-black bg-[#FFEB3B] hover:bg-[#FDE047] text-xs font-black text-black shadow-[2px_2px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none cursor-pointer transition-all"
+                            class="min-h-[40px] px-2 py-1 rounded-xl border border-[#4F5FE8] bg-[#E6E9FD] hover:bg-[#4F5FE8] hover:text-white text-xs font-bold text-[#26338A] active:scale-[0.98] cursor-pointer transition-all shadow-xs"
                         >
                             Uang Pas
                         </button>
@@ -388,7 +388,7 @@ async function processOrderSubmit() {
                             :key="preset"
                             type="button"
                             @click="setPresetTender(preset)"
-                            class="min-h-[42px] px-2 py-1 rounded-[6px] border-2 border-black bg-white hover:bg-[#FFF9D2] text-xs font-mono font-black text-black shadow-[2px_2px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none cursor-pointer transition-all"
+                            class="min-h-[40px] px-2 py-1 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-xs font-mono font-bold text-slate-800 active:scale-[0.98] cursor-pointer transition-all shadow-xs"
                         >
                             {{ preset >= 1000 ? `${preset / 1000}k` : preset }}
                         </button>
@@ -403,33 +403,33 @@ async function processOrderSubmit() {
                 </div>
 
                 <!-- MODE 2: QRIS MANUAL SCAN & VERIFY -->
-                <div v-else class="space-y-3.5 p-4 bg-white rounded-[8px] border-2 border-black shadow-[3px_3px_0px_#000]">
+                <div v-else class="space-y-3.5 p-4 bg-slate-50 rounded-2xl border border-slate-200">
                     <!-- Amount to pay header -->
-                    <div class="text-center p-3 rounded-[8px] bg-[#FFEB3B] border-2 border-black shadow-[2px_2px_0px_#000]">
-                        <span class="text-[11px] font-black uppercase tracking-wider text-black block">Nominal Transfer QRIS</span>
-                        <span class="font-mono font-black text-2xl text-black block">{{ formatRupiah(grandTotal) }}</span>
-                        <span class="text-[11px] font-bold text-gray-800 block mt-0.5">Harap pastikan pelanggan transfer dengan nominal pas</span>
+                    <div class="text-center p-3.5 rounded-2xl bg-[#E6E9FD] border border-[#26338A]/20">
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-[#26338A] block">Nominal Transfer QRIS</span>
+                        <span class="font-mono font-extrabold text-2xl text-[#10194D] block mt-0.5">{{ formatRupiah(grandTotal) }}</span>
+                        <span class="text-[11px] text-[#26338A]/80 block mt-0.5">Harap pastikan pelanggan transfer dengan nominal pas</span>
                     </div>
 
                     <!-- QRIS & Transfer Info Card -->
-                    <div class="flex flex-col items-center justify-center p-3 bg-[#FFFDF5] rounded-[8px] border-2 border-black shadow-[2px_2px_0px_#000]">
+                    <div class="flex flex-col items-center justify-center p-4 bg-white rounded-2xl border border-slate-200 shadow-xs">
                         <!-- Image Container with Toggle -->
                         <div class="relative flex justify-center">
                             <img
                                 :src="showPosterImage ? '/images/qris-andiklaundry-poster.jpg' : '/images/qris-andiklaundry.svg'"
                                 alt="QRIS Resmi Andik Laundry"
-                                class="max-w-[210px] max-h-[250px] w-full object-contain rounded-[6px] border-2 border-black shadow-[2px_2px_0px_#000] bg-white p-1"
+                                class="max-w-[210px] max-h-[250px] w-full object-contain rounded-xl border border-slate-200 shadow-sm bg-white p-2"
                             />
                         </div>
 
                         <!-- Toggle Switch: Vector vs Real Photo Poster -->
-                        <div class="flex items-center space-x-2 mt-2.5">
+                        <div class="flex items-center space-x-2 mt-3">
                             <button
                                 type="button"
                                 @click="showPosterImage = false"
                                 :class="[
-                                    'px-2 py-1 text-[10px] font-black uppercase tracking-wider rounded-[6px] border-2 border-black transition-all cursor-pointer',
-                                    !showPosterImage ? 'bg-[#FFEB3B] text-black shadow-[2px_2px_0px_#000]' : 'bg-white text-gray-700 hover:bg-gray-100'
+                                    'px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-full border transition-all cursor-pointer',
+                                    !showPosterImage ? 'bg-[#4F5FE8] text-white border-[#4F5FE8]' : 'bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200'
                                 ]"
                             >
                                 QR Scan
@@ -438,8 +438,8 @@ async function processOrderSubmit() {
                                 type="button"
                                 @click="showPosterImage = true"
                                 :class="[
-                                    'px-2 py-1 text-[10px] font-black uppercase tracking-wider rounded-[6px] border-2 border-black transition-all cursor-pointer',
-                                    showPosterImage ? 'bg-[#FFEB3B] text-black shadow-[2px_2px_0px_#000]' : 'bg-white text-gray-700 hover:bg-gray-100'
+                                    'px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-full border transition-all cursor-pointer',
+                                    showPosterImage ? 'bg-[#4F5FE8] text-white border-[#4F5FE8]' : 'bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200'
                                 ]"
                             >
                                 📷 Foto Banner Asli
@@ -448,7 +448,7 @@ async function processOrderSubmit() {
                                 href="/images/qris-andiklaundry-poster.jpg"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                class="px-2 py-1 text-[10px] font-black uppercase tracking-wider rounded-[6px] border-2 border-black bg-white hover:bg-[#FFF9D2] text-black shadow-[1.5px_1.5px_0px_#000] transition-all inline-flex items-center"
+                                class="px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-full border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 shadow-xs transition-all inline-flex items-center"
                                 title="Buka foto asli resolusi penuh"
                             >
                                 Penuh ↗
@@ -456,36 +456,36 @@ async function processOrderSubmit() {
                         </div>
 
                         <!-- Store & Payment Channels Info -->
-                        <div class="mt-2 text-center w-full">
-                            <span class="text-xs font-black text-black block">Andik Laundry, Service</span>
-                            <span class="text-[11px] font-mono font-bold text-gray-900 block">NMID: ID1026636068961 (A01)</span>
-                            <div class="mt-1.5 p-2 bg-white rounded-[6px] border border-black text-left text-[11px] space-y-1">
+                        <div class="mt-3 text-center w-full">
+                            <span class="text-xs font-bold text-slate-900 block">Andik Laundry, Service</span>
+                            <span class="text-[11px] font-mono font-medium text-slate-600 block mt-0.5">NMID: ID1026636068961 (A01)</span>
+                            <div class="mt-2 p-3 bg-slate-50 rounded-xl border border-slate-200 text-left text-xs space-y-1">
                                 <div class="flex items-center justify-between">
-                                    <span class="font-bold text-gray-700">E-Wallet DANA:</span>
-                                    <span class="font-mono font-black text-black">Scan QRIS / Akun Toko</span>
+                                    <span class="text-slate-600 font-medium">E-Wallet DANA:</span>
+                                    <span class="font-mono font-bold text-slate-900">Scan QRIS / Akun Toko</span>
                                 </div>
                                 <div class="flex items-center justify-between">
-                                    <span class="font-bold text-gray-700">Bank Mandiri:</span>
-                                    <span class="font-mono font-black text-black">Tersedia Transfer Mandiri</span>
+                                    <span class="text-slate-600 font-medium">Bank Mandiri:</span>
+                                    <span class="font-mono font-bold text-slate-900">Tersedia Transfer Mandiri</span>
                                 </div>
                             </div>
-                            <span class="text-[10px] font-bold text-gray-600 block mt-1">Dukung Semua E-Wallet (DANA, GoPay, OVO, ShopeePay) & M-Banking GPN</span>
+                            <span class="text-[11px] text-slate-500 block mt-1.5">Dukung Semua E-Wallet (DANA, GoPay, OVO, ShopeePay) & M-Banking GPN</span>
                         </div>
                     </div>
 
                     <!-- Kasir Verification Checkbox -->
                     <label
-                        class="flex items-start space-x-2.5 p-3 rounded-[8px] border-2 border-black cursor-pointer transition-all select-none"
-                        :class="isQrisVerified ? 'bg-[#22C55E]/15 border-[#16A34A]' : 'bg-[#FFFDF5] hover:bg-[#FFF9D2]'"
+                        class="flex items-start space-x-3 p-3.5 rounded-2xl border cursor-pointer transition-all select-none"
+                        :class="isQrisVerified ? 'bg-emerald-50/70 border-emerald-300 text-emerald-900' : 'bg-white border-slate-200 hover:bg-slate-50'"
                     >
                         <input
                             v-model="isQrisVerified"
                             type="checkbox"
-                            class="h-5 w-5 mt-0.5 rounded-[4px] border-2 border-black text-black focus:ring-black cursor-pointer"
+                            class="h-4 w-4 mt-0.5 rounded border-slate-300 text-[#4F5FE8] focus:ring-[#4F5FE8] cursor-pointer"
                         />
                         <div class="text-xs leading-snug">
-                            <span class="font-black text-black block">Verifikasi Pembayaran QRIS Masuk</span>
-                            <span class="text-gray-700 font-bold block mt-0.5">
+                            <span class="font-bold block">Verifikasi Pembayaran QRIS Masuk</span>
+                            <span class="text-slate-600 block mt-0.5 font-normal">
                                 Saya telah memeriksa mutasi / melihat bukti berhasil transfer senilai {{ formatRupiah(grandTotal) }} dari HP pelanggan.
                             </span>
                         </div>
@@ -494,38 +494,38 @@ async function processOrderSubmit() {
             </div>
 
             <!-- JIKA BAYAR PAS AMBIL (BELUM BAYAR) -->
-            <div v-else class="space-y-3.5 p-4 bg-white rounded-[8px] border-2 border-black shadow-[3px_3px_0px_#000]">
+            <div v-else class="space-y-3.5 p-4 bg-slate-50 rounded-2xl border border-slate-200">
                     <!-- Amount to pay header -->
-                    <div class="p-3.5 bg-[#FFF9D2] rounded-[8px] border-2 border-black shadow-[2px_2px_0px_#000] space-y-1.5">
+                    <div class="p-4 bg-white rounded-2xl border border-slate-200 shadow-xs space-y-1.5">
                         <div class="flex items-center justify-between">
-                            <span class="text-[11px] font-black uppercase tracking-wider text-black flex items-center space-x-1.5">
-                                <Clock class="h-3.5 w-3.5" />
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center space-x-1.5">
+                                <Clock class="h-3.5 w-3.5 text-[#4F5FE8]" />
                                 <span>Status: Belum Lunas (Bayar Nanti)</span>
                             </span>
-                            <span class="text-[10px] font-black uppercase tracking-wider bg-black text-[#FFEB3B] px-2 py-0.5 rounded-[4px]">
+                            <span class="text-[10px] font-bold uppercase tracking-wider bg-[#E6E9FD] text-[#26338A] px-2.5 py-0.5 rounded-full">
                                 Bayar Pas Ambil
                             </span>
                         </div>
-                        <div class="flex items-baseline justify-between pt-1 border-t border-black/20">
-                            <span class="text-xs font-bold text-gray-800">Total Tagihan Saat Pengambilan:</span>
-                            <span class="text-2xl font-mono font-black text-black">{{ formatRupiah(grandTotal) }}</span>
+                        <div class="flex items-baseline justify-between pt-2 border-t border-slate-100">
+                            <span class="text-xs text-slate-500 font-medium">Total Tagihan Saat Pengambilan:</span>
+                            <span class="text-2xl font-mono font-extrabold text-[#0A1033]">{{ formatRupiah(grandTotal) }}</span>
                         </div>
                     </div>
 
                     <!-- Flow Information for Cashier & Customer -->
-                    <div class="p-3.5 bg-[#FFFDF5] rounded-[8px] border border-black text-xs space-y-2">
-                        <span class="font-black text-black block">Alur Pembayaran Pas Ambil:</span>
-                        <ul class="space-y-1.5 text-gray-800 font-bold text-[11px] leading-relaxed">
+                    <div class="p-4 bg-white rounded-2xl border border-slate-200 text-xs space-y-2 shadow-xs">
+                        <span class="font-bold text-slate-900 block">Alur Pembayaran Pas Ambil:</span>
+                        <ul class="space-y-1.5 text-slate-600 text-xs leading-relaxed">
                             <li class="flex items-start space-x-2">
-                                <span class="text-black font-black">1.</span>
+                                <span class="text-[#4F5FE8] font-bold">1.</span>
                                 <span>Cucian langsung masuk antrean cuci dan diproses oleh tim laundry.</span>
                             </li>
                             <li class="flex items-start space-x-2">
-                                <span class="text-black font-black">2.</span>
+                                <span class="text-[#4F5FE8] font-bold">2.</span>
                                 <span>Pelanggan menerima nota digital WhatsApp dengan status <strong>BELUM LUNAS</strong> dan QRIS resmi.</span>
                             </li>
                             <li class="flex items-start space-x-2">
-                                <span class="text-black font-black">3.</span>
+                                <span class="text-[#4F5FE8] font-bold">3.</span>
                                 <span>Saat cucian selesai & diambil, pelanggan cukup <strong>menunjukkan nota digital</strong> ke kasir untuk pelunasan via Tunai atau QRIS.</span>
                             </li>
                         </ul>
@@ -534,22 +534,22 @@ async function processOrderSubmit() {
 
                 <!-- Notes (Optional) -->
                 <div>
-                    <label class="block text-xs font-black uppercase tracking-wider text-black mb-1">Catatan Struk (Opsional)</label>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Catatan Struk (Opsional)</label>
                     <input
                         v-model="orderNotes"
                         type="text"
                         placeholder="Contoh: Titip hanger 2 buah / pakaian wangi ekstra"
-                        class="min-h-[44px] w-full rounded-[8px] border-2 border-black bg-white px-3 py-2 text-xs font-bold text-black placeholder:text-gray-400 shadow-[2px_2px_0px_#000] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#2196F3]"
+                        class="min-h-[42px] w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus-visible:outline-none focus-visible:border-[#4F5FE8] focus-visible:ring-3 focus-visible:ring-[#4F5FE8]/20 transition-all shadow-xs"
                     />
                 </div>
             </div>
 
             <!-- Footer Action Buttons -->
-            <div class="p-3.5 sm:p-4 bg-[#FFEB3B]/20 border-t-[3.5px] border-black flex items-center space-x-3">
+            <div class="p-4 sm:p-5 bg-slate-50 border-t border-slate-200 flex items-center space-x-3">
                 <button
                     type="button"
                     @click="closeModal"
-                    class="min-h-[46px] px-5 py-2 rounded-[8px] border-2 border-black bg-white text-black text-xs font-black shadow-[2px_2px_0px_#000] hover:bg-[#FF5252] hover:text-white active:translate-x-0.5 active:translate-y-0.5 active:shadow-none cursor-pointer transition-all"
+                    class="min-h-[44px] px-5 py-2 rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 text-xs font-bold shadow-xs active:scale-[0.98] cursor-pointer transition-all"
                 >
                     Batal
                 </button>
@@ -558,11 +558,13 @@ async function processOrderSubmit() {
                     :disabled="isSubmitting || (paymentTiming === 'paid' && (isCashUnderpaid || (paymentMethod === 'qris' && !isQrisVerified)))"
                     @click="processOrderSubmit"
                     :class="[
-                        'min-h-[46px] flex-1 px-5 py-2 rounded-[8px] border-[3px] border-black text-black text-sm font-black uppercase tracking-wider shadow-[4px_4px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#000] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center space-x-2 cursor-pointer transition-all',
-                        paymentTiming === 'unpaid' ? 'bg-[#FFEB3B] hover:bg-[#FDE047]' : 'bg-[#22C55E] hover:bg-[#16A34A]'
+                        'min-h-[44px] flex-1 px-5 py-2 rounded-xl text-sm font-bold uppercase tracking-wider shadow-sm active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center space-x-2 cursor-pointer transition-all',
+                        paymentTiming === 'unpaid'
+                            ? 'bg-[#FF8A5B] hover:bg-[#F26B3A] text-[#0A1033] shadow-[0_4px_14px_rgba(255,138,91,0.35)]'
+                            : 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-600/25'
                     ]"
                 >
-                    <Loader2 v-if="isSubmitting" class="h-5 w-5 animate-spin" />
+                    <Loader2 v-if="isSubmitting" class="h-4 w-4 animate-spin" />
                     <span v-else>
                         {{
                             paymentTiming === 'unpaid'

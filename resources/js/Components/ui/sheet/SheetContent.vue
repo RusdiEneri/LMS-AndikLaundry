@@ -33,7 +33,7 @@ const forwarded = useForwardPropsEmits(props, emits);
 <template>
     <DialogPortal>
         <DialogOverlay
-            class="fixed inset-0 z-50 bg-[#0A0A0A]/40 backdrop-blur-xs data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0"
+            class="fixed inset-0 z-50 bg-[#0A1033]/60 backdrop-blur-xs data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0"
         />
         <DialogContent
             :class="cn(sheetVariants({ side }), props.class)"
@@ -42,9 +42,9 @@ const forwarded = useForwardPropsEmits(props, emits);
             <slot />
 
             <DialogClose
-                class="absolute right-3.5 top-3.5 inline-flex min-h-[36px] min-w-[36px] items-center justify-center rounded-[8px] border-2 border-black bg-white text-black shadow-[2px_2px_0px_#000] hover:bg-[#FF5252] hover:text-white active:translate-x-0.5 active:translate-y-0.5 active:shadow-none focus:outline-none disabled:pointer-events-none transition-all cursor-pointer z-50"
+                class="absolute right-4 top-4 inline-flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4F5FE8] transition-all cursor-pointer z-50"
             >
-                <X class="h-4 w-4 stroke-[3]" />
+                <X class="h-4 w-4" />
                 <span class="sr-only">Tutup</span>
             </DialogClose>
         </DialogContent>

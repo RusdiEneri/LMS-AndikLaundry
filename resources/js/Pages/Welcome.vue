@@ -449,9 +449,9 @@ onBeforeUnmount(() => {
         <!-- ======================================================== -->
         <main id="main-content" class="overflow-hidden">
             <!-- ======================================================== -->
-            <!-- HERO SECTION: CREAM TOP CURVING INTO NAVY ROAD           -->
+            <!-- HERO SECTION: WARM CREAM HERO (Every Sunday Style)        -->
             <!-- ======================================================== -->
-            <section class="relative bg-gradient-to-b from-[#F6F4EF] via-[#F6F4EF] to-[#10194D] pt-12 md:pt-16 pb-24 md:pb-32 px-4 sm:px-6 lg:px-8 text-[#10194D] rounded-b-[40px] md:rounded-b-[60px] shadow-2xl">
+            <section class="relative bg-[#F6F4EF] pt-12 md:pt-16 pb-20 md:pb-24 px-4 sm:px-6 lg:px-8 text-[#10194D] rounded-b-[40px] md:rounded-b-[60px] shadow-xl">
                 <!-- Decorative subtle road curve in background -->
                 <div class="absolute inset-0 pointer-events-none opacity-40 overflow-hidden">
                     <svg class="w-full h-full object-cover" viewBox="0 0 1440 800" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -464,7 +464,7 @@ onBeforeUnmount(() => {
                     <!-- Left Hero Content -->
                     <div class="lg:col-span-7 flex flex-col items-start pt-4 sm:pt-8">
                         <!-- Sub-heading Tag / Overline -->
-                        <div class="inline-flex items-center gap-2 bg-[#E6E9FD] text-[#26338A] px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-5 shadow-sm">
+                        <div class="inline-flex items-center gap-2 bg-[#E6E9FD] text-[#26338A] px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-5 shadow-xs">
                             <Sparkles class="w-4 h-4 text-[#4F5FE8]" />
                             <span>SEJAK 2009 • 1 MESIN 1 PELANGGAN</span>
                         </div>
@@ -476,8 +476,8 @@ onBeforeUnmount(() => {
                             <span class="inline-block ml-3 text-3xl sm:text-4xl">🧺</span>
                         </h1>
 
-                        <!-- Subtitle -->
-                        <p class="font-sans text-base sm:text-lg text-[#6B7194] mt-5 max-w-xl leading-relaxed">
+                        <!-- Subtitle with high-contrast Slate-700 readability -->
+                        <p class="font-sans text-base sm:text-lg text-slate-700 mt-5 max-w-xl leading-relaxed font-medium">
                             Layanan binatu modern kiloan & karpet terpercaya di Hendrosari, Menganti, Gresik. Pakaian tidak pernah dicampur, timbangan jujur, gratis antar-jemput maksimal 3 kg, dan pantau nota digital langsung dari WhatsApp.
                         </p>
 
@@ -485,7 +485,7 @@ onBeforeUnmount(() => {
                         <div class="w-full max-w-xl mt-8">
                             <form
                                 @submit.prevent="submitOrderCheck"
-                                class="bg-white rounded-full p-2 pl-5 sm:pl-6 shadow-[0_12px_32px_rgba(16,25,77,0.14)] border border-[#E3E1DA] flex items-center justify-between gap-2 transition-all focus-within:ring-3 focus-within:ring-[#4F5FE8]/40"
+                                class="bg-white rounded-full p-2 pl-5 sm:pl-6 shadow-[0_12px_32px_rgba(16,25,77,0.12)] border border-[#E3E1DA] flex items-center justify-between gap-2 transition-all focus-within:ring-3 focus-within:ring-[#4F5FE8]/40"
                             >
                                 <div class="flex items-center gap-3 flex-1 min-w-0">
                                     <Search class="w-5 h-5 text-[#4F5FE8] shrink-0" />
@@ -493,7 +493,7 @@ onBeforeUnmount(() => {
                                         v-model="orderQuery"
                                         type="text"
                                         :placeholder="typewriterPlaceholder"
-                                        class="w-full bg-transparent text-[#10194D] text-sm sm:text-base font-medium placeholder-[#6B7194] focus:outline-none"
+                                        class="w-full bg-transparent text-[#10194D] text-sm sm:text-base font-semibold placeholder-slate-400 focus:outline-none"
                                         aria-label="Nomor nota laundry atau nomor WhatsApp"
                                         @focus="onInputFocus"
                                         @blur="onInputBlur"
@@ -511,33 +511,33 @@ onBeforeUnmount(() => {
                             </form>
 
                             <!-- Error Message -->
-                            <p v-if="orderQueryError" class="text-xs text-[#E5484D] font-medium mt-2 pl-4" role="alert">
+                            <p v-if="orderQueryError" class="text-xs text-[#E5484D] font-bold mt-2 pl-4" role="alert">
                                 {{ orderQueryError }}
                             </p>
                         </div>
 
-                        <!-- Micro Social Proof Badges -->
-                        <div class="flex flex-wrap items-center gap-4 sm:gap-6 mt-8 pt-4 border-t border-[#E3E1DA]/80 w-full max-w-xl">
-                            <div class="flex items-center gap-2">
+                        <!-- Micro Social Proof Badges with High Contrast -->
+                        <div class="flex flex-wrap items-center gap-4 sm:gap-6 mt-8 pt-4 border-t border-slate-300/80 w-full max-w-xl">
+                            <div class="flex items-center gap-2.5">
                                 <div class="flex -space-x-2">
-                                    <div class="w-8 h-8 rounded-full bg-[#4F5FE8] text-white font-bold text-xs flex items-center justify-center border-2 border-white">A</div>
-                                    <div class="w-8 h-8 rounded-full bg-[#FF8A5B] text-[#10194D] font-bold text-xs flex items-center justify-center border-2 border-white">N</div>
-                                    <div class="w-8 h-8 rounded-full bg-[#22A06B] text-white font-bold text-xs flex items-center justify-center border-2 border-white">D</div>
+                                    <div class="w-8 h-8 rounded-full bg-[#4F5FE8] text-white font-extrabold text-xs flex items-center justify-center border-2 border-white shadow-xs">A</div>
+                                    <div class="w-8 h-8 rounded-full bg-[#FF8A5B] text-[#10194D] font-extrabold text-xs flex items-center justify-center border-2 border-white shadow-xs">N</div>
+                                    <div class="w-8 h-8 rounded-full bg-[#22A06B] text-white font-extrabold text-xs flex items-center justify-center border-2 border-white shadow-xs">D</div>
                                 </div>
                                 <div class="text-xs">
-                                    <div class="font-bold text-[#10194D] flex items-center gap-1">
+                                    <div class="font-extrabold text-[#10194D] flex items-center gap-1">
                                         <Star class="w-3.5 h-3.5 fill-[#F5A623] text-[#F5A623]" />
                                         <span>{{ ratingScore }} / 5.0 Rating</span>
                                     </div>
-                                    <div class="text-[#6B7194]">{{ customersLabel }} Pelanggan Puas</div>
+                                    <div class="text-slate-600 font-semibold">{{ customersLabel }} Pelanggan Puas</div>
                                 </div>
                             </div>
 
-                            <div class="h-6 w-[1px] bg-[#E3E1DA] hidden sm:block"></div>
+                            <div class="h-6 w-[1px] bg-slate-300 hidden sm:block"></div>
 
                             <div class="text-xs">
-                                <div class="font-bold text-[#10194D]">{{ ordersLabel }} Nota Dikerjakan</div>
-                                <div class="text-[#6B7194]">Standar 1 Mesin 1 Pelanggan</div>
+                                <div class="font-extrabold text-[#10194D]">{{ ordersLabel }} Nota Dikerjakan</div>
+                                <div class="text-slate-600 font-semibold">Standar 1 Mesin 1 Pelanggan</div>
                             </div>
                         </div>
                     </div>
@@ -686,33 +686,33 @@ onBeforeUnmount(() => {
                             </div>
 
                             <!-- Card 2: Navy Outline Card -->
-                            <div class="bg-[#1A2566]/80 border-2 border-white/70 text-white rounded-[24px] p-6 shadow-lg transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between">
+                            <div class="bg-[#1A2566]/90 border border-white/20 text-white rounded-[24px] p-6 shadow-lg transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between">
                                 <div>
                                     <div class="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center mb-5">
                                         <Sparkles class="w-6 h-6 text-[#FFE14D]" />
                                     </div>
                                     <h3 class="font-heading font-bold text-lg mb-2">Pewangi & Sabun Premium</h3>
-                                    <p class="font-sans text-xs sm:text-sm text-[#B5BAE0] leading-relaxed">
+                                    <p class="font-sans text-xs sm:text-sm text-slate-200 leading-relaxed">
                                         Deterjen ramah serat kain dipadukan setrika uap boiler profesional, pakaian rapi licin bebas noda gosong.
                                     </p>
                                 </div>
-                                <div class="mt-6 text-xs font-semibold text-[#B5BAE0]">
+                                <div class="mt-6 text-xs font-semibold text-[#FFE14D]">
                                     Aroma Tahan Lama
                                 </div>
                             </div>
 
                             <!-- Card 3: Navy Outline Card -->
-                            <div class="bg-[#1A2566]/80 border-2 border-white/70 text-white rounded-[24px] p-6 shadow-lg transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between">
+                            <div class="bg-[#1A2566]/90 border border-white/20 text-white rounded-[24px] p-6 shadow-lg transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between">
                                 <div>
                                     <div class="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center mb-5">
                                         <Truck class="w-6 h-6 text-[#FF8A5B]" />
                                     </div>
                                     <h3 class="font-heading font-bold text-lg mb-2">Free Ongkir Maks 3 kg</h3>
-                                    <p class="font-sans text-xs sm:text-sm text-[#B5BAE0] leading-relaxed">
+                                    <p class="font-sans text-xs sm:text-sm text-slate-200 leading-relaxed">
                                         Layanan antar jemput cucian praktis langsung ke depan pintu rumah Anda di area Hendrosari & sekitarnya.
                                     </p>
                                 </div>
-                                <div class="mt-6 text-xs font-semibold text-[#B5BAE0]">
+                                <div class="mt-6 text-xs font-semibold text-[#FF8A5B]">
                                     Antar Jemput Cepat
                                 </div>
                             </div>
@@ -721,13 +721,13 @@ onBeforeUnmount(() => {
                         <!-- Right Section Header / Description -->
                         <div class="lg:col-span-4 flex flex-col items-start lg:pl-6">
                             <!-- Section Number Badge 01 -->
-                            <div class="w-10 h-10 rounded-full border-2 border-white/80 flex items-center justify-center font-heading font-extrabold text-sm text-white mb-4">
+                            <div class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center font-heading font-extrabold text-sm text-white mb-4 bg-white/10">
                                 01
                             </div>
                             <h2 class="font-heading font-extrabold text-3xl sm:text-4xl uppercase tracking-tight text-white leading-tight">
                                 LAYANAN UTAMA KAMI
                             </h2>
-                            <p class="font-sans text-sm text-[#B5BAE0] mt-4 leading-relaxed">
+                            <p class="font-sans text-sm text-slate-200 mt-4 leading-relaxed">
                                 Sejak 2009, Andik Laundry berkomitmen memberikan pelayanan binatu paling rapi, jujur timbangannya, dan terjaga kebersihannya untuk warga Gresik.
                             </p>
                             <a
@@ -750,13 +750,13 @@ onBeforeUnmount(() => {
                     <!-- Section Header -->
                     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
                         <div>
-                            <div class="w-10 h-10 rounded-full border-2 border-white/80 flex items-center justify-center font-heading font-extrabold text-sm text-white mb-4">
+                            <div class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center font-heading font-extrabold text-sm text-white mb-4 bg-white/10">
                                 02
                             </div>
                             <h2 class="font-heading font-extrabold text-3xl sm:text-4xl uppercase tracking-tight text-white">
                                 PAKET SPESIAL & TARIF
                             </h2>
-                            <p class="font-sans text-sm sm:text-base text-[#B5BAE0] mt-2 max-w-xl">
+                            <p class="font-sans text-sm sm:text-base text-slate-200 mt-2 max-w-xl">
                                 Tarif transparan dan jujur. Minimal order kiloan 2 kg. Tersedia pengerjaan Reguler (2-3 hari) dan Ekspres (pagi antar, sore ambil).
                             </p>
                         </div>
@@ -779,7 +779,7 @@ onBeforeUnmount(() => {
                         <div
                             v-for="service in services"
                             :key="service.id"
-                            class="bg-white text-[#10194D] rounded-[28px] p-6 shadow-xl border border-[#E3E1DA] hover:shadow-[0_20px_48px_rgba(16,25,77,0.18)] transition-all duration-300 hover:-translate-y-2 flex flex-col justify-between relative group"
+                            class="bg-white text-[#10194D] rounded-[28px] p-6 shadow-xl border border-slate-200 hover:shadow-[0_20px_48px_rgba(16,25,77,0.18)] transition-all duration-300 hover:-translate-y-2 flex flex-col justify-between relative group"
                         >
                             <!-- Top Info & Badges -->
                             <div>
@@ -799,27 +799,27 @@ onBeforeUnmount(() => {
                                 <h3 class="font-heading font-extrabold text-xl text-[#10194D] mb-1">
                                     {{ service.name }}
                                 </h3>
-                                <p class="text-xs text-[#6B7194] font-medium mb-4">
+                                <p class="text-xs text-slate-500 font-semibold mb-4">
                                     {{ service.minWeight }}
                                 </p>
 
                                 <!-- Price Tag -->
-                                <div class="bg-[#F6F4EF] rounded-[20px] p-4 mb-5 border border-[#E3E1DA]">
-                                    <div class="text-xs text-[#6B7194] font-medium">Tarif Mulai</div>
+                                <div class="bg-[#F8FAFC] rounded-[20px] p-4 mb-5 border border-slate-200">
+                                    <div class="text-xs text-slate-500 font-medium">Tarif Mulai</div>
                                     <div class="flex items-baseline gap-1 mt-0.5">
                                         <span class="font-heading font-extrabold text-2xl sm:text-3xl text-[#10194D]">
                                             {{ service.price }}
                                         </span>
-                                        <span class="text-xs font-bold text-[#6B7194]">/ {{ service.unit }}</span>
+                                        <span class="text-xs font-bold text-slate-500">/ {{ service.unit }}</span>
                                     </div>
                                 </div>
 
-                                <p class="text-xs text-[#6B7194] leading-relaxed mb-5">
+                                <p class="text-xs text-slate-600 leading-relaxed mb-5 font-medium">
                                     {{ service.desc }}
                                 </p>
 
                                 <!-- Feature Checklist -->
-                                <ul class="space-y-2 text-xs text-[#10194D] font-medium mb-6">
+                                <ul class="space-y-2 text-xs text-slate-800 font-medium mb-6">
                                     <li v-for="(feat, fIdx) in service.features" :key="fIdx" class="flex items-start gap-2">
                                         <Check class="w-4 h-4 text-[#22A06B] shrink-0 mt-0.5" />
                                         <span>{{ feat }}</span>
@@ -885,16 +885,16 @@ onBeforeUnmount(() => {
 
                     <!-- Overlapping White Ticket Card (Every Sunday Signature) -->
                     <div class="relative -mt-24 sm:-mt-28 mx-auto max-w-4xl z-20 px-2 sm:px-4">
-                        <div class="bg-white text-[#10194D] rounded-[28px] sm:rounded-[32px] shadow-[0_20px_48px_rgba(16,25,77,0.22)] border border-[#E3E1DA] overflow-hidden flex flex-col md:flex-row items-stretch">
+                        <div class="bg-white text-[#10194D] rounded-[28px] sm:rounded-[32px] shadow-[0_20px_48px_rgba(16,25,77,0.22)] border border-slate-200 overflow-hidden flex flex-col md:flex-row items-stretch">
                             <!-- Left: Illustration Mini-car / Basket -->
-                            <div class="md:w-5/12 bg-[#F6F4EF] p-6 sm:p-8 flex items-center justify-center border-b md:border-b-0 md:border-r border-[#E3E1DA]">
+                            <div class="md:w-5/12 bg-[#F6F4EF] p-6 sm:p-8 flex items-center justify-center border-b md:border-b-0 md:border-r border-slate-200">
                                 <div class="text-center">
                                     <div class="w-24 h-24 mx-auto rounded-full bg-[#E6E9FD] flex items-center justify-center text-4xl mb-4 shadow-sm">
                                         👕
                                     </div>
                                     <div class="font-heading font-extrabold text-lg text-[#10194D]">Paket All-In-One</div>
-                                    <p class="text-xs text-[#6B7194] mt-1">Cuci + Kering Mesin + Setrika Uap</p>
-                                    <span class="inline-block mt-3 bg-[#22A06B]/15 text-[#22A06B] font-bold text-[11px] px-3 py-1 rounded-full">
+                                    <p class="text-xs text-slate-600 mt-1 font-medium">Cuci + Kering Mesin + Setrika Uap</p>
+                                    <span class="inline-block mt-3 bg-[#22A06B]/15 text-[#12724A] font-bold text-[11px] px-3 py-1 rounded-full">
                                         Higienis 1 Mesin 1 Pelanggan
                                     </span>
                                 </div>
@@ -910,10 +910,10 @@ onBeforeUnmount(() => {
                                         <span class="font-heading font-extrabold text-3xl sm:text-4xl text-[#F26B3A]">
                                             Rp 8.000
                                         </span>
-                                        <span class="text-sm font-bold text-[#6B7194]">/ kg</span>
+                                        <span class="text-sm font-bold text-slate-500">/ kg</span>
                                     </div>
 
-                                    <ul class="space-y-2.5 text-xs sm:text-sm text-[#10194D] font-medium mb-6">
+                                    <ul class="space-y-2.5 text-xs sm:text-sm text-slate-800 font-medium mb-6">
                                         <li class="flex items-center gap-2">
                                             <Check class="w-4 h-4 text-[#22A06B] shrink-0" />
                                             <span>1 Mesin 1 Pelanggan (Tidak pernah dicampur)</span>
@@ -945,7 +945,7 @@ onBeforeUnmount(() => {
                             </div>
 
                             <!-- Right: Signature Vertical Orange Ticket Stub (Every Sunday) -->
-                            <div class="md:w-1/12 bg-[#FF8A5B] text-[#10194D] font-bold text-xs uppercase tracking-widest writing-vertical flex items-center justify-center py-4 px-3 select-none">
+                            <div class="md:w-1/12 bg-[#FF8A5B] text-[#10194D] font-extrabold text-xs uppercase tracking-widest writing-vertical flex items-center justify-center py-4 px-3 select-none">
                                 <span>ANDIK LAUNDRY • GRESIK</span>
                             </div>
                         </div>
@@ -960,13 +960,13 @@ onBeforeUnmount(() => {
                 <div class="max-w-7xl mx-auto">
                     <!-- Section Header -->
                     <div class="mb-10">
-                        <div class="w-10 h-10 rounded-full border-2 border-white/80 flex items-center justify-center font-heading font-extrabold text-sm text-white mb-4">
+                        <div class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center font-heading font-extrabold text-sm text-white mb-4 bg-white/10">
                             04
                         </div>
                         <h2 class="font-heading font-extrabold text-3xl sm:text-4xl uppercase tracking-tight text-white">
                             TIPS & INFORMASI CUCIAN
                         </h2>
-                        <p class="font-sans text-sm sm:text-base text-[#B5BAE0] mt-2">
+                        <p class="font-sans text-sm sm:text-base text-slate-200 mt-2">
                             Edukasi perawatan pakaian dan komitmen higienitas kami untuk kenyamanan keluarga Anda.
                         </p>
                     </div>
@@ -986,10 +986,10 @@ onBeforeUnmount(() => {
                                 <h3 class="font-heading font-bold text-xl sm:text-2xl text-white group-hover:text-[#FFE14D] transition-colors leading-snug">
                                     Tips Merawat Baju & Sprei Agar Tidak Cepat Kusam dan Tetap Wangi Semerbak
                                 </h3>
-                                <p class="text-xs sm:text-sm text-[#B5BAE0] mt-2 line-clamp-2">
+                                <p class="text-xs sm:text-sm text-slate-200 mt-2 line-clamp-2">
                                     Ketahui cara memisahkan pakaian warna pekat, penggunaan air bersih terfilter, dan teknik setrika uap yang aman bagi serat kain.
                                 </p>
-                                <div class="flex items-center gap-4 text-xs text-[#B5BAE0] mt-4 pt-4 border-t border-white/10">
+                                <div class="flex items-center gap-4 text-xs text-slate-300 mt-4 pt-4 border-t border-white/10">
                                     <span class="flex items-center gap-1.5"><Calendar class="w-3.5 h-3.5" /> 16 Nov 2026</span>
                                     <span>•</span>
                                     <span>Tim Andik Laundry</span>
@@ -1010,10 +1010,10 @@ onBeforeUnmount(() => {
                                 <h3 class="font-heading font-bold text-xl sm:text-2xl text-white group-hover:text-[#FFE14D] transition-colors leading-snug">
                                     Mengapa Standar 1 Mesin 1 Pelanggan Sangat Penting Bagi Kesehatan & Kesucian?
                                 </h3>
-                                <p class="text-xs sm:text-sm text-[#B5BAE0] mt-2 line-clamp-2">
+                                <p class="text-xs sm:text-sm text-slate-200 mt-2 line-clamp-2">
                                     Mencampur pakaian dengan orang tak dikenal berisiko memindahkan kuman dan melanggar kesucian pakaian ibadah. Inilah prinsip yang kami jaga sejak 2009.
                                 </p>
-                                <div class="flex items-center gap-4 text-xs text-[#B5BAE0] mt-4 pt-4 border-t border-white/10">
+                                <div class="flex items-center gap-4 text-xs text-slate-300 mt-4 pt-4 border-t border-white/10">
                                     <span class="flex items-center gap-1.5"><Calendar class="w-3.5 h-3.5" /> 15 Nov 2026</span>
                                     <span>•</span>
                                     <span>Tim Andik Laundry</span>
@@ -1030,18 +1030,18 @@ onBeforeUnmount(() => {
             <section id="lokasi" class="relative bg-[#0A1033] pt-16 pb-24 px-4 sm:px-6 lg:px-8 text-white">
                 <div class="max-w-7xl mx-auto">
                     <div class="mb-10">
-                        <div class="w-10 h-10 rounded-full border-2 border-white/80 flex items-center justify-center font-heading font-extrabold text-sm text-white mb-4">
+                        <div class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center font-heading font-extrabold text-sm text-white mb-4 bg-white/10">
                             05
                         </div>
                         <h2 class="font-heading font-extrabold text-3xl sm:text-4xl uppercase tracking-tight text-white">
                             KUNJUNGI OUTLET KAMI
                         </h2>
-                        <p class="font-sans text-sm sm:text-base text-[#B5BAE0] mt-2">
+                        <p class="font-sans text-sm sm:text-base text-slate-200 mt-2">
                             Datang langsung untuk drop cucian atau gunakan layanan antar jemput kami.
                         </p>
                     </div>
 
-                    <div class="bg-white text-[#10194D] rounded-[28px] sm:rounded-[36px] p-6 sm:p-8 shadow-2xl border border-[#E3E1DA] grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    <div class="bg-white text-[#10194D] rounded-[28px] sm:rounded-[36px] p-6 sm:p-8 shadow-2xl border border-slate-200 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                         <!-- Left Info Card -->
                         <div class="lg:col-span-5 flex flex-col justify-between h-full">
                             <div>
@@ -1057,7 +1057,7 @@ onBeforeUnmount(() => {
                                         <MapPin class="w-5 h-5 text-[#4F5FE8] shrink-0 mt-0.5" />
                                         <div>
                                             <div class="font-bold">Alamat Lengkap:</div>
-                                            <p class="text-[#6B7194] leading-relaxed mt-0.5">
+                                            <p class="text-slate-600 font-medium leading-relaxed mt-0.5">
                                                 Hendrosari, RT.06/RW.03, Hendrosari, Kec. Menganti, Kabupaten Gresik, Jawa Timur 61174
                                             </p>
                                         </div>
@@ -1067,7 +1067,7 @@ onBeforeUnmount(() => {
                                         <Clock class="w-5 h-5 text-[#22A06B] shrink-0 mt-0.5" />
                                         <div>
                                             <div class="font-bold">Jam Operasional:</div>
-                                            <p class="text-[#6B7194] mt-0.5">
+                                            <p class="text-slate-600 font-medium mt-0.5">
                                                 Buka Setiap Hari: 07.00 – 20.00 WIB
                                             </p>
                                         </div>
@@ -1077,7 +1077,7 @@ onBeforeUnmount(() => {
                                         <Truck class="w-5 h-5 text-[#FF8A5B] shrink-0 mt-0.5" />
                                         <div>
                                             <div class="font-bold">Antar Jemput:</div>
-                                            <p class="text-[#6B7194] mt-0.5">
+                                            <p class="text-slate-600 font-medium mt-0.5">
                                                 Gratis ongkir untuk cucian maksimal 3 kg di area sekitar.
                                             </p>
                                         </div>
@@ -1109,7 +1109,7 @@ onBeforeUnmount(() => {
                         </div>
 
                         <!-- Right Google Maps Interactive Embed -->
-                        <div class="lg:col-span-7 h-[360px] sm:h-[420px] rounded-[24px] overflow-hidden border border-[#E3E1DA] shadow-inner relative">
+                        <div class="lg:col-span-7 h-[360px] sm:h-[420px] rounded-[24px] overflow-hidden border border-slate-200 shadow-inner relative">
                             <iframe
                                 title="Peta Lokasi Resmi Andik Laundry Gresik"
                                 class="w-full h-full border-0"
@@ -1129,13 +1129,13 @@ onBeforeUnmount(() => {
             <section id="faq" class="relative bg-[#10194D] pt-16 pb-24 px-4 sm:px-6 lg:px-8 text-white">
                 <div class="max-w-4xl mx-auto">
                     <div class="text-center mb-12">
-                        <div class="w-10 h-10 rounded-full border-2 border-white/80 mx-auto flex items-center justify-center font-heading font-extrabold text-sm text-white mb-4">
+                        <div class="w-10 h-10 rounded-full border border-white/40 mx-auto flex items-center justify-center font-heading font-extrabold text-sm text-white mb-4 bg-white/10">
                             06
                         </div>
                         <h2 class="font-heading font-extrabold text-3xl sm:text-4xl uppercase tracking-tight text-white">
                             PERTANYAAN YANG SERING DITANYAKAN
                         </h2>
-                        <p class="font-sans text-sm sm:text-base text-[#B5BAE0] mt-2">
+                        <p class="font-sans text-sm sm:text-base text-slate-200 mt-2">
                             Punya pertanyaan lain seputar pencucian, timbangan, atau antar-jemput? Cek jawaban di bawah ini.
                         </p>
                     </div>
@@ -1162,7 +1162,7 @@ onBeforeUnmount(() => {
 
                             <div
                                 v-show="activeFaqIndex === fIdx"
-                                class="px-6 pb-6 text-xs sm:text-sm text-[#B5BAE0] leading-relaxed border-t border-white/5 pt-4 animate-fadeIn"
+                                class="px-6 pb-6 text-xs sm:text-sm text-slate-200 leading-relaxed border-t border-white/5 pt-4 animate-fadeIn"
                             >
                                 {{ faq.a }}
                             </div>
@@ -1181,7 +1181,7 @@ onBeforeUnmount(() => {
                         SIAP CUCIAN BERSIH TANPA REPOT? <br />
                         <span class="text-[#FFE14D]">PESAN SEKARANG</span> JUGA!
                     </h2>
-                    <p class="font-sans text-sm sm:text-base text-[#B5BAE0] mt-4 max-w-xl mx-auto leading-relaxed">
+                    <p class="font-sans text-sm sm:text-base text-slate-200 mt-4 max-w-xl mx-auto leading-relaxed">
                         Kirim pesan ke admin WhatsApp kami untuk penjemputan cucian gratis (maks 3 kg) atau lacak langsung progres nota Anda.
                     </p>
 
@@ -1189,13 +1189,13 @@ onBeforeUnmount(() => {
                     <div class="max-w-xl mx-auto mt-8">
                         <form
                             @submit.prevent="submitOrderCheck"
-                            class="bg-white rounded-full p-2 pl-6 shadow-2xl border border-[#E3E1DA] flex items-center justify-between gap-2 transition-all focus-within:ring-3 focus-within:ring-[#4F5FE8]/40"
+                            class="bg-white rounded-full p-2 pl-6 shadow-2xl border border-slate-200 flex items-center justify-between gap-2 transition-all focus-within:ring-3 focus-within:ring-[#4F5FE8]/40"
                         >
                             <input
                                 v-model="orderQuery"
                                 type="text"
                                 placeholder="Masukkan nomor nota atau No. HP…"
-                                class="w-full bg-transparent text-[#10194D] text-sm sm:text-base font-medium placeholder-[#6B7194] focus:outline-none"
+                                class="w-full bg-transparent text-[#10194D] text-sm sm:text-base font-semibold placeholder-slate-400 focus:outline-none"
                             />
                             <button
                                 type="submit"
@@ -1228,7 +1228,7 @@ onBeforeUnmount(() => {
         <!-- ======================================================== -->
         <!-- FOOTER (DESIGN.md)                                       -->
         <!-- ======================================================== -->
-        <footer class="bg-[#070B24] text-[#B5BAE0] border-t border-white/10 pt-16 pb-12 px-4 sm:px-6 lg:px-8">
+        <footer class="bg-[#070B24] text-slate-300 border-t border-white/10 pt-16 pb-12 px-4 sm:px-6 lg:px-8">
             <div class="max-w-7xl mx-auto">
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-white/10">
                     <!-- Brand Column -->
@@ -1241,7 +1241,7 @@ onBeforeUnmount(() => {
                                 LAUNDRY
                             </span>
                         </Link>
-                        <p class="font-sans text-xs sm:text-sm text-[#B5BAE0] mt-4 max-w-sm leading-relaxed">
+                        <p class="font-sans text-xs sm:text-sm text-slate-300 mt-4 max-w-sm leading-relaxed font-normal">
                             Layanan binatu harian higienis dan terpercaya di Gresik sejak 2009. Berprinsip 1 mesin 1 pelanggan, menjaga kesucian dan kebersihan pakaian keluarga Anda.
                         </p>
                         <div class="text-xs text-[#FFE14D] font-bold mt-4">
@@ -1254,7 +1254,7 @@ onBeforeUnmount(() => {
                         <div class="font-heading font-bold text-sm text-white uppercase tracking-wider mb-4">
                             Layanan Unggulan
                         </div>
-                        <ul class="space-y-2.5 text-xs text-[#B5BAE0]">
+                        <ul class="space-y-2.5 text-xs text-slate-300">
                             <li><a href="#tarif" class="hover:text-white transition-colors">Cuci Setrika Komplit (Rp 8.000/kg)</a></li>
                             <li><a href="#tarif" class="hover:text-white transition-colors">Cuci Kering Lipat (Rp 6.000/kg)</a></li>
                             <li><a href="#tarif" class="hover:text-white transition-colors">Cuci Basah Ekonomis (Rp 5.000/kg)</a></li>
@@ -1267,7 +1267,7 @@ onBeforeUnmount(() => {
                         <div class="font-heading font-bold text-sm text-white uppercase tracking-wider mb-4">
                             Akses & Bantuan
                         </div>
-                        <ul class="space-y-2.5 text-xs text-[#B5BAE0] mb-6">
+                        <ul class="space-y-2.5 text-xs text-slate-300 mb-6">
                             <li><a href="#lacak" class="hover:text-white transition-colors">Cek Status Nota Digital</a></li>
                             <li><a href="#lokasi" class="hover:text-white transition-colors">Petunjuk Arah Google Maps</a></li>
                             <li><a :href="whatsappUrl" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">Chat Admin WhatsApp</a></li>
@@ -1277,7 +1277,7 @@ onBeforeUnmount(() => {
                 </div>
 
                 <!-- Copyright -->
-                <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#6B7194]">
+                <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
                     <div>
                         © 2009 – 2026 Andik Laundry (Hendrosari, Menganti, Gresik). Seluruh hak cipta dilindungi.
                     </div>

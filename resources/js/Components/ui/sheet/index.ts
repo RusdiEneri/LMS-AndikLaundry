@@ -1,14 +1,14 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 
 export const sheetVariants = cva(
-    'fixed z-50 gap-4 bg-[#FFFDF5] text-black shadow-lg transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500',
+    'fixed z-50 gap-4 bg-white text-slate-900 shadow-2xl transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500',
     {
         variants: {
             side: {
-                top: 'inset-x-0 top-0 border-b-[3.5px] border-black shadow-[0px_6px_0px_#000] data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top',
-                bottom: 'inset-x-0 bottom-0 border-t-[3.5px] border-black shadow-[0px_-6px_0px_#000] rounded-t-[14px] max-h-[92vh] overflow-y-auto data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom',
-                left: 'inset-y-0 left-0 h-full w-3/4 border-r-[3.5px] border-black shadow-[6px_0px_0px_#000] sm:max-w-sm data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left',
-                right: 'inset-y-0 right-0 h-full w-3/4 border-l-[3.5px] border-black shadow-[-6px_0px_0px_#000] sm:max-w-sm data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right',
+                top: 'inset-x-0 top-0 border-b border-slate-200 data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top',
+                bottom: 'inset-x-0 bottom-0 border-t border-slate-200 rounded-t-3xl max-h-[92vh] overflow-y-auto data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom',
+                left: 'inset-y-0 left-0 h-full w-3/4 border-r border-slate-200 sm:max-w-sm data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left',
+                right: 'inset-y-0 right-0 h-full w-3/4 border-l border-slate-200 sm:max-w-sm data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right',
             },
         },
         defaultVariants: {

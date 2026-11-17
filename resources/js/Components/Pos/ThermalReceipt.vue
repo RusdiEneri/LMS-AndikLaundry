@@ -163,23 +163,23 @@ function handleNewTransaction() {
         class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-3 sm:p-4 overflow-y-auto"
         @click.self="handleClose"
     >
-        <div class="bg-white rounded-[12px] max-w-lg w-full shadow-[8px_8px_0px_#000] border-[3.5px] border-black overflow-hidden flex flex-col my-auto max-h-[95vh]">
+        <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-slate-200/90 overflow-hidden flex flex-col my-auto max-h-[92vh]">
             <!-- Header & Paper Width Controls -->
-            <div class="px-5 py-3.5 bg-[#FFEB3B] border-b-[3px] border-black flex items-center justify-between no-print">
+            <div class="px-6 py-4 bg-[#10194D] text-white flex items-center justify-between no-print">
                 <div class="flex items-center space-x-2">
-                    <Printer class="h-5 w-5 text-black stroke-[2.5]" />
-                    <span class="font-black text-sm text-black uppercase tracking-wider">Struk Transaksi Kasir</span>
+                    <Printer class="h-5 w-5 text-white" />
+                    <span class="font-bold text-sm text-white uppercase tracking-wider">Struk Transaksi Kasir</span>
                 </div>
 
                 <div class="flex items-center space-x-2">
                     <!-- Paper Width Toggle (58mm / 80mm) -->
-                    <div class="flex items-center bg-white border-2 border-black p-0.5 rounded-[6px] text-xs font-mono font-bold shadow-[2px_2px_0px_#000]">
+                    <div class="flex items-center bg-white/10 p-0.5 rounded-lg border border-white/20 text-xs font-mono font-bold">
                         <button
                             type="button"
                             @click="currentPaperWidth = '58mm'"
                             :class="[
-                                'px-2 py-0.5 rounded-[4px] font-black transition-all cursor-pointer',
-                                currentPaperWidth === '58mm' ? 'bg-black text-[#FFEB3B]' : 'text-black hover:bg-slate-100',
+                                'px-2.5 py-1 rounded-md transition-all cursor-pointer',
+                                currentPaperWidth === '58mm' ? 'bg-white text-[#10194D] shadow-xs' : 'text-white/80 hover:bg-white/10',
                             ]"
                         >
                             58mm
@@ -188,8 +188,8 @@ function handleNewTransaction() {
                             type="button"
                             @click="currentPaperWidth = '80mm'"
                             :class="[
-                                'px-2 py-0.5 rounded-[4px] font-black transition-all cursor-pointer',
-                                currentPaperWidth === '80mm' ? 'bg-black text-[#FFEB3B]' : 'text-black hover:bg-slate-100',
+                                'px-2.5 py-1 rounded-md transition-all cursor-pointer',
+                                currentPaperWidth === '80mm' ? 'bg-white text-[#10194D] shadow-xs' : 'text-white/80 hover:bg-white/10',
                             ]"
                         >
                             80mm
@@ -199,21 +199,21 @@ function handleNewTransaction() {
                     <button
                         type="button"
                         @click="handleClose"
-                        class="h-8 w-8 rounded-[6px] border-2 border-black bg-white text-black hover:bg-[#FF5252] hover:text-white shadow-[2px_2px_0px_#000] flex items-center justify-center transition-all cursor-pointer active:translate-x-[1px] active:translate-y-[1px] active:shadow-none"
+                        class="h-8 w-8 rounded-full bg-white/10 text-white hover:bg-white/20 flex items-center justify-center transition-all cursor-pointer"
                         aria-label="Tutup Struk"
                     >
-                        <X class="h-4 w-4 stroke-[3]" />
+                        <X class="h-4 w-4" />
                     </button>
                 </div>
             </div>
 
             <!-- Receipt Preview Area -->
-            <div class="p-4 sm:p-6 flex-1 overflow-y-auto bg-[#FFFDF5] flex justify-center border-b-[3px] border-black">
+            <div class="p-4 sm:p-6 flex-1 overflow-y-auto bg-slate-100 flex justify-center border-b border-slate-200">
                 <!-- PRINTABLE RECEIPT CONTAINER -->
                 <div
                     id="thermal-receipt-printable"
                     :class="[
-                        'bg-white text-black font-mono text-[11px] leading-relaxed p-4 shadow-[4px_4px_0px_#000] border-2 border-black transition-all select-text',
+                        'bg-white text-black font-mono text-[11px] leading-relaxed p-4 shadow-md rounded-lg border border-slate-300 transition-all select-text',
                         currentPaperWidth === '58mm' ? 'w-[230px] max-w-[230px]' : 'w-[320px] max-w-[320px]',
                     ]"
                 >
@@ -347,15 +347,15 @@ function handleNewTransaction() {
             </div>
 
             <!-- Footer Action Buttons (Excluded from print) -->
-            <div class="p-4 bg-[#FFFDF5] space-y-2.5 no-print">
+            <div class="p-5 bg-slate-50 space-y-2.5 no-print border-t border-slate-200">
                 <div class="grid grid-cols-2 gap-2.5">
                     <!-- Print Button -->
                     <button
                         type="button"
                         @click="printReceipt"
-                        class="min-h-[44px] flex items-center justify-center space-x-2 rounded-[8px] bg-black hover:bg-neutral-800 text-white font-black text-xs uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all cursor-pointer"
+                        class="min-h-[44px] flex items-center justify-center space-x-2 rounded-xl bg-[#10194D] hover:bg-[#1A2566] text-white font-bold text-xs uppercase tracking-wider shadow-xs transition-all cursor-pointer"
                     >
-                        <Printer class="h-4 w-4 stroke-[2.5]" />
+                        <Printer class="h-4 w-4" />
                         <span>Cetak Struk [P]</span>
                     </button>
 
@@ -364,9 +364,9 @@ function handleNewTransaction() {
                         :href="whatsappUrl"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="min-h-[44px] flex items-center justify-center space-x-2 rounded-[8px] bg-[#22C55E] hover:bg-[#16a34a] text-black font-black text-xs uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all cursor-pointer"
+                        class="min-h-[44px] flex items-center justify-center space-x-2 rounded-xl bg-[#22C55E] hover:bg-[#16a34a] text-white font-bold text-xs uppercase tracking-wider shadow-xs transition-all cursor-pointer"
                     >
-                        <Send class="h-4 w-4 stroke-[2.5]" />
+                        <Send class="h-4 w-4" />
                         <span>Kirim WhatsApp</span>
                     </a>
                 </div>
@@ -376,10 +376,10 @@ function handleNewTransaction() {
                     <button
                         type="button"
                         @click="copyReceiptText"
-                        class="min-h-[42px] flex items-center justify-center space-x-2 rounded-[8px] border-2 border-black bg-white hover:bg-slate-100 text-black font-black text-xs uppercase tracking-wider shadow-[3px_3px_0px_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all cursor-pointer"
+                        class="min-h-[42px] flex items-center justify-center space-x-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs uppercase tracking-wider shadow-xs transition-all cursor-pointer"
                     >
-                        <Check v-if="isCopied" class="h-4 w-4 text-[#22C55E] stroke-[3]" />
-                        <Copy v-else class="h-4 w-4 text-black stroke-[2.5]" />
+                        <Check v-if="isCopied" class="h-4 w-4 text-[#22C55E]" />
+                        <Copy v-else class="h-4 w-4 text-slate-500" />
                         <span>{{ isCopied ? 'Tersalin!' : 'Salin Teks' }}</span>
                     </button>
 
@@ -388,9 +388,9 @@ function handleNewTransaction() {
                         :href="digitalReceiptUrl"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="min-h-[42px] flex items-center justify-center space-x-2 rounded-[8px] border-2 border-black bg-white hover:bg-slate-100 text-black font-black text-xs uppercase tracking-wider shadow-[3px_3px_0px_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all cursor-pointer"
+                        class="min-h-[42px] flex items-center justify-center space-x-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs uppercase tracking-wider shadow-xs transition-all cursor-pointer"
                     >
-                        <ExternalLink class="h-4 w-4 text-black stroke-[2.5]" />
+                        <ExternalLink class="h-4 w-4 text-slate-500" />
                         <span>Nota Digital</span>
                     </a>
                 </div>
@@ -399,9 +399,9 @@ function handleNewTransaction() {
                 <button
                     type="button"
                     @click="handleNewTransaction"
-                    class="min-h-[44px] w-full flex items-center justify-center space-x-2 rounded-[8px] bg-[#FFEB3B] hover:bg-[#FDE047] text-black font-black text-xs uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all cursor-pointer"
+                    class="min-h-[46px] w-full flex items-center justify-center space-x-2 rounded-xl bg-[#FF8A5B] hover:bg-[#F26B3A] text-[#10194D] font-bold text-xs uppercase tracking-wider shadow-sm transition-all cursor-pointer"
                 >
-                    <RotateCcw class="h-4 w-4 stroke-[2.5]" />
+                    <RotateCcw class="h-4 w-4" />
                     <span>Mulai Transaksi Baru</span>
                 </button>
             </div>

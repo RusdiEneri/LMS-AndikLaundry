@@ -273,15 +273,15 @@ onUnmounted(() => {
         <template #catalog>
             <div class="space-y-4">
                 <!-- Search Bar & Category Filter Tabs -->
-                <div class="bg-white p-4 rounded-[12px] border-[3.5px] border-black shadow-[5px_5px_0px_#000] space-y-3">
+                <div class="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-xs space-y-3">
                     <div class="relative">
-                        <Search class="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-black stroke-[2.5]" />
+                        <Search class="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
                         <input
                             ref="searchInputRef"
                             v-model="searchQuery"
                             type="text"
                             placeholder="Cari layanan cucian atau SKU barcode... [F1]"
-                            class="flex min-h-[44px] w-full rounded-[8px] border-[2.5px] border-black bg-white pl-11 pr-4 py-2 text-sm font-bold text-black placeholder:text-black/40 shadow-[3px_3px_0px_#000] focus:outline-none focus:shadow-[4px_4px_0px_#000]"
+                            class="flex min-h-[42px] w-full rounded-xl border border-slate-200 bg-slate-50/50 pl-11 pr-4 py-2 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:bg-white focus:border-[#4F5FE8] focus:ring-3 focus:ring-[#4F5FE8]/20 transition-all"
                         />
                     </div>
 
@@ -293,10 +293,10 @@ onUnmounted(() => {
                             type="button"
                             @click="selectedCategory = cat"
                             :class="[
-                                'min-h-[44px] px-4 py-2 rounded-[8px] text-xs font-black uppercase tracking-wider whitespace-nowrap transition-all border-2 border-black cursor-pointer active:translate-x-0.5 active:translate-y-0.5',
+                                'min-h-[38px] px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-all cursor-pointer',
                                 selectedCategory === cat
-                                    ? 'bg-[#FFEB3B] text-black shadow-[3px_3px_0px_#000]'
-                                    : 'bg-white text-black/70 hover:bg-[#FFF9D2]/40 hover:text-black shadow-[2px_2px_0px_#000]',
+                                    ? 'bg-[#4F5FE8] text-white shadow-xs'
+                                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900',
                             ]"
                         >
                             {{ cat }}
@@ -320,24 +320,24 @@ onUnmounted(() => {
         <template #cart>
             <div class="flex flex-col h-full min-h-0">
                 <!-- CUSTOMER SELECTOR CARD (Fixed at Top, shrink-0) -->
-                <div class="shrink-0 mb-2.5 p-3 bg-[#FFF9D2] rounded-[10px] border-[2.5px] border-black shadow-[3px_3px_0px_#000] flex items-center justify-between">
-                    <div class="flex items-center space-x-2.5">
-                        <div class="h-8 w-8 rounded-[8px] bg-black text-[#FFEB3B] border-2 border-black flex items-center justify-center font-black text-xs shadow-[1px_1px_0px_#000] shrink-0">
+                <div class="shrink-0 mb-3 p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="h-9 w-9 rounded-xl bg-[#E6E9FD] text-[#4F5FE8] flex items-center justify-center font-bold text-xs shrink-0">
                             <UserIcon class="h-4 w-4" />
                         </div>
                         <div>
                             <div class="flex items-center space-x-1.5">
-                                <span class="font-black text-xs text-black">{{ currentCustomer.name }}</span>
+                                <span class="font-heading font-bold text-xs text-slate-900">{{ currentCustomer.name }}</span>
                                 <span
                                     v-if="Number(currentCustomer.outstanding_receivables ?? 0) > 0"
-                                    class="inline-flex items-center space-x-0.5 px-1.5 py-0.5 rounded-[4px] text-[9px] font-black bg-[#FF5252] text-black border border-black shadow-[1px_1px_0px_#000]"
+                                    class="inline-flex items-center space-x-0.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200"
                                 >
-                                    <AlertCircle class="h-2.5 w-2.5 stroke-[3]" />
-                                    <span>Tagihan</span>
+                                    <AlertCircle class="h-3 w-3" />
+                                    <span>Ada Piutang</span>
                                 </span>
                             </div>
-                            <span class="text-[11px] font-mono font-bold text-black/70 block">
-                                {{ currentCustomer.phone || 'Pelanggan Umum (Walk-In)' }}
+                            <span class="text-[11px] font-mono text-slate-500 block mt-0.5">
+                                {{ currentCustomer.phone || 'Pelanggan Walk-In' }}
                             </span>
                         </div>
                     </div>
@@ -345,7 +345,7 @@ onUnmounted(() => {
                     <button
                         type="button"
                         @click="isCustomerModalOpen = true"
-                        class="min-h-[38px] px-3.5 py-1.5 rounded-[8px] border-2 border-black bg-white hover:bg-[#FFEB3B] text-black text-xs font-black shadow-[2px_2px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
+                        class="min-h-[36px] px-3.5 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 text-xs font-bold transition-all cursor-pointer shadow-xs"
                     >
                         Cari / Ubah
                     </button>
@@ -370,15 +370,15 @@ onUnmounted(() => {
                 </div>
 
                 <!-- CHECKOUT BUTTON (Fixed at Bottom, shrink-0) -->
-                <div class="shrink-0 pt-2.5">
+                <div class="shrink-0 pt-3">
                     <button
                         type="button"
                         :disabled="cartItems.length === 0"
                         @click="openCheckoutModal"
-                        class="w-full min-h-[48px] rounded-[8px] border-[3px] border-black bg-[#22C55E] hover:bg-[#16A34A] text-black font-black text-sm uppercase tracking-wider shadow-[4px_4px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[2px_2px_0px_#000] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center space-x-2 transition-all cursor-pointer"
+                        class="w-full min-h-[48px] rounded-xl bg-[#FF8A5B] hover:bg-[#F26B3A] text-[#0A1033] font-heading font-extrabold text-sm uppercase tracking-wider shadow-sm hover:shadow-[0_4px_14px_rgba(255,138,91,0.35)] active:scale-[0.99] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center space-x-2 transition-all cursor-pointer"
                     >
                         <CreditCard class="h-5 w-5" />
-                        <span>PROSES PEMBAYARAN [F8] ({{ formatRupiah(grandTotal) }})</span>
+                        <span>BAYAR SEKARANG [F8] ({{ formatRupiah(grandTotal) }})</span>
                     </button>
                 </div>
             </div>

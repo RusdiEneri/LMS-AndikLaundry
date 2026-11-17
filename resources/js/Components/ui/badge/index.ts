@@ -1,20 +1,20 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 
 export const badgeVariants = cva(
-    'inline-flex items-center rounded-[6px] border-2 border-black px-2.5 py-0.5 text-xs font-black shadow-[2px_2px_0px_#000] select-none transition-transform',
+    'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold select-none transition-colors',
     {
         variants: {
             variant: {
-                default: 'bg-[#FFEB3B] text-black',
-                secondary: 'bg-white text-black',
-                destructive: 'bg-[#FF5252] text-white',
-                outline: 'bg-white text-black',
-                success: 'bg-[#22C55E] text-black',
-                warning: 'bg-[#F59E0B] text-black',
-                teal: 'bg-[#2196F3] text-white',
-                cyan: 'bg-[#06b6d4] text-black',
-                amber: 'bg-[#F59E0B] text-black',
-                rose: 'bg-[#FF5252] text-white',
+                default: 'bg-[#E6E9FD] text-[#26338A]',
+                secondary: 'bg-slate-100 text-slate-700',
+                destructive: 'bg-red-50 text-red-700 border border-red-200',
+                outline: 'border border-slate-200 text-slate-700 bg-white',
+                success: 'bg-emerald-50 text-emerald-700 border border-emerald-200',
+                warning: 'bg-amber-50 text-amber-800 border border-amber-200',
+                teal: 'bg-teal-50 text-teal-800 border border-teal-200',
+                cyan: 'bg-sky-50 text-sky-800 border border-sky-200',
+                amber: 'bg-amber-50 text-amber-800 border border-amber-200',
+                rose: 'bg-rose-50 text-rose-700 border border-rose-200',
             },
         },
         defaultVariants: {

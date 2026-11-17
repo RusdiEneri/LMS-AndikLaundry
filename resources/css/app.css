@@ -206,27 +206,27 @@
   min-width: 48px;
   font-size: 1.25rem;
   font-weight: 800;
-  border-radius: 8px;
+  border-radius: 12px;
   background-color: #FFFFFF;
-  border: 2px solid #000000;
-  box-shadow: 2px 2px 0px #000000;
-  color: #000000;
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 1px 2px rgba(16, 25, 77, 0.05);
+  color: #0F172A;
   display: flex;
   align-items: center;
   justify-content: center;
   user-select: none;
   font-family: var(--font-mono);
-  transition: all 0.1s ease-in-out;
+  transition: all 0.15s ease-in-out;
 }
 .btn-numpad:hover {
-  background-color: #FFEB3B;
-  transform: translate(-1px, -1px);
-  box-shadow: 3px 3px 0px #000000;
+  background-color: #F8FAFC;
+  border-color: #4F5FE8;
+  color: #4F5FE8;
+  transform: translateY(-1px);
 }
 .btn-numpad:active {
-  background-color: #FDE047;
-  transform: translate(1px, 1px);
-  box-shadow: 1px 1px 0px #000000;
+  background-color: #E6E9FD;
+  transform: translateY(0);
 }
 
 .btn-quick-tender {
@@ -234,18 +234,20 @@
   padding: 0 1rem;
   font-size: 0.875rem;
   font-weight: 600;
-  border-radius: 6px;
+  border-radius: 12px;
   background-color: #FFFFFF;
-  border: 1px solid var(--border-subtle);
-  color: var(--text-primary);
+  border: 1px solid #E2E8F0;
+  color: #0F172A;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   transition: all 0.15s ease-in-out;
+  box-shadow: 0 1px 2px rgba(16, 25, 77, 0.04);
 }
 .btn-quick-tender:hover {
-  background-color: #FAFAFA;
-  border-color: #9C9C9C;
+  background-color: #F8FAFC;
+  border-color: #4F5FE8;
+  color: #4F5FE8;
   transform: translateY(-1px);
 }
 

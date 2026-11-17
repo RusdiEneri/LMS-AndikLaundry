@@ -129,13 +129,13 @@ const isCancelled = computed(() => props.order?.production_status.toLowerCase() 
 
 // Payment Badge (LUNAS / BELUM LUNAS)
 const paymentBadge = computed(() => {
-    if (!props.order) return { text: '-', bg: 'bg-white text-black border-2 border-black' };
+    if (!props.order) return { text: '-', bg: 'bg-white text-slate-700 border border-slate-200' };
     const debt = Number(props.order.outstanding_balance || 0);
 
     if (debt <= 0) {
-        return { text: 'LUNAS', bg: 'bg-[#22C55E] text-black border-2 border-black shadow-[2px_2px_0px_#000]' };
+        return { text: 'LUNAS', bg: 'bg-emerald-50 text-emerald-700 border border-emerald-200' };
     }
-    return { text: 'BELUM LUNAS (BAYAR PAS AMBIL)', bg: 'bg-[#FFEB3B] text-black border-2 border-black shadow-[2px_2px_0px_#000]' };
+    return { text: 'BELUM LUNAS (BAYAR PAS AMBIL)', bg: 'bg-amber-50 text-amber-800 border border-amber-200' };
 });
 
 // WhatsApp Link
@@ -247,17 +247,17 @@ const isUnpaid = computed(() => props.order && props.order.outstanding_balance >
 <template>
     <Head :title="order ? `Nota Digital - ${order.invoice_number} | ${store_info.name}` : `Cari Nota | ${store_info.name}`" />
 
-    <div class="min-h-screen bg-[#FFFDF5] text-black font-sans pb-12 antialiased">
+    <div class="min-h-screen bg-[#F8FAFC] text-slate-900 font-sans pb-12 antialiased">
         <!-- Top Navbar -->
-        <header class="bg-[#FFEB3B] border-b-[3.5px] border-black sticky top-0 z-30 shadow-[0_4px_0px_#000] no-print">
-            <div class="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
+        <header class="bg-[#10194D] text-white border-b border-slate-800 sticky top-0 z-30 shadow-md no-print">
+            <div class="max-w-3xl mx-auto px-4 py-3.5 flex items-center justify-between">
                 <div class="flex items-center space-x-2.5">
-                    <div class="h-9 w-9 rounded-[8px] bg-black text-[#FFEB3B] border-2 border-black flex items-center justify-center font-black text-sm shadow-[2px_2px_0px_#000] shrink-0">
+                    <div class="h-9 w-9 rounded-xl bg-white/10 text-white flex items-center justify-center font-bold text-sm shrink-0 border border-white/10">
                         AL
                     </div>
                     <div>
-                        <h1 class="font-black text-sm text-black leading-tight">{{ store_info.name }}</h1>
-                        <p class="text-[11px] font-bold text-black/70">Nota Digital & Status Pelacakan Live</p>
+                        <h1 class="font-bold text-sm text-white leading-tight">{{ store_info.name }}</h1>
+                        <p class="text-[11px] font-medium text-slate-300">Nota Digital & Status Pelacakan Live</p>
                     </div>
                 </div>
 
@@ -265,9 +265,9 @@ const isUnpaid = computed(() => props.order && props.order.outstanding_balance >
                     <button
                         type="button"
                         @click="printReceipt"
-                        class="min-h-[44px] px-3.5 py-1.5 rounded-[8px] border-[2.5px] border-black bg-white hover:bg-[#FFF9D2] text-black text-xs font-black shadow-[3px_3px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none flex items-center space-x-1.5 transition-all cursor-pointer"
+                        class="min-h-[42px] px-3.5 py-1.5 rounded-xl border border-white/20 bg-white/10 hover:bg-white/20 text-white text-xs font-bold shadow-xs flex items-center space-x-1.5 transition-all cursor-pointer"
                     >
-                        <Printer class="h-4 w-4 text-black" />
+                        <Printer class="h-4 w-4 text-white" />
                         <span class="hidden sm:inline">Cetak Nota</span>
                     </button>
 
@@ -275,7 +275,7 @@ const isUnpaid = computed(() => props.order && props.order.outstanding_balance >
                         :href="storeContactWaLink"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="min-h-[44px] px-3.5 py-1.5 rounded-[8px] border-[2.5px] border-black bg-[#22C55E] hover:bg-[#16A34A] text-black text-xs font-black shadow-[3px_3px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none flex items-center space-x-1.5 transition-all cursor-pointer"
+                        class="min-h-[42px] px-3.5 py-1.5 rounded-xl bg-[#22A06B] hover:bg-[#12724A] text-white text-xs font-bold shadow-xs flex items-center space-x-1.5 transition-all cursor-pointer"
                     >
                         <MessageCircle class="h-4 w-4" />
                         <span>Chat Kasir</span>
@@ -287,31 +287,31 @@ const isUnpaid = computed(() => props.order && props.order.outstanding_balance >
         <!-- Main Content Container -->
         <main class="max-w-3xl mx-auto px-4 pt-6 space-y-6">
             <!-- No Order Found: Search Section -->
-            <div v-if="!order" class="bg-white rounded-[12px] p-6 sm:p-8 border-[3.5px] border-black shadow-[6px_6px_0px_#000] text-center space-y-4">
-                <div class="h-14 w-14 rounded-[8px] bg-[#FFF9D2] border-[2.5px] border-black flex items-center justify-center mx-auto text-black shadow-[3px_3px_0px_#000]">
-                    <Search class="h-6 w-6 stroke-[2.5]" />
+            <div v-if="!order" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm text-center space-y-4">
+                <div class="h-14 w-14 rounded-2xl bg-[#E6E9FD] text-[#4F5FE8] flex items-center justify-center mx-auto shadow-xs">
+                    <Search class="h-6 w-6 stroke-[2]" />
                 </div>
                 <div>
-                    <h2 class="font-black text-xl text-black">Cari Nota Digital</h2>
-                    <p class="text-sm font-bold text-black/70 mt-1">Masukkan nomor nota atau nomor WhatsApp pelanggan</p>
+                    <h2 class="font-extrabold text-xl text-slate-900">Cari Nota Digital</h2>
+                    <p class="text-sm font-medium text-slate-500 mt-1">Masukkan nomor nota atau nomor WhatsApp pelanggan</p>
                 </div>
                 <div class="flex flex-col sm:flex-row gap-2 max-w-md mx-auto">
                     <input
                         v-model="searchQuery"
                         type="text"
                         placeholder="Contoh: AL-20261115-001"
-                        class="flex-1 min-h-[44px] rounded-[8px] border-[2.5px] border-black bg-white px-3.5 py-2 text-sm font-bold text-black placeholder:text-black/40 shadow-[3px_3px_0px_#000] focus:outline-none focus:shadow-[4px_4px_0px_#000]"
+                        class="flex-1 min-h-[44px] rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm font-semibold text-slate-900 placeholder:text-slate-400 shadow-xs focus:outline-none focus:ring-2 focus:ring-[#4F5FE8]"
                         @keyup.enter="searchOrder"
                     />
                     <button
                         type="button"
                         @click="searchOrder"
-                        class="min-h-[44px] px-5 rounded-[8px] border-[2.5px] border-black bg-[#FFEB3B] hover:bg-[#FDE047] text-black font-black text-sm shadow-[3px_3px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
+                        class="min-h-[44px] px-5 rounded-xl bg-[#4F5FE8] hover:bg-[#3D4DC6] text-white font-bold text-sm shadow-xs transition-all cursor-pointer"
                     >
                         Cari
                     </button>
                 </div>
-                <p class="text-xs font-bold text-black/60">
+                <p class="text-xs font-medium text-slate-400">
                     Atau buka langsung tautan unik yang dikirimkan ke pesan WhatsApp Anda.
                 </p>
             </div>
@@ -319,91 +319,91 @@ const isUnpaid = computed(() => props.order && props.order.outstanding_balance >
             <!-- Order Found -->
             <template v-else>
                 <!-- Order Header Card -->
-                <div class="bg-white rounded-[12px] p-5 sm:p-6 border-[3.5px] border-black shadow-[6px_6px_0px_#000] space-y-4">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b-2 border-black/20">
+                <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
                         <div>
                             <div class="flex items-center space-x-2 flex-wrap gap-2">
-                                <span class="text-xs font-black uppercase tracking-wider bg-[#FFEB3B] text-black border-2 border-black px-2.5 py-0.5 rounded-[6px] shadow-[2px_2px_0px_#000]">
+                                <span class="text-xs font-bold uppercase tracking-wider bg-[#E6E9FD] text-[#26338A] px-2.5 py-0.5 rounded-full">
                                     Nota Resmi
                                 </span>
-                                <span :class="['px-2.5 py-0.5 rounded-[6px] text-xs font-black uppercase tracking-wider', paymentBadge.bg]">
+                                <span :class="['px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider', paymentBadge.bg]">
                                     {{ paymentBadge.text }}
                                 </span>
                             </div>
-                            <h2 class="font-mono font-black text-2xl sm:text-3xl text-black mt-2 tracking-tight">
+                            <h2 class="font-mono font-extrabold text-2xl sm:text-3xl text-slate-900 mt-2 tracking-tight">
                                 {{ order.invoice_number }}
                             </h2>
                         </div>
 
                         <div class="text-left sm:text-right">
-                            <span class="text-xs font-black uppercase tracking-wider text-black/60 block">Total Tagihan</span>
-                            <span class="font-mono font-black text-2xl sm:text-3xl text-black">
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-400 block">Total Tagihan</span>
+                            <span class="font-mono font-extrabold text-2xl sm:text-3xl text-slate-900">
                                 {{ formatRupiah(order.total_amount) }}
                             </span>
                         </div>
                     </div>
 
                     <!-- Customer & Metadata Grid -->
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
                         <div>
-                            <span class="text-black/60 block text-[11px] font-black uppercase tracking-wider">Nama Pelanggan</span>
-                            <span class="font-black text-black text-sm">{{ order.customer.name }}</span>
+                            <span class="text-slate-400 block text-[11px] font-bold uppercase tracking-wider">Nama Pelanggan</span>
+                            <span class="font-bold text-slate-900 text-sm mt-0.5 block">{{ order.customer.name }}</span>
                         </div>
                         <div>
-                            <span class="text-black/60 block text-[11px] font-black uppercase tracking-wider">Waktu Masuk</span>
-                            <span class="font-bold text-black">{{ formatDateTimeIndo(order.intake_at) }}</span>
+                            <span class="text-slate-400 block text-[11px] font-bold uppercase tracking-wider">Waktu Masuk</span>
+                            <span class="font-semibold text-slate-700 mt-0.5 block">{{ formatDateTimeIndo(order.intake_at) }}</span>
                         </div>
                         <div>
-                            <span class="text-black/60 block text-[11px] font-black uppercase tracking-wider">Estimasi Selesai</span>
-                            <span class="font-black text-[#2196F3]">{{ formatDateTimeIndo(order.target_completion_at) }}</span>
+                            <span class="text-slate-400 block text-[11px] font-bold uppercase tracking-wider">Estimasi Selesai</span>
+                            <span class="font-bold text-[#4F5FE8] mt-0.5 block">{{ formatDateTimeIndo(order.target_completion_at) }}</span>
                         </div>
                         <div>
-                            <span class="text-black/60 block text-[11px] font-black uppercase tracking-wider">Rak Pengambilan</span>
-                            <span class="font-black font-mono text-black">{{ order.staging_rack || 'Menunggu Rak' }}</span>
+                            <span class="text-slate-400 block text-[11px] font-bold uppercase tracking-wider">Rak Pengambilan</span>
+                            <span class="font-mono font-bold text-slate-900 mt-0.5 block">{{ order.staging_rack || 'Menunggu Rak' }}</span>
                         </div>
                     </div>
 
                     <!-- Rack Location Display when status is SELESAI -->
-                    <div v-if="order.production_status.toLowerCase() === 'selesai' || order.production_status.toLowerCase() === 'ready_for_pickup'" class="p-4 bg-[#FFF9D2] rounded-[8px] border-[2.5px] border-black shadow-[3px_3px_0px_#000]">
+                    <div v-if="order.production_status.toLowerCase() === 'selesai' || order.production_status.toLowerCase() === 'ready_for_pickup'" class="p-4 bg-emerald-50 rounded-2xl border border-emerald-200">
                         <div class="flex items-center space-x-2.5">
-                            <MapPin class="h-6 w-6 text-black shrink-0" />
+                            <MapPin class="h-6 w-6 text-emerald-600 shrink-0" />
                             <div>
-                                <span class="text-xs font-black uppercase tracking-wider text-black/70 block">Lokasi Rak Pengambilan:</span>
-                                <span class="font-mono font-black text-xl text-black">{{ order.staging_rack || 'Segera Ditentukan' }}</span>
+                                <span class="text-xs font-bold uppercase tracking-wider text-emerald-700 block">Lokasi Rak Pengambilan:</span>
+                                <span class="font-mono font-extrabold text-xl text-emerald-950">{{ order.staging_rack || 'Segera Ditentukan' }}</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Delivery Option Display -->
-                    <div v-if="order.delivery_option === 'delivery'" class="p-4 bg-[#2196F3]/15 rounded-[8px] border-[2.5px] border-black shadow-[3px_3px_0px_#000]">
+                    <div v-if="order.delivery_option === 'delivery'" class="p-4 bg-[#E6E9FD]/50 rounded-2xl border border-[#4F5FE8]/30">
                         <div class="flex items-center space-x-2.5">
-                            <Truck class="h-6 w-6 text-black shrink-0" />
+                            <Truck class="h-6 w-6 text-[#4F5FE8] shrink-0" />
                             <div>
-                                <span class="text-xs font-black uppercase tracking-wider text-black block">Pilihan Pengantaran</span>
-                                <span class="text-sm font-black text-black">Antar Jemput (Gratis &lt; 3 km)</span>
+                                <span class="text-xs font-bold uppercase tracking-wider text-[#26338A] block">Pilihan Pengantaran</span>
+                                <span class="text-sm font-bold text-slate-900">Antar Jemput (Gratis &lt; 3 km)</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- LIVE PRODUCTION 3-STATE TRACKER -->
-                <div class="bg-white rounded-[12px] p-5 sm:p-6 border-[3.5px] border-black shadow-[6px_6px_0px_#000] space-y-4">
+                <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm space-y-4">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-2">
-                            <Clock class="h-5 w-5 text-black" />
-                            <h3 class="font-black text-base text-black">Pelacakan Progres Cucian</h3>
+                            <Clock class="h-5 w-5 text-slate-700" />
+                            <h3 class="font-bold text-base text-slate-900">Pelacakan Progres Cucian</h3>
                         </div>
-                        <span class="text-xs font-black px-2.5 py-0.5 rounded-[6px] bg-[#FFEB3B] text-black border-2 border-black shadow-[2px_2px_0px_#000]">
+                        <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#E6E9FD] text-[#26338A]">
                             {{ order.production_status_label }}
                         </span>
                     </div>
 
                     <!-- Cancelled Warning if applicable -->
-                    <div v-if="isCancelled" class="p-4 rounded-[8px] bg-[#FF5252]/20 border-[2.5px] border-black text-black flex items-center space-x-3 shadow-[3px_3px_0px_#000]">
-                        <AlertCircle class="h-6 w-6 text-[#FF5252] shrink-0" />
+                    <div v-if="isCancelled" class="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 flex items-center space-x-3">
+                        <AlertCircle class="h-6 w-6 text-rose-600 shrink-0" />
                         <div>
-                            <span class="font-black text-sm block">Pesanan Dibatalkan</span>
-                            <span class="text-xs font-bold text-black/70">Pesanan ini telah dibatalkan oleh pemilik/kasir.</span>
+                            <span class="font-bold text-sm block">Pesanan Dibatalkan</span>
+                            <span class="text-xs font-medium text-rose-600">Pesanan ini telah dibatalkan oleh pemilik/kasir.</span>
                         </div>
                     </div>
 
@@ -414,41 +414,41 @@ const isUnpaid = computed(() => props.order && props.order.outstanding_balance >
                                 v-for="(step, sIdx) in workflowSteps"
                                 :key="step.key"
                                 :class="[
-                                    'p-3.5 rounded-[8px] transition-all flex flex-row sm:flex-col items-center sm:text-center gap-3 sm:gap-2',
+                                    'p-4 rounded-2xl transition-all flex flex-row sm:flex-col items-center sm:text-center gap-3 sm:gap-2',
                                     sIdx < mappedStepIndex
-                                        ? 'bg-[#22C55E]/20 border-[2.5px] border-black text-black shadow-[3px_3px_0px_#000]'
+                                        ? 'bg-emerald-50 border border-emerald-200 text-emerald-950 shadow-xs'
                                         : (sIdx === mappedStepIndex
-                                            ? 'bg-[#FFEB3B] border-[3px] border-black text-black shadow-[4px_4px_0px_#000]'
-                                            : 'bg-white border-2 border-black/30 text-black/40'),
+                                            ? 'bg-[#E6E9FD]/80 border-2 border-[#4F5FE8] text-[#10194D] shadow-xs'
+                                            : 'bg-slate-50 border border-slate-200 text-slate-400'),
                                 ]"
                             >
                                 <div class="shrink-0">
-                                    <CheckCircle2 v-if="sIdx < mappedStepIndex" class="h-6 w-6 text-black" />
-                                    <div v-else-if="sIdx === mappedStepIndex" class="h-7 w-7 rounded-full border-[2.5px] border-black bg-black text-[#FFEB3B] flex items-center justify-center font-black text-xs shadow-[1px_1px_0px_#000]">
+                                    <CheckCircle2 v-if="sIdx < mappedStepIndex" class="h-6 w-6 text-emerald-600" />
+                                    <div v-else-if="sIdx === mappedStepIndex" class="h-7 w-7 rounded-full bg-[#4F5FE8] text-white flex items-center justify-center font-bold text-xs shadow-xs">
                                         {{ sIdx + 1 }}
                                     </div>
-                                    <div v-else class="h-6 w-6 rounded-full border-2 border-black/30 bg-white flex items-center justify-center text-xs font-bold text-black/40">
+                                    <div v-else class="h-6 w-6 rounded-full border border-slate-300 bg-white flex items-center justify-center text-xs font-semibold text-slate-400">
                                         {{ sIdx + 1 }}
                                     </div>
                                 </div>
 
                                 <div class="min-w-0 flex-1 sm:flex-none">
-                                    <span class="font-black text-sm block leading-tight">{{ step.label }}</span>
-                                    <span class="text-[11px] font-bold opacity-80 block mt-0.5">{{ step.desc }}</span>
+                                    <span class="font-bold text-sm block leading-tight">{{ step.label }}</span>
+                                    <span class="text-[11px] font-medium opacity-80 block mt-0.5">{{ step.desc }}</span>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Current Step Status Banner -->
-                        <div class="p-3.5 rounded-[8px] bg-[#FFF9D2] border-[2.5px] border-black text-black flex items-center justify-between text-xs shadow-[3px_3px_0px_#000]">
+                        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 flex items-center justify-between text-xs">
                             <div class="flex items-center space-x-2">
-                                <Sparkles class="h-4 w-4 text-black shrink-0" />
-                                <span class="font-bold">
-                                    Status: <strong>{{ workflowSteps[mappedStepIndex]?.label ?? order.production_status_label }}</strong>
+                                <Sparkles class="h-4 w-4 text-[#4F5FE8] shrink-0" />
+                                <span class="font-medium">
+                                    Status: <strong class="font-bold text-slate-900">{{ workflowSteps[mappedStepIndex]?.label ?? order.production_status_label }}</strong>
                                     — {{ workflowSteps[mappedStepIndex]?.desc ?? 'Sedang diproses' }}
                                 </span>
                             </div>
-                            <span class="font-mono text-xs text-black hidden sm:inline font-black uppercase">
+                            <span class="font-mono text-xs text-slate-500 hidden sm:inline font-bold uppercase">
                                 Tahap {{ mappedStepIndex + 1 }} dari 3
                             </span>
                         </div>
@@ -458,34 +458,34 @@ const isUnpaid = computed(() => props.order && props.order.outstanding_balance >
                 <!-- Customer & Cashier Pickup Payment Section for Unpaid Orders -->
                 <div v-if="isUnpaid && order.outstanding_balance > 0" class="space-y-4">
                     <!-- Customer Pickup Instruction Card -->
-                    <div class="bg-white rounded-[12px] p-5 sm:p-6 border-[3.5px] border-black shadow-[6px_6px_0px_#000] space-y-3">
-                        <div class="p-3.5 bg-[#FFF9D2] rounded-[8px] border-2 border-black shadow-[2px_2px_0px_#000] text-left">
-                            <div class="flex items-center space-x-2 text-black font-black text-xs uppercase tracking-wider">
-                                <Clock class="h-4 w-4" />
+                    <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm space-y-3">
+                        <div class="p-4 bg-amber-50/80 rounded-2xl border border-amber-200 text-left">
+                            <div class="flex items-center space-x-2 text-amber-900 font-bold text-xs uppercase tracking-wider">
+                                <Clock class="h-4 w-4 text-amber-700" />
                                 <span>Bayar Pas Ambil Cucian</span>
                             </div>
-                            <p class="text-xs text-black/80 font-bold mt-1.5 leading-relaxed">
+                            <p class="text-xs text-amber-900/90 font-medium mt-1.5 leading-relaxed">
                                 Pakaian Anda sedang kami rawat & cuci. Saat pakaian bersih siap diambil, cukup <strong>tunjukkan bukti nota digital ini</strong> ke meja kasir Andik Laundry untuk pelunasan via Tunai (Cash) atau QRIS.
                             </p>
                         </div>
 
                         <!-- Cashier Settlement Card (Visible to Logged-in Staff) -->
-                        <div v-if="authUser" class="p-4 bg-[#22C55E]/15 rounded-[10px] border-[2.5px] border-black shadow-[3px_3px_0px_#000] space-y-2.5 text-left">
+                        <div v-if="authUser" class="p-4 bg-emerald-50/60 rounded-2xl border border-emerald-200 space-y-2.5 text-left">
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center space-x-2">
-                                    <Coins class="h-4 w-4 text-black" />
-                                    <span class="font-black text-xs uppercase tracking-wider text-black">Aksi Kasir: Pelunasan Nota</span>
+                                    <Coins class="h-4 w-4 text-emerald-700" />
+                                    <span class="font-bold text-xs uppercase tracking-wider text-emerald-900">Aksi Kasir: Pelunasan Nota</span>
                                 </div>
-                                <span class="text-[11px] font-bold text-gray-700 font-mono">Staf: {{ authUser.name }}</span>
+                                <span class="text-[11px] font-semibold text-slate-600 font-mono">Staf: {{ authUser.name }}</span>
                             </div>
-                            <p class="text-[11px] text-black/70 font-bold">
+                            <p class="text-[11px] text-slate-600 font-medium">
                                 Pelanggan datang ke kasir untuk mengambil pakaian? Pilih metode pelunasan di bawah:
                             </p>
                             <div class="grid grid-cols-2 gap-2 pt-1">
                                 <button
                                     type="button"
                                     @click="openSettleModal('cash')"
-                                    class="min-h-[44px] px-3 py-2 bg-[#22C55E] text-black font-black text-xs uppercase tracking-wider rounded-[8px] border-2 border-black shadow-[2px_2px_0px_#000] hover:bg-[#16A34A] active:translate-x-0.5 active:translate-y-0.5 cursor-pointer flex items-center justify-center space-x-1.5 transition-all"
+                                    class="min-h-[44px] px-3 py-2 bg-[#22A06B] text-white font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-[#12724A] cursor-pointer flex items-center justify-center space-x-1.5 transition-all shadow-xs"
                                 >
                                     <Banknote class="h-4 w-4" />
                                     <span>Lunas Tunai</span>
@@ -493,7 +493,7 @@ const isUnpaid = computed(() => props.order && props.order.outstanding_balance >
                                 <button
                                     type="button"
                                     @click="openSettleModal('qris')"
-                                    class="min-h-[44px] px-3 py-2 bg-[#FFEB3B] text-black font-black text-xs uppercase tracking-wider rounded-[8px] border-2 border-black shadow-[2px_2px_0px_#000] hover:bg-[#FDE047] active:translate-x-0.5 active:translate-y-0.5 cursor-pointer flex items-center justify-center space-x-1.5 transition-all"
+                                    class="min-h-[44px] px-3 py-2 bg-[#4F5FE8] text-white font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-[#3D4DC6] cursor-pointer flex items-center justify-center space-x-1.5 transition-all shadow-xs"
                                 >
                                     <QrCode class="h-4 w-4" />
                                     <span>Lunas QRIS</span>
@@ -503,18 +503,18 @@ const isUnpaid = computed(() => props.order && props.order.outstanding_balance >
                     </div>
 
                     <!-- QRIS Payment Card for Unpaid Orders -->
-                    <div class="bg-white rounded-[12px] p-5 sm:p-6 border-[3.5px] border-black shadow-[6px_6px_0px_#000] text-center space-y-4">
-                        <div class="flex items-center justify-center space-x-2 text-black">
-                            <span class="font-black text-base uppercase tracking-wider">Pembayaran Non-Tunai (QRIS)</span>
+                    <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm text-center space-y-4">
+                        <div class="flex items-center justify-center space-x-2 text-slate-900">
+                            <span class="font-bold text-base uppercase tracking-wider">Pembayaran Non-Tunai (QRIS)</span>
                         </div>
-                        <div class="p-5 bg-[#FFF9D2] rounded-[10px] border-[2.5px] border-black shadow-[4px_4px_0px_#000] max-w-sm mx-auto">
+                        <div class="p-5 bg-slate-50 rounded-2xl border border-slate-200 max-w-sm mx-auto shadow-xs">
                             <img 
                                 src="/images/qris-andiklaundry.svg" 
                                 alt="QRIS Payment Andik Laundry" 
-                                class="qris-image mx-auto max-w-[200px] border-[2.5px] border-black rounded-[8px] shadow-[3px_3px_0px_#000] bg-white p-2"
+                                class="qris-image mx-auto max-w-[200px] border border-slate-200 rounded-xl shadow-xs bg-white p-2"
                             />
-                            <p class="text-xs font-bold text-black/70 mt-3">Scan QRIS melalui mobile banking atau aplikasi e-wallet Anda</p>
-                            <p class="text-2xl font-black font-mono text-black mt-2">
+                            <p class="text-xs font-medium text-slate-500 mt-3">Scan QRIS melalui mobile banking atau aplikasi e-wallet Anda</p>
+                            <p class="text-2xl font-extrabold font-mono text-slate-900 mt-2">
                                 {{ formatRupiah(order.outstanding_balance) }}
                             </p>
                         </div>
@@ -522,42 +522,42 @@ const isUnpaid = computed(() => props.order && props.order.outstanding_balance >
                 </div>
 
                 <!-- Itemized Breakdown Table -->
-                <div class="bg-white rounded-[12px] p-5 sm:p-6 border-[3.5px] border-black shadow-[6px_6px_0px_#000] space-y-4">
-                    <h3 class="font-black text-base text-black flex items-center space-x-2">
-                        <Shirt class="h-5 w-5 text-black" />
+                <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm space-y-4">
+                    <h3 class="font-bold text-base text-slate-900 flex items-center space-x-2">
+                        <Shirt class="h-5 w-5 text-slate-700" />
                         <span>Rincian Item & Biaya</span>
                     </h3>
 
-                    <div class="overflow-x-auto border-2 border-black rounded-[8px]">
+                    <div class="overflow-x-auto border border-slate-200 rounded-2xl">
                         <table class="w-full text-left text-xs min-w-[480px] sm:min-w-0">
                             <thead>
-                                <tr class="bg-[#FFEB3B] border-b-2 border-black text-black font-black uppercase tracking-wider">
-                                    <th class="py-2.5 px-3">Layanan</th>
-                                    <th class="py-2.5 px-3 text-center">Jumlah / Berat</th>
-                                    <th class="py-2.5 px-3 text-right">Tarif Satuan</th>
-                                    <th class="py-2.5 px-3 text-right">Subtotal</th>
+                                <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase tracking-wider">
+                                    <th class="py-3 px-4">Layanan</th>
+                                    <th class="py-3 px-4 text-center">Jumlah / Berat</th>
+                                    <th class="py-3 px-4 text-right">Tarif Satuan</th>
+                                    <th class="py-3 px-4 text-right">Subtotal</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y-2 divide-black/10">
-                                <tr v-for="item in order.items" :key="item.id" class="hover:bg-[#FFF9D2]/30">
-                                    <td class="py-3 px-3">
-                                        <span class="font-black text-black block">{{ item.item_name }}</span>
+                            <tbody class="divide-y divide-slate-100">
+                                <tr v-for="item in order.items" :key="item.id" class="hover:bg-slate-50/70 transition-colors">
+                                    <td class="py-3 px-4">
+                                        <span class="font-bold text-slate-900 block">{{ item.item_name }}</span>
                                         <div v-if="item.item_condition_notes" class="flex flex-wrap items-center gap-1.5 mt-1 text-[11px]">
-                                            <span class="inline-flex items-center text-black bg-[#FF5252]/20 border border-black px-1.5 py-0.5 rounded-[4px] font-bold">
+                                            <span class="inline-flex items-center text-rose-700 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-md font-medium">
                                                 Catatan: {{ item.item_condition_notes }}
                                             </span>
                                         </div>
                                     </td>
-                                    <td class="py-3 px-3 text-center font-mono font-bold text-black">
+                                    <td class="py-3 px-4 text-center font-mono font-bold text-slate-800">
                                         <span>{{ item.actual_quantity }} {{ item.pricing_unit }}</span>
-                                        <span v-if="item.billed_quantity > item.actual_quantity" class="text-[10px] text-[#FF5252] block font-black">
+                                        <span v-if="item.billed_quantity > item.actual_quantity" class="text-[10px] text-rose-600 block font-semibold">
                                             (Cas min. {{ item.billed_quantity }} {{ item.pricing_unit }})
                                         </span>
                                     </td>
-                                    <td class="py-3 px-3 text-right font-mono font-bold text-black/70">
+                                    <td class="py-3 px-4 text-right font-mono text-slate-600">
                                         {{ formatRupiah(item.unit_price) }}
                                     </td>
-                                    <td class="py-3 px-3 text-right font-mono font-black text-black">
+                                    <td class="py-3 px-4 text-right font-mono font-bold text-slate-900">
                                         {{ formatRupiah(item.subtotal) }}
                                     </td>
                                 </tr>
@@ -566,63 +566,63 @@ const isUnpaid = computed(() => props.order && props.order.outstanding_balance >
                     </div>
 
                     <!-- Financial Ledger Summary -->
-                    <div class="pt-3 border-t-2 border-black space-y-1.5 max-w-xs ml-auto text-xs">
-                        <div class="flex justify-between font-bold text-black/70">
+                    <div class="pt-3 border-t border-slate-100 space-y-1.5 max-w-xs ml-auto text-xs">
+                        <div class="flex justify-between font-medium text-slate-500">
                             <span>Subtotal:</span>
-                            <span class="font-mono text-black font-black">{{ formatRupiah(order.subtotal_amount) }}</span>
+                            <span class="font-mono text-slate-800 font-bold">{{ formatRupiah(order.subtotal_amount) }}</span>
                         </div>
-                        <div v-if="order.surcharge_amount > 0" class="flex justify-between font-bold text-[#2196F3]">
+                        <div v-if="order.surcharge_amount > 0" class="flex justify-between font-medium text-[#4F5FE8]">
                             <span>Biaya Kecepatan:</span>
-                            <span class="font-mono font-black">+{{ formatRupiah(order.surcharge_amount) }}</span>
+                            <span class="font-mono font-bold">+{{ formatRupiah(order.surcharge_amount) }}</span>
                         </div>
-                        <div v-if="order.discount_amount > 0" class="flex justify-between font-bold text-[#FF5252]">
+                        <div v-if="order.discount_amount > 0" class="flex justify-between font-medium text-rose-600">
                             <span>Diskon:</span>
-                            <span class="font-mono font-black">-{{ formatRupiah(order.discount_amount) }}</span>
+                            <span class="font-mono font-bold">-{{ formatRupiah(order.discount_amount) }}</span>
                         </div>
-                        <div class="flex justify-between font-black text-sm text-black pt-1.5 border-t-2 border-black">
+                        <div class="flex justify-between font-extrabold text-sm text-slate-900 pt-1.5 border-t border-slate-200">
                             <span>Total Tagihan:</span>
-                            <span class="font-mono text-black">{{ formatRupiah(order.total_amount) }}</span>
+                            <span class="font-mono text-slate-900">{{ formatRupiah(order.total_amount) }}</span>
                         </div>
-                        <div class="flex justify-between font-bold text-black/70">
+                        <div class="flex justify-between font-medium text-slate-500">
                             <span>Sudah Dibayar:</span>
-                            <span class="font-mono font-black">{{ formatRupiah(order.paid_amount) }}</span>
+                            <span class="font-mono font-bold text-slate-800">{{ formatRupiah(order.paid_amount) }}</span>
                         </div>
-                        <div v-if="order.outstanding_balance > 0" class="flex justify-between font-black text-[#FF5252] pt-1.5 border-t-2 border-black">
+                        <div v-if="order.outstanding_balance > 0" class="flex justify-between font-bold text-rose-600 pt-1.5 border-t border-slate-200">
                             <span>Sisa Pembayaran:</span>
-                            <span class="font-mono">{{ formatRupiah(order.outstanding_balance) }}</span>
+                            <span class="font-mono font-extrabold">{{ formatRupiah(order.outstanding_balance) }}</span>
                         </div>
-                        <div v-else class="flex justify-between font-black text-[#22C55E] pt-1.5 border-t-2 border-black">
+                        <div v-else class="flex justify-between font-bold text-emerald-600 pt-1.5 border-t border-slate-200">
                             <span>Status:</span>
-                            <span class="bg-[#22C55E] text-black border-2 border-black px-2 py-0.5 rounded-[4px] shadow-[1px_1px_0px_#000]">LUNAS</span>
+                            <span class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full text-[11px]">LUNAS</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Contact/Request Delivery Button -->
-                <div class="bg-white rounded-[12px] p-5 sm:p-6 border-[3.5px] border-black shadow-[6px_6px_0px_#000] text-center space-y-3 no-print">
+                <div class="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm text-center space-y-3 no-print">
                     <a
                         :href="whatsAppLink"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="inline-flex items-center justify-center space-x-2 min-h-[48px] px-6 py-2.5 rounded-[8px] border-[2.5px] border-black bg-[#22C55E] hover:bg-[#16A34A] text-black font-black text-sm shadow-[4px_4px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer uppercase tracking-wider"
+                        class="inline-flex items-center justify-center space-x-2 min-h-[46px] px-6 py-2.5 rounded-xl bg-[#22A06B] hover:bg-[#12724A] text-white font-bold text-sm shadow-xs transition-all cursor-pointer uppercase tracking-wider"
                     >
                         <MessageCircle class="h-5 w-5" />
                         <span>Hubungi Admin / Minta Antar</span>
                     </a>
-                    <p class="text-xs font-bold text-black/70">
+                    <p class="text-xs font-medium text-slate-500">
                         Konfirmasi bukti bayar QRIS atau permintaan pengantaran langsung via WhatsApp
                     </p>
                 </div>
 
                 <!-- Store Information Footer & Terms -->
-                <div class="bg-white rounded-[12px] p-5 sm:p-6 border-[3.5px] border-black shadow-[6px_6px_0px_#000] text-center space-y-3">
+                <div class="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm text-center space-y-3">
                     <div class="space-y-1">
-                        <h4 class="font-black text-sm text-black">{{ store_info.name }}</h4>
-                        <p class="text-xs font-bold text-black/70">{{ store_info.address }}</p>
-                        <p class="text-xs text-black font-mono font-bold">No. WA Toko: {{ store_info.phone }}</p>
+                        <h4 class="font-bold text-sm text-slate-900">{{ store_info.name }}</h4>
+                        <p class="text-xs font-medium text-slate-500">{{ store_info.address }}</p>
+                        <p class="text-xs text-slate-700 font-mono font-semibold">No. WA Toko: {{ store_info.phone }}</p>
                     </div>
 
-                    <p class="text-xs font-bold text-black/70 italic max-w-md mx-auto pt-2 border-t-2 border-black/20">
+                    <p class="text-xs font-medium text-slate-400 italic max-w-md mx-auto pt-2 border-t border-slate-100">
                         {{ store_info.receipt_footer }}
                     </p>
 
@@ -631,7 +631,7 @@ const isUnpaid = computed(() => props.order && props.order.outstanding_balance >
                             :href="storeContactWaLink"
                             target="_blank"
                             rel="noopener noreferrer"
-                            class="text-black font-black hover:underline inline-flex items-center space-x-1"
+                            class="text-[#4F5FE8] font-bold hover:underline inline-flex items-center space-x-1"
                         >
                             <MessageCircle class="h-4 w-4" />
                             <span>Hubungi Kasir via WhatsApp</span>
@@ -644,21 +644,21 @@ const isUnpaid = computed(() => props.order && props.order.outstanding_balance >
         <!-- Cashier Settlement Confirmation Modal -->
         <div
             v-if="showSettleModal && order"
-            class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 no-print"
+            class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 no-print"
             @click.self="showSettleModal = false"
         >
-            <div class="bg-[#FFFDF5] rounded-[12px] max-w-md w-full border-[3.5px] border-black shadow-[8px_8px_0px_#000] overflow-hidden flex flex-col">
-                <div class="px-5 py-3.5 bg-[#FFEB3B] border-b-[3.5px] border-black flex items-center justify-between">
+            <div class="bg-white rounded-3xl max-w-md w-full border border-slate-200/90 shadow-2xl overflow-hidden flex flex-col">
+                <div class="px-6 py-4 bg-[#10194D] text-white flex items-center justify-between">
                     <div>
-                        <span class="text-[10px] font-black uppercase tracking-wider bg-black text-[#FFEB3B] px-2 py-0.5 rounded-[4px]">
+                        <span class="text-[10px] font-bold uppercase tracking-wider bg-white/10 text-slate-200 px-2 py-0.5 rounded-full">
                             Kasir • Pelunasan Nota
                         </span>
-                        <h3 class="font-black text-lg text-black tracking-tight mt-1">Konfirmasi Pembayaran</h3>
+                        <h3 class="font-bold text-lg text-white tracking-tight mt-1">Konfirmasi Pembayaran</h3>
                     </div>
                     <button
                         type="button"
                         @click="showSettleModal = false"
-                        class="h-8 w-8 rounded-[6px] border-2 border-black bg-white flex items-center justify-center text-black hover:bg-[#FF5252] hover:text-white transition-all cursor-pointer shadow-[1.5px_1.5px_0px_#000]"
+                        class="h-8 w-8 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition-all cursor-pointer"
                     >
                         <X class="h-4 w-4" />
                     </button>
@@ -666,30 +666,30 @@ const isUnpaid = computed(() => props.order && props.order.outstanding_balance >
 
                 <div class="p-5 space-y-4">
                     <!-- Error Alert -->
-                    <div v-if="settleErrorMessage" class="p-3 rounded-[8px] bg-[#FF5252]/15 border-2 border-black text-xs text-black font-bold flex items-center space-x-2">
-                        <AlertCircle class="h-4 w-4 text-[#FF5252] shrink-0" />
+                    <div v-if="settleErrorMessage" class="p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-700 font-semibold flex items-center space-x-2">
+                        <AlertCircle class="h-4 w-4 text-rose-600 shrink-0" />
                         <span>{{ settleErrorMessage }}</span>
                     </div>
 
                     <!-- Customer & Invoice Info -->
-                    <div class="p-3 bg-white rounded-[8px] border-2 border-black shadow-[2px_2px_0px_#000] text-xs space-y-1">
+                    <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200 text-xs space-y-1">
                         <div class="flex justify-between">
-                            <span class="font-bold text-gray-600">No. Nota:</span>
-                            <span class="font-mono font-black text-black">{{ order.invoice_number }}</span>
+                            <span class="font-medium text-slate-500">No. Nota:</span>
+                            <span class="font-mono font-bold text-slate-900">{{ order.invoice_number }}</span>
                         </div>
                         <div class="flex justify-between">
-                            <span class="font-bold text-gray-600">Pelanggan:</span>
-                            <span class="font-black text-black">{{ order.customer?.name ?? 'Pelanggan Umum' }}</span>
+                            <span class="font-medium text-slate-500">Pelanggan:</span>
+                            <span class="font-bold text-slate-900">{{ order.customer?.name ?? 'Pelanggan Umum' }}</span>
                         </div>
-                        <div class="flex justify-between pt-1 border-t border-black/10">
-                            <span class="font-bold text-gray-700">Sisa Tagihan:</span>
-                            <span class="font-mono font-black text-base text-black">{{ formatRupiah(order.outstanding_balance) }}</span>
+                        <div class="flex justify-between pt-1 border-t border-slate-200">
+                            <span class="font-bold text-slate-700">Sisa Tagihan:</span>
+                            <span class="font-mono font-bold text-base text-rose-600">{{ formatRupiah(order.outstanding_balance) }}</span>
                         </div>
                     </div>
 
                     <!-- Payment Method Toggle -->
                     <div>
-                        <label class="block text-xs font-black uppercase tracking-wider text-black mb-1.5">
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                             Metode Pelunasan
                         </label>
                         <div class="grid grid-cols-2 gap-2">
@@ -697,8 +697,8 @@ const isUnpaid = computed(() => props.order && props.order.outstanding_balance >
                                 type="button"
                                 @click="settleMethod = 'cash'"
                                 :class="[
-                                    'p-2.5 rounded-[8px] border-2 border-black text-xs font-black flex items-center justify-center space-x-2 transition-all cursor-pointer',
-                                    settleMethod === 'cash' ? 'bg-[#22C55E] text-black shadow-[2px_2px_0px_#000]' : 'bg-white text-gray-700 hover:bg-[#EAFFEA]'
+                                    'p-2.5 rounded-xl border text-xs font-bold flex items-center justify-center space-x-2 transition-all cursor-pointer',
+                                    settleMethod === 'cash' ? 'bg-[#22C55E] text-white border-[#22C55E] shadow-xs' : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
                                 ]"
                             >
                                 <Banknote class="h-4 w-4" />
@@ -708,8 +708,8 @@ const isUnpaid = computed(() => props.order && props.order.outstanding_balance >
                                 type="button"
                                 @click="settleMethod = 'qris'"
                                 :class="[
-                                    'p-2.5 rounded-[8px] border-2 border-black text-xs font-black flex items-center justify-center space-x-2 transition-all cursor-pointer',
-                                    settleMethod === 'qris' ? 'bg-[#FFEB3B] text-black shadow-[2px_2px_0px_#000]' : 'bg-white text-gray-700 hover:bg-[#FFF9D2]'
+                                    'p-2.5 rounded-xl border text-xs font-bold flex items-center justify-center space-x-2 transition-all cursor-pointer',
+                                    settleMethod === 'qris' ? 'bg-[#4F5FE8] text-white border-[#4F5FE8] shadow-xs' : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
                                 ]"
                             >
                                 <QrCode class="h-4 w-4" />
@@ -720,23 +720,23 @@ const isUnpaid = computed(() => props.order && props.order.outstanding_balance >
 
                     <!-- Cash Tender (if cash) -->
                     <div v-if="settleMethod === 'cash'" class="space-y-1.5">
-                        <label class="block text-xs font-black uppercase tracking-wider text-black">
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-700">
                             Uang Tunai Diterima (Rp)
                         </label>
                         <input
                             v-model="settleTender"
                             type="text"
-                            class="min-h-[44px] w-full rounded-[8px] border-2 border-black bg-white px-3 py-2 text-base font-mono font-black text-black shadow-[2px_2px_0px_#000] focus:outline-none"
+                            class="min-h-[44px] w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-base font-mono font-bold text-slate-900 shadow-xs focus:outline-none focus:ring-2 focus:ring-[#4F5FE8]"
                             placeholder="Ketik nominal tunai"
                         />
                     </div>
                 </div>
 
-                <div class="p-4 bg-[#FFEB3B]/20 border-t-[3.5px] border-black flex items-center space-x-2.5">
+                <div class="p-4 bg-slate-50 border-t border-slate-200 flex items-center space-x-2.5">
                     <button
                         type="button"
                         @click="showSettleModal = false"
-                        class="min-h-[44px] px-4 rounded-[8px] border-2 border-black bg-white text-black text-xs font-black hover:bg-gray-100 cursor-pointer shadow-[2px_2px_0px_#000]"
+                        class="min-h-[44px] px-4 rounded-xl border border-slate-200 bg-white text-slate-700 text-xs font-bold hover:bg-slate-50 cursor-pointer shadow-xs"
                     >
                         Batal
                     </button>
@@ -744,7 +744,7 @@ const isUnpaid = computed(() => props.order && props.order.outstanding_balance >
                         type="button"
                         :disabled="isSettling"
                         @click="confirmSettlement"
-                        class="min-h-[44px] flex-1 px-4 rounded-[8px] border-[2.5px] border-black bg-[#22C55E] text-black text-xs font-black uppercase tracking-wider hover:bg-[#16A34A] shadow-[3px_3px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 disabled:opacity-50 cursor-pointer flex items-center justify-center space-x-1.5 transition-all"
+                        class="min-h-[44px] flex-1 px-4 rounded-xl bg-[#22C55E] hover:bg-[#16A34A] text-white text-xs font-bold uppercase tracking-wider shadow-xs disabled:opacity-50 cursor-pointer flex items-center justify-center space-x-1.5 transition-all"
                     >
                         <Loader2 v-if="isSettling" class="h-4 w-4 animate-spin" />
                         <span v-else>Konfirmasi Lunas & Simpan</span>
