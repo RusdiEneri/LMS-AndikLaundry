@@ -11,12 +11,12 @@
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v=1.1">
         <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}?v=1.1">
 
-        <!-- Fonts: General Sans (Fontshare), DM Sans & JetBrains Mono (Google Fonts) -->
+        <!-- Fonts: Lexend (Heading), Poppins (Body), DM Sans, General Sans & JetBrains Mono -->
         <link rel="preconnect" href="https://api.fontshare.com">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@600;700;800;900&family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
 
         <!-- Scripts and Styles -->
         @vite(['resources/css/app.css', 'resources/js/app.ts'])

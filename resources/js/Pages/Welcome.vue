@@ -2,22 +2,22 @@
 import { Head, Link, router } from '@inertiajs/vue3';
 import {
     ArrowRight,
-    Banknote,
+    Calendar,
     Check,
-    CheckCircle2,
     ChevronDown,
     Clock,
-    FileText,
+    ExternalLink,
     MapPin,
+    Menu,
     MessageCircle,
     Phone,
-    QrCode,
-    Receipt,
     Search,
     ShieldCheck,
+    Shirt,
     Sparkles,
     Star,
     Truck,
+    X,
 } from 'lucide-vue-next';
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 
@@ -28,7 +28,11 @@ const props = defineProps<{
 }>();
 
 const menuOpen = ref(false);
-const menuLabel = computed(() => (menuOpen.value ? 'Tutup navigasi' : 'Buka navigasi'));
+const activeFaqIndex = ref<number | null>(0);
+
+function toggleFaq(index: number) {
+    activeFaqIndex.value = activeFaqIndex.value === index ? null : index;
+}
 
 // Data Toko & Kontak
 const storeName = computed(() => props.store?.name || 'Andik Laundry');
@@ -47,11 +51,10 @@ function getServiceWhatsappUrl(serviceName: string) {
     return `https://wa.me/${phone}?text=${text}`;
 }
 
-// Cek Pesanan: nomor nota atau nomor HP, diteruskan ke halaman nota publik.
+// Cek Pesanan
 const orderQuery = ref('');
 const orderQueryError = ref('');
 const isCheckingOrder = ref(false);
-
 const orderQueryPattern = /^[A-Za-z0-9\-]{4,}$/;
 
 function submitOrderCheck() {
@@ -74,10 +77,9 @@ function submitOrderCheck() {
     });
 }
 
-// Statistik pelanggan (riil + basis) untuk social proof di hero.
+// Statistik pelanggan
 const stats = computed(() => props.stats ?? { customers: 1250, orders: 3400, laundry_kg: 8200 });
 
-// Counter ++ animasi bertahap dari 0 saat web load
 const animatedCustomers = ref(0);
 const animatedOrders = ref(0);
 const animatedLaundryKg = ref(0);
@@ -136,7 +138,7 @@ function startCounterAnimation() {
     counterRafId = requestAnimationFrame(step);
 }
 
-// Auto-typing text effect di input lacak progres
+// Typewriter effect
 const typewriterPlaceholder = ref('Nomor nota (AL-...) atau No. HP');
 const isInputFocused = ref(false);
 let typewriterTimer: ReturnType<typeof setTimeout> | null = null;
@@ -216,59 +218,74 @@ function onInputBlur() {
 // 4 Layanan Utama POS
 const services = [
     {
-        name: 'Cuci Basah',
-        unit: 'kg',
-        price: 'Rp 5.000',
-        minWeight: 'Min. 2 kg',
-        badge: 'Ekonomis',
-        desc: 'Pakaian dicuci bersih dan dibilas higienis dengan deterjen premium, siap dijemur mandiri di rumah.',
-        features: [
-            '1 mesin 1 pelanggan (tidak dicampur)',
-            'Deterjen premium ramah serat kain',
-            'Pembersihan noda awal kerah & manset',
-            'Bilas bersih tanpa sisa deterjen',
-        ],
-    },
-    {
-        name: 'Cuci Kering',
-        unit: 'kg',
-        price: 'Rp 6.000',
-        minWeight: 'Min. 2 kg',
-        badge: 'Cepat & Rapi',
-        desc: 'Dicuci higienis dan dikeringkan menggunakan mesin pengering suhu terkontrol, bebas apek dan siap dilipat.',
-        features: [
-            '1 mesin 1 pelanggan (tidak dicampur)',
-            'Mesin pengering suhu stabil (anti-kusut)',
-            'Pakaian kering sempurna tanpa bau apek',
-            'Disortir dan dilipat rapi',
-        ],
-    },
-    {
+        id: 'cuci-setrika',
         name: 'Cuci Setrika',
         unit: 'kg',
         price: 'Rp 8.000',
         minWeight: 'Min. 2 kg',
         badge: 'Paling Favorit',
         featured: true,
-        desc: 'Layanan all-in-one paling diminati: dicuci higienis, dikeringkan, disetrika uap halus, dan dikemas wangi terlindung debu.',
+        rating: '4.9',
+        reviews: '520+ ulasan',
+        desc: 'Layanan all-in-one paling diminati: dicuci higienis, dikeringkan mesin, disetrika uap boiler halus, dan dikemas wangi terlindung debu.',
         features: [
             '1 mesin 1 pelanggan (tidak dicampur)',
-            'Setrika uap profesional (anti-gosong)',
-            'Pewangi tahan lama grade premium',
-            'Kemasan plastik higienis kedap debu',
+            'Setrika uap boiler profesional (anti-gosong)',
+            'Pewangi grade premium tahan lama',
+            'Kemasan plastik rapi kedap debu',
         ],
     },
     {
+        id: 'cuci-kering',
+        name: 'Cuci Kering',
+        unit: 'kg',
+        price: 'Rp 6.000',
+        minWeight: 'Min. 2 kg',
+        badge: 'Cepat & Rapi',
+        featured: false,
+        rating: '4.8',
+        reviews: '310+ ulasan',
+        desc: 'Dicuci higienis dan dikeringkan mesin pengering suhu terkontrol, bebas bau apek, disortir rapi dan siap dilipat.',
+        features: [
+            '1 mesin 1 pelanggan (tidak dicampur)',
+            'Mesin pengering suhu stabil (anti-kusut)',
+            'Kering sempurna tanpa bau apek',
+            'Disortir dan dilipat rapi',
+        ],
+    },
+    {
+        id: 'cuci-basah',
+        name: 'Cuci Basah',
+        unit: 'kg',
+        price: 'Rp 5.000',
+        minWeight: 'Min. 2 kg',
+        badge: 'Ekonomis',
+        featured: false,
+        rating: '4.8',
+        reviews: '190+ ulasan',
+        desc: 'Pakaian dicuci bersih dan dibilas higienis dengan sabun premium, siap dijemur mandiri di rumah dengan wangi segar.',
+        features: [
+            '1 mesin 1 pelanggan (tidak dicampur)',
+            'Deterjen khusus ramah serat kain',
+            'Pembersihan noda awal kerah & manset',
+            'Bilas bersih tanpa sisa residu sabun',
+        ],
+    },
+    {
+        id: 'cuci-karpet',
         name: 'Cuci Karpet',
         unit: 'm²',
         price: 'Rp 15.000',
-        minWeight: 'Kalkulasi P × L',
+        minWeight: 'Hitung P × L',
         badge: 'Deep Clean',
-        desc: 'Pembersihan mendalam karpet rumah, kantor, atau masjid menggunakan hydro-cleaning untuk mengangkat debu dan tungau.',
+        featured: false,
+        rating: '4.9',
+        reviews: '140+ ulasan',
+        desc: 'Pembersihan karpet rumah, kantor, atau masjid dengan hydro-cleaning untuk mengangkat debu membandel dan tungau hingga tuntas.',
         features: [
             'Pembersihan serat karpet mendalam',
-            'Mengangkat debu, tungau, dan kuman',
-            'Pengerolan dan pengeringan steril',
+            'Angkat debu, tungau, dan kuman',
+            'Pengerolan & pengeringan steril',
             'Kemasan plastik khusus pelindung karpet',
         ],
     },
@@ -281,7 +298,7 @@ const faqs = [
     },
     {
         q: 'Apakah pakaian saya dicampur dengan pelanggan lain?',
-        a: 'Sama sekali tidak. Komitmen utama Andik Laundry adalah 1 mesin khusus untuk 1 pelanggan pada setiap proses pencucian. Pakaian Anda dijamin tidak tercampur, lebih higienis, dan terhindar dari risiko tertukar.',
+        a: 'Sama sekali tidak. Komitmen utama Andik Laundry sejak 2009 adalah 1 mesin khusus untuk 1 pelanggan pada setiap proses pencucian. Pakaian Anda dijamin tidak tercampur, lebih higienis, dan terhindar dari risiko tertukar.',
     },
     {
         q: 'Berapa lama waktu pengerjaan cucian?',
@@ -289,76 +306,28 @@ const faqs = [
     },
     {
         q: 'Apakah ada layanan antar jemput cucian?',
-        a: 'Ya, kami melayani antar jemput cucian. Gratis ongkir untuk cucian maksimal 3 kg. Cukup hubungi admin kami melalui WhatsApp.',
+        a: 'Ya, kami melayani antar jemput cucian. Gratis ongkir untuk cucian maksimal 3 kg di area sekitar Hendrosari & Menganti. Cukup hubungi admin kami melalui WhatsApp.',
     },
     {
         q: 'Bagaimana cara melacak progres cucian saya?',
-        a: 'Begitu pesanan Anda diinput, sistem mengirimkan nota digital langsung ke WhatsApp Anda. Anda cukup mengklik tautan nota tersebut atau memasukkan nomor nota di kolom Cek Pesanan di website ini tanpa perlu membuat akun / login.',
+        a: 'Begitu pesanan Anda diinput di kasir, sistem mengirimkan nota digital langsung ke WhatsApp Anda. Anda cukup mengklik tautan nota tersebut atau memasukkan nomor nota di kolom Cek Pesanan di website ini tanpa perlu repot login.',
     },
     {
         q: 'Metode pembayaran apa saja yang diterima?',
-        a: 'Kami menerima pembayaran Tunai (Cash) di kasir toko dan Non-Tunai QRIS (GoPay, OVO, Dana, ShopeePay, LinkAja, serta seluruh aplikasi mobile banking BCA, Mandiri, BRI, BNI). QRIS juga tertera di nota digital Anda.',
+        a: 'Kami menerima pembayaran Tunai (Cash) di kasir toko dan Non-Tunai QRIS resmi (Dana, Mandiri, BCA, GoPay, OVO, ShopeePay, dan semua mobile banking berlogo QRIS). Bisa bayar di muka atau saat pakaian diambil.',
     },
 ];
-
-const testimonials = [
-    {
-        name: 'Ratna W.',
-        area: 'Pelanggan Kiloan Rutin',
-        text: 'Cucian selesai tepat waktu, packing rapi, dan wanginya tahan sampai berhari-hari. Senang sekali pakaian tidak dicampur dengan orang lain.',
-        stars: 5,
-    },
-    {
-        name: 'Dimas P.',
-        area: 'Antar Jemput Sekitar Toko',
-        text: 'Notifikasi WhatsApp sangat memudahkan. Tinggal klik link nota langsung tahu cucian sudah di rak nomor berapa dan siap diambil.',
-        stars: 5,
-    },
-    {
-        name: 'Sinta M.',
-        area: 'Pelanggan Cuci Karpet',
-        text: 'Karpet ruang tamu 3x4 meter kembali bersih cerah dan aromanya segar. Noda kopi yang menempel lama bisa hilang bersih.',
-        stars: 5,
-    },
-];
-
-let revealObserver: IntersectionObserver | null = null;
 
 onMounted(() => {
     startCounterAnimation();
     startTypewriter();
-
-    const revealTargets = document.querySelectorAll<HTMLElement>('[data-reveal]');
-
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) {
-        revealTargets.forEach((element) => element.classList.add('is-revealed'));
-        return;
-    }
-
-    revealObserver = new IntersectionObserver(
-        (entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('is-revealed');
-                    revealObserver?.unobserve(entry.target);
-                }
-            });
-        },
-        { threshold: 0.1, rootMargin: '0px 0px -32px 0px' },
-    );
-
-    revealTargets.forEach((element) => revealObserver?.observe(element));
 });
 
 onBeforeUnmount(() => {
-    revealObserver?.disconnect();
-    revealObserver = null;
-
     if (counterRafId !== null) {
         cancelAnimationFrame(counterRafId);
         counterRafId = null;
     }
-
     if (typewriterTimer !== null) {
         clearTimeout(typewriterTimer);
         typewriterTimer = null;
@@ -370,1766 +339,970 @@ onBeforeUnmount(() => {
     <Head title="Andik Laundry | Bersih, Wangi & Dirawat Teliti Tanpa Dicampur">
         <meta
             name="description"
-            content="Layanan binatu modern kiloan dan karpet terpercaya. 1 mesin 1 pelanggan, nota digital WhatsApp, pelacakan live, pembayaran QRIS, dan gratis antar jemput."
+            content="Layanan binatu modern kiloan dan karpet terpercaya sejak 2009 di Gresik. 1 mesin 1 pelanggan, nota digital WhatsApp, pelacakan live, pembayaran QRIS, dan gratis antar jemput."
         />
     </Head>
 
-    <div class="landing-page min-h-screen bg-[#FFFDF5] text-[#000000]">
-        <a class="skip-link" href="#main-content">Lewati ke konten utama</a>
+    <div class="min-h-screen bg-[#0A1033] text-white font-sans antialiased selection:bg-[#FF8A5B] selection:text-[#10194D]">
+        <!-- Skip link a11y -->
+        <a
+            href="#main-content"
+            class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#FF8A5B] focus:text-[#10194D] focus:font-bold focus:rounded-full focus:shadow-lg focus:outline-none"
+        >
+            Lewati ke konten utama
+        </a>
 
-        <!-- Sticky Header Navigasi -->
-        <header class="site-header">
-            <div class="site-header__inner">
-                <Link href="/" class="wordmark" aria-label="Andik Laundry Beranda">
-                    <span class="wordmark__name">andik<span class="wordmark__accent">.</span></span>
-                    <span class="wordmark__caption">LAUNDRY</span>
+        <!-- ======================================================== -->
+        <!-- HEADER / NAVBAR FLOATING PILL (DESIGN.md)               -->
+        <!-- ======================================================== -->
+        <header class="sticky top-4 z-50 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="bg-white/95 backdrop-blur-md text-[#10194D] rounded-full px-5 sm:px-7 py-3 shadow-[0_8px_24px_rgba(16,25,77,0.12)] border border-[#E3E1DA] flex items-center justify-between transition-all">
+                <!-- Logo -->
+                <Link href="/" class="flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F5FE8] rounded-lg">
+                    <span class="font-heading font-extrabold text-2xl tracking-tight text-[#10194D]">
+                        andik<span class="text-[#FF8A5B]">.</span>
+                    </span>
+                    <span class="text-[10px] font-bold tracking-widest text-[#4F5FE8] uppercase bg-[#E6E9FD] px-2 py-0.5 rounded-full ml-1">
+                        LAUNDRY
+                    </span>
                 </Link>
 
-                <nav
-                    id="primary-navigation"
-                    class="site-nav"
-                    :class="{ 'site-nav--open': menuOpen }"
-                    aria-label="Navigasi utama"
-                >
-                    <a href="#keunggulan" @click="menuOpen = false">Keunggulan</a>
-                    <a href="#tarif" @click="menuOpen = false">Layanan & Tarif</a>
-                    <a href="#cara-pesan" @click="menuOpen = false">Cara Pesan</a>
-                    <a href="#lacak" @click="menuOpen = false">Lacak Nota</a>
-                    <a href="#faq" @click="menuOpen = false">FAQ</a>
-                    <a href="#kontak" @click="menuOpen = false">Kontak</a>
-
-                    <div class="site-nav__actions">
-                        <a
-                            :href="whatsappUrl"
-                            target="_blank"
-                            rel="noopener"
-                            class="nav-btn-wa"
-                            aria-label="Pesan via WhatsApp"
-                        >
-                            <MessageCircle class="w-4 h-4 mr-1.5" />
-                            <span>Pesan WA</span>
-                        </a>
-                        <Link v-if="canLogin" href="/login" class="staff-link" @click="menuOpen = false">
-                            Masuk Staf
-                        </Link>
-                    </div>
+                <!-- Desktop Navigation Links -->
+                <nav class="hidden lg:flex items-center gap-7 text-[14px] font-medium text-[#10194D]" aria-label="Navigasi Utama">
+                    <a href="#keunggulan" class="hover:text-[#4F5FE8] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F5FE8] rounded-md px-1 py-0.5">Keunggulan</a>
+                    <a href="#tarif" class="hover:text-[#4F5FE8] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F5FE8] rounded-md px-1 py-0.5">Layanan & Tarif</a>
+                    <a href="#lacak" class="hover:text-[#4F5FE8] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F5FE8] rounded-md px-1 py-0.5">Lacak Nota</a>
+                    <a href="#lokasi" class="hover:text-[#4F5FE8] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F5FE8] rounded-md px-1 py-0.5">Lokasi</a>
+                    <a href="#faq" class="hover:text-[#4F5FE8] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F5FE8] rounded-md px-1 py-0.5">FAQ</a>
                 </nav>
 
+                <!-- Right Action Buttons -->
+                <div class="hidden sm:flex items-center gap-3">
+                    <a
+                        :href="whatsappUrl"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="bg-[#FF8A5B] hover:bg-[#F26B3A] text-[#10194D] font-bold text-xs sm:text-sm px-4 sm:px-5 py-2.5 rounded-full transition-all duration-200 shadow-sm hover:shadow-[0_4px_14px_rgba(255,138,91,0.4)] hover:-translate-y-0.5 flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#10194D]"
+                    >
+                        <MessageCircle class="w-4 h-4 text-[#10194D]" />
+                        <span>Pesan Antar Jemput</span>
+                    </a>
+
+                    <Link
+                        v-if="canLogin"
+                        href="/login"
+                        class="text-[#10194D] hover:bg-[#E6E9FD] hover:text-[#4F5FE8] font-bold text-xs sm:text-sm px-4 py-2.5 rounded-full border border-[#E3E1DA] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F5FE8]"
+                    >
+                        Masuk Staf
+                    </Link>
+                </div>
+
+                <!-- Mobile Menu Toggle -->
                 <button
-                    class="menu-toggle"
                     type="button"
+                    class="lg:hidden p-2 rounded-full text-[#10194D] hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F5FE8]"
                     :aria-expanded="menuOpen"
-                    aria-controls="primary-navigation"
-                    :aria-label="menuLabel"
+                    aria-label="Buka menu navigasi"
                     @click="menuOpen = !menuOpen"
                 >
-                    <span :class="{ 'rotate-45 translate-y-[6px]': menuOpen }"></span>
-                    <span :class="{ 'opacity-0': menuOpen }"></span>
-                    <span :class="{ '-rotate-45 -translate-y-[6px]': menuOpen }"></span>
+                    <Menu v-if="!menuOpen" class="w-6 h-6" />
+                    <X v-else class="w-6 h-6" />
                 </button>
+            </div>
+
+            <!-- Mobile Navigation Drawer -->
+            <div
+                v-if="menuOpen"
+                class="lg:hidden mt-2 bg-white text-[#10194D] rounded-[24px] p-5 shadow-xl border border-[#E3E1DA] flex flex-col gap-3 animate-fadeIn"
+            >
+                <a href="#keunggulan" class="px-3 py-2 font-medium hover:text-[#4F5FE8] rounded-lg" @click="menuOpen = false">Keunggulan</a>
+                <a href="#tarif" class="px-3 py-2 font-medium hover:text-[#4F5FE8] rounded-lg" @click="menuOpen = false">Layanan & Tarif</a>
+                <a href="#lacak" class="px-3 py-2 font-medium hover:text-[#4F5FE8] rounded-lg" @click="menuOpen = false">Lacak Nota</a>
+                <a href="#lokasi" class="px-3 py-2 font-medium hover:text-[#4F5FE8] rounded-lg" @click="menuOpen = false">Lokasi</a>
+                <a href="#faq" class="px-3 py-2 font-medium hover:text-[#4F5FE8] rounded-lg" @click="menuOpen = false">FAQ</a>
+                <hr class="border-[#E3E1DA]" />
+                <div class="flex flex-col gap-2 pt-1">
+                    <a
+                        :href="whatsappUrl"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="bg-[#FF8A5B] text-[#10194D] font-bold text-center py-2.5 rounded-full flex items-center justify-center gap-2"
+                        @click="menuOpen = false"
+                    >
+                        <MessageCircle class="w-4 h-4" />
+                        <span>Pesan Antar Jemput</span>
+                    </a>
+                    <Link
+                        v-if="canLogin"
+                        href="/login"
+                        class="text-center font-bold py-2 rounded-full border border-[#E3E1DA]"
+                        @click="menuOpen = false"
+                    >
+                        Masuk Staf
+                    </Link>
+                </div>
             </div>
         </header>
 
-        <main id="main-content">
-            <!-- Hero Section Wrapper with background -->
-            <div class="hero-wrapper">
-                <section id="hero" class="hero-section">
-                    <div class="hero-section__copy" data-reveal>
-                        <div class="hero-badge">
-                            <span class="hero-badge__dot"></span>
-                            <span>Berdiri Sejak 2009 • 1 Mesin 1 Pelanggan</span>
-                        </div>
-
-                        <h1 class="hero-title">
-                            Pakaian Bersih, Wangi & Rapi.<br />
-                            <span class="hero-title__highlight">Dirawat Teliti Tanpa Dicampur.</span>
-                        </h1>
-
-                        <p class="hero-description">
-                            Layanan binatu modern harian kiloan & karpet profesional. Nikmati pencucian higienis dengan nota digital otomatis terkirim ke WhatsApp Anda dan pelacakan progres secara live tanpa perlu login.
-                        </p>
-
-                        <!-- Dual Call To Action -->
-                        <div class="hero-cta-group">
-                            <a
-                                :href="whatsappUrl"
-                                target="_blank"
-                                rel="noopener"
-                                class="btn-cta-primary"
-                            >
-                                <MessageCircle class="w-5 h-5 mr-2" />
-                                <span>Pesan Antar-Jemput (WA)</span>
-                            </a>
-                            <a href="#tarif" class="btn-cta-secondary">
-                                <span>Lihat Tarif Layanan</span>
-                                <ArrowRight class="w-4 h-4 ml-1.5" />
-                            </a>
-                        </div>
-
-                        <!-- Quick Key Guarantees -->
-                        <div class="hero-guarantees">
-                            <div class="hero-guarantee-item">
-                                <Check class="w-4 h-4 text-[#16A34A] mr-1.5 flex-shrink-0" />
-                                <span>Deterjen & Pewangi Ramah Serat</span>
-                            </div>
-                            <div class="hero-guarantee-item">
-                                <Check class="w-4 h-4 text-[#16A34A] mr-1.5 flex-shrink-0" />
-                                <span>Opsi Ekspres Selesai Hari Ini</span>
-                            </div>
-                            <div class="hero-guarantee-item">
-                                <Check class="w-4 h-4 text-[#16A34A] mr-1.5 flex-shrink-0" />
-                                <span>Garansi Cuci Ulang 1x24 Jam</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Right Column: Interactive Hub (Form Lacak + Counter Grid) -->
-                    <div class="hero-section__interactive" data-reveal>
-                        <!-- Card 1: Form Lacak Progres Cucian -->
-                        <form class="hero-track-panel" aria-label="Cek pesanan nota" @submit.prevent="submitOrderCheck">
-                            <div class="hero-track-panel__header">
-                                <div class="flex items-center gap-2">
-                                    <div class="w-7 h-7 rounded-md bg-[#EEF2FF] text-[#4F46E5] flex items-center justify-center">
-                                        <Search class="w-4 h-4" />
-                                    </div>
-                                    <div>
-                                        <h3 class="font-bold text-xs uppercase tracking-wider text-[#0A0A0A]">Lacak Progres Cucian</h3>
-                                        <p class="text-[11px] text-[#6B6B6B]">Pantau status cucian & nota digital</p>
-                                    </div>
-                                </div>
-                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-[#ECFDF5] text-[#059669]">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-[#10B981]"></span>
-                                    Live Realtime
-                                </span>
-                            </div>
-
-                            <div class="hero-track-panel__row mt-3.5">
-                                <input
-                                    id="hero-order-query"
-                                    v-model="orderQuery"
-                                    class="hero-track-panel__input"
-                                    type="text"
-                                    name="q"
-                                    inputmode="text"
-                                    autocomplete="off"
-                                    :placeholder="typewriterPlaceholder"
-                                    aria-label="Nomor nota atau nomor HP"
-                                    @focus="onInputFocus"
-                                    @blur="onInputBlur"
-                                />
-                                <button class="hero-track-panel__submit" type="submit" :disabled="isCheckingOrder">
-                                    {{ isCheckingOrder ? 'Mencari…' : 'Cek Status' }}
-                                </button>
-                            </div>
-
-                            <p v-if="orderQueryError" class="hero-track-panel__error" role="alert">
-                                {{ orderQueryError }}
-                            </p>
-                            <p v-else class="hero-track-panel__hint">
-                                Contoh: AL-20261115-001 atau 08123456789. Tanpa perlu login.
-                            </p>
-                        </form>
-
-                        <!-- Card 2: Counter / Stats 4-Grid -->
-                        <dl class="hero-stats-panel" aria-label="Statistik Andik Laundry">
-                            <div class="hero-stats-panel__item">
-                                <dt>Pelanggan Setia</dt>
-                                <dd>{{ customersLabel }}</dd>
-                            </div>
-                            <div class="hero-stats-panel__item">
-                                <dt>Pesanan Tuntas</dt>
-                                <dd>{{ ordersLabel }}</dd>
-                            </div>
-                            <div class="hero-stats-panel__item">
-                                <dt>Cucian Bersih</dt>
-                                <dd>{{ laundryKgLabel }}</dd>
-                            </div>
-                            <div class="hero-stats-panel__item">
-                                <dt>Rating Pelanggan</dt>
-                                <dd class="text-[#D97706]">
-                                    ★ {{ ratingScore }}<span class="text-xs text-[#6B6B6B] font-normal">/5</span>
-                                </dd>
-                            </div>
-                        </dl>
-
-                        <!-- Trust Badges Footer -->
-                        <div class="hero-trust-pills">
-                            <div class="trust-pill-item">
-                                <ShieldCheck class="w-3.5 h-3.5 text-[#10B981] mr-1.5" />
-                                <span>1 Mesin 1 Pelanggan</span>
-                            </div>
-                            <div class="trust-pill-item">
-                                <QrCode class="w-3.5 h-3.5 text-[#4F46E5] mr-1.5" />
-                                <span>QRIS & Tunai</span>
-                            </div>
-                            <div class="trust-pill-item">
-                                <Truck class="w-3.5 h-3.5 text-[#16A34A] mr-1.5" />
-                                <span>Gratis Antar &lt; 3 km</span>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-
-            <!-- Mengapa Memilih Kami (USP Section) -->
-            <section id="keunggulan" class="section-container">
-                <div class="section-header text-center" data-reveal>
-                    <p class="section-eyebrow">Standar Kualitas</p>
-                    <h2 class="section-title">Mengapa Harus Andik Laundry?</h2>
-                    <p class="section-subtitle">
-                        Empat alasan pelanggan mempercayakan pakaian harian dan karpet mereka kepada kami.
-                    </p>
+        <!-- ======================================================== -->
+        <!-- MAIN CONTENT                                            -->
+        <!-- ======================================================== -->
+        <main id="main-content" class="overflow-hidden">
+            <!-- ======================================================== -->
+            <!-- HERO SECTION: CREAM TOP CURVING INTO NAVY ROAD           -->
+            <!-- ======================================================== -->
+            <section class="relative bg-gradient-to-b from-[#F6F4EF] via-[#F6F4EF] to-[#10194D] pt-12 md:pt-16 pb-24 md:pb-32 px-4 sm:px-6 lg:px-8 text-[#10194D] rounded-b-[40px] md:rounded-b-[60px] shadow-2xl">
+                <!-- Decorative subtle road curve in background -->
+                <div class="absolute inset-0 pointer-events-none opacity-40 overflow-hidden">
+                    <svg class="w-full h-full object-cover" viewBox="0 0 1440 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M-100 500 C 300 350, 700 700, 1540 400" stroke="#E3E1DA" stroke-width="120" stroke-linecap="round" opacity="0.6"/>
+                        <path d="M-100 500 C 300 350, 700 700, 1540 400" stroke="#FFFFFF" stroke-width="6" stroke-dasharray="24 24" stroke-linecap="round"/>
+                    </svg>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-8" data-reveal>
-                    <div class="feature-card">
-                        <div class="feature-icon bg-[#EEF2FF] text-[#4F46E5]">
-                            <ShieldCheck class="w-6 h-6" />
+                <div class="max-w-7xl mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    <!-- Left Hero Content -->
+                    <div class="lg:col-span-7 flex flex-col items-start pt-4 sm:pt-8">
+                        <!-- Sub-heading Tag / Overline -->
+                        <div class="inline-flex items-center gap-2 bg-[#E6E9FD] text-[#26338A] px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-5 shadow-sm">
+                            <Sparkles class="w-4 h-4 text-[#4F5FE8]" />
+                            <span>SEJAK 2009 • 1 MESIN 1 PELANGGAN</span>
                         </div>
-                        <h3 class="feature-title">1 Mesin 1 Pelanggan</h3>
-                        <p class="feature-desc">
-                            Pakaian Anda tidak pernah dicampur dengan cucian pelanggan lain. Menjaga higienitas maksimal dan anti-tertukar.
+
+                        <!-- Main Display Heading (Every Sunday Style) -->
+                        <h1 class="font-heading font-extrabold text-4xl sm:text-5xl lg:text-6xl tracking-tight leading-[1.08] text-[#10194D] uppercase">
+                            CUCI BERSIH,<br />
+                            <span class="text-[#4F5FE8]">WANGI & RAPI!</span>
+                            <span class="inline-block ml-3 text-3xl sm:text-4xl">🧺</span>
+                        </h1>
+
+                        <!-- Subtitle -->
+                        <p class="font-sans text-base sm:text-lg text-[#6B7194] mt-5 max-w-xl leading-relaxed">
+                            Layanan binatu modern kiloan & karpet terpercaya di Hendrosari, Menganti, Gresik. Pakaian tidak pernah dicampur, timbangan jujur, gratis antar-jemput maksimal 3 kg, dan pantau nota digital langsung dari WhatsApp.
                         </p>
+
+                        <!-- Search Pill (Lacak Order) - Every Sunday Style -->
+                        <div class="w-full max-w-xl mt-8">
+                            <form
+                                @submit.prevent="submitOrderCheck"
+                                class="bg-white rounded-full p-2 pl-5 sm:pl-6 shadow-[0_12px_32px_rgba(16,25,77,0.14)] border border-[#E3E1DA] flex items-center justify-between gap-2 transition-all focus-within:ring-3 focus-within:ring-[#4F5FE8]/40"
+                            >
+                                <div class="flex items-center gap-3 flex-1 min-w-0">
+                                    <Search class="w-5 h-5 text-[#4F5FE8] shrink-0" />
+                                    <input
+                                        v-model="orderQuery"
+                                        type="text"
+                                        :placeholder="typewriterPlaceholder"
+                                        class="w-full bg-transparent text-[#10194D] text-sm sm:text-base font-medium placeholder-[#6B7194] focus:outline-none"
+                                        aria-label="Nomor nota laundry atau nomor WhatsApp"
+                                        @focus="onInputFocus"
+                                        @blur="onInputBlur"
+                                    />
+                                </div>
+                                <button
+                                    type="submit"
+                                    :disabled="isCheckingOrder"
+                                    class="bg-[#FF8A5B] hover:bg-[#F26B3A] text-[#10194D] font-bold text-xs sm:text-sm px-5 sm:px-7 py-3 rounded-full transition-all duration-200 shrink-0 shadow-sm hover:shadow-[0_4px_14px_rgba(255,138,91,0.4)] disabled:opacity-50 flex items-center gap-2"
+                                >
+                                    <span v-if="!isCheckingOrder">Cek Pesanan</span>
+                                    <span v-else>Memeriksa…</span>
+                                    <ArrowRight v-if="!isCheckingOrder" class="w-4 h-4" />
+                                </button>
+                            </form>
+
+                            <!-- Error Message -->
+                            <p v-if="orderQueryError" class="text-xs text-[#E5484D] font-medium mt-2 pl-4" role="alert">
+                                {{ orderQueryError }}
+                            </p>
+                        </div>
+
+                        <!-- Micro Social Proof Badges -->
+                        <div class="flex flex-wrap items-center gap-4 sm:gap-6 mt-8 pt-4 border-t border-[#E3E1DA]/80 w-full max-w-xl">
+                            <div class="flex items-center gap-2">
+                                <div class="flex -space-x-2">
+                                    <div class="w-8 h-8 rounded-full bg-[#4F5FE8] text-white font-bold text-xs flex items-center justify-center border-2 border-white">A</div>
+                                    <div class="w-8 h-8 rounded-full bg-[#FF8A5B] text-[#10194D] font-bold text-xs flex items-center justify-center border-2 border-white">N</div>
+                                    <div class="w-8 h-8 rounded-full bg-[#22A06B] text-white font-bold text-xs flex items-center justify-center border-2 border-white">D</div>
+                                </div>
+                                <div class="text-xs">
+                                    <div class="font-bold text-[#10194D] flex items-center gap-1">
+                                        <Star class="w-3.5 h-3.5 fill-[#F5A623] text-[#F5A623]" />
+                                        <span>{{ ratingScore }} / 5.0 Rating</span>
+                                    </div>
+                                    <div class="text-[#6B7194]">{{ customersLabel }} Pelanggan Puas</div>
+                                </div>
+                            </div>
+
+                            <div class="h-6 w-[1px] bg-[#E3E1DA] hidden sm:block"></div>
+
+                            <div class="text-xs">
+                                <div class="font-bold text-[#10194D]">{{ ordersLabel }} Nota Dikerjakan</div>
+                                <div class="text-[#6B7194]">Standar 1 Mesin 1 Pelanggan</div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="feature-card">
-                        <div class="feature-icon bg-[#F0FDF4] text-[#16A34A]">
-                            <Clock class="w-6 h-6" />
-                        </div>
-                        <h3 class="feature-title">Tepat Waktu & Opsi Kilat</h3>
-                        <p class="feature-desc">
-                            Komitmen waktu yang pasti: Reguler 2–3 hari atau layanan Ekspres selesai di hari yang sama (taruh pagi ambil sore).
-                        </p>
-                    </div>
+                    <!-- Right Hero Illustration: Playful Laundry Delivery Van (Every Sunday Style) -->
+                    <div class="lg:col-span-5 flex justify-center items-center relative">
+                        <div class="relative w-full max-w-md lg:max-w-none animate-float-slow">
+                            <!-- SVG Laundry Delivery Van & Happy Characters -->
+                            <svg class="w-full h-auto drop-shadow-2xl" viewBox="0 0 540 440" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stop-color="#E6E9FD"/>
+                                        <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+                                    </linearGradient>
+                                    <linearGradient id="vanGrad" x1="0" y1="0" x2="1" y2="1">
+                                        <stop offset="0%" stop-color="#4F5FE8"/>
+                                        <stop offset="100%" stop-color="#26338A"/>
+                                    </linearGradient>
+                                    <linearGradient id="basketGrad" x1="0" y1="0" x2="1" y2="1">
+                                        <stop offset="0%" stop-color="#FF8A5B"/>
+                                        <stop offset="100%" stop-color="#F26B3A"/>
+                                    </linearGradient>
+                                    <linearGradient id="bubbleGrad" x1="0" y1="0" x2="1" y2="1">
+                                        <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9"/>
+                                        <stop offset="100%" stop-color="#6577F0" stop-opacity="0.3"/>
+                                    </linearGradient>
+                                </defs>
 
-                    <div class="feature-card">
-                        <div class="feature-icon bg-[#F0F9FF] text-[#0284C7]">
-                            <Receipt class="w-6 h-6" />
-                        </div>
-                        <h3 class="feature-title">Nota Digital & Live Track</h3>
-                        <p class="feature-desc">
-                            Struk resmi otomatis terkirim ke WhatsApp Anda. Lacak posisi cucian di rak dan progres pengerjaan secara real-time.
-                        </p>
-                    </div>
+                                <!-- Circular soft backdrop glow -->
+                                <circle cx="270" cy="220" r="180" fill="url(#skyGrad)"/>
 
-                    <div class="feature-card">
-                        <div class="feature-icon bg-[#FEF3C7] text-[#D97706]">
-                            <Truck class="w-6 h-6" />
+                                <!-- Road track -->
+                                <path d="M40 370 C 180 340, 360 380, 500 350" stroke="#10194D" stroke-width="46" stroke-linecap="round"/>
+                                <path d="M60 370 C 180 340, 360 380, 480 350" stroke="#FFE14D" stroke-width="5" stroke-dasharray="16 14" stroke-linecap="round"/>
+
+                                <!-- Decorative Floating Soap Bubbles -->
+                                <circle cx="90" cy="180" r="22" fill="url(#bubbleGrad)" stroke="#FFFFFF" stroke-width="2"/>
+                                <circle cx="130" cy="140" r="14" fill="url(#bubbleGrad)" stroke="#FFFFFF" stroke-width="1.5"/>
+                                <circle cx="440" cy="120" r="26" fill="url(#bubbleGrad)" stroke="#FFFFFF" stroke-width="2"/>
+                                <circle cx="480" cy="170" r="16" fill="url(#bubbleGrad)" stroke="#FFFFFF" stroke-width="1.5"/>
+                                <circle cx="410" cy="90" r="12" fill="url(#bubbleGrad)" stroke="#FFFFFF" stroke-width="1"/>
+
+                                <!-- Sparkles -->
+                                <path d="M100 110 Q 100 125, 115 125 Q 100 125, 100 140 Q 100 125, 85 125 Q 100 125, 100 110 Z" fill="#FFE14D"/>
+                                <path d="M460 70 Q 460 82, 472 82 Q 460 82, 460 94 Q 460 82, 448 82 Q 460 82, 460 70 Z" fill="#FFE14D"/>
+
+                                <!-- Laundry Car / Van Body -->
+                                <g transform="translate(100, 140)">
+                                    <!-- Roof Luggage Rack with Fresh Laundry Baskets -->
+                                    <rect x="50" y="25" width="180" height="8" rx="4" fill="#10194D"/>
+                                    <line x1="75" y1="33" x2="75" y2="40" stroke="#10194D" stroke-width="4"/>
+                                    <line x1="205" y1="33" x2="205" y2="40" stroke="#10194D" stroke-width="4"/>
+
+                                    <!-- Laundry Basket 1 (Orange) on roof -->
+                                    <rect x="60" y="-15" width="70" height="40" rx="8" fill="url(#basketGrad)"/>
+                                    <!-- Folded Towels overflowing -->
+                                    <path d="M65 -15 Q 75 -28, 85 -15" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round"/>
+                                    <path d="M85 -15 Q 95 -28, 105 -15" stroke="#FFE14D" stroke-width="8" stroke-linecap="round"/>
+                                    <path d="M105 -15 Q 115 -28, 125 -15" stroke="#38BDF8" stroke-width="8" stroke-linecap="round"/>
+
+                                    <!-- Laundry Basket 2 (White/Clean) on roof -->
+                                    <rect x="140" y="-8" width="75" height="33" rx="8" fill="#FFFFFF" stroke="#E3E1DA" stroke-width="2"/>
+                                    <path d="M148 -8 Q 160 -22, 172 -8" stroke="#FF8A5B" stroke-width="8" stroke-linecap="round"/>
+                                    <path d="M172 -8 Q 185 -22, 198 -8" stroke="#6577F0" stroke-width="8" stroke-linecap="round"/>
+
+                                    <!-- Cheerful Smiley Mascot on roof basket -->
+                                    <circle cx="230" cy="5" r="18" fill="#FFE14D"/>
+                                    <!-- eyes & smile -->
+                                    <circle cx="225" cy="2" r="2.5" fill="#10194D"/>
+                                    <circle cx="235" cy="2" r="2.5" fill="#10194D"/>
+                                    <path d="M225 9 Q 230 15, 235 9" stroke="#10194D" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+
+                                    <!-- Main Van Cabin -->
+                                    <path d="M40 90 L 60 40 Q 65 35, 75 35 L 210 35 Q 220 35, 230 48 L 270 95 L 285 105 Q 295 115, 295 125 L 295 180 Q 295 190, 285 190 L 30 190 Q 20 190, 20 180 L 20 115 Q 20 95, 40 90 Z" fill="url(#vanGrad)"/>
+
+                                    <!-- Front Hood Highlight -->
+                                    <path d="M270 95 L 285 105 L 295 125 L 225 125 Z" fill="#6577F0" opacity="0.4"/>
+
+                                    <!-- Windows (Cab & Driver) -->
+                                    <path d="M68 45 L 140 45 L 140 90 L 52 90 Z" fill="#FFFFFF" opacity="0.9" rx="4"/>
+                                    <path d="M152 45 L 215 45 L 255 90 L 152 90 Z" fill="#FFFFFF" opacity="0.9" rx="4"/>
+
+                                    <!-- Happy Driver in front window -->
+                                    <circle cx="185" cy="65" r="14" fill="#FF8A5B"/>
+                                    <circle cx="182" cy="63" r="2" fill="#10194D"/>
+                                    <circle cx="189" cy="63" r="2" fill="#10194D"/>
+                                    <path d="M182 69 Q 186 73, 190 69" stroke="#10194D" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+                                    <path d="M175 56 Q 185 50, 195 56" fill="#10194D"/> <!-- cap -->
+
+                                    <!-- Van Door Line & Handle -->
+                                    <line x1="145" y1="45" x2="145" y2="185" stroke="#1A2566" stroke-width="3"/>
+                                    <rect x="155" y="105" width="16" height="5" rx="2.5" fill="#FFE14D"/>
+
+                                    <!-- Van Brand Wordmark on Side -->
+                                    <rect x="42" y="108" width="90" height="34" rx="8" fill="#FFFFFF"/>
+                                    <text x="50" y="130" font-family="Lexend, sans-serif" font-weight="800" font-size="14" fill="#10194D">andik<tspan fill="#FF8A5B">.</tspan></text>
+                                    <text x="96" y="125" font-family="Poppins, sans-serif" font-weight="700" font-size="7" fill="#4F5FE8">LAUNDRY</text>
+
+                                    <!-- Front Bumper & Headlight -->
+                                    <rect x="280" y="145" width="22" height="30" rx="6" fill="#FFE14D"/>
+                                    <rect x="290" y="165" width="18" height="15" rx="4" fill="#10194D"/>
+
+                                    <!-- Left Wheel -->
+                                    <g transform="translate(65, 185)">
+                                        <circle cx="0" cy="0" r="30" fill="#0A1033"/>
+                                        <circle cx="0" cy="0" r="16" fill="#E3E1DA"/>
+                                        <circle cx="0" cy="0" r="6" fill="#4F5FE8"/>
+                                    </g>
+
+                                    <!-- Right Wheel -->
+                                    <g transform="translate(245, 185)">
+                                        <circle cx="0" cy="0" r="30" fill="#0A1033"/>
+                                        <circle cx="0" cy="0" r="16" fill="#E3E1DA"/>
+                                        <circle cx="0" cy="0" r="6" fill="#4F5FE8"/>
+                                    </g>
+                                </g>
+                            </svg>
                         </div>
-                        <h3 class="feature-title">Gratis Antar Jemput</h3>
-                        <p class="feature-desc">
-                            Bebas ongkos kirim penjemputan dan pengantaran cucian untuk radius hingga 3 km dari lokasi outlet kami.
-                        </p>
                     </div>
                 </div>
             </section>
 
-            <!-- Layanan & Tarif Transparan (Pricing Section) -->
-            <section id="tarif" class="section-container bg-[#FEF9C3] border-[3px] border-black shadow-[6px_6px_0px_#000] rounded-xl py-12 px-4 md:px-8 my-10">
-                <div class="section-header text-center" data-reveal>
-                    <p class="section-eyebrow">Daftar Harga Resmi</p>
-                    <h2 class="section-title">Layanan Lengkap & Tarif Transparan</h2>
-                    <p class="section-subtitle">
-                        Harga jujur tanpa biaya siluman. Timbangan digital akurat dicatat langsung pada nota WhatsApp Anda.
-                    </p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mt-10" data-reveal>
-                    <div
-                        v-for="service in services"
-                        :key="service.name"
-                        class="service-pricing-card"
-                        :class="{ 'service-pricing-card--popular': service.featured }"
-                    >
-                        <div v-if="service.featured" class="popular-ribbon">
-                            Paling Diminati
-                        </div>
-
-                        <div class="service-pricing-card__header">
-                            <span class="service-badge">{{ service.badge }}</span>
-                            <h3 class="service-name">{{ service.name }}</h3>
-                            <div class="service-price-row">
-                                <span class="service-price">{{ service.price }}</span>
-                                <span class="service-unit">/ {{ service.unit }}</span>
+            <!-- ======================================================== -->
+            <!-- SECTION 01: LAYANAN UTAMA KAMI (OUR SERVICES)            -->
+            <!-- ======================================================== -->
+            <section id="keunggulan" class="relative bg-[#10194D] pt-20 pb-24 px-4 sm:px-6 lg:px-8 text-white">
+                <div class="max-w-7xl mx-auto">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+                        <!-- Left 3 Feature Cards (Every Sunday Reference Layout) -->
+                        <div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-3 gap-5">
+                            <!-- Card 1: Highlight Periwinkle Card -->
+                            <div class="bg-gradient-to-br from-[#6577F0] to-[#4F5FE8] text-white rounded-[24px] p-6 shadow-xl relative overflow-hidden transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between">
+                                <div>
+                                    <div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center mb-5">
+                                        <ShieldCheck class="w-6 h-6 text-white" />
+                                    </div>
+                                    <h3 class="font-heading font-bold text-lg mb-2">1 Mesin 1 Pelanggan</h3>
+                                    <p class="font-sans text-xs sm:text-sm text-white/90 leading-relaxed">
+                                        Pakaian Anda tidak pernah dicampur dengan orang lain. 100% higienis, bersih suci, dan aman tanpa risiko tertukar.
+                                    </p>
+                                </div>
+                                <div class="mt-6 flex items-center text-xs font-bold text-[#FFE14D] gap-1">
+                                    <span>Standar Mutlak</span>
+                                    <Check class="w-4 h-4" />
+                                </div>
                             </div>
-                            <span class="service-min">{{ service.minWeight }}</span>
+
+                            <!-- Card 2: Navy Outline Card -->
+                            <div class="bg-[#1A2566]/80 border-2 border-white/70 text-white rounded-[24px] p-6 shadow-lg transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between">
+                                <div>
+                                    <div class="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center mb-5">
+                                        <Sparkles class="w-6 h-6 text-[#FFE14D]" />
+                                    </div>
+                                    <h3 class="font-heading font-bold text-lg mb-2">Pewangi & Sabun Premium</h3>
+                                    <p class="font-sans text-xs sm:text-sm text-[#B5BAE0] leading-relaxed">
+                                        Deterjen ramah serat kain dipadukan setrika uap boiler profesional, pakaian rapi licin bebas noda gosong.
+                                    </p>
+                                </div>
+                                <div class="mt-6 text-xs font-semibold text-[#B5BAE0]">
+                                    Aroma Tahan Lama
+                                </div>
+                            </div>
+
+                            <!-- Card 3: Navy Outline Card -->
+                            <div class="bg-[#1A2566]/80 border-2 border-white/70 text-white rounded-[24px] p-6 shadow-lg transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between">
+                                <div>
+                                    <div class="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center mb-5">
+                                        <Truck class="w-6 h-6 text-[#FF8A5B]" />
+                                    </div>
+                                    <h3 class="font-heading font-bold text-lg mb-2">Free Ongkir Maks 3 kg</h3>
+                                    <p class="font-sans text-xs sm:text-sm text-[#B5BAE0] leading-relaxed">
+                                        Layanan antar jemput cucian praktis langsung ke depan pintu rumah Anda di area Hendrosari & sekitarnya.
+                                    </p>
+                                </div>
+                                <div class="mt-6 text-xs font-semibold text-[#B5BAE0]">
+                                    Antar Jemput Cepat
+                                </div>
+                            </div>
                         </div>
 
-                        <p class="service-desc">{{ service.desc }}</p>
+                        <!-- Right Section Header / Description -->
+                        <div class="lg:col-span-4 flex flex-col items-start lg:pl-6">
+                            <!-- Section Number Badge 01 -->
+                            <div class="w-10 h-10 rounded-full border-2 border-white/80 flex items-center justify-center font-heading font-extrabold text-sm text-white mb-4">
+                                01
+                            </div>
+                            <h2 class="font-heading font-extrabold text-3xl sm:text-4xl uppercase tracking-tight text-white leading-tight">
+                                LAYANAN UTAMA KAMI
+                            </h2>
+                            <p class="font-sans text-sm text-[#B5BAE0] mt-4 leading-relaxed">
+                                Sejak 2009, Andik Laundry berkomitmen memberikan pelayanan binatu paling rapi, jujur timbangannya, dan terjaga kebersihannya untuk warga Gresik.
+                            </p>
+                            <a
+                                href="#tarif"
+                                class="mt-6 bg-[#FF8A5B] hover:bg-[#F26B3A] text-[#10194D] font-bold text-sm px-6 py-3 rounded-full transition-all duration-200 shadow-sm hover:shadow-[0_4px_14px_rgba(255,138,91,0.4)] inline-flex items-center gap-2"
+                            >
+                                <span>Lihat Daftar Tarif</span>
+                                <ArrowRight class="w-4 h-4" />
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-                        <ul class="service-feature-list">
-                            <li v-for="feat in service.features" :key="feat">
-                                <Check class="w-4 h-4 text-[#16A34A] flex-shrink-0 mr-2 mt-0.5" />
-                                <span>{{ feat }}</span>
-                            </li>
-                        </ul>
+            <!-- ======================================================== -->
+            <!-- SECTION 02: PAKET SPESIAL & TARIF (SPECIAL PACKAGE)      -->
+            <!-- ======================================================== -->
+            <section id="tarif" class="relative bg-[#0A1033] pt-20 pb-28 px-4 sm:px-6 lg:px-8 text-white">
+                <div class="max-w-7xl mx-auto">
+                    <!-- Section Header -->
+                    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+                        <div>
+                            <div class="w-10 h-10 rounded-full border-2 border-white/80 flex items-center justify-center font-heading font-extrabold text-sm text-white mb-4">
+                                02
+                            </div>
+                            <h2 class="font-heading font-extrabold text-3xl sm:text-4xl uppercase tracking-tight text-white">
+                                PAKET SPESIAL & TARIF
+                            </h2>
+                            <p class="font-sans text-sm sm:text-base text-[#B5BAE0] mt-2 max-w-xl">
+                                Tarif transparan dan jujur. Minimal order kiloan 2 kg. Tersedia pengerjaan Reguler (2-3 hari) dan Ekspres (pagi antar, sore ambil).
+                            </p>
+                        </div>
 
-                        <div class="service-pricing-card__footer">
+                        <div class="flex items-center gap-3">
+                            <a
+                                :href="whatsappUrl"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="bg-[#FF8A5B] hover:bg-[#F26B3A] text-[#10194D] font-bold text-sm px-6 py-3 rounded-full transition-all duration-200 shadow-sm hover:shadow-[0_4px_14px_rgba(255,138,91,0.4)] flex items-center gap-2"
+                            >
+                                <MessageCircle class="w-4 h-4" />
+                                <span>Pesan via WhatsApp</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Cards Grid (4 Core Services from Riil Catalog) -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div
+                            v-for="service in services"
+                            :key="service.id"
+                            class="bg-white text-[#10194D] rounded-[28px] p-6 shadow-xl border border-[#E3E1DA] hover:shadow-[0_20px_48px_rgba(16,25,77,0.18)] transition-all duration-300 hover:-translate-y-2 flex flex-col justify-between relative group"
+                        >
+                            <!-- Top Info & Badges -->
+                            <div>
+                                <div class="flex items-center justify-between mb-4">
+                                    <span
+                                        class="text-[11px] font-extrabold uppercase px-3 py-1 rounded-full"
+                                        :class="service.featured ? 'bg-[#FF8A5B] text-[#10194D]' : 'bg-[#E6E9FD] text-[#26338A]'"
+                                    >
+                                        {{ service.badge }}
+                                    </span>
+                                    <div class="flex items-center gap-1 text-xs font-bold text-[#10194D]">
+                                        <Star class="w-3.5 h-3.5 fill-[#F5A623] text-[#F5A623]" />
+                                        <span>{{ service.rating }}</span>
+                                    </div>
+                                </div>
+
+                                <h3 class="font-heading font-extrabold text-xl text-[#10194D] mb-1">
+                                    {{ service.name }}
+                                </h3>
+                                <p class="text-xs text-[#6B7194] font-medium mb-4">
+                                    {{ service.minWeight }}
+                                </p>
+
+                                <!-- Price Tag -->
+                                <div class="bg-[#F6F4EF] rounded-[20px] p-4 mb-5 border border-[#E3E1DA]">
+                                    <div class="text-xs text-[#6B7194] font-medium">Tarif Mulai</div>
+                                    <div class="flex items-baseline gap-1 mt-0.5">
+                                        <span class="font-heading font-extrabold text-2xl sm:text-3xl text-[#10194D]">
+                                            {{ service.price }}
+                                        </span>
+                                        <span class="text-xs font-bold text-[#6B7194]">/ {{ service.unit }}</span>
+                                    </div>
+                                </div>
+
+                                <p class="text-xs text-[#6B7194] leading-relaxed mb-5">
+                                    {{ service.desc }}
+                                </p>
+
+                                <!-- Feature Checklist -->
+                                <ul class="space-y-2 text-xs text-[#10194D] font-medium mb-6">
+                                    <li v-for="(feat, fIdx) in service.features" :key="fIdx" class="flex items-start gap-2">
+                                        <Check class="w-4 h-4 text-[#22A06B] shrink-0 mt-0.5" />
+                                        <span>{{ feat }}</span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- Card Order CTA -->
                             <a
                                 :href="getServiceWhatsappUrl(service.name)"
                                 target="_blank"
-                                rel="noopener"
-                                class="btn-service-order"
-                                :class="{ 'btn-service-order--primary': service.featured }"
+                                rel="noopener noreferrer"
+                                class="w-full text-center py-3 rounded-full font-bold text-xs transition-all duration-200 flex items-center justify-center gap-2"
+                                :class="service.featured
+                                    ? 'bg-[#FF8A5B] hover:bg-[#F26B3A] text-[#10194D] shadow-sm'
+                                    : 'bg-[#10194D] hover:bg-[#1A2566] text-white'"
                             >
-                                <MessageCircle class="w-4 h-4 mr-1.5" />
+                                <MessageCircle class="w-3.5 h-3.5" />
                                 <span>Pesan {{ service.name }}</span>
                             </a>
                         </div>
                     </div>
                 </div>
-
-                <!-- Satuan Items Price Grid -->
-                <div class="mt-8 bg-white rounded-xl border-[3px] border-black p-5 shadow-[4px_4px_0px_#000]" data-reveal>
-                    <div class="flex items-center justify-between mb-3 border-b-2 border-black pb-2">
-                        <div>
-                            <h3 class="font-black text-base text-black">Tarif Layanan Satuan (Pcs)</h3>
-                            <p class="text-xs text-gray-700 font-bold">Dicuci teliti satu per satu untuk bedcover, selimut, dan perlengkapan tidur</p>
-                        </div>
-                        <span class="text-[10px] uppercase font-black px-2 py-0.5 rounded bg-[#FFEB3B] border border-black text-black">
-                            Satuan
-                        </span>
-                    </div>
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                        <div class="p-3 rounded-lg border-2 border-black bg-[#FFFDF5] shadow-[2px_2px_0px_#000]">
-                            <span class="text-xs font-black text-black block">Bedcover King</span>
-                            <span class="text-[11px] font-bold text-gray-600 block">Ukuran Besar</span>
-                            <span class="text-sm font-mono font-black text-black mt-1 block">Rp 25.000 / pcs</span>
-                        </div>
-                        <div class="p-3 rounded-lg border-2 border-black bg-[#FFFDF5] shadow-[2px_2px_0px_#000]">
-                            <span class="text-xs font-black text-black block">Bedcover Single</span>
-                            <span class="text-[11px] font-bold text-gray-600 block">Ukuran Kecil</span>
-                            <span class="text-sm font-mono font-black text-black mt-1 block">Rp 20.000 / pcs</span>
-                        </div>
-                        <div class="p-3 rounded-lg border-2 border-black bg-[#FFFDF5] shadow-[2px_2px_0px_#000]">
-                            <span class="text-xs font-black text-black block">Selimut / Sprei</span>
-                            <span class="text-[11px] font-bold text-gray-600 block">Tebal / Standar</span>
-                            <span class="text-sm font-mono font-black text-black mt-1 block">Rp 15.000 / pcs</span>
-                        </div>
-                        <div class="p-3 rounded-lg border-2 border-black bg-[#FFFDF5] shadow-[2px_2px_0px_#000]">
-                            <span class="text-xs font-black text-black block">Boneka / Bantal</span>
-                            <span class="text-[11px] font-bold text-gray-600 block">Semua Ukuran</span>
-                            <span class="text-sm font-mono font-black text-black mt-1 block">Rp 10.000 / pcs</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Addon Speed & Delivery Notes -->
-                <div class="service-addons-strip mt-8" data-reveal>
-                    <div class="service-addon-item">
-                        <Sparkles class="w-5 h-5 text-[#4F46E5] mr-2" />
-                        <div>
-                            <span class="font-semibold text-sm text-[#0A0A0A]">Opsi Ekspres (+Rp 2.000 / kg):</span>
-                            <span class="text-sm text-[#55555E] ml-1">Taruh pagi, ambil sore di hari yang sama.</span>
-                        </div>
-                    </div>
-                    <div class="service-addon-item">
-                        <Truck class="w-5 h-5 text-[#16A34A] mr-2" />
-                        <div>
-                            <span class="font-semibold text-sm text-[#0A0A0A]">Gratis Ongkir Antar-Jemput:</span>
-                            <span class="text-sm text-[#55555E] ml-1">Bebas biaya antar-jemput untuk cucian maksimal 3 kg.</span>
-                        </div>
-                    </div>
-                </div>
             </section>
 
-            <!-- Alur Cara Pesan (How It Works) -->
-            <section id="cara-pesan" class="section-container">
-                <div class="section-header text-center" data-reveal>
-                    <p class="section-eyebrow">Alur Kerja Praktis</p>
-                    <h2 class="section-title">4 Langkah Mudah Cucian Beres</h2>
-                    <p class="section-subtitle">
-                        Tanpa repot, pakaian Anda ditangani rapi dari penjemputan hingga siap pakai kembali.
-                    </p>
-                </div>
+            <!-- ======================================================== -->
+            <!-- SECTION 03: FULL FEATURED BANNER & OVERLAPPING TICKET     -->
+            <!-- ======================================================== -->
+            <section class="relative bg-gradient-to-b from-[#0A1033] to-[#10194D] pt-12 pb-24 px-4 sm:px-6 lg:px-8 text-white">
+                <div class="max-w-6xl mx-auto">
+                    <!-- Big Curved Periwinkle Banner (Every Sunday Reference) -->
+                    <div class="bg-gradient-to-r from-[#6577F0] to-[#4F5FE8] rounded-[36px] md:rounded-[44px] p-8 sm:p-12 md:p-16 text-white relative shadow-2xl overflow-hidden pb-32 md:pb-36">
+                        <!-- Background Glow & Shapes -->
+                        <div class="absolute -right-16 -top-16 w-80 h-80 rounded-full bg-white/10 blur-2xl pointer-events-none"></div>
 
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mt-10 relative" data-reveal>
-                    <div class="step-card">
-                        <div class="step-number">01</div>
-                        <h3 class="step-title">Taruh atau Minta Jemput</h3>
-                        <p class="step-desc">
-                            Bawa cucian langsung ke outlet Andik Laundry, atau cukup chat WhatsApp kami untuk request jemput di rumah.
-                        </p>
-                    </div>
+                        <div class="relative z-10 max-w-2xl">
+                            <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-4">
+                                <span>03</span>
+                                <span>•</span>
+                                <span>KOMITMEN TERBAIK</span>
+                            </div>
+                            <h2 class="font-heading font-extrabold text-2xl sm:text-4xl md:text-5xl uppercase tracking-tight leading-tight">
+                                DIPERCAYA LEBIH DARI 15 TAHUN (SEJAK 2009)
+                            </h2>
+                            <p class="font-sans text-sm sm:text-base text-white/90 mt-4 leading-relaxed max-w-lg">
+                                Dari cucian rumahan tetangga hingga ribuan keluarga di Gresik. Kami senantiasa menjaga kepercayaan Anda dengan kebersihan higienis, timbangan jujur, dan nota digital WhatsApp tanpa ribet.
+                            </p>
 
-                    <div class="step-card">
-                        <div class="step-number">02</div>
-                        <h3 class="step-title">Timbang & Terima Nota WA</h3>
-                        <p class="step-desc">
-                            Pakaian ditimbang transparan. Nomor nota resmi beserta rincian biaya langsung terkirim otomatis ke WhatsApp Anda.
-                        </p>
-                    </div>
-
-                    <div class="step-card">
-                        <div class="step-number">03</div>
-                        <h3 class="step-title">Dicuci Higienis 1 Mesin</h3>
-                        <p class="step-desc">
-                            Pakaian disortir dan dicuci di 1 mesin tersendiri, dikeringkan, dan disetrika uap dengan teliti.
-                        </p>
-                    </div>
-
-                    <div class="step-card">
-                        <div class="step-number">04</div>
-                        <h3 class="step-title">Siap Diambil atau Diantar</h3>
-                        <p class="step-desc">
-                            Notifikasi WA cucian selesai masuk beserta nomor rak penyimpanan. Siap Anda ambil atau kami antar ke rumah.
-                        </p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Dedicated Tracking Section -->
-            <section id="lacak" class="section-container bg-[#BAE6FD] border-[3px] border-black shadow-[6px_6px_0px_#000] rounded-xl p-8 md:p-12 my-10" data-reveal>
-                <div class="max-w-2xl mx-auto text-center">
-                    <span class="inline-flex items-center px-3 py-1 rounded-md text-xs font-black bg-[#FFEB3B] text-black border-2 border-black shadow-[2px_2px_0px_#000] mb-3">
-                        <FileText class="w-3.5 h-3.5 mr-1.5" />
-                        Live Status Tracking
-                    </span>
-                    <h2 class="text-2xl md:text-3xl font-extrabold text-black tracking-tight">
-                        Cek Progres Cucian & Nota Digital Anda
-                    </h2>
-                    <p class="text-sm md:text-base text-gray-800 font-semibold mt-2 mb-6">
-                        Pantau status pengerjaan secara real-time (Diproses → Selesai di Rak → Sudah Diambil) tanpa perlu login aplikasi.
-                    </p>
-
-                    <form class="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto" @submit.prevent="submitOrderCheck">
-                        <input
-                            v-model="orderQuery"
-                            type="text"
-                            :placeholder="typewriterPlaceholder"
-                            class="flex-1 h-12 px-4 rounded-lg border-[3px] border-black shadow-[3px_3px_0px_#000] bg-white text-sm font-bold text-black focus:outline-none focus:ring-0 focus:border-black"
-                            @focus="onInputFocus"
-                            @blur="onInputBlur"
-                        />
-                        <button
-                            type="submit"
-                            :disabled="isCheckingOrder"
-                            class="h-12 px-6 rounded-lg bg-[#FFEB3B] hover:bg-[#FDE047] text-black font-extrabold text-sm border-[3px] border-black shadow-[3px_3px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#000] transition-all cursor-pointer flex items-center justify-center"
-                        >
-                            <Search class="w-4 h-4 mr-1.5 stroke-[3]" />
-                            <span>{{ isCheckingOrder ? 'Mencari…' : 'Lacak Sekarang' }}</span>
-                        </button>
-                    </form>
-                    <p v-if="orderQueryError" class="text-xs text-red-600 font-bold mt-2">
-                        {{ orderQueryError }}
-                    </p>
-                    <p v-else class="text-xs text-gray-800 font-semibold mt-2">
-                        Pesan WA terhapus? Cukup ketik nomor WhatsApp yang didaftarkan saat drop-off cucian.
-                    </p>
-                </div>
-            </section>
-
-            <!-- Metode Pembayaran Cashless & Tunai -->
-            <section class="section-container" data-reveal>
-                <div class="payment-banner">
-                    <div class="payment-banner__copy">
-                        <span class="text-xs font-semibold tracking-wider text-[#4F46E5] uppercase">Kemudahan Transaksi</span>
-                        <h3 class="text-xl md:text-2xl font-bold text-[#0A0A0A] mt-1 mb-2">
-                            Pembayaran Mudah: Tunai & Non-Tunai QRIS
-                        </h3>
-                        <p class="text-sm text-[#55555E] max-w-xl">
-                            Bayar di tempat dengan uang tunai, atau bayar praktis dari rumah menggunakan scan QRIS resmi Andik Laundry yang tertera langsung di nota digital Anda.
-                        </p>
-                    </div>
-
-                    <div class="payment-methods-grid">
-                        <div class="payment-chip">
-                            <QrCode class="w-4 h-4 text-[#4F46E5] mr-1.5" />
-                            <span>QRIS Semua Bank & E-Wallet</span>
-                        </div>
-                        <div class="payment-chip">
-                            <Banknote class="w-4 h-4 text-[#16A34A] mr-1.5" />
-                            <span>Uang Tunai (Cash)</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Ulasan Pelanggan -->
-            <section id="ulasan" class="section-container">
-                <div class="section-header text-center" data-reveal>
-                    <p class="section-eyebrow">Kepuasan Pelanggan</p>
-                    <h2 class="section-title">Apa Kata Mereka Tentang Andik Laundry?</h2>
-                    <p class="section-subtitle">
-                        Nilai rata-rata ★ {{ ratingScore }} dari 5 berdasarkan ratusan pesanan pelanggan setia.
-                    </p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mt-8" data-reveal>
-                    <div v-for="review in testimonials" :key="review.name" class="testimonial-card">
-                        <div class="flex text-[#D97706] mb-3">
-                            <Star v-for="i in review.stars" :key="i" class="w-4 h-4 fill-current" />
-                        </div>
-                        <blockquote class="text-sm text-[#41414A] leading-relaxed flex-1">
-                            “{{ review.text }}”
-                        </blockquote>
-                        <div class="mt-4 pt-3 border-t border-[#E8E8EC] flex items-center justify-between text-xs">
-                            <span class="font-bold text-[#0A0A0A]">{{ review.name }}</span>
-                            <span class="text-[#6B6B6B] bg-[#F4F4F6] px-2 py-0.5 rounded">{{ review.area }}</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- FAQ Section (Pertanyaan Umum) -->
-            <section id="faq" class="section-container max-w-3xl">
-                <div class="section-header text-center" data-reveal>
-                    <p class="section-eyebrow">Informasi Pelanggan</p>
-                    <h2 class="section-title">Pertanyaan yang Sering Diajukan</h2>
-                    <p class="section-subtitle">
-                        Segala hal penting yang perlu Anda ketahui mengenai operasional layanan kami.
-                    </p>
-                </div>
-
-                <div class="faq-accordion-list mt-8" data-reveal>
-                    <details v-for="faq in faqs" :key="faq.q" class="faq-item">
-                        <summary class="faq-question">
-                            <span>{{ faq.q }}</span>
-                            <ChevronDown class="w-4 h-4 text-[#6B6B6B] transition-transform duration-200 faq-icon" />
-                        </summary>
-                        <div class="faq-answer">
-                            <p>{{ faq.a }}</p>
-                        </div>
-                    </details>
-                </div>
-            </section>
-
-            <!-- Lokasi & Jam Buka Toko -->
-            <section id="kontak" class="section-container" data-reveal>
-                <div class="store-info-card grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
-                    <!-- Left: Detail Outlet & Kontak -->
-                    <div class="lg:col-span-6 flex flex-col justify-center">
-                        <div>
-                            <span class="text-[11px] font-black uppercase tracking-wider bg-[#FFEB3B] text-black border-2 border-black px-2.5 py-0.5 rounded-[4px] shadow-[1.5px_1.5px_0px_#000] inline-block">
-                                Kunjungi Outlet Kami
-                            </span>
-                        </div>
-                        <h3 class="text-2xl md:text-3xl font-black text-black tracking-tight mt-2.5">{{ storeName }}</h3>
-                        <p class="text-sm font-bold text-black/80 mt-3 flex items-start">
-                            <MapPin class="w-4 h-4 text-[#FF5252] mr-2.5 mt-0.5 shrink-0 stroke-[2.5]" />
-                            <span>{{ storeAddress }}</span>
-                        </p>
-                        <p class="text-sm font-bold text-black/80 mt-2 flex items-center">
-                            <Clock class="w-4 h-4 text-[#16A34A] mr-2.5 shrink-0 stroke-[2.5]" />
-                            <span>Buka Setiap Hari: 07.00 – 20.00 WIB</span>
-                        </p>
-
-                        <div class="flex flex-wrap gap-3 mt-6">
-                            <a
-                                :href="whatsappUrl"
-                                target="_blank"
-                                rel="noopener"
-                                class="btn-cta-primary text-xs sm:text-sm font-black py-2.5 px-4 rounded-[8px] border-2 border-black bg-[#22C55E] text-black hover:bg-[#16A34A] hover:text-white shadow-[3px_3px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center"
-                            >
-                                <MessageCircle class="w-4 h-4 mr-1.5 stroke-[2.5]" />
-                                <span>Hubungi WhatsApp Toko</span>
-                            </a>
-                            <a
-                                href="https://www.google.com/maps/place/Andik+Laundry/@-7.2392419,112.581764,21z/data=!4m12!1m5!3m4!2zN8KwMTQnMjEuMyJTIDExMsKwMzQnNTQuMyJF!8m2!3d-7.2392469!4d112.5817531!3m5!1s0x2e7800f99a230c6b:0xb287a654290078e9!8m2!3d-7.239213!4d112.5817581!16s%2Fg%2F11gdlxnlmk?hl=id-ID"
-                                target="_blank"
-                                rel="noopener"
-                                class="btn-cta-secondary text-xs sm:text-sm font-black py-2.5 px-4 rounded-[8px] border-2 border-black bg-[#FFEB3B] text-black hover:bg-[#FDE047] shadow-[3px_3px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center"
-                            >
-                                <MapPin class="w-4 h-4 mr-1.5 stroke-[2.5]" />
-                                <span>Buka Google Maps</span>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Right: Interactive Draggable Map Preview -->
-                    <div class="lg:col-span-6">
-                        <div class="rounded-[10px] border-[3px] border-black shadow-[5px_5px_0px_#000] overflow-hidden bg-white">
-                            <div class="bg-black text-[#FFEB3B] px-3.5 py-2 text-xs font-black flex items-center justify-between border-b-2 border-black">
-                                <span class="flex items-center space-x-1.5">
-                                    <MapPin class="w-3.5 h-3.5 text-[#FF5252] stroke-[2.5]" />
-                                    <span>Peta Outlet (Bisa Digeser &amp; Di-zoom)</span>
+                            <!-- Stat Pill Chips -->
+                            <div class="flex flex-wrap gap-3 mt-6">
+                                <span class="bg-white/20 backdrop-blur-md text-white text-xs font-bold px-4 py-2 rounded-full">
+                                    {{ customersLabel }} Pelanggan Setia
                                 </span>
+                                <span class="bg-white/20 backdrop-blur-md text-white text-xs font-bold px-4 py-2 rounded-full">
+                                    {{ ordersLabel }} Nota Dikerjakan
+                                </span>
+                                <span class="bg-white/20 backdrop-blur-md text-white text-xs font-bold px-4 py-2 rounded-full">
+                                    {{ laundryKgLabel }} Pakaian Bersih
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Overlapping White Ticket Card (Every Sunday Signature) -->
+                    <div class="relative -mt-24 sm:-mt-28 mx-auto max-w-4xl z-20 px-2 sm:px-4">
+                        <div class="bg-white text-[#10194D] rounded-[28px] sm:rounded-[32px] shadow-[0_20px_48px_rgba(16,25,77,0.22)] border border-[#E3E1DA] overflow-hidden flex flex-col md:flex-row items-stretch">
+                            <!-- Left: Illustration Mini-car / Basket -->
+                            <div class="md:w-5/12 bg-[#F6F4EF] p-6 sm:p-8 flex items-center justify-center border-b md:border-b-0 md:border-r border-[#E3E1DA]">
+                                <div class="text-center">
+                                    <div class="w-24 h-24 mx-auto rounded-full bg-[#E6E9FD] flex items-center justify-center text-4xl mb-4 shadow-sm">
+                                        👕
+                                    </div>
+                                    <div class="font-heading font-extrabold text-lg text-[#10194D]">Paket All-In-One</div>
+                                    <p class="text-xs text-[#6B7194] mt-1">Cuci + Kering Mesin + Setrika Uap</p>
+                                    <span class="inline-block mt-3 bg-[#22A06B]/15 text-[#22A06B] font-bold text-[11px] px-3 py-1 rounded-full">
+                                        Higienis 1 Mesin 1 Pelanggan
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Center: Package Features & Details -->
+                            <div class="md:w-6/12 p-6 sm:p-8 flex flex-col justify-between">
+                                <div>
+                                    <div class="text-[11px] font-bold tracking-wider text-[#4F5FE8] uppercase mb-1">
+                                        PAKET PALING LARIS
+                                    </div>
+                                    <div class="flex items-baseline gap-2 mb-4">
+                                        <span class="font-heading font-extrabold text-3xl sm:text-4xl text-[#F26B3A]">
+                                            Rp 8.000
+                                        </span>
+                                        <span class="text-sm font-bold text-[#6B7194]">/ kg</span>
+                                    </div>
+
+                                    <ul class="space-y-2.5 text-xs sm:text-sm text-[#10194D] font-medium mb-6">
+                                        <li class="flex items-center gap-2">
+                                            <Check class="w-4 h-4 text-[#22A06B] shrink-0" />
+                                            <span>1 Mesin 1 Pelanggan (Tidak pernah dicampur)</span>
+                                        </li>
+                                        <li class="flex items-center gap-2">
+                                            <Check class="w-4 h-4 text-[#22A06B] shrink-0" />
+                                            <span>Setrika Uap Boiler Rapi & Halus</span>
+                                        </li>
+                                        <li class="flex items-center gap-2">
+                                            <Check class="w-4 h-4 text-[#22A06B] shrink-0" />
+                                            <span>Pewangi Grade Premium Tahan Lama</span>
+                                        </li>
+                                        <li class="flex items-center gap-2">
+                                            <Check class="w-4 h-4 text-[#22A06B] shrink-0" />
+                                            <span>Free Ongkir Antar-Jemput (Maksimal 3 kg)</span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <a
+                                    :href="getServiceWhatsappUrl('Cuci Setrika Rp 8.000/kg')"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="inline-flex items-center gap-2 text-sm font-bold text-[#4F5FE8] hover:text-[#26338A] transition-colors"
+                                >
+                                    <span>Pesan Paket Ini via WhatsApp</span>
+                                    <ArrowRight class="w-4 h-4" />
+                                </a>
+                            </div>
+
+                            <!-- Right: Signature Vertical Orange Ticket Stub (Every Sunday) -->
+                            <div class="md:w-1/12 bg-[#FF8A5B] text-[#10194D] font-bold text-xs uppercase tracking-widest writing-vertical flex items-center justify-center py-4 px-3 select-none">
+                                <span>ANDIK LAUNDRY • GRESIK</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ======================================================== -->
+            <!-- SECTION 04: TIPS & ARTIKEL (ARTICLES)                    -->
+            <!-- ======================================================== -->
+            <section class="relative bg-[#10194D] pt-16 pb-24 px-4 sm:px-6 lg:px-8 text-white">
+                <div class="max-w-7xl mx-auto">
+                    <!-- Section Header -->
+                    <div class="mb-10">
+                        <div class="w-10 h-10 rounded-full border-2 border-white/80 flex items-center justify-center font-heading font-extrabold text-sm text-white mb-4">
+                            04
+                        </div>
+                        <h2 class="font-heading font-extrabold text-3xl sm:text-4xl uppercase tracking-tight text-white">
+                            TIPS & INFORMASI CUCIAN
+                        </h2>
+                        <p class="font-sans text-sm sm:text-base text-[#B5BAE0] mt-2">
+                            Edukasi perawatan pakaian dan komitmen higienitas kami untuk kenyamanan keluarga Anda.
+                        </p>
+                    </div>
+
+                    <!-- 2 Large Article Cards with Dark Gradient Overlay -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Article Card 1 -->
+                        <div class="group relative rounded-[28px] overflow-hidden shadow-xl bg-[#1A2566] min-h-[340px] flex flex-col justify-end p-8 border border-white/10 transition-all duration-300 hover:-translate-y-1.5">
+                            <!-- Background Pattern / Tint -->
+                            <div class="absolute inset-0 bg-gradient-to-br from-[#4F5FE8]/40 via-[#10194D]/80 to-[#0A1033] z-10"></div>
+                            <div class="absolute inset-0 bg-[radial-gradient(#FFE14D_1px,transparent_1px)] [background-size:16px_16px] opacity-20"></div>
+
+                            <div class="relative z-20">
+                                <span class="bg-[#FF8A5B] text-[#10194D] font-bold text-xs px-3 py-1 rounded-full uppercase tracking-wider mb-3 inline-block">
+                                    Tips Perawatan
+                                </span>
+                                <h3 class="font-heading font-bold text-xl sm:text-2xl text-white group-hover:text-[#FFE14D] transition-colors leading-snug">
+                                    Tips Merawat Baju & Sprei Agar Tidak Cepat Kusam dan Tetap Wangi Semerbak
+                                </h3>
+                                <p class="text-xs sm:text-sm text-[#B5BAE0] mt-2 line-clamp-2">
+                                    Ketahui cara memisahkan pakaian warna pekat, penggunaan air bersih terfilter, dan teknik setrika uap yang aman bagi serat kain.
+                                </p>
+                                <div class="flex items-center gap-4 text-xs text-[#B5BAE0] mt-4 pt-4 border-t border-white/10">
+                                    <span class="flex items-center gap-1.5"><Calendar class="w-3.5 h-3.5" /> 16 Nov 2026</span>
+                                    <span>•</span>
+                                    <span>Tim Andik Laundry</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Article Card 2 -->
+                        <div class="group relative rounded-[28px] overflow-hidden shadow-xl bg-[#1A2566] min-h-[340px] flex flex-col justify-end p-8 border border-white/10 transition-all duration-300 hover:-translate-y-1.5">
+                            <!-- Background Pattern / Tint -->
+                            <div class="absolute inset-0 bg-gradient-to-br from-[#6577F0]/40 via-[#10194D]/80 to-[#0A1033] z-10"></div>
+                            <div class="absolute inset-0 bg-[radial-gradient(#4F5FE8_1px,transparent_1px)] [background-size:16px_16px] opacity-20"></div>
+
+                            <div class="relative z-20">
+                                <span class="bg-[#FFE14D] text-[#10194D] font-bold text-xs px-3 py-1 rounded-full uppercase tracking-wider mb-3 inline-block">
+                                    Edukasi Higienis
+                                </span>
+                                <h3 class="font-heading font-bold text-xl sm:text-2xl text-white group-hover:text-[#FFE14D] transition-colors leading-snug">
+                                    Mengapa Standar 1 Mesin 1 Pelanggan Sangat Penting Bagi Kesehatan & Kesucian?
+                                </h3>
+                                <p class="text-xs sm:text-sm text-[#B5BAE0] mt-2 line-clamp-2">
+                                    Mencampur pakaian dengan orang tak dikenal berisiko memindahkan kuman dan melanggar kesucian pakaian ibadah. Inilah prinsip yang kami jaga sejak 2009.
+                                </p>
+                                <div class="flex items-center gap-4 text-xs text-[#B5BAE0] mt-4 pt-4 border-t border-white/10">
+                                    <span class="flex items-center gap-1.5"><Calendar class="w-3.5 h-3.5" /> 15 Nov 2026</span>
+                                    <span>•</span>
+                                    <span>Tim Andik Laundry</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ======================================================== -->
+            <!-- SECTION 05: LOKASI & PETA OUTLET (GOOGLE MAPS RESMI)     -->
+            <!-- ======================================================== -->
+            <section id="lokasi" class="relative bg-[#0A1033] pt-16 pb-24 px-4 sm:px-6 lg:px-8 text-white">
+                <div class="max-w-7xl mx-auto">
+                    <div class="mb-10">
+                        <div class="w-10 h-10 rounded-full border-2 border-white/80 flex items-center justify-center font-heading font-extrabold text-sm text-white mb-4">
+                            05
+                        </div>
+                        <h2 class="font-heading font-extrabold text-3xl sm:text-4xl uppercase tracking-tight text-white">
+                            KUNJUNGI OUTLET KAMI
+                        </h2>
+                        <p class="font-sans text-sm sm:text-base text-[#B5BAE0] mt-2">
+                            Datang langsung untuk drop cucian atau gunakan layanan antar jemput kami.
+                        </p>
+                    </div>
+
+                    <div class="bg-white text-[#10194D] rounded-[28px] sm:rounded-[36px] p-6 sm:p-8 shadow-2xl border border-[#E3E1DA] grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                        <!-- Left Info Card -->
+                        <div class="lg:col-span-5 flex flex-col justify-between h-full">
+                            <div>
+                                <span class="bg-[#E6E9FD] text-[#26338A] text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                                    Outlet Resmi
+                                </span>
+                                <h3 class="font-heading font-extrabold text-2xl sm:text-3xl text-[#10194D] mt-3 mb-4">
+                                    Andik Laundry
+                                </h3>
+
+                                <div class="space-y-4 text-xs sm:text-sm text-[#10194D]">
+                                    <div class="flex items-start gap-3">
+                                        <MapPin class="w-5 h-5 text-[#4F5FE8] shrink-0 mt-0.5" />
+                                        <div>
+                                            <div class="font-bold">Alamat Lengkap:</div>
+                                            <p class="text-[#6B7194] leading-relaxed mt-0.5">
+                                                Hendrosari, RT.06/RW.03, Hendrosari, Kec. Menganti, Kabupaten Gresik, Jawa Timur 61174
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-start gap-3">
+                                        <Clock class="w-5 h-5 text-[#22A06B] shrink-0 mt-0.5" />
+                                        <div>
+                                            <div class="font-bold">Jam Operasional:</div>
+                                            <p class="text-[#6B7194] mt-0.5">
+                                                Buka Setiap Hari: 07.00 – 20.00 WIB
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-start gap-3">
+                                        <Truck class="w-5 h-5 text-[#FF8A5B] shrink-0 mt-0.5" />
+                                        <div>
+                                            <div class="font-bold">Antar Jemput:</div>
+                                            <p class="text-[#6B7194] mt-0.5">
+                                                Gratis ongkir untuk cucian maksimal 3 kg di area sekitar.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col sm:flex-row gap-3 mt-8">
+                                <a
+                                    :href="whatsappUrl"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="bg-[#22A06B] hover:bg-[#12724A] text-white font-bold text-xs sm:text-sm px-5 py-3 rounded-full transition-all duration-200 flex items-center justify-center gap-2 shadow-sm"
+                                >
+                                    <MessageCircle class="w-4 h-4" />
+                                    <span>Hubungi WhatsApp Toko</span>
+                                </a>
+
                                 <a
                                     href="https://www.google.com/maps/place/Andik+Laundry/@-7.2392419,112.581764,21z/data=!4m12!1m5!3m4!2zN8KwMTQnMjEuMyJTIDExMsKwMzQnNTQuMyJF!8m2!3d-7.2392469!4d112.5817531!3m5!1s0x2e7800f99a230c6b:0xb287a654290078e9!8m2!3d-7.239213!4d112.5817581!16s%2Fg%2F11gdlxnlmk?hl=id-ID"
                                     target="_blank"
-                                    rel="noopener"
-                                    class="text-[11px] font-bold text-white hover:text-[#FFEB3B] underline transition-colors"
+                                    rel="noopener noreferrer"
+                                    class="bg-[#10194D] hover:bg-[#1A2566] text-white font-bold text-xs sm:text-sm px-5 py-3 rounded-full transition-all duration-200 flex items-center justify-center gap-2"
                                 >
-                                    Buka Peta ↗
+                                    <ExternalLink class="w-4 h-4" />
+                                    <span>Buka di Google Maps</span>
                                 </a>
                             </div>
+                        </div>
+
+                        <!-- Right Google Maps Interactive Embed -->
+                        <div class="lg:col-span-7 h-[360px] sm:h-[420px] rounded-[24px] overflow-hidden border border-[#E3E1DA] shadow-inner relative">
                             <iframe
-                                src="https://maps.google.com/maps?q=Andik+Laundry,+Hendrosari,+Menganti,+Gresik&amp;t=&amp;z=18&amp;ie=UTF8&amp;iwloc=&amp;output=embed"
-                                class="w-full h-[260px] sm:h-[300px] border-0 block"
+                                title="Peta Lokasi Resmi Andik Laundry Gresik"
+                                class="w-full h-full border-0"
                                 loading="lazy"
                                 allowfullscreen
                                 referrerpolicy="no-referrer-when-downgrade"
-                                title="Peta Lokasi Andik Laundry Hendrosari Menganti Gresik"
+                                src="https://maps.google.com/maps?q=Andik+Laundry,+Hendrosari,+Menganti,+Gresik&t=&z=18&ie=UTF8&iwloc=&output=embed"
                             ></iframe>
                         </div>
                     </div>
                 </div>
             </section>
+
+            <!-- ======================================================== -->
+            <!-- SECTION 06: PERTANYAAN UMUM (FAQ)                        -->
+            <!-- ======================================================== -->
+            <section id="faq" class="relative bg-[#10194D] pt-16 pb-24 px-4 sm:px-6 lg:px-8 text-white">
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-12">
+                        <div class="w-10 h-10 rounded-full border-2 border-white/80 mx-auto flex items-center justify-center font-heading font-extrabold text-sm text-white mb-4">
+                            06
+                        </div>
+                        <h2 class="font-heading font-extrabold text-3xl sm:text-4xl uppercase tracking-tight text-white">
+                            PERTANYAAN YANG SERING DITANYAKAN
+                        </h2>
+                        <p class="font-sans text-sm sm:text-base text-[#B5BAE0] mt-2">
+                            Punya pertanyaan lain seputar pencucian, timbangan, atau antar-jemput? Cek jawaban di bawah ini.
+                        </p>
+                    </div>
+
+                    <!-- Accordion List -->
+                    <div class="space-y-4">
+                        <div
+                            v-for="(faq, fIdx) in faqs"
+                            :key="fIdx"
+                            class="bg-[#1A2566]/80 border border-white/10 rounded-[20px] overflow-hidden transition-all duration-200"
+                        >
+                            <button
+                                type="button"
+                                class="w-full text-left px-6 py-5 flex items-center justify-between gap-4 font-heading font-bold text-base sm:text-lg text-white hover:text-[#FFE14D] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFE14D]"
+                                :aria-expanded="activeFaqIndex === fIdx"
+                                @click="toggleFaq(fIdx)"
+                            >
+                                <span>{{ faq.q }}</span>
+                                <ChevronDown
+                                    class="w-5 h-5 text-[#FFE14D] shrink-0 transition-transform duration-300"
+                                    :class="{ 'rotate-180': activeFaqIndex === fIdx }"
+                                />
+                            </button>
+
+                            <div
+                                v-show="activeFaqIndex === fIdx"
+                                class="px-6 pb-6 text-xs sm:text-sm text-[#B5BAE0] leading-relaxed border-t border-white/5 pt-4 animate-fadeIn"
+                            >
+                                {{ faq.a }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ======================================================== -->
+            <!-- SECTION 07: CTA NEWSLETTER / KONSULTASI (Every Sunday)   -->
+            <!-- ======================================================== -->
+            <section id="lacak" class="relative bg-gradient-to-b from-[#10194D] via-[#0A1033] to-[#0A1033] pt-16 pb-24 px-4 sm:px-6 lg:px-8 text-white">
+                <div class="max-w-4xl mx-auto text-center">
+                    <!-- Heading Every Sunday Style with Yellow Highlight -->
+                    <h2 class="font-heading font-extrabold text-3xl sm:text-5xl uppercase tracking-tight leading-tight text-white">
+                        SIAP CUCIAN BERSIH TANPA REPOT? <br />
+                        <span class="text-[#FFE14D]">PESAN SEKARANG</span> JUGA!
+                    </h2>
+                    <p class="font-sans text-sm sm:text-base text-[#B5BAE0] mt-4 max-w-xl mx-auto leading-relaxed">
+                        Kirim pesan ke admin WhatsApp kami untuk penjemputan cucian gratis (maks 3 kg) atau lacak langsung progres nota Anda.
+                    </p>
+
+                    <!-- Large Pill Search / Action Form -->
+                    <div class="max-w-xl mx-auto mt-8">
+                        <form
+                            @submit.prevent="submitOrderCheck"
+                            class="bg-white rounded-full p-2 pl-6 shadow-2xl border border-[#E3E1DA] flex items-center justify-between gap-2 transition-all focus-within:ring-3 focus-within:ring-[#4F5FE8]/40"
+                        >
+                            <input
+                                v-model="orderQuery"
+                                type="text"
+                                placeholder="Masukkan nomor nota atau No. HP…"
+                                class="w-full bg-transparent text-[#10194D] text-sm sm:text-base font-medium placeholder-[#6B7194] focus:outline-none"
+                            />
+                            <button
+                                type="submit"
+                                :disabled="isCheckingOrder"
+                                class="bg-[#FF8A5B] hover:bg-[#F26B3A] text-[#10194D] font-bold text-xs sm:text-sm px-6 py-3.5 rounded-full transition-all duration-200 shrink-0 shadow-sm hover:shadow-[0_4px_14px_rgba(255,138,91,0.4)] disabled:opacity-50 flex items-center gap-2"
+                            >
+                                <span v-if="!isCheckingOrder">Lacak Nota</span>
+                                <span v-else>Memeriksa…</span>
+                                <ArrowRight v-if="!isCheckingOrder" class="w-4 h-4" />
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Direct WhatsApp Quick Call Button -->
+                    <div class="mt-8 flex justify-center">
+                        <a
+                            :href="whatsappUrl"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="inline-flex items-center gap-2.5 bg-transparent border-2 border-white/60 hover:border-white text-white font-bold text-sm px-6 py-3 rounded-full transition-all hover:bg-white/10"
+                        >
+                            <Phone class="w-4 h-4 text-[#FFE14D]" />
+                            <span>Hubungi Admin: {{ storePhone }}</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
         </main>
 
-        <!-- Floating Mobile WhatsApp CTA -->
-        <aside class="mobile-floating-wa" aria-label="Pesan cepat via WhatsApp">
-            <a
-                :href="whatsappUrl"
-                target="_blank"
-                rel="noopener"
-                class="mobile-floating-wa__btn"
-                title="Pesan Antar-Jemput via WhatsApp"
-            >
-                <MessageCircle class="w-6 h-6 text-white" />
-                <span class="text-xs font-bold text-white pr-1">Pesan WA</span>
-            </a>
-        </aside>
+        <!-- ======================================================== -->
+        <!-- FOOTER (DESIGN.md)                                       -->
+        <!-- ======================================================== -->
+        <footer class="bg-[#070B24] text-[#B5BAE0] border-t border-white/10 pt-16 pb-12 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-white/10">
+                    <!-- Brand Column -->
+                    <div class="md:col-span-5">
+                        <Link href="/" class="flex items-center gap-1.5 focus-visible:outline-none">
+                            <span class="font-heading font-extrabold text-2xl tracking-tight text-white">
+                                andik<span class="text-[#FF8A5B]">.</span>
+                            </span>
+                            <span class="text-[10px] font-bold tracking-widest text-[#4F5FE8] uppercase bg-[#E6E9FD] px-2 py-0.5 rounded-full ml-1">
+                                LAUNDRY
+                            </span>
+                        </Link>
+                        <p class="font-sans text-xs sm:text-sm text-[#B5BAE0] mt-4 max-w-sm leading-relaxed">
+                            Layanan binatu harian higienis dan terpercaya di Gresik sejak 2009. Berprinsip 1 mesin 1 pelanggan, menjaga kesucian dan kebersihan pakaian keluarga Anda.
+                        </p>
+                        <div class="text-xs text-[#FFE14D] font-bold mt-4">
+                            Buka Setiap Hari: 07.00 – 20.00 WIB
+                        </div>
+                    </div>
 
-        <!-- Modern Footer -->
-        <footer class="site-footer">
-            <div class="site-footer__inner">
-                <div class="site-footer__brand">
-                    <Link href="/" class="wordmark">
-                        <span class="wordmark__name">andik<span class="wordmark__accent">.</span></span>
-                        <span class="wordmark__caption">LAUNDRY</span>
-                    </Link>
-                    <p class="text-xs text-[#6B6B6B] mt-2 max-w-sm">
-                        Layanan binatu harian higienis dan terpercaya. 1 mesin 1 pelanggan dengan nota digital terpadu dan pembayaran QRIS.
-                    </p>
+                    <!-- Links: Layanan -->
+                    <div class="md:col-span-3">
+                        <div class="font-heading font-bold text-sm text-white uppercase tracking-wider mb-4">
+                            Layanan Unggulan
+                        </div>
+                        <ul class="space-y-2.5 text-xs text-[#B5BAE0]">
+                            <li><a href="#tarif" class="hover:text-white transition-colors">Cuci Setrika Komplit (Rp 8.000/kg)</a></li>
+                            <li><a href="#tarif" class="hover:text-white transition-colors">Cuci Kering Lipat (Rp 6.000/kg)</a></li>
+                            <li><a href="#tarif" class="hover:text-white transition-colors">Cuci Basah Ekonomis (Rp 5.000/kg)</a></li>
+                            <li><a href="#tarif" class="hover:text-white transition-colors">Cuci Karpet Rumah & Masjid (Rp 15.000/m²)</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Links: Navigasi & Staf -->
+                    <div class="md:col-span-4">
+                        <div class="font-heading font-bold text-sm text-white uppercase tracking-wider mb-4">
+                            Akses & Bantuan
+                        </div>
+                        <ul class="space-y-2.5 text-xs text-[#B5BAE0] mb-6">
+                            <li><a href="#lacak" class="hover:text-white transition-colors">Cek Status Nota Digital</a></li>
+                            <li><a href="#lokasi" class="hover:text-white transition-colors">Petunjuk Arah Google Maps</a></li>
+                            <li><a :href="whatsappUrl" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">Chat Admin WhatsApp</a></li>
+                            <li><Link v-if="canLogin" href="/login" class="hover:text-white transition-colors font-bold text-[#FF8A5B]">Masuk Dashboard Kasir / Owner</Link></li>
+                        </ul>
+                    </div>
                 </div>
 
-                <div class="site-footer__links">
-                    <span class="text-xs font-semibold text-[#0A0A0A] uppercase tracking-wider">Navigasi</span>
-                    <a href="#keunggulan">Keunggulan</a>
-                    <a href="#tarif">Daftar Tarif</a>
-                    <a href="#cara-pesan">Cara Pesan</a>
-                    <a href="#lacak">Lacak Nota</a>
-                    <a href="#faq">FAQ</a>
+                <!-- Copyright -->
+                <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#6B7194]">
+                    <div>
+                        © 2009 – 2026 Andik Laundry (Hendrosari, Menganti, Gresik). Seluruh hak cipta dilindungi.
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span>Standar Higienis 1 Mesin 1 Pelanggan</span>
+                    </div>
                 </div>
-
-                <div class="site-footer__staff-panel">
-                    <span class="text-xs font-semibold text-[#0A0A0A] uppercase tracking-wider">Akses Internal</span>
-                    <p class="text-xs text-[#6B6B6B] mb-3">Portal login operasional kasir & manajemen toko.</p>
-                    <Link v-if="canLogin" href="/login" class="staff-link text-xs py-2 px-4">
-                        Masuk Dashboard Owner
-                    </Link>
-                </div>
-            </div>
-
-            <div class="site-footer__bottom">
-                <p>© 2026 {{ storeName }}. Hak cipta dilindungi. Dirancang untuk kebersihan & kenyamanan pakaian Anda.</p>
             </div>
         </footer>
     </div>
 </template>
 
 <style scoped>
-:global(*),
-:global(*::before),
-:global(*::after) {
-    box-sizing: border-box;
-}
-
-:global(html) {
-    scroll-behavior: smooth;
-    scroll-padding-top: 5rem;
-}
-
-:global(body) {
-    background-color: #FFFDF5;
-    color: #000000;
-}
-
-.skip-link {
-    position: absolute;
-    top: 0.5rem;
-    left: 0.5rem;
-    z-index: 50;
-    padding: 0.5rem 1rem;
-    background: #000000;
-    color: #FFEB3B;
-    border: 2px solid #000000;
-    box-shadow: 3px 3px 0 #000000;
-    border-radius: 6px;
-    font-size: 0.875rem;
-    font-weight: 800;
-    transform: translateY(-200%);
-    transition: transform 150ms ease;
-}
-
-.skip-link:focus {
-    transform: translateY(0);
-}
-
-/* Site Header */
-.site-header {
-    position: sticky;
-    top: 0;
-    z-index: 40;
-    background: #FFEB3B;
-    border-bottom: 3.5px solid #000000;
-}
-
-.site-header__inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: min(100% - 2rem, 1200px);
-    margin-inline: auto;
-    min-height: 60px;
-}
-
-.wordmark {
-    display: inline-flex;
-    flex-direction: column;
-    text-decoration: none;
-    color: #000000;
-}
-
-.wordmark__name {
-    font-size: 1.45rem;
-    font-weight: 900;
-    letter-spacing: -0.05em;
-    line-height: 0.95;
-    color: #000000;
-}
-
-.wordmark__accent {
-    color: #FF5252;
-}
-
-.wordmark__caption {
-    display: inline-block;
-    width: fit-content;
-    font-size: 0.55rem;
-    font-weight: 800;
-    letter-spacing: 0.22em;
-    margin-top: 0.15rem;
-    background: #000000;
-    color: #FFEB3B;
-    padding: 1px 6px;
-    border-radius: 4px;
-}
-
-.site-nav {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-}
-
-.site-nav a:not(.nav-btn-wa):not(.staff-link) {
-    font-size: 0.875rem;
-    font-weight: 800;
-    color: #000000;
-    text-decoration: none;
-    padding: 0.25rem 0.5rem;
-    border-radius: 6px;
-    transition: all 120ms ease;
-}
-
-.site-nav a:not(.nav-btn-wa):not(.staff-link):hover {
-    background: #000000;
-    color: #FFEB3B;
-}
-
-.site-nav__actions {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin-left: 0.5rem;
-}
-
-.nav-btn-wa {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 40px;
-    padding: 0.4rem 1rem;
-    border-radius: 8px;
-    background: #22C55E;
-    color: #000000;
-    border: 2.5px solid #000000;
-    box-shadow: 3px 3px 0 #000000;
-    font-size: 0.85rem;
-    font-weight: 800;
-    text-decoration: none;
-    transition: all 120ms ease;
-}
-
-.nav-btn-wa:hover {
-    transform: translate(-1px, -1px);
-    box-shadow: 4px 4px 0 #000000;
-}
-
-.nav-btn-wa:active {
-    transform: translate(2px, 2px);
-    box-shadow: 1px 1px 0 #000000;
-}
-
-.staff-link {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 40px;
-    padding: 0.4rem 1rem;
-    border: 2.5px solid #000000;
-    border-radius: 8px;
-    box-shadow: 3px 3px 0 #000000;
-    background: #FFFFFF;
-    color: #000000;
-    font-size: 0.85rem;
-    font-weight: 800;
-    text-decoration: none;
-    transition: all 120ms ease;
-}
-
-.staff-link:hover {
-    background: #000000;
-    color: #FFEB3B;
-    transform: translate(-1px, -1px);
-    box-shadow: 4px 4px 0 #000000;
-}
-
-.staff-link:active {
-    transform: translate(2px, 2px);
-    box-shadow: 1px 1px 0 #000000;
-}
-
-.menu-toggle {
-    display: none;
-    width: 44px;
-    height: 44px;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    border: 2.5px solid #000000;
-    box-shadow: 3px 3px 0 #000000;
-    border-radius: 8px;
-    background: #FFFFFF;
-    cursor: pointer;
-}
-
-.menu-toggle span {
-    width: 20px;
-    height: 2.5px;
-    background: #000000;
-    transition: all 180ms ease;
-}
-
-/* Hero Wrapper */
-.hero-wrapper {
-    position: relative;
-    background: #FFF9D2;
-    border-bottom: 3.5px solid #000000;
-    overflow: hidden;
-}
-
-.hero-section {
-    display: grid;
-    grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
-    align-items: center;
-    gap: clamp(1.75rem, 3.5vw, 3.5rem);
-    width: min(100% - 2rem, 1200px);
-    margin-inline: auto;
-    padding-block: clamp(2.5rem, 5vh, 4.25rem);
-}
-
-.hero-section__copy {
-    max-width: 620px;
-}
-
-.hero-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.4rem 0.9rem;
-    border-radius: 8px;
-    background: #2196F3;
-    border: 2.5px solid #000000;
-    box-shadow: 3px 3px 0 #000000;
-    color: #FFFFFF;
-    font-size: 0.75rem;
-    font-weight: 800;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    margin-bottom: 1rem;
-}
-
-.hero-badge__dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 9999px;
-    background: #FFEB3B;
-    border: 1.5px solid #000000;
-    margin-right: 0.5rem;
-}
-
-.hero-title {
-    font-size: clamp(2.25rem, 4.2vw, 3.75rem);
-    font-weight: 900;
-    letter-spacing: -0.04em;
-    line-height: 1.08;
-    color: #000000;
-    margin: 0;
-}
-
-.hero-title__highlight {
-    background: #FF5252;
-    color: #FFFFFF;
-    border: 2.5px solid #000000;
-    box-shadow: 3px 3px 0 #000000;
-    padding: 2px 10px;
-    border-radius: 8px;
-    display: inline-block;
-    margin-top: 0.25rem;
-}
-
-.hero-description {
-    font-size: clamp(0.95rem, 1.1vw, 1.1rem);
-    line-height: 1.6;
-    color: #1F2937;
-    font-weight: 500;
-    margin: 1.25rem 0 1.5rem;
-    max-width: 540px;
-}
-
-.hero-cta-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.85rem;
-    align-items: center;
-}
-
-.btn-cta-primary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 48px;
-    padding: 0.75rem 1.45rem;
-    border-radius: 8px;
-    background: #22C55E;
-    color: #000000;
-    border: 3px solid #000000;
-    box-shadow: 4px 4px 0 #000000;
-    font-size: 0.925rem;
-    font-weight: 800;
-    text-decoration: none;
-    transition: all 120ms ease;
-}
-
-.btn-cta-primary:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0 #000000;
-}
-
-.btn-cta-primary:active {
-    transform: translate(2px, 2px);
-    box-shadow: 2px 2px 0 #000000;
-}
-
-.btn-cta-secondary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 48px;
-    padding: 0.75rem 1.35rem;
-    border-radius: 8px;
-    background: #FFEB3B;
-    border: 3px solid #000000;
-    box-shadow: 4px 4px 0 #000000;
-    color: #000000;
-    font-size: 0.925rem;
-    font-weight: 800;
-    text-decoration: none;
-    transition: all 120ms ease;
-}
-
-.btn-cta-secondary:hover {
-    background: #FFFFFF;
-    transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0 #000000;
-}
-
-.btn-cta-secondary:active {
-    transform: translate(2px, 2px);
-    box-shadow: 2px 2px 0 #000000;
-}
-
-.hero-guarantees {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    margin-top: 1.75rem;
-    padding-top: 1.25rem;
-    border-top: 2px dashed #000000;
-}
-
-.hero-guarantee-item {
-    display: flex;
-    align-items: center;
-    font-size: 0.8rem;
-    color: #000000;
-    font-weight: 700;
-    background: #FFFFFF;
-    border: 2px solid #000000;
-    box-shadow: 2px 2px 0 #000000;
-    border-radius: 6px;
-    padding: 0.35rem 0.65rem;
-}
-
-/* Hero Right Column: Interactive Hub */
-.hero-section__interactive {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    align-self: center;
-    max-width: 490px;
-    width: 100%;
-}
-
-/* Card 1: Form Lacak Panel */
-.hero-track-panel {
-    background: #FFFFFF;
-    border: 3px solid #000000;
-    border-radius: 8px;
-    padding: 1.35rem;
-    box-shadow: 5px 5px 0 #000000;
-}
-
-.hero-track-panel__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.hero-track-panel__row {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.hero-track-panel__input {
-    flex: 1;
-    min-width: 0;
-    min-height: 46px;
-    padding: 0.5rem 0.85rem;
-    border: 2.5px solid #000000;
-    box-shadow: 3px 3px 0 #000000;
-    border-radius: 8px;
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: #000000;
-    background: #FFFFFF;
-    transition: all 120ms ease;
-}
-
-.hero-track-panel__input:focus {
-    outline: none;
-    border-color: #000000;
-    box-shadow: 4px 4px 0 #2196F3;
-}
-
-.hero-track-panel__submit {
-    flex-shrink: 0;
-    min-height: 46px;
-    padding: 0.5rem 1.25rem;
-    border: 2.5px solid #000000;
-    border-radius: 8px;
-    box-shadow: 3px 3px 0 #000000;
-    background: #2196F3;
-    color: #FFFFFF;
-    font-size: 0.875rem;
-    font-weight: 800;
-    cursor: pointer;
-    transition: all 120ms ease;
-}
-
-.hero-track-panel__submit:hover {
-    transform: translate(-1px, -1px);
-    box-shadow: 4px 4px 0 #000000;
-}
-
-.hero-track-panel__submit:active {
-    transform: translate(2px, 2px);
-    box-shadow: 1px 1px 0 #000000;
-}
-
-.hero-track-panel__submit:disabled {
-    background: #93C5FD;
-    cursor: wait;
-}
-
-.hero-track-panel__hint,
-.hero-track-panel__error {
-    font-size: 0.75rem;
-    margin-top: 0.5rem;
-    line-height: 1.45;
-    font-weight: 600;
-}
-
-.hero-track-panel__hint {
-    color: #4B5563;
-}
-
-.hero-track-panel__error {
-    color: #DC2626;
-    font-weight: 700;
-}
-
-/* Card 2: Stats Panel (2x2 Grid) */
-.hero-stats-panel {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 3px;
-    background: #000000;
-    border: 3px solid #000000;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 5px 5px 0 #000000;
-}
-
-.hero-stats-panel__item {
-    background: #FFFFFF;
-    padding: 1rem 1.15rem;
-}
-
-.hero-stats-panel__item dt {
-    font-size: 0.72rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: #4B5563;
-}
-
-.hero-stats-panel__item dd {
-    font-size: 1.45rem;
-    font-weight: 900;
-    color: #000000;
-    margin: 0.25rem 0 0;
-    letter-spacing: -0.03em;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-}
-
-/* Trust Pills Row */
-.hero-trust-pills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.6rem;
-}
-
-.trust-pill-item {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.45rem 0.85rem;
-    border-radius: 8px;
-    background: #FFEB3B;
-    border: 2px solid #000000;
-    box-shadow: 3px 3px 0 #000000;
-    font-size: 0.75rem;
-    font-weight: 800;
-    color: #000000;
-}
-
-/* Sections Shared */
-.section-container {
-    width: min(100% - 2rem, 1200px);
-    margin-inline: auto;
-    padding-block: clamp(2.5rem, 5vw, 4.5rem);
-}
-
-.section-header {
-    max-width: 680px;
-    margin-inline: auto;
-}
-
-.section-eyebrow {
-    font-size: 0.75rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: #000000;
-    background: #FFEB3B;
-    border: 2px solid #000000;
-    box-shadow: 2px 2px 0 #000000;
-    padding: 2px 10px;
-    border-radius: 6px;
-    display: inline-block;
-    margin-bottom: 0.6rem;
-}
-
-.section-title {
-    font-size: clamp(2rem, 3.2vw, 2.75rem);
-    font-weight: 900;
-    letter-spacing: -0.04em;
-    line-height: 1.1;
-    color: #000000;
-    margin: 0;
-}
-
-.section-subtitle {
-    font-size: 0.975rem;
-    color: #374151;
-    font-weight: 500;
-    line-height: 1.6;
-    margin-top: 0.6rem;
-}
-
-/* Feature Cards */
-.feature-card {
-    background: #FFFFFF;
-    border: 3px solid #000000;
-    border-radius: 8px;
-    box-shadow: 4px 4px 0 #000000;
-    padding: 1.5rem 1.25rem;
-    display: flex;
-    flex-direction: column;
-    transition: transform 150ms ease, box-shadow 150ms ease;
-}
-
-.feature-card:hover {
-    transform: translate(-3px, -3px);
-    box-shadow: 7px 7px 0 #000000;
-}
-
-.feature-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 8px;
-    border: 2.5px solid #000000;
-    box-shadow: 3px 3px 0 #000000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1rem;
-}
-
-.feature-title {
-    font-size: 1.15rem;
-    font-weight: 800;
-    color: #000000;
-    margin: 0 0 0.5rem;
-    letter-spacing: -0.02em;
-}
-
-.feature-desc {
-    font-size: 0.875rem;
-    color: #374151;
-    line-height: 1.55;
-    margin: 0;
-    font-weight: 500;
-}
-
-/* Service Pricing Cards */
-.service-pricing-card {
-    background: #FFFFFF;
-    border: 3px solid #000000;
-    border-radius: 8px;
-    box-shadow: 4px 4px 0 #000000;
-    padding: 1.5rem 1.25rem;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    transition: transform 150ms ease, box-shadow 150ms ease;
-}
-
-.service-pricing-card:hover {
-    transform: translate(-3px, -3px);
-    box-shadow: 7px 7px 0 #000000;
-}
-
-.service-pricing-card--popular {
-    background: #FEF08A;
-    border: 3.5px solid #000000;
-    box-shadow: 6px 6px 0 #000000;
-}
-
-.popular-ribbon {
-    position: absolute;
-    top: -12px;
-    right: 14px;
-    background: #FF5252;
-    color: #FFFFFF;
-    font-size: 0.72rem;
-    font-weight: 800;
-    padding: 3px 12px;
-    border: 2px solid #000000;
-    box-shadow: 2px 2px 0 #000000;
-    border-radius: 6px;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-}
-
-.service-pricing-card__header {
-    border-bottom: 2px dashed #000000;
-    padding-bottom: 1rem;
-}
-
-.service-badge {
-    display: inline-block;
-    font-size: 0.72rem;
-    font-weight: 800;
-    color: #000000;
-    background: #FFEB3B;
-    border: 1.5px solid #000000;
-    box-shadow: 1.5px 1.5px 0 #000000;
-    padding: 2px 8px;
-    border-radius: 4px;
-    margin-bottom: 0.5rem;
-}
-
-.service-name {
-    font-size: 1.3rem;
-    font-weight: 900;
-    color: #000000;
-    margin: 0 0 0.5rem;
-    letter-spacing: -0.02em;
-}
-
-.service-price-row {
-    display: flex;
-    align-items: baseline;
-    gap: 0.35rem;
-}
-
-.service-price {
-    font-size: 1.85rem;
-    font-weight: 900;
-    color: #000000;
-    letter-spacing: -0.04em;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-}
-
-.service-unit {
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: #000000;
-}
-
-.service-min {
-    display: block;
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: #4B5563;
-    margin-top: 0.25rem;
-}
-
-.service-desc {
-    font-size: 0.875rem;
-    color: #1F2937;
-    font-weight: 500;
-    line-height: 1.5;
-    margin: 1rem 0;
-}
-
-.service-feature-list {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.65rem;
-    flex: 1;
-}
-
-.service-feature-list li {
-    font-size: 0.825rem;
-    font-weight: 600;
-    color: #000000;
-    display: flex;
-    align-items: flex-start;
-    line-height: 1.4;
-}
-
-.btn-service-order {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    min-height: 44px;
-    border-radius: 8px;
-    background: #FFEB3B;
-    color: #000000;
-    font-size: 0.85rem;
-    font-weight: 800;
-    text-decoration: none;
-    border: 2.5px solid #000000;
-    box-shadow: 3px 3px 0 #000000;
-    transition: all 120ms ease;
-}
-
-.btn-service-order:hover {
-    transform: translate(-1px, -1px);
-    box-shadow: 4px 4px 0 #000000;
-}
-
-.btn-service-order:active {
-    transform: translate(2px, 2px);
-    box-shadow: 1px 1px 0 #000000;
-}
-
-.btn-service-order--primary {
-    background: #22C55E;
-    color: #000000;
-}
-
-/* Service Addons Strip */
-.service-addons-strip {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.25rem;
-    justify-content: center;
-    background: #FFFFFF;
-    border: 3px solid #000000;
-    box-shadow: 4px 4px 0 #000000;
-    border-radius: 8px;
-    padding: 1.15rem 1.5rem;
-}
-
-.service-addon-item {
-    display: flex;
-    align-items: center;
-}
-
-/* Step Cards */
-.step-card {
-    background: #FFFFFF;
-    border: 3px solid #000000;
-    border-radius: 8px;
-    box-shadow: 4px 4px 0 #000000;
-    padding: 1.5rem 1.25rem;
-    position: relative;
-    transition: transform 150ms ease, box-shadow 150ms ease;
-}
-
-.step-card:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0 #000000;
-}
-
-.step-number {
-    display: inline-block;
-    font-size: 1.25rem;
-    font-weight: 900;
-    background: #000000;
-    color: #FFEB3B;
-    border: 2px solid #000000;
-    box-shadow: 2px 2px 0 #000000;
-    padding: 3px 10px;
-    border-radius: 6px;
-    line-height: 1;
-    margin-bottom: 0.85rem;
-}
-
-.step-title {
-    font-size: 1.1rem;
-    font-weight: 800;
-    color: #000000;
-    margin: 0 0 0.5rem;
-}
-
-.step-desc {
-    font-size: 0.85rem;
-    color: #374151;
-    font-weight: 500;
-    line-height: 1.55;
-    margin: 0;
-}
-
-/* Payment Banner */
-.payment-banner {
-    background: #FED7AA;
-    border: 3px solid #000000;
-    box-shadow: 5px 5px 0 #000000;
-    border-radius: 8px;
-    padding: 1.75rem 2rem;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1.5rem;
-}
-
-.payment-methods-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-}
-
-.payment-chip {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.65rem 1.15rem;
-    border-radius: 8px;
-    background: #FFFFFF;
-    border: 2.5px solid #000000;
-    box-shadow: 3px 3px 0 #000000;
-    font-size: 0.875rem;
-    font-weight: 800;
-    color: #000000;
-}
-
-/* Testimonials */
-.testimonial-card {
-    background: #FFFFFF;
-    border: 3px solid #000000;
-    border-radius: 8px;
-    box-shadow: 4px 4px 0 #000000;
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-}
-
-/* FAQ Accordion */
-.faq-accordion-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.85rem;
-}
-
-.faq-item {
-    background: #FFFFFF;
-    border: 3px solid #000000;
-    box-shadow: 3px 3px 0 #000000;
-    border-radius: 8px;
-    overflow: hidden;
-    transition: all 150ms ease;
-}
-
-.faq-question {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1.1rem 1.35rem;
-    font-size: 0.975rem;
-    font-weight: 800;
-    color: #000000;
-    cursor: pointer;
-    list-style: none;
-    min-height: 48px;
-}
-
-.faq-question::-webkit-details-marker {
-    display: none;
-}
-
-.faq-item[open] {
-    background: #FFFBEB;
-    box-shadow: 5px 5px 0 #000000;
-}
-
-.faq-item[open] .faq-question {
-    border-bottom: 2px solid #000000;
-    background: #FEF08A;
-}
-
-.faq-item[open] .faq-icon {
-    transform: rotate(180deg);
-}
-
-.faq-answer {
-    padding: 1.1rem 1.35rem;
-    font-size: 0.9rem;
-    color: #1F2937;
-    font-weight: 500;
-    line-height: 1.6;
-}
-
-/* Store Info Card */
-.store-info-card {
-    background: #FFFFFF;
-    border: 3.5px solid #000000;
-    border-radius: 10px;
-    box-shadow: 6px 6px 0 #000000;
-    padding: 2rem;
-}
-
-/* Floating Mobile WhatsApp */
-.mobile-floating-wa {
-    display: none;
-}
-
-@media (max-width: 768px) {
-    .mobile-floating-wa {
-        display: block;
-        position: fixed;
-        bottom: calc(env(safe-area-inset-bottom, 0px) + 1.25rem);
-        right: 1.25rem;
-        z-index: 50;
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
     }
-
-    .mobile-floating-wa__btn {
-        display: flex;
-        align-items: center;
-        gap: 0.4rem;
-        background: #22C55E;
-        color: #000000;
-        border: 3px solid #000000;
-        box-shadow: 4px 4px 0 #000000;
-        padding: 0.65rem 1rem 0.65rem 0.85rem;
-        border-radius: 9999px;
-        text-decoration: none;
-        min-height: 48px;
-        transition: transform 120ms ease;
-    }
-
-    .mobile-floating-wa__btn:hover {
-        transform: scale(1.05);
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 
-/* Footer */
-.site-footer {
-    border-top: 3.5px solid #000000;
-    background: #FFEB3B;
-    color: #000000;
-    margin-top: 2rem;
-    padding-top: 3rem;
-}
-
-.site-footer__inner {
-    width: min(100% - 2rem, 1200px);
-    margin-inline: auto;
-    display: grid;
-    grid-template-columns: 2fr 1fr 1.5fr;
-    gap: 2.5rem;
-    padding-bottom: 2.5rem;
-}
-
-.site-footer__links {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-}
-
-.site-footer__links a {
-    font-size: 0.875rem;
-    font-weight: 700;
-    color: #000000;
-    text-decoration: none;
-    transition: color 150ms ease;
-}
-
-.site-footer__links a:hover {
-    color: #FF5252;
-    text-decoration: underline;
-}
-
-.site-footer__staff-panel {
-    display: flex;
-    flex-direction: column;
-}
-
-.site-footer__bottom {
-    border-top: 2px solid #000000;
-    padding-block: 1.25rem;
-    text-align: center;
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: #000000;
-}
-
-/* Responsive Overrides */
-@media (max-width: 900px) {
-    .hero-section {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-    }
-
-    .hero-section__interactive {
-        max-width: 100%;
-    }
-
-    .site-footer__inner {
-        grid-template-columns: 1fr 1fr;
-        gap: 2rem;
-    }
-}
-
-@media (max-width: 680px) {
-    .menu-toggle {
-        display: flex;
-    }
-
-    .site-nav {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: #FFEB3B;
-        border-bottom: 3px solid #000000;
-        flex-direction: column;
-        align-items: stretch;
-        padding: 1rem;
-        gap: 0;
-        display: none;
-    }
-
-    .site-nav--open {
-        display: flex;
-    }
-
-    .site-nav a:not(.nav-btn-wa):not(.staff-link) {
-        display: flex;
-        align-items: center;
-        min-height: 48px;
-        border-bottom: 2px solid #000000;
-    }
-
-    .site-nav__actions {
-        flex-direction: column;
-        margin-top: 1rem;
-        margin-left: 0;
-        gap: 0.5rem;
-    }
-
-    .nav-btn-wa,
-    .staff-link {
-        width: 100%;
-        min-height: 44px;
-    }
-
-    .hero-title {
-        font-size: clamp(2rem, 8vw, 2.6rem);
-    }
-
-    .hero-cta-group {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .btn-cta-primary,
-    .btn-cta-secondary {
-        width: 100%;
-    }
-
-    .hero-stats-panel {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .site-footer__inner {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* Data Reveal Animations */
-[data-reveal] {
-    opacity: 0;
-    transform: translateY(12px);
-    transition: opacity 350ms cubic-bezier(0.16, 1, 0.3, 1), transform 350ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-[data-reveal].is-revealed {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-@media (prefers-reduced-motion: reduce) {
-    [data-reveal] {
-        opacity: 1 !important;
-        transform: none !important;
-        transition: none !important;
-    }
-
-    *,
-    *::before,
-    *::after {
-        scroll-behavior: auto !important;
-        transition-duration: 0.01ms !important;
-    }
+.animate-fadeIn {
+    animation: fadeIn 0.2s ease-out forwards;
 }
 </style>
