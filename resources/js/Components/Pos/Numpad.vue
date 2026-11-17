@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Delete, RotateCcw } from 'lucide-vue-next';
+import { Delete } from 'lucide-vue-next';
 
 interface Props {
     modelValue?: string | number;
@@ -45,79 +45,19 @@ function onKeyClick(key: string) {
 
 <template>
     <div class="grid grid-cols-3 gap-1.5 select-none w-full">
-        <!-- Row 1: 7, 8, 9 -->
         <button
+            v-for="key in ['7', '8', '9', '4', '5', '6', '1', '2', '3']"
+            :key="key"
             type="button"
-            class="btn-numpad cursor-pointer"
-            @click="onKeyClick('7')"
+            class="inline-flex h-12 items-center justify-center rounded-md border border-border bg-surface font-heading text-base font-bold text-text hover:bg-primary-100 hover:border-primary-500 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500 transition-all duration-[120ms] ease-standard cursor-pointer shadow-sm"
+            @click="onKeyClick(key)"
         >
-            7
-        </button>
-        <button
-            type="button"
-            class="btn-numpad cursor-pointer"
-            @click="onKeyClick('8')"
-        >
-            8
-        </button>
-        <button
-            type="button"
-            class="btn-numpad cursor-pointer"
-            @click="onKeyClick('9')"
-        >
-            9
+            {{ key }}
         </button>
 
-        <!-- Row 2: 4, 5, 6 -->
         <button
             type="button"
-            class="btn-numpad cursor-pointer"
-            @click="onKeyClick('4')"
-        >
-            4
-        </button>
-        <button
-            type="button"
-            class="btn-numpad cursor-pointer"
-            @click="onKeyClick('5')"
-        >
-            5
-        </button>
-        <button
-            type="button"
-            class="btn-numpad cursor-pointer"
-            @click="onKeyClick('6')"
-        >
-            6
-        </button>
-
-        <!-- Row 3: 1, 2, 3 -->
-        <button
-            type="button"
-            class="btn-numpad cursor-pointer"
-            @click="onKeyClick('1')"
-        >
-            1
-        </button>
-        <button
-            type="button"
-            class="btn-numpad cursor-pointer"
-            @click="onKeyClick('2')"
-        >
-            2
-        </button>
-        <button
-            type="button"
-            class="btn-numpad cursor-pointer"
-            @click="onKeyClick('3')"
-        >
-            3
-        </button>
-
-        <!-- Row 4: 0, ., backspace -->
-        <button
-            type="button"
-            class="btn-numpad cursor-pointer"
+            class="inline-flex h-12 items-center justify-center rounded-md border border-border bg-surface font-heading text-base font-bold text-text hover:bg-primary-100 hover:border-primary-500 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500 transition-all duration-[120ms] ease-standard cursor-pointer shadow-sm"
             @click="onKeyClick('0')"
         >
             0
@@ -125,7 +65,7 @@ function onKeyClick(key: string) {
         <button
             type="button"
             :disabled="!allowDecimal"
-            class="btn-numpad disabled:opacity-30 cursor-pointer text-xl"
+            class="inline-flex h-12 items-center justify-center rounded-md border border-border bg-surface text-xl text-text hover:bg-primary-100 hover:border-primary-500 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500 disabled:pointer-events-none disabled:opacity-30 transition-all duration-[120ms] ease-standard cursor-pointer shadow-sm"
             @click="onKeyClick('.')"
             aria-label="Titik desimal"
         >
@@ -133,7 +73,7 @@ function onKeyClick(key: string) {
         </button>
         <button
             type="button"
-            class="btn-numpad bg-rose-500 text-white hover:bg-rose-600 cursor-pointer shadow-xs border border-rose-500"
+            class="inline-flex h-12 items-center justify-center rounded-md border border-danger bg-danger text-white hover:bg-danger/90 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500 transition-all duration-[120ms] ease-standard cursor-pointer shadow-sm"
             @click="onKeyClick('backspace')"
             aria-label="Hapus digit terakhir"
         >

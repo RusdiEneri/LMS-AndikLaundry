@@ -48,12 +48,12 @@ const isMeterService = computed(() => {
 const categoryBadgeClass = computed(() => {
     const cat = props.service.category.toLowerCase();
     if (cat.includes('kiloan')) {
-        return 'bg-[#E6E9FD] text-[#26338A] border border-[#26338A]/20';
+        return 'bg-primary-100 text-primary-700';
     }
     if (cat.includes('meteran') || cat.includes('karpet')) {
-        return 'bg-amber-50 text-amber-800 border border-amber-200';
+        return 'bg-[#FFF1D6] text-[#8A5A00]';
     }
-    return 'bg-emerald-50 text-emerald-700 border border-emerald-200';
+    return 'bg-accent-100 text-accent-700';
 });
 
 function handleClick() {
@@ -65,14 +65,13 @@ function handleClick() {
     <button
         type="button"
         @click="handleClick"
-        class="min-h-[44px] flex flex-col justify-between text-left p-4 rounded-2xl border border-slate-200/90 bg-white shadow-xs hover:shadow-md hover:border-[#4F5FE8]/50 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 group relative cursor-pointer"
+        class="min-h-[44px] flex flex-col justify-between text-left p-4 rounded-lg border border-border bg-surface shadow-sm hover:shadow-md hover:border-primary-500 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-[200ms] ease-standard group relative cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
     >
         <div>
-            <!-- Category & Badge Header -->
             <div class="flex items-center justify-between mb-2 flex-wrap gap-1">
                 <span
                     :class="[
-                        'text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full flex items-center space-x-1',
+                        'overline-label px-2.5 py-0.5 rounded-pill flex items-center space-x-1',
                         categoryBadgeClass,
                     ]"
                 >
@@ -82,38 +81,34 @@ function handleClick() {
                     <span>{{ service.category }}</span>
                 </span>
 
-                <!-- Min weight tag (for kiloan only) -->
                 <span
                     v-if="service.min_weight && isKiloan"
-                    class="text-[10px] text-[#26338A] bg-[#E6E9FD] px-2 py-0.5 rounded-full font-mono font-bold"
+                    class="text-[10px] text-primary-700 bg-primary-100 px-2 py-0.5 rounded-pill font-mono font-semibold"
                 >
                     Min {{ service.min_weight }} kg
                 </span>
             </div>
 
-            <!-- Service Name -->
-            <h4 class="font-heading font-bold text-sm text-slate-900 group-hover:text-[#4F5FE8] transition-colors line-clamp-2 mt-1">
+            <h4 class="font-heading font-bold text-sm text-text group-hover:text-primary-700 transition-colors line-clamp-2 mt-1">
                 {{ service.name }}
             </h4>
 
-            <p class="text-[11px] text-slate-500 font-medium mt-1">
+            <p class="text-[11px] text-text-muted font-medium mt-1">
                 Estimasi: {{ service.estimated_hours }} Jam
             </p>
 
-            <!-- Unit type indicator -->
-            <p v-if="isMeterService" class="text-[10px] text-amber-800 font-bold mt-1">
+            <p v-if="isMeterService" class="text-[10px] text-[#8A5A00] font-bold mt-1">
                 Input P × L (m²)
             </p>
         </div>
 
-        <!-- Price & Action Footer -->
-        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between w-full">
-            <span class="font-mono font-bold text-slate-900 text-sm">
+        <div class="mt-4 pt-3 border-t border-border flex items-center justify-between w-full">
+            <span class="font-mono font-bold text-text text-sm tabular-nums">
                 {{ formatRupiah(service.price) }}
-                <span class="text-xs text-slate-500 font-normal">/{{ service.unit }}</span>
+                <span class="text-xs text-text-muted font-normal">/{{ service.unit }}</span>
             </span>
 
-            <span class="h-8 w-8 rounded-xl bg-[#E6E9FD] text-[#4F5FE8] group-hover:bg-[#4F5FE8] group-hover:text-white transition-colors flex items-center justify-center font-bold shadow-xs">
+            <span class="h-8 w-8 rounded-md bg-primary-100 text-primary-700 group-hover:bg-primary-600 group-hover:text-white transition-colors flex items-center justify-center font-bold">
                 <Plus class="h-4 w-4" />
             </span>
         </div>

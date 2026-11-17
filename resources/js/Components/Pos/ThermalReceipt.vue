@@ -8,7 +8,6 @@ import {
     X,
     ExternalLink,
     RotateCcw,
-    Sparkles,
 } from 'lucide-vue-next';
 import {
     formatRupiah,
@@ -86,7 +85,6 @@ const digitalReceiptUrl = computed(() => {
     return `/receipts/${invoiceNumber.value}`;
 });
 
-// WhatsApp Link Generator
 const whatsappUrl = computed(() => {
     return generateWhatsAppReceiptLink({
         phone: customerPhone.value,
@@ -160,26 +158,24 @@ function handleNewTransaction() {
 <template>
     <div
         v-if="isOpen && transaction"
-        class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-3 sm:p-4 overflow-y-auto"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-navy-950/60 backdrop-blur-[4px] p-3 sm:p-4 overflow-y-auto"
         @click.self="handleClose"
     >
-        <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-slate-200/90 overflow-hidden flex flex-col my-auto max-h-[92vh]">
-            <!-- Header & Paper Width Controls -->
-            <div class="px-6 py-4 bg-[#10194D] text-white flex items-center justify-between no-print">
+        <div class="bg-surface rounded-xl max-w-lg w-full shadow-lg overflow-hidden flex flex-col my-auto max-h-[92vh]">
+            <div class="px-6 py-4 bg-navy-900 text-white flex items-center justify-between no-print">
                 <div class="flex items-center space-x-2">
                     <Printer class="h-5 w-5 text-white" />
-                    <span class="font-bold text-sm text-white uppercase tracking-wider">Struk Transaksi Kasir</span>
+                    <span class="font-heading font-bold text-sm text-white uppercase tracking-wider">Struk Transaksi Kasir</span>
                 </div>
 
                 <div class="flex items-center space-x-2">
-                    <!-- Paper Width Toggle (58mm / 80mm) -->
-                    <div class="flex items-center bg-white/10 p-0.5 rounded-lg border border-white/20 text-xs font-mono font-bold">
+                    <div class="flex items-center bg-white/10 p-0.5 rounded-md border border-white/20 text-xs font-mono font-semibold">
                         <button
                             type="button"
                             @click="currentPaperWidth = '58mm'"
                             :class="[
-                                'px-2.5 py-1 rounded-md transition-all cursor-pointer',
-                                currentPaperWidth === '58mm' ? 'bg-white text-[#10194D] shadow-xs' : 'text-white/80 hover:bg-white/10',
+                                'px-2.5 py-1 rounded-sm transition-all duration-[120ms] ease-standard cursor-pointer',
+                                currentPaperWidth === '58mm' ? 'bg-white text-navy-900' : 'text-white/80 hover:bg-white/10',
                             ]"
                         >
                             58mm
@@ -188,8 +184,8 @@ function handleNewTransaction() {
                             type="button"
                             @click="currentPaperWidth = '80mm'"
                             :class="[
-                                'px-2.5 py-1 rounded-md transition-all cursor-pointer',
-                                currentPaperWidth === '80mm' ? 'bg-white text-[#10194D] shadow-xs' : 'text-white/80 hover:bg-white/10',
+                                'px-2.5 py-1 rounded-sm transition-all duration-[120ms] ease-standard cursor-pointer',
+                                currentPaperWidth === '80mm' ? 'bg-white text-navy-900' : 'text-white/80 hover:bg-white/10',
                             ]"
                         >
                             80mm
@@ -199,7 +195,7 @@ function handleNewTransaction() {
                     <button
                         type="button"
                         @click="handleClose"
-                        class="h-8 w-8 rounded-full bg-white/10 text-white hover:bg-white/20 flex items-center justify-center transition-all cursor-pointer"
+                        class="h-8 w-8 rounded-full bg-white/10 text-white hover:bg-white/20 flex items-center justify-center transition-all duration-[120ms] ease-standard cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
                         aria-label="Tutup Struk"
                     >
                         <X class="h-4 w-4" />
@@ -207,24 +203,20 @@ function handleNewTransaction() {
                 </div>
             </div>
 
-            <!-- Receipt Preview Area -->
-            <div class="p-4 sm:p-6 flex-1 overflow-y-auto bg-slate-100 flex justify-center border-b border-slate-200">
-                <!-- PRINTABLE RECEIPT CONTAINER -->
+            <div class="p-4 sm:p-6 flex-1 overflow-y-auto bg-bg flex justify-center border-b border-border">
                 <div
                     id="thermal-receipt-printable"
                     :class="[
-                        'bg-white text-black font-mono text-[11px] leading-relaxed p-4 shadow-md rounded-lg border border-slate-300 transition-all select-text',
+                        'bg-white text-black font-mono text-[11px] leading-relaxed p-4 shadow-md rounded-md transition-all select-text',
                         currentPaperWidth === '58mm' ? 'w-[230px] max-w-[230px]' : 'w-[320px] max-w-[320px]',
                     ]"
                 >
-                    <!-- Store Header -->
                     <div class="text-center pb-2 border-b border-dashed border-black space-y-0.5">
                         <h2 class="font-bold text-sm tracking-wider uppercase">{{ storeInfo.name }}</h2>
-                        <p class="text-[10px] text-gray-700 leading-tight">{{ storeInfo.address }}</p>
-                        <p class="text-[10px] text-gray-700">WA: {{ storeInfo.phone }}</p>
+                        <p class="text-[10px] leading-tight">{{ storeInfo.address }}</p>
+                        <p class="text-[10px]">WA: {{ storeInfo.phone }}</p>
                     </div>
 
-                    <!-- Invoice & Cashier Metadata -->
                     <div class="py-2 border-b border-dashed border-black text-[10px] space-y-0.5">
                         <div class="flex justify-between">
                             <span>No. Nota:</span>
@@ -248,7 +240,6 @@ function handleNewTransaction() {
                         </div>
                     </div>
 
-                    <!-- Line Items Table -->
                     <div class="py-2 border-b border-dashed border-black space-y-1.5">
                         <div
                             v-for="(item, idx) in items"
@@ -259,7 +250,7 @@ function handleNewTransaction() {
                                 <span class="truncate">{{ item.item_name_snapshot ?? item.name }}</span>
                             </div>
 
-                            <div class="flex justify-between text-[10px] text-gray-700">
+                            <div class="flex justify-between text-[10px]">
                                 <span>
                                     {{ item.actual_quantity }} {{ item.pricing_unit_snapshot ?? item.unit }}
                                     <span v-if="item.billed_quantity && item.billed_quantity > item.actual_quantity">
@@ -267,7 +258,7 @@ function handleNewTransaction() {
                                     </span>
                                     x {{ formatRupiah(item.unit_price_snapshot ?? item.price) }}
                                 </span>
-                                <span class="font-bold text-black">
+                                <span class="font-bold">
                                     {{ formatRupiah(item.subtotal_snapshot ?? (item.billed_quantity * item.unit_price_snapshot)) }}
                                 </span>
                             </div>
@@ -278,7 +269,6 @@ function handleNewTransaction() {
                         </div>
                     </div>
 
-                    <!-- Delivery Option -->
                     <div class="py-2 border-b border-dashed border-black text-[10px]">
                         <div class="flex justify-between">
                             <span>Pengantaran:</span>
@@ -288,7 +278,6 @@ function handleNewTransaction() {
                         </div>
                     </div>
 
-                    <!-- Ledger Summary -->
                     <div class="py-2 border-b border-dashed border-black space-y-1 text-[10px]">
                         <div class="flex justify-between">
                             <span>Subtotal:</span>
@@ -314,57 +303,52 @@ function handleNewTransaction() {
                             <span>Kembalian:</span>
                             <span>{{ formatRupiah(changeAmount) }}</span>
                         </div>
-                        <div v-if="outstandingBalance > 0" class="flex justify-between font-bold text-black">
+                        <div v-if="outstandingBalance > 0" class="flex justify-between font-bold">
                             <span>SISA TAGIHAN:</span>
                             <span class="font-mono">{{ formatRupiah(outstandingBalance) }}</span>
                         </div>
                     </div>
 
-                    <!-- Payment Status Badge -->
                     <div class="py-2 text-center border-b border-dashed border-black">
                         <span
                             :class="[
-                                'inline-block px-3 py-1 border-2 border-black font-black text-[10px] tracking-wider uppercase shadow-[2px_2px_0px_#000]',
-                                outstandingBalance <= 0 ? 'bg-[#22C55E] text-black' : 'bg-[#FFEB3B] text-black',
+                                'inline-block px-3 py-1 border-2 border-black font-black text-[10px] tracking-wider uppercase',
+                                outstandingBalance <= 0 ? 'bg-white text-black' : 'bg-white text-black underline',
                             ]"
                         >
                             STATUS: {{ paymentStatusLabel }}
                         </span>
-                        <div v-if="targetCompletion" class="text-[9px] text-gray-700 font-bold mt-1.5">
+                        <div v-if="targetCompletion" class="text-[9px] font-bold mt-1.5">
                             Estimasi Selesai: {{ targetCompletion }}
                         </div>
                     </div>
 
-                    <!-- Public Receipt Link Notice -->
-                    <div class="pt-2 text-center text-[9px] text-gray-600 space-y-1">
-                        <p class="font-bold text-black">Lacak Status Cucian Live:</p>
-                        <p class="break-all font-mono text-[8px] text-black bg-[#FFF9D2] border border-black/40 p-1 rounded-sm">
+                    <div class="pt-2 text-center text-[9px] space-y-1">
+                        <p class="font-bold">Lacak Status Cucian Live:</p>
+                        <p class="break-all font-mono text-[8px] border border-black/40 p-1 rounded-sm">
                             {{ digitalReceiptUrl }}
                         </p>
-                        <p class="pt-1 italic leading-tight text-gray-700">{{ storeInfo.receipt_footer }}</p>
+                        <p class="pt-1 italic leading-tight">{{ storeInfo.receipt_footer }}</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Footer Action Buttons (Excluded from print) -->
-            <div class="p-5 bg-slate-50 space-y-2.5 no-print border-t border-slate-200">
+            <div class="p-5 bg-bg space-y-2.5 no-print border-t border-border">
                 <div class="grid grid-cols-2 gap-2.5">
-                    <!-- Print Button -->
                     <button
                         type="button"
                         @click="printReceipt"
-                        class="min-h-[44px] flex items-center justify-center space-x-2 rounded-xl bg-[#10194D] hover:bg-[#1A2566] text-white font-bold text-xs uppercase tracking-wider shadow-xs transition-all cursor-pointer"
+                        class="min-h-[44px] flex items-center justify-center space-x-2 rounded-pill bg-navy-800 hover:bg-navy-700 text-white font-bold text-xs uppercase tracking-wider transition-all duration-[120ms] ease-standard cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
                     >
                         <Printer class="h-4 w-4" />
                         <span>Cetak Struk [P]</span>
                     </button>
 
-                    <!-- WhatsApp Share Button -->
                     <a
                         :href="whatsappUrl"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="min-h-[44px] flex items-center justify-center space-x-2 rounded-xl bg-[#22C55E] hover:bg-[#16a34a] text-white font-bold text-xs uppercase tracking-wider shadow-xs transition-all cursor-pointer"
+                        class="min-h-[44px] flex items-center justify-center space-x-2 rounded-pill bg-success hover:bg-success/90 text-white font-bold text-xs uppercase tracking-wider transition-all duration-[120ms] ease-standard cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
                     >
                         <Send class="h-4 w-4" />
                         <span>Kirim WhatsApp</span>
@@ -372,34 +356,31 @@ function handleNewTransaction() {
                 </div>
 
                 <div class="grid grid-cols-2 gap-2.5">
-                    <!-- Copy WhatsApp Message Text -->
                     <button
                         type="button"
                         @click="copyReceiptText"
-                        class="min-h-[42px] flex items-center justify-center space-x-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs uppercase tracking-wider shadow-xs transition-all cursor-pointer"
+                        class="min-h-[42px] flex items-center justify-center space-x-2 rounded-pill border-[1.5px] border-navy-900 bg-surface hover:bg-primary-100/50 text-text font-bold text-xs uppercase tracking-wider transition-all duration-[120ms] ease-standard cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
                     >
-                        <Check v-if="isCopied" class="h-4 w-4 text-[#22C55E]" />
-                        <Copy v-else class="h-4 w-4 text-slate-500" />
+                        <Check v-if="isCopied" class="h-4 w-4 text-success" />
+                        <Copy v-else class="h-4 w-4 text-text-muted" />
                         <span>{{ isCopied ? 'Tersalin!' : 'Salin Teks' }}</span>
                     </button>
 
-                    <!-- Open Public Digital Receipt Page -->
                     <a
                         :href="digitalReceiptUrl"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="min-h-[42px] flex items-center justify-center space-x-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs uppercase tracking-wider shadow-xs transition-all cursor-pointer"
+                        class="min-h-[42px] flex items-center justify-center space-x-2 rounded-pill border-[1.5px] border-navy-900 bg-surface hover:bg-primary-100/50 text-text font-bold text-xs uppercase tracking-wider transition-all duration-[120ms] ease-standard cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
                     >
-                        <ExternalLink class="h-4 w-4 text-slate-500" />
+                        <ExternalLink class="h-4 w-4 text-text-muted" />
                         <span>Nota Digital</span>
                     </a>
                 </div>
 
-                <!-- Start New Transaction -->
                 <button
                     type="button"
                     @click="handleNewTransaction"
-                    class="min-h-[46px] w-full flex items-center justify-center space-x-2 rounded-xl bg-[#FF8A5B] hover:bg-[#F26B3A] text-[#10194D] font-bold text-xs uppercase tracking-wider shadow-sm transition-all cursor-pointer"
+                    class="min-h-[46px] w-full flex items-center justify-center space-x-2 rounded-pill bg-accent-500 hover:bg-accent-600 text-navy-950 font-bold text-xs uppercase tracking-wider shadow-sm transition-all duration-[120ms] ease-standard cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
                 >
                     <RotateCcw class="h-4 w-4" />
                     <span>Mulai Transaksi Baru</span>
@@ -411,7 +392,6 @@ function handleNewTransaction() {
 
 <style>
 @media print {
-    /* Hide everything except printable receipt */
     body * {
         visibility: hidden !important;
     }

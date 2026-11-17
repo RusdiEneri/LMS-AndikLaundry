@@ -40,7 +40,6 @@ const searchResults = ref<CustomerData[]>([]);
 const isSearching = ref(false);
 const searchError = ref('');
 
-// Fast Add Form State
 const newName = ref('');
 const newPhone = ref('');
 const newAddress = ref('');
@@ -134,13 +133,11 @@ async function handleCreateCustomer() {
 
         if (res.ok) {
             const created = await res.json();
-            // Reset form
             newName.value = '';
             newPhone.value = '';
             newAddress.value = '';
             newNotes.value = '';
             activeTab.value = 'search';
-            // Select immediately
             selectCustomer(created);
         } else {
             const errData = await res.json();
@@ -161,40 +158,38 @@ function closeModal() {
 <template>
     <div
         v-if="isOpen"
-        class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-3 sm:p-4 animate-fadeIn"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-navy-950/60 backdrop-blur-[4px] p-3 sm:p-4 animate-fadeIn"
         @click.self="closeModal"
     >
-        <div class="bg-white rounded-3xl max-w-lg w-full border border-slate-200/90 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            <!-- Header: Modern Navy-900 Banner -->
-            <div class="px-6 py-4 bg-[#10194D] text-white flex items-center justify-between">
+        <div class="bg-surface rounded-xl max-w-lg w-full shadow-lg overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="px-6 py-4 bg-navy-900 text-white flex items-center justify-between">
                 <div>
                     <div class="flex items-center space-x-2">
-                        <span class="text-[10px] font-bold uppercase tracking-wider bg-white/10 text-slate-200 px-2.5 py-0.5 rounded-full border border-white/20">
+                        <span class="overline-label bg-white/10 text-text-on-dark-muted px-2.5 py-0.5 rounded-pill border border-white/20">
                             Data Pelanggan
                         </span>
                     </div>
-                    <h3 class="font-bold text-lg text-white tracking-tight mt-0.5">Pencarian & Profil Pelanggan</h3>
+                    <h3 class="font-heading font-bold text-lg text-white tracking-tight mt-0.5">Pencarian & Profil Pelanggan</h3>
                 </div>
                 <button
                     type="button"
                     @click="closeModal"
-                    class="h-8 w-8 rounded-full bg-white/10 text-white hover:bg-white/20 flex items-center justify-center transition-colors cursor-pointer"
+                    class="h-8 w-8 rounded-full bg-white/10 text-white hover:bg-white/20 flex items-center justify-center transition-colors duration-[120ms] ease-standard cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
                     aria-label="Tutup Modal"
                 >
                     <X class="h-4 w-4" />
                 </button>
             </div>
 
-            <!-- Tabs: Cari Pelanggan vs Tambah Baru -->
-            <div class="flex border-b border-slate-200 bg-slate-50/70 p-2 gap-2">
+            <div class="flex border-b border-border bg-bg p-2 gap-2">
                 <button
                     type="button"
                     @click="activeTab = 'search'"
                     :class="[
-                        'flex-1 min-h-[42px] py-2 text-xs font-bold uppercase tracking-wider rounded-xl transition-all flex items-center justify-center space-x-2 cursor-pointer',
+                        'flex-1 min-h-[42px] py-2 text-xs font-semibold rounded-pill transition-all duration-[120ms] ease-standard flex items-center justify-center space-x-2 cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500',
                         activeTab === 'search'
-                            ? 'bg-[#4F5FE8] text-white shadow-sm'
-                            : 'bg-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-100',
+                            ? 'bg-navy-800 text-white shadow-sm'
+                            : 'bg-transparent text-text-muted hover:text-text hover:bg-primary-100/60',
                     ]"
                 >
                     <Search class="h-4 w-4" />
@@ -204,10 +199,10 @@ function closeModal() {
                     type="button"
                     @click="activeTab = 'create'"
                     :class="[
-                        'flex-1 min-h-[42px] py-2 text-xs font-bold uppercase tracking-wider rounded-xl transition-all flex items-center justify-center space-x-2 cursor-pointer',
+                        'flex-1 min-h-[42px] py-2 text-xs font-semibold rounded-pill transition-all duration-[120ms] ease-standard flex items-center justify-center space-x-2 cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500',
                         activeTab === 'create'
-                            ? 'bg-[#4F5FE8] text-white shadow-sm'
-                            : 'bg-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-100',
+                            ? 'bg-navy-800 text-white shadow-sm'
+                            : 'bg-transparent text-text-muted hover:text-text hover:bg-primary-100/60',
                     ]"
                 >
                     <UserPlus class="h-4 w-4" />
@@ -215,52 +210,48 @@ function closeModal() {
                 </button>
             </div>
 
-            <!-- Tab 1: Search -->
             <div v-if="activeTab === 'search'" class="p-5 flex-1 overflow-y-auto space-y-4">
-                <!-- Search Input -->
                 <div class="relative">
-                    <Search class="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+                    <Search class="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-text-muted" />
                     <input
                         v-model="searchQuery"
                         type="text"
                         placeholder="Ketik nama atau nomor WhatsApp (mis: 0812...)..."
-                        class="min-h-[44px] w-full rounded-xl border border-slate-200 bg-white pl-11 pr-10 py-2.5 text-sm font-semibold text-slate-900 placeholder:text-slate-400 shadow-xs focus:outline-none focus:ring-2 focus:ring-[#4F5FE8]"
+                        class="min-h-[44px] w-full rounded-md border border-border bg-surface pl-11 pr-10 py-2.5 text-sm font-medium text-text placeholder:text-text-muted focus:outline-none focus:border-primary-600 focus:ring-3 focus:ring-primary-100"
                         autofocus
                     />
                     <div v-if="isSearching" class="absolute right-3.5 top-1/2 -translate-y-1/2">
-                        <Loader2 class="h-4 w-4 animate-spin text-[#4F5FE8]" />
+                        <Loader2 class="h-4 w-4 animate-spin text-primary-600" />
                     </div>
                 </div>
 
-                <!-- Walk-in Shortcut Option -->
                 <button
                     type="button"
                     @click="selectWalkIn"
-                    class="w-full text-left p-3.5 rounded-2xl border border-slate-200 bg-[#F8FAFC] hover:bg-[#E6E9FD]/40 transition-all flex items-center justify-between cursor-pointer group hover:border-[#4F5FE8]/40"
+                    class="w-full text-left p-3.5 rounded-lg border border-border bg-bg hover:bg-primary-100/40 transition-all duration-[120ms] ease-standard flex items-center justify-between cursor-pointer group focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
                 >
                     <div class="flex items-center space-x-3">
-                        <div class="h-10 w-10 rounded-xl bg-[#E6E9FD] text-[#4F5FE8] flex items-center justify-center font-bold">
+                        <div class="h-10 w-10 rounded-full bg-primary-100 text-primary-700 flex items-center justify-center font-bold">
                             <UserIcon class="h-5 w-5" />
                         </div>
                         <div>
-                            <span class="font-bold text-sm text-slate-900 block group-hover:text-[#4F5FE8] transition-colors">Pelanggan Umum (Walk-in)</span>
-                            <span class="text-xs text-slate-500 font-medium">Pelanggan langsung / tanpa simpan kontak</span>
+                            <span class="font-bold text-sm text-text block group-hover:text-primary-700 transition-colors">Pelanggan Umum (Walk-in)</span>
+                            <span class="text-xs text-text-muted font-medium">Pelanggan langsung / tanpa simpan kontak</span>
                         </div>
                     </div>
-                    <span class="text-xs font-bold uppercase tracking-wider text-[#4F5FE8] px-3 py-1.5 rounded-lg bg-white border border-slate-200 shadow-xs group-hover:bg-[#4F5FE8] group-hover:text-white group-hover:border-[#4F5FE8] transition-all">
+                    <span class="text-xs font-semibold text-primary-700 px-3 py-1.5 rounded-pill bg-surface border border-border group-hover:bg-primary-600 group-hover:text-white group-hover:border-primary-600 transition-all duration-[120ms] ease-standard">
                         Pilih
                     </span>
                 </button>
 
-                <!-- Search Results List -->
                 <div class="space-y-2">
-                    <div v-if="searchQuery.trim().length > 0 && !isSearching && searchResults.length === 0" class="text-center py-8 text-slate-600 font-medium text-xs bg-slate-50 rounded-2xl border border-dashed border-slate-300 p-5">
+                    <div v-if="searchQuery.trim().length > 0 && !isSearching && searchResults.length === 0" class="text-center py-8 text-text-muted font-medium text-xs bg-bg rounded-lg border border-dashed border-border p-5">
                         Tidak ada pelanggan dengan kata kunci "{{ searchQuery }}".
                         <div class="mt-3">
                             <button
                                 type="button"
                                 @click="activeTab = 'create'; newName = searchQuery"
-                                class="text-[#10194D] font-bold uppercase text-xs bg-[#FF8A5B] hover:bg-[#F26B3A] px-4 py-2 rounded-xl shadow-xs transition-all inline-block cursor-pointer"
+                                class="bg-accent-500 hover:bg-accent-600 text-navy-950 font-bold text-xs px-4 py-2 rounded-pill shadow-sm transition-all duration-[120ms] ease-standard inline-block cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
                             >
                                 + Daftarkan Sekarang
                             </button>
@@ -271,89 +262,87 @@ function closeModal() {
                         v-for="cust in searchResults"
                         :key="cust.id ?? cust.phone"
                         @click="selectCustomer(cust)"
-                        class="p-3.5 rounded-2xl border border-slate-200/90 bg-white hover:bg-[#F8FAFC] cursor-pointer transition-all flex items-start justify-between shadow-xs hover:border-[#4F5FE8]/40 group"
+                        class="p-3.5 rounded-lg border border-border bg-surface hover:bg-bg cursor-pointer transition-all duration-[120ms] ease-standard flex items-start justify-between shadow-sm hover:border-primary-500 group focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
                     >
                         <div class="space-y-1">
                             <div class="flex items-center space-x-2">
-                                <span class="font-bold text-sm text-slate-900 group-hover:text-[#4F5FE8] transition-colors">{{ cust.name }}</span>
-                                <!-- Piutang / Debt Badge if any -->
+                                <span class="font-bold text-sm text-text group-hover:text-primary-700 transition-colors">{{ cust.name }}</span>
                                 <span
                                     v-if="Number(cust.outstanding_receivables ?? 0) > 0"
-                                    class="inline-flex items-center space-x-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200"
+                                    class="inline-flex items-center space-x-1 px-2 py-0.5 rounded-pill text-[10px] font-bold bg-[#FDE3E4] text-[#B3262B]"
                                 >
                                     <AlertCircle class="h-3 w-3 stroke-[2.5]" />
                                     <span>Piutang: {{ formatRupiah(cust.outstanding_receivables) }}</span>
                                 </span>
                             </div>
 
-                            <div class="flex items-center space-x-3 text-xs font-medium text-slate-500">
+                            <div class="flex items-center space-x-3 text-xs font-medium text-text-muted">
                                 <span class="flex items-center space-x-1">
-                                    <Phone class="h-3.5 w-3.5 text-slate-400" />
-                                    <span class="font-mono font-semibold text-slate-700">{{ cust.phone }}</span>
+                                    <Phone class="h-3.5 w-3.5 text-text-muted" />
+                                    <span class="font-mono font-medium text-text">{{ cust.phone }}</span>
                                 </span>
                                 <span>•</span>
                                 <span>{{ cust.total_orders_count ?? 0 }} Transaksi</span>
                             </div>
 
-                            <div v-if="cust.address" class="text-[11px] font-medium text-slate-500 flex items-center space-x-1">
-                                <MapPin class="h-3 w-3 text-slate-400" />
+                            <div v-if="cust.address" class="text-[11px] font-medium text-text-muted flex items-center space-x-1">
+                                <MapPin class="h-3 w-3 text-text-muted" />
                                 <span class="truncate max-w-[280px]">{{ cust.address }}</span>
                             </div>
                         </div>
 
-                        <div class="h-8 w-8 rounded-xl bg-slate-50 border border-slate-200 text-slate-400 group-hover:bg-[#22A06B] group-hover:text-white group-hover:border-[#22A06B] flex items-center justify-center transition-all">
+                        <div class="h-8 w-8 rounded-full bg-bg border border-border text-text-muted group-hover:bg-success group-hover:text-white group-hover:border-success flex items-center justify-center transition-all duration-[120ms] ease-standard">
                             <Check class="h-4 w-4 stroke-[2.5]" />
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Tab 2: Create Customer -->
             <div v-else class="p-5 flex-1 overflow-y-auto space-y-4">
-                <div v-if="formError" class="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold flex items-center space-x-2">
+                <div v-if="formError" class="p-3 rounded-md bg-[#FDE3E4] border-l-4 border-l-danger text-[#B3262B] text-xs font-semibold flex items-center space-x-2">
                     <AlertCircle class="h-4 w-4 shrink-0 stroke-[2.5]" />
                     <span>{{ formError }}</span>
                 </div>
 
                 <div class="space-y-3">
                     <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Nama Lengkap *</label>
+                        <label class="overline-label text-text mb-1">Nama Lengkap *</label>
                         <input
                             v-model="newName"
                             type="text"
                             placeholder="Contoh: Budi Santoso"
-                            class="min-h-[44px] w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm font-semibold text-slate-900 placeholder:text-slate-400 shadow-xs focus:outline-none focus:ring-2 focus:ring-[#4F5FE8]"
+                            class="min-h-[44px] w-full rounded-md border border-border bg-surface px-3.5 py-2 text-sm font-medium text-text placeholder:text-text-muted focus:outline-none focus:border-primary-600 focus:ring-3 focus:ring-primary-100"
                         />
                     </div>
 
                     <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Nomor WhatsApp *</label>
+                        <label class="overline-label text-text mb-1">Nomor WhatsApp *</label>
                         <input
                             v-model="newPhone"
                             type="tel"
                             placeholder="Contoh: 081234567890"
-                            class="min-h-[44px] w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm font-mono font-semibold text-slate-900 placeholder:text-slate-400 shadow-xs focus:outline-none focus:ring-2 focus:ring-[#4F5FE8]"
+                            class="min-h-[44px] w-full rounded-md border border-border bg-surface px-3.5 py-2 text-sm font-mono font-medium text-text placeholder:text-text-muted focus:outline-none focus:border-primary-600 focus:ring-3 focus:ring-primary-100"
                         />
-                        <span class="text-[11px] font-medium text-slate-500 mt-1 block">Format: 08xxx atau 628xxx (otomatis dinormalisasi).</span>
+                        <span class="text-[11px] font-medium text-text-muted mt-1 block">Format: 08xxx atau 628xxx (otomatis dinormalisasi).</span>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Alamat (Opsional)</label>
+                        <label class="overline-label text-text mb-1">Alamat (Opsional)</label>
                         <textarea
                             v-model="newAddress"
                             rows="2"
                             placeholder="Contoh: Jl. Merpati No. 10, RT 02/05"
-                            class="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm font-semibold text-slate-900 placeholder:text-slate-400 shadow-xs focus:outline-none focus:ring-2 focus:ring-[#4F5FE8]"
+                            class="w-full rounded-md border border-border bg-surface px-3.5 py-2 text-sm font-medium text-text placeholder:text-text-muted focus:outline-none focus:border-primary-600 focus:ring-3 focus:ring-primary-100"
                         ></textarea>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Catatan Pelanggan (Opsional)</label>
+                        <label class="overline-label text-text mb-1">Catatan Pelanggan (Opsional)</label>
                         <input
                             v-model="newNotes"
                             type="text"
                             placeholder="Mis: Alergi deterjen tertentu, langganan VIP"
-                            class="min-h-[44px] w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm font-semibold text-slate-900 placeholder:text-slate-400 shadow-xs focus:outline-none focus:ring-2 focus:ring-[#4F5FE8]"
+                            class="min-h-[44px] w-full rounded-md border border-border bg-surface px-3.5 py-2 text-sm font-medium text-text placeholder:text-text-muted focus:outline-none focus:border-primary-600 focus:ring-3 focus:ring-primary-100"
                         />
                     </div>
                 </div>
@@ -362,7 +351,7 @@ function closeModal() {
                     <button
                         type="button"
                         @click="activeTab = 'search'"
-                        class="min-h-[44px] px-5 py-2 rounded-xl border border-slate-200 bg-white text-slate-700 text-xs font-bold uppercase tracking-wider hover:bg-slate-50 transition-all cursor-pointer"
+                        class="min-h-[44px] px-5 py-2 rounded-pill border-[1.5px] border-navy-900 bg-surface text-text text-xs font-semibold hover:bg-primary-100/50 transition-all duration-[120ms] ease-standard cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
                     >
                         Batal
                     </button>
@@ -370,9 +359,9 @@ function closeModal() {
                         type="button"
                         :disabled="isSubmitting"
                         @click="handleCreateCustomer"
-                        class="min-h-[44px] flex-1 px-5 py-2 rounded-xl bg-[#FF8A5B] hover:bg-[#F26B3A] text-[#10194D] text-xs font-bold uppercase tracking-wider shadow-sm disabled:opacity-50 flex items-center justify-center space-x-2 cursor-pointer transition-all"
+                        class="min-h-[44px] flex-1 px-5 py-2 rounded-pill bg-accent-500 hover:bg-accent-600 text-navy-950 text-xs font-bold uppercase tracking-wider shadow-sm disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center space-x-2 cursor-pointer transition-all duration-[120ms] ease-standard focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
                     >
-                        <Loader2 v-if="isSubmitting" class="h-4 w-4 animate-spin text-[#10194D]" />
+                        <Loader2 v-if="isSubmitting" class="h-4 w-4 animate-spin text-navy-950" />
                         <span>Simpan & Pilih Pelanggan</span>
                     </button>
                 </div>
