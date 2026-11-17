@@ -3,6 +3,7 @@ import { computed, ref, watch, onMounted } from 'vue';
 import { Head, Link, usePage } from '@inertiajs/vue3';
 import type { PageProps, User } from '@/types';
 import { Badge } from '@/Components/ui/badge';
+import { Alert } from '@/Components/ui/alert';
 import {
     Sheet,
     SheetContent,
@@ -19,10 +20,6 @@ import {
     Wallet,
     LogOut,
     Menu,
-    CheckCircle2,
-    XCircle,
-    AlertTriangle,
-    Info,
     WifiOff,
     HelpCircle,
     X,
@@ -76,10 +73,10 @@ const dismissedFlashes = ref<Record<string, boolean>>({});
 const flashMessages = computed(() => {
     const flash = page.props.flash || {};
     return [
-        { type: 'success', message: flash.success, icon: CheckCircle2, bg: 'bg-emerald-50 text-emerald-900 border border-emerald-200' },
-        { type: 'error', message: flash.error, icon: XCircle, bg: 'bg-rose-50 text-rose-900 border border-rose-200' },
-        { type: 'warning', message: flash.warning, icon: AlertTriangle, bg: 'bg-amber-50 text-amber-900 border border-amber-200' },
-        { type: 'info', message: flash.info, icon: Info, bg: 'bg-sky-50 text-sky-900 border border-sky-200' },
+        { type: 'success', message: flash.success },
+        { type: 'error', message: flash.error },
+        { type: 'warning', message: flash.warning },
+        { type: 'info', message: flash.info },
     ].filter(item => Boolean(item.message) && !dismissedFlashes.value[item.type + item.message]);
 });
 
@@ -143,6 +140,19 @@ const filteredNav = computed(() => {
     return navigationItems.filter(item => item.roles.includes(userRole.value as any));
 });
 
+// DESIGN.md 6.7 — sidebar groups with overline labels
+const navGroups = computed(() => {
+    const operational = ['/pos', '/production/station'];
+    const finance = ['/dashboard', '/owner/expenses', '/owner/receivables'];
+    const settings = ['/owner/settings'];
+
+    return [
+        { label: 'Operasional', items: filteredNav.value.filter(i => operational.includes(i.href)) },
+        { label: 'Keuangan', items: filteredNav.value.filter(i => finance.includes(i.href)) },
+        { label: 'Pengaturan', items: filteredNav.value.filter(i => settings.includes(i.href)) },
+    ].filter(group => group.items.length > 0);
+});
+
 function isCurrentRoute(href: string): boolean {
     const currentUrl = page.url.split('?')[0];
     if (href === '/dashboard') {
@@ -179,88 +189,101 @@ const roleLabel = computed(() => {
 </script>
 
 <template>
-    <div class="fixed inset-0 flex overflow-hidden bg-[#F8FAFC] font-sans text-slate-900 antialiased selection:bg-[#FF8A5B] selection:text-[#0A1033]">
+    <div class="fixed inset-0 flex overflow-hidden bg-bg font-body text-text antialiased">
         <Head :title="title ? `${title} - Andik Laundry` : 'Andik Laundry'" />
 
-        <!-- 1. Left Desktop Sidebar (>= 1024px) - Pinned Full Viewport Height -->
+        <!-- 1. Left Desktop Sidebar (>= 1024px) — navy-900, 240px open / 72px collapsed (DESIGN.md 5.2) -->
         <aside
             :class="[
-                'hidden lg:flex lg:flex-col bg-[#10194D] text-white border-r border-[#1E293B] shrink-0 select-none transition-all duration-300 ease-in-out z-30',
-                isDesktopSidebarOpen ? 'w-64 opacity-100' : 'w-0 border-r-0 opacity-0 overflow-hidden pointer-events-none'
+                'hidden lg:flex lg:flex-col bg-navy-900 text-white shrink-0 select-none transition-[width] duration-300 ease-standard z-30 border-r border-navy-950',
+                isDesktopSidebarOpen ? 'w-60' : 'w-[72px]',
             ]"
         >
             <!-- Sidebar Header: Logo + Brand + Collapse button -->
-            <div class="h-16 shrink-0 flex items-center justify-between px-5 bg-[#0A1033] border-b border-[#1E293B]">
+            <div
+                class="h-16 shrink-0 flex items-center border-b border-white/10"
+                :class="isDesktopSidebarOpen ? 'justify-between px-5' : 'justify-center px-2'"
+            >
                 <Link href="/" class="flex items-center space-x-3 group min-w-0">
-                    <div class="h-9 w-9 rounded-xl bg-gradient-to-br from-[#6577F0] to-[#4F5FE8] text-white flex items-center justify-center font-heading font-extrabold text-sm shadow-sm shrink-0 transition-transform group-hover:scale-105">
+                    <div class="h-9 w-9 rounded-md bg-primary-600 text-white flex items-center justify-center font-heading font-extrabold text-sm shadow-sm shrink-0 transition-transform duration-[200ms] ease-standard group-hover:scale-105">
                         AL
                     </div>
-                    <div class="truncate">
+                    <div v-if="isDesktopSidebarOpen" class="truncate">
                         <span class="block font-heading font-extrabold text-sm text-white tracking-tight leading-tight truncate">
-                            andik<span class="text-[#FF8A5B]">.</span>
+                            andik<span class="text-accent-500">.</span>
                         </span>
-                        <span class="block text-[10px] font-bold uppercase tracking-wider text-[#E6E9FD] leading-none truncate">
+                        <span class="overline-label block text-text-on-dark-muted leading-none truncate">
                             Laundry Management
                         </span>
                     </div>
                 </Link>
                 <button
+                    v-if="isDesktopSidebarOpen"
                     type="button"
-                    class="h-8 w-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-all cursor-pointer shrink-0"
+                    class="h-8 w-8 flex items-center justify-center rounded-md text-text-on-dark-muted hover:text-white hover:bg-white/10 transition-all duration-[120ms] ease-standard cursor-pointer shrink-0 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
                     @click="closeDesktopSidebar"
-                    title="Tutup menu samping"
-                    aria-label="Tutup menu samping"
+                    title="Ciutkan menu samping"
+                    aria-label="Ciutkan menu samping"
                 >
                     <PanelLeftClose class="h-4 w-4" />
                 </button>
             </div>
 
             <!-- Navigation Links (Internally scrollable if needed) -->
-            <div class="flex-1 overflow-y-auto px-3.5 py-4 space-y-1">
-                <div class="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                    Menu Utama
-                </div>
-                <nav class="space-y-1">
-                    <Link
-                        v-for="item in filteredNav"
-                        :key="item.href"
-                        :href="item.href"
-                        :class="[
-                            'flex items-center space-x-3 px-3.5 py-2.5 rounded-xl min-h-[42px] text-sm font-semibold transition-all duration-150',
-                            isCurrentRoute(item.href)
-                                ? 'bg-[#4F5FE8] text-white shadow-sm shadow-[#4F5FE8]/30 font-bold'
-                                : 'text-slate-300 hover:bg-white/10 hover:text-white',
-                        ]"
+            <div class="flex-1 overflow-y-auto py-4 space-y-5" :class="isDesktopSidebarOpen ? 'px-3' : 'px-2'">
+                <div v-for="group in navGroups" :key="group.label">
+                    <div
+                        v-if="isDesktopSidebarOpen"
+                        class="overline-label px-3 pb-2 text-text-on-dark-muted"
                     >
-                        <component :is="item.icon" class="h-4 w-4 shrink-0" />
-                        <span class="truncate">{{ item.name }}</span>
-                    </Link>
-                </nav>
+                        {{ group.label }}
+                    </div>
+                    <div v-else class="mx-2 mb-2 border-t border-white/10" aria-hidden="true" />
+                    <nav class="space-y-1" :aria-label="group.label">
+                        <Link
+                            v-for="item in group.items"
+                            :key="item.href"
+                            :href="item.href"
+                            :title="!isDesktopSidebarOpen ? item.name : undefined"
+                            :class="[
+                                'flex items-center rounded-pill min-h-[40px] text-sm font-semibold transition-all duration-[120ms] ease-standard focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500',
+                                isDesktopSidebarOpen ? 'space-x-3 px-3.5 py-2.5' : 'justify-center h-10 w-10 mx-auto p-0',
+                                isCurrentRoute(item.href)
+                                    ? 'bg-primary-700 text-white shadow-sm'
+                                    : 'text-text-on-dark-muted hover:bg-white/10 hover:text-white',
+                            ]"
+                        >
+                            <component :is="item.icon" class="h-4 w-4 shrink-0" aria-hidden="true" />
+                            <span v-if="isDesktopSidebarOpen" class="truncate">{{ item.name }}</span>
+                            <span v-else class="sr-only">{{ item.name }}</span>
+                        </Link>
+                    </nav>
+                </div>
             </div>
 
             <!-- Sidebar Footer: Brand info & Version -->
-            <div class="p-3.5 border-t border-[#1E293B] bg-[#0A1033] shrink-0">
-                <div class="rounded-xl bg-[#1A2566] p-3 text-xs text-white">
+            <div v-if="isDesktopSidebarOpen" class="p-3.5 border-t border-white/10 shrink-0">
+                <div class="rounded-md bg-navy-800 p-3 text-xs text-white">
                     <div class="flex items-center justify-between">
                         <span class="font-heading font-bold text-white">Andik Laundry</span>
-                        <span class="text-[10px] bg-[#4F5FE8] text-white px-1.5 py-0.5 rounded-md font-mono font-bold">v1.2</span>
+                        <span class="text-[10px] bg-primary-700 text-white px-1.5 py-0.5 rounded-sm font-mono font-bold">v1.2</span>
                     </div>
-                    <span class="block text-[11px] text-slate-300 font-medium mt-1">Sistem Kasir & Operasional</span>
+                    <span class="block text-[11px] text-text-on-dark-muted font-medium mt-1">Sistem Kasir & Operasional</span>
                 </div>
             </div>
         </aside>
 
         <!-- 2. Right Column: Top Header + Independently Scrollable Canvas -->
-        <div class="flex-1 flex flex-col min-w-0 h-full overflow-hidden bg-[#F8FAFC]">
-            <!-- Top Header Navigation -->
-            <header class="h-16 shrink-0 bg-white border-b border-slate-200/80 px-4 sm:px-6 flex items-center justify-between shadow-xs z-20">
+        <div class="flex-1 flex flex-col min-w-0 h-full overflow-hidden bg-bg">
+            <!-- Top Header Navigation — white 64px (DESIGN.md 5.2) -->
+            <header class="h-16 shrink-0 bg-surface border-b border-border px-4 sm:px-6 flex items-center justify-between z-20">
                 <!-- Left: Sidebar Toggle + Title/Context -->
                 <div class="flex items-center space-x-3">
                     <!-- Desktop Open Button (Visible only when desktop sidebar is closed) -->
                     <button
                         v-if="!isDesktopSidebarOpen"
                         type="button"
-                        class="hidden lg:inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 cursor-pointer transition-all"
+                        class="hidden lg:inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-surface text-text hover:bg-primary-100 cursor-pointer transition-all duration-[120ms] ease-standard focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
                         @click="handleMenuToggle"
                         title="Buka menu samping"
                         aria-label="Buka menu samping"
@@ -271,7 +294,7 @@ const roleLabel = computed(() => {
                     <!-- Mobile Toggle Button (< lg) -->
                     <button
                         type="button"
-                        class="lg:hidden inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 cursor-pointer transition-all"
+                        class="lg:hidden inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-surface text-text hover:bg-primary-100 cursor-pointer transition-all duration-[120ms] ease-standard focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
                         @click="handleMenuToggle"
                         title="Buka menu samping"
                         aria-label="Buka menu samping"
@@ -281,23 +304,23 @@ const roleLabel = computed(() => {
 
                     <!-- Desktop Collapsed Brand Fallback -->
                     <div v-if="!isDesktopSidebarOpen" class="hidden lg:flex items-center space-x-2.5">
-                        <div class="h-8 w-8 rounded-lg bg-[#4F5FE8] text-white flex items-center justify-center font-heading font-bold text-xs shadow-xs">
+                        <div class="h-8 w-8 rounded-md bg-navy-800 text-white flex items-center justify-center font-heading font-bold text-xs">
                             AL
                         </div>
-                        <span class="font-heading font-bold text-sm text-slate-900">Andik Laundry</span>
+                        <span class="font-heading font-bold text-sm text-text">Andik Laundry</span>
                     </div>
 
                     <!-- Mobile Brand (< lg) -->
                     <div class="flex lg:hidden items-center space-x-2">
-                        <div class="h-8 w-8 rounded-lg bg-[#4F5FE8] text-white flex items-center justify-center font-heading font-bold text-xs shadow-xs">
+                        <div class="h-8 w-8 rounded-md bg-navy-800 text-white flex items-center justify-center font-heading font-bold text-xs">
                             AL
                         </div>
-                        <span class="font-heading font-bold text-sm text-slate-900 sm:inline hidden">Andik Laundry</span>
+                        <span class="font-heading font-bold text-sm text-text sm:inline hidden">Andik Laundry</span>
                     </div>
 
                     <!-- Current Page Context on Desktop when sidebar is open -->
                     <div v-if="isDesktopSidebarOpen" class="hidden lg:flex items-center space-x-2">
-                        <span class="font-heading font-bold text-sm text-slate-900 tracking-tight">{{ title ?? 'Dashboard' }}</span>
+                        <span class="font-heading font-bold text-sm text-text tracking-tight">{{ title ?? 'Dashboard' }}</span>
                     </div>
                 </div>
 
@@ -308,41 +331,42 @@ const roleLabel = computed(() => {
                         <button
                             type="button"
                             @click="showWaTooltip = !showWaTooltip"
-                            class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 text-xs font-medium transition-all cursor-pointer"
+                            class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-pill border border-border bg-bg text-text-muted hover:bg-primary-100 text-xs font-medium transition-all duration-[120ms] ease-standard cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
                             aria-label="Info status WhatsApp fallback"
                         >
-                            <WifiOff class="h-3.5 w-3.5 text-slate-600" />
+                            <WifiOff class="h-3.5 w-3.5 text-text-muted" />
                             <span>WA Manual</span>
-                            <HelpCircle class="h-3.5 w-3.5 text-slate-400" />
+                            <HelpCircle class="h-3.5 w-3.5 text-text-muted" />
                         </button>
 
                         <div
                             v-if="showWaTooltip"
-                            class="absolute right-0 top-12 z-50 w-72 rounded-2xl bg-white p-4 text-xs text-slate-700 shadow-xl border border-slate-200"
+                            class="absolute right-0 top-12 z-50 w-72 rounded-md bg-surface p-4 text-xs text-text shadow-lg border border-border"
                         >
                             <div class="flex justify-between items-start mb-1.5">
-                                <span class="font-bold text-[#10194D] uppercase tracking-wide">Mode WhatsApp Manual</span>
+                                <span class="overline-label text-text">Mode WhatsApp Manual</span>
                                 <button
                                     type="button"
-                                    class="text-slate-400 hover:text-slate-700 -m-1 p-1"
+                                    class="text-text-muted hover:text-text -m-1 p-1 rounded-sm focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
                                     @click="showWaTooltip = false"
+                                    aria-label="Tutup info"
                                 >
                                     <X class="h-4 w-4" />
                                 </button>
                             </div>
-                            <p class="text-slate-600 leading-relaxed font-normal">
+                            <p class="text-text-muted leading-relaxed font-normal">
                                 Notifikasi struk dan status cucian dapat dikirim langsung oleh kasir melalui tombol WhatsApp otomatis berformat wa.me.
                             </p>
                         </div>
                     </div>
 
                     <!-- User Profile & Role Badge -->
-                    <div class="flex items-center space-x-2.5 bg-slate-50 border border-slate-200/80 rounded-xl px-3 py-1.5">
+                    <div class="flex items-center space-x-2.5 bg-bg border border-border rounded-pill px-3 py-1.5">
                         <div class="text-right hidden sm:block">
-                            <span class="block text-xs font-bold text-slate-900 leading-tight">
+                            <span class="block text-xs font-bold text-text leading-tight">
                                 {{ user?.name ?? 'Staf Toko' }}
                             </span>
-                            <span class="block text-[11px] text-slate-500 font-mono leading-none mt-0.5">
+                            <span class="block text-[11px] text-text-muted font-mono leading-none mt-0.5">
                                 {{ user?.phone ?? '' }}
                             </span>
                         </div>
@@ -356,7 +380,7 @@ const roleLabel = computed(() => {
                         href="/logout"
                         method="post"
                         as="button"
-                        class="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 hover:text-red-600 hover:bg-red-50 hover:border-red-200 transition-all cursor-pointer shadow-xs"
+                        class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-surface text-text-muted hover:text-danger hover:bg-[#FDE3E4] hover:border-danger/40 transition-all duration-[120ms] ease-standard cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
                         title="Keluar dari Aplikasi"
                         aria-label="Keluar dari Aplikasi"
                     >
@@ -366,31 +390,25 @@ const roleLabel = computed(() => {
             </header>
 
             <!-- Offline WhatsApp Fallback Banner (Mobile/Tablet Alert) -->
-            <div class="sm:hidden bg-[#E6E9FD] text-[#26338A] px-4 py-1.5 text-xs font-semibold flex items-center justify-between border-b border-[#26338A]/20 shrink-0">
+            <div class="sm:hidden bg-primary-100 text-primary-700 px-4 py-1.5 text-xs font-semibold flex items-center justify-between border-b border-primary-100 shrink-0">
                 <div class="flex items-center space-x-1.5">
                     <WifiOff class="h-3.5 w-3.5 shrink-0" />
                     <span>Mode WhatsApp Manual Aktif</span>
                 </div>
-                <span class="text-[10px] bg-[#26338A] text-white px-2 py-0.5 rounded-full font-mono">wa.me</span>
+                <span class="text-[10px] bg-primary-700 text-white px-2 py-0.5 rounded-pill font-mono">wa.me</span>
             </div>
 
             <!-- Independently Scrollable Content Canvas -->
-            <div class="flex-1 overflow-y-auto bg-[#F8FAFC] relative">
+            <div class="flex-1 overflow-y-auto bg-bg relative">
                 <!-- Global Flash Toast Notification Banners -->
                 <div v-if="flashMessages.length > 0" class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-4 space-y-2">
-                    <div
-                        v-for="flash in flashMessages"
-                        :key="flash.type"
-                        :class="['flex items-center justify-between p-3.5 rounded-2xl shadow-sm', flash.bg]"
-                        role="alert"
-                    >
-                        <div class="flex items-center space-x-3">
-                            <component :is="flash.icon" class="h-5 w-5 shrink-0" />
-                            <span class="text-sm font-semibold leading-normal">{{ flash.message }}</span>
-                        </div>
+                    <div v-for="flash in flashMessages" :key="flash.type" class="relative">
+                        <Alert :variant="flash.type as any" class="pr-12">
+                            {{ flash.message }}
+                        </Alert>
                         <button
                             type="button"
-                            class="inline-flex h-8 w-8 items-center justify-center rounded-lg hover:bg-black/5 focus:outline-none"
+                            class="absolute right-3 top-3 inline-flex h-7 w-7 items-center justify-center rounded-md text-text-muted hover:bg-black/5 hover:text-text focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500 transition-all duration-[120ms] ease-standard cursor-pointer"
                             @click="dismissFlash(flash.type, flash.message as string)"
                             aria-label="Tutup pemberitahuan"
                         >
@@ -408,55 +426,57 @@ const roleLabel = computed(() => {
 
         <!-- 3. Mobile Sliding Navigation Drawer (< 1024px) -->
         <Sheet v-model:open="isMobileMenuOpen">
-            <SheetContent side="left" class="w-80 max-w-[85vw] bg-[#10194D] text-white border-r border-[#1E293B] p-0 flex flex-col h-full shadow-2xl">
+            <SheetContent side="left" class="w-80 max-w-[85vw] bg-navy-900 text-white border-r border-navy-950 p-0 flex flex-col h-full shadow-lg">
                 <!-- Mobile Drawer Header -->
-                <SheetHeader class="p-5 bg-[#0A1033] border-b border-[#1E293B] text-left">
+                <SheetHeader class="p-5 bg-navy-950 border-b border-white/10 text-left">
                     <div class="flex items-center space-x-3 pr-8">
-                        <div class="h-9 w-9 rounded-xl bg-gradient-to-br from-[#6577F0] to-[#4F5FE8] text-white flex items-center justify-center font-heading font-extrabold text-sm shadow-sm shrink-0">
+                        <div class="h-9 w-9 rounded-md bg-primary-600 text-white flex items-center justify-center font-heading font-extrabold text-sm shadow-sm shrink-0">
                             AL
                         </div>
                         <div class="truncate">
                             <SheetTitle class="text-white text-base font-heading font-bold leading-tight tracking-tight">
-                                andik<span class="text-[#FF8A5B]">.</span>
+                                andik<span class="text-accent-500">.</span>
                             </SheetTitle>
-                            <SheetDescription class="text-slate-400 text-xs font-medium">Sistem Manajemen Toko</SheetDescription>
+                            <SheetDescription class="text-text-on-dark-muted text-xs font-medium">Sistem Manajemen Toko</SheetDescription>
                         </div>
                     </div>
                 </SheetHeader>
 
                 <!-- Navigation List -->
-                <div class="p-4 space-y-2 flex-1 overflow-y-auto">
-                    <div class="px-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                        Menu Navigasi
+                <div class="p-4 space-y-5 flex-1 overflow-y-auto">
+                    <div v-for="group in navGroups" :key="group.label">
+                        <div class="overline-label px-2 pb-2 text-text-on-dark-muted">
+                            {{ group.label }}
+                        </div>
+                        <nav class="space-y-1" :aria-label="group.label">
+                            <Link
+                                v-for="item in group.items"
+                                :key="item.href"
+                                :href="item.href"
+                                @click="isMobileMenuOpen = false"
+                                :class="[
+                                    'flex items-center space-x-3 px-3.5 py-2.5 rounded-pill min-h-[40px] text-sm font-semibold transition-all duration-[120ms] ease-standard cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500',
+                                    isCurrentRoute(item.href)
+                                        ? 'bg-primary-700 text-white font-bold shadow-sm'
+                                        : 'text-text-on-dark-muted hover:bg-white/10 hover:text-white',
+                                ]"
+                            >
+                                <component :is="item.icon" class="h-5 w-5 shrink-0" aria-hidden="true" />
+                                <span class="truncate">{{ item.name }}</span>
+                            </Link>
+                        </nav>
                     </div>
-                    <nav class="space-y-1">
-                        <Link
-                            v-for="item in filteredNav"
-                            :key="item.href"
-                            :href="item.href"
-                            @click="isMobileMenuOpen = false"
-                            :class="[
-                                'flex items-center space-x-3 px-3.5 py-2.5 rounded-xl min-h-[42px] text-sm font-semibold transition-all cursor-pointer',
-                                isCurrentRoute(item.href)
-                                    ? 'bg-[#4F5FE8] text-white font-bold shadow-sm shadow-[#4F5FE8]/30'
-                                    : 'text-slate-300 hover:bg-white/10 hover:text-white',
-                            ]"
-                        >
-                            <component :is="item.icon" class="h-5 w-5 shrink-0" />
-                            <span class="truncate">{{ item.name }}</span>
-                        </Link>
-                    </nav>
                 </div>
 
                 <!-- Drawer Footer: User Profile & Logout -->
-                <div class="p-4 border-t border-[#1E293B] bg-[#0A1033] space-y-2.5">
-                    <div class="flex items-center space-x-2.5 p-2.5 rounded-xl bg-[#1A2566] text-white">
-                        <div class="h-8 w-8 rounded-lg bg-[#4F5FE8] text-white flex items-center justify-center font-bold text-xs shrink-0">
+                <div class="p-4 border-t border-white/10 bg-navy-950 space-y-2.5">
+                    <div class="flex items-center space-x-2.5 p-2.5 rounded-md bg-navy-800 text-white">
+                        <div class="h-8 w-8 rounded-md bg-primary-600 text-white flex items-center justify-center font-bold text-xs shrink-0">
                             {{ user?.name ? user.name.slice(0, 2).toUpperCase() : 'OW' }}
                         </div>
                         <div class="truncate flex-1">
                             <span class="block text-xs font-bold text-white leading-tight truncate">{{ user?.name ?? 'Andik' }}</span>
-                            <span class="block text-[10px] text-slate-400 truncate">{{ roleLabel }}</span>
+                            <span class="block text-[10px] text-text-on-dark-muted truncate">{{ roleLabel }}</span>
                         </div>
                     </div>
 
@@ -465,7 +485,7 @@ const roleLabel = computed(() => {
                         method="post"
                         as="button"
                         @click="isMobileMenuOpen = false"
-                        class="flex w-full items-center justify-center space-x-2 px-4 py-2.5 rounded-xl min-h-[40px] text-xs font-bold text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-all cursor-pointer"
+                        class="flex w-full items-center justify-center space-x-2 px-4 py-2.5 rounded-pill min-h-[40px] text-xs font-bold text-[#F5B8BC] hover:bg-danger/15 hover:text-white transition-all duration-[120ms] ease-standard cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
                     >
                         <LogOut class="h-4 w-4 shrink-0" />
                         <span>Keluar dari Aplikasi</span>
