@@ -19,7 +19,7 @@ import {
     Truck,
     X,
 } from 'lucide-vue-next';
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
 
 const props = defineProps<{
     canLogin?: boolean;
@@ -318,9 +318,51 @@ const faqs = [
     },
 ];
 
+const isScrolled = ref(false);
+function handleScroll() {
+    if (typeof window !== 'undefined') {
+        isScrolled.value = window.scrollY > 20;
+    }
+}
+
+let revealObserver: IntersectionObserver | null = null;
+function setupRevealObserver() {
+    if (typeof window === 'undefined') return;
+
+    if (!('IntersectionObserver' in window)) {
+        document.querySelectorAll('.landing-reveal, .landing-reveal-left, .landing-reveal-right').forEach((el) => {
+            el.classList.add('is-visible');
+        });
+        return;
+    }
+
+    revealObserver = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    revealObserver?.unobserve(entry.target);
+                }
+            });
+        },
+        {
+            rootMargin: '0px 0px -40px 0px',
+            threshold: 0.08,
+        }
+    );
+
+    document.querySelectorAll('.landing-reveal, .landing-reveal-left, .landing-reveal-right').forEach((el) => {
+        revealObserver?.observe(el);
+    });
+}
+
 onMounted(() => {
     startCounterAnimation();
     startTypewriter();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    nextTick(() => {
+        setupRevealObserver();
+    });
 });
 
 onBeforeUnmount(() => {
@@ -332,6 +374,8 @@ onBeforeUnmount(() => {
         clearTimeout(typewriterTimer);
         typewriterTimer = null;
     }
+    window.removeEventListener('scroll', handleScroll);
+    revealObserver?.disconnect();
 });
 </script>
 
@@ -343,7 +387,7 @@ onBeforeUnmount(() => {
         />
     </Head>
 
-    <div class="min-h-screen bg-[#0A1033] text-white font-sans antialiased selection:bg-[#FF8A5B] selection:text-[#10194D]">
+    <div class="min-h-screen bg-[#F6F4EF] text-white font-sans antialiased selection:bg-[#FF8A5B] selection:text-[#10194D]">
         <!-- Skip link a11y -->
         <a
             href="#main-content"
@@ -355,8 +399,15 @@ onBeforeUnmount(() => {
         <!-- ======================================================== -->
         <!-- HEADER / NAVBAR FLOATING PILL (DESIGN.md)               -->
         <!-- ======================================================== -->
-        <header class="sticky top-4 z-50 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-            <div class="bg-white/95 backdrop-blur-md text-[#10194D] rounded-full px-5 sm:px-7 py-3 shadow-[0_8px_24px_rgba(16,25,77,0.12)] border border-[#E3E1DA] flex items-center justify-between transition-all">
+        <header class="fixed top-3 sm:top-4 left-0 right-0 z-50 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pointer-events-none transition-all duration-300">
+            <div
+                :class="[
+                    'pointer-events-auto backdrop-blur-md text-[#10194D] rounded-full px-5 sm:px-7 py-3 border transition-all duration-300 flex items-center justify-between',
+                    isScrolled
+                        ? 'bg-white/98 shadow-[0_12px_32px_rgba(16,25,77,0.16)] border-[#E3E1DA]'
+                        : 'bg-white/95 shadow-[0_8px_24px_rgba(16,25,77,0.08)] border-[#E3E1DA]/80'
+                ]"
+            >
                 <!-- Logo -->
                 <Link href="/" class="flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F5FE8] rounded-lg">
                     <span class="font-heading font-extrabold text-2xl tracking-tight text-[#10194D]">
@@ -413,7 +464,7 @@ onBeforeUnmount(() => {
             <!-- Mobile Navigation Drawer -->
             <div
                 v-if="menuOpen"
-                class="lg:hidden mt-2 bg-white text-[#10194D] rounded-[24px] p-5 shadow-xl border border-[#E3E1DA] flex flex-col gap-3 animate-fadeIn"
+                class="pointer-events-auto lg:hidden mt-2 bg-white text-[#10194D] rounded-[24px] p-5 shadow-2xl border border-[#E3E1DA] flex flex-col gap-3 animate-fadeIn"
             >
                 <a href="#keunggulan" class="px-3 py-2 font-medium hover:text-[#4F5FE8] rounded-lg" @click="menuOpen = false">Keunggulan</a>
                 <a href="#tarif" class="px-3 py-2 font-medium hover:text-[#4F5FE8] rounded-lg" @click="menuOpen = false">Layanan & Tarif</a>
@@ -447,11 +498,11 @@ onBeforeUnmount(() => {
         <!-- ======================================================== -->
         <!-- MAIN CONTENT                                            -->
         <!-- ======================================================== -->
-        <main id="main-content" class="overflow-hidden">
+        <main id="main-content" class="overflow-hidden bg-[#10194D]">
             <!-- ======================================================== -->
             <!-- HERO SECTION: WARM CREAM HERO (Every Sunday Style)        -->
             <!-- ======================================================== -->
-            <section class="relative bg-[#F6F4EF] pt-12 md:pt-16 pb-20 md:pb-24 px-4 sm:px-6 lg:px-8 text-[#10194D] rounded-b-[40px] md:rounded-b-[60px] shadow-xl">
+            <section class="relative bg-[#F6F4EF] pt-24 sm:pt-28 md:pt-32 pb-20 md:pb-24 px-4 sm:px-6 lg:px-8 text-[#10194D] rounded-b-[40px] md:rounded-b-[60px] shadow-xl">
                 <!-- Decorative subtle road curve in background -->
                 <div class="absolute inset-0 pointer-events-none opacity-40 overflow-hidden">
                     <svg class="w-full h-full object-cover" viewBox="0 0 1440 800" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -462,27 +513,27 @@ onBeforeUnmount(() => {
 
                 <div class="max-w-7xl mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                     <!-- Left Hero Content -->
-                    <div class="lg:col-span-7 flex flex-col items-start pt-4 sm:pt-8">
+                    <div class="lg:col-span-7 flex flex-col items-start pt-4 sm:pt-6">
                         <!-- Sub-heading Tag / Overline -->
-                        <div class="inline-flex items-center gap-2 bg-[#E6E9FD] text-[#26338A] px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-5 shadow-xs">
-                            <Sparkles class="w-4 h-4 text-[#4F5FE8]" />
+                        <div class="animate-fade-slide-up inline-flex items-center gap-2 bg-[#E6E9FD] text-[#26338A] px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-5 shadow-xs">
+                            <Sparkles class="w-4 h-4 text-[#4F5FE8] animate-pulse-subtle" />
                             <span>SEJAK 2009 • 1 MESIN 1 PELANGGAN</span>
                         </div>
 
                         <!-- Main Display Heading (Every Sunday Style) -->
-                        <h1 class="font-heading font-extrabold text-4xl sm:text-5xl lg:text-6xl tracking-tight leading-[1.08] text-[#10194D] uppercase">
+                        <h1 class="animate-fade-slide-up delay-100 font-heading font-extrabold text-4xl sm:text-5xl lg:text-6xl tracking-tight leading-[1.08] text-[#10194D] uppercase">
                             CUCI BERSIH,<br />
                             <span class="text-[#4F5FE8]">WANGI & RAPI!</span>
                             <span class="inline-block ml-3 text-3xl sm:text-4xl">🧺</span>
                         </h1>
 
                         <!-- Subtitle with high-contrast Slate-700 readability -->
-                        <p class="font-sans text-base sm:text-lg text-slate-700 mt-5 max-w-xl leading-relaxed font-medium">
+                        <p class="animate-fade-slide-up delay-200 font-sans text-base sm:text-lg text-slate-700 mt-5 max-w-xl leading-relaxed font-medium">
                             Layanan binatu modern kiloan & karpet terpercaya di Hendrosari, Menganti, Gresik. Pakaian tidak pernah dicampur, timbangan jujur, gratis antar-jemput maksimal 3 kg, dan pantau nota digital langsung dari WhatsApp.
                         </p>
 
                         <!-- Search Pill (Lacak Order) - Every Sunday Style -->
-                        <div class="w-full max-w-xl mt-8">
+                        <div class="animate-fade-slide-up delay-300 w-full max-w-xl mt-8">
                             <form
                                 @submit.prevent="submitOrderCheck"
                                 class="bg-white rounded-full p-2 pl-5 sm:pl-6 shadow-[0_12px_32px_rgba(16,25,77,0.12)] border border-[#E3E1DA] flex items-center justify-between gap-2 transition-all focus-within:ring-3 focus-within:ring-[#4F5FE8]/40"
@@ -517,7 +568,7 @@ onBeforeUnmount(() => {
                         </div>
 
                         <!-- Micro Social Proof Badges with High Contrast -->
-                        <div class="flex flex-wrap items-center gap-4 sm:gap-6 mt-8 pt-4 border-t border-slate-300/80 w-full max-w-xl">
+                        <div class="animate-fade-slide-up delay-400 flex flex-wrap items-center gap-4 sm:gap-6 mt-8 pt-4 border-t border-slate-300/80 w-full max-w-xl">
                             <div class="flex items-center gap-2.5">
                                 <div class="flex -space-x-2">
                                     <div class="w-8 h-8 rounded-full bg-[#4F5FE8] text-white font-extrabold text-xs flex items-center justify-center border-2 border-white shadow-xs">A</div>
@@ -574,15 +625,15 @@ onBeforeUnmount(() => {
                                 <path d="M60 370 C 180 340, 360 380, 480 350" stroke="#FFE14D" stroke-width="5" stroke-dasharray="16 14" stroke-linecap="round"/>
 
                                 <!-- Decorative Floating Soap Bubbles -->
-                                <circle cx="90" cy="180" r="22" fill="url(#bubbleGrad)" stroke="#FFFFFF" stroke-width="2"/>
-                                <circle cx="130" cy="140" r="14" fill="url(#bubbleGrad)" stroke="#FFFFFF" stroke-width="1.5"/>
-                                <circle cx="440" cy="120" r="26" fill="url(#bubbleGrad)" stroke="#FFFFFF" stroke-width="2"/>
-                                <circle cx="480" cy="170" r="16" fill="url(#bubbleGrad)" stroke="#FFFFFF" stroke-width="1.5"/>
-                                <circle cx="410" cy="90" r="12" fill="url(#bubbleGrad)" stroke="#FFFFFF" stroke-width="1"/>
+                                <circle cx="90" cy="180" r="22" fill="url(#bubbleGrad)" stroke="#FFFFFF" stroke-width="2" class="animate-bubble-1" />
+                                <circle cx="130" cy="140" r="14" fill="url(#bubbleGrad)" stroke="#FFFFFF" stroke-width="1.5" class="animate-bubble-2" />
+                                <circle cx="440" cy="120" r="26" fill="url(#bubbleGrad)" stroke="#FFFFFF" stroke-width="2" class="animate-bubble-1" />
+                                <circle cx="480" cy="170" r="16" fill="url(#bubbleGrad)" stroke="#FFFFFF" stroke-width="1.5" class="animate-bubble-2" />
+                                <circle cx="410" cy="90" r="12" fill="url(#bubbleGrad)" stroke="#FFFFFF" stroke-width="1" class="animate-bubble-1" />
 
                                 <!-- Sparkles -->
-                                <path d="M100 110 Q 100 125, 115 125 Q 100 125, 100 140 Q 100 125, 85 125 Q 100 125, 100 110 Z" fill="#FFE14D"/>
-                                <path d="M460 70 Q 460 82, 472 82 Q 460 82, 460 94 Q 460 82, 448 82 Q 460 82, 460 70 Z" fill="#FFE14D"/>
+                                <path d="M100 110 Q 100 125, 115 125 Q 100 125, 100 140 Q 100 125, 85 125 Q 100 125, 100 110 Z" fill="#FFE14D" class="animate-pulse-subtle" />
+                                <path d="M460 70 Q 460 82, 472 82 Q 460 82, 460 94 Q 460 82, 448 82 Q 460 82, 460 70 Z" fill="#FFE14D" class="animate-pulse-subtle delay-200" />
 
                                 <!-- Laundry Car / Van Body -->
                                 <g transform="translate(100, 140)">
@@ -604,11 +655,13 @@ onBeforeUnmount(() => {
                                     <path d="M172 -8 Q 185 -22, 198 -8" stroke="#6577F0" stroke-width="8" stroke-linecap="round"/>
 
                                     <!-- Cheerful Smiley Mascot on roof basket -->
-                                    <circle cx="230" cy="5" r="18" fill="#FFE14D"/>
-                                    <!-- eyes & smile -->
-                                    <circle cx="225" cy="2" r="2.5" fill="#10194D"/>
-                                    <circle cx="235" cy="2" r="2.5" fill="#10194D"/>
-                                    <path d="M225 9 Q 230 15, 235 9" stroke="#10194D" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                                    <g class="animate-float-gentle">
+                                        <circle cx="230" cy="5" r="18" fill="#FFE14D"/>
+                                        <!-- eyes & smile -->
+                                        <circle cx="225" cy="2" r="2.5" fill="#10194D"/>
+                                        <circle cx="235" cy="2" r="2.5" fill="#10194D"/>
+                                        <path d="M225 9 Q 230 15, 235 9" stroke="#10194D" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                                    </g>
 
                                     <!-- Main Van Cabin -->
                                     <path d="M40 90 L 60 40 Q 65 35, 75 35 L 210 35 Q 220 35, 230 48 L 270 95 L 285 105 Q 295 115, 295 125 L 295 180 Q 295 190, 285 190 L 30 190 Q 20 190, 20 180 L 20 115 Q 20 95, 40 90 Z" fill="url(#vanGrad)"/>
@@ -669,7 +722,7 @@ onBeforeUnmount(() => {
                         <!-- Left 3 Feature Cards (Every Sunday Reference Layout) -->
                         <div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-3 gap-5">
                             <!-- Card 1: Highlight Periwinkle Card -->
-                            <div class="bg-gradient-to-br from-[#6577F0] to-[#4F5FE8] text-white rounded-[24px] p-6 shadow-xl relative overflow-hidden transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between">
+                            <div class="landing-reveal bg-gradient-to-br from-[#6577F0] to-[#4F5FE8] text-white rounded-[24px] p-6 shadow-xl relative overflow-hidden transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between">
                                 <div>
                                     <div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center mb-5">
                                         <ShieldCheck class="w-6 h-6 text-white" />
@@ -686,7 +739,7 @@ onBeforeUnmount(() => {
                             </div>
 
                             <!-- Card 2: Navy Outline Card -->
-                            <div class="bg-[#1A2566]/90 border border-white/20 text-white rounded-[24px] p-6 shadow-lg transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between">
+                            <div class="landing-reveal delay-150 bg-[#1A2566]/90 border border-white/20 text-white rounded-[24px] p-6 shadow-lg transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between">
                                 <div>
                                     <div class="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center mb-5">
                                         <Sparkles class="w-6 h-6 text-[#FFE14D]" />
@@ -702,7 +755,7 @@ onBeforeUnmount(() => {
                             </div>
 
                             <!-- Card 3: Navy Outline Card -->
-                            <div class="bg-[#1A2566]/90 border border-white/20 text-white rounded-[24px] p-6 shadow-lg transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between">
+                            <div class="landing-reveal delay-300 bg-[#1A2566]/90 border border-white/20 text-white rounded-[24px] p-6 shadow-lg transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between">
                                 <div>
                                     <div class="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center mb-5">
                                         <Truck class="w-6 h-6 text-[#FF8A5B]" />
@@ -719,7 +772,7 @@ onBeforeUnmount(() => {
                         </div>
 
                         <!-- Right Section Header / Description -->
-                        <div class="lg:col-span-4 flex flex-col items-start lg:pl-6">
+                        <div class="landing-reveal-right lg:col-span-4 flex flex-col items-start lg:pl-6">
                             <!-- Section Number Badge 01 -->
                             <div class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center font-heading font-extrabold text-sm text-white mb-4 bg-white/10">
                                 01
@@ -748,7 +801,7 @@ onBeforeUnmount(() => {
             <section id="tarif" class="relative bg-[#0A1033] pt-20 pb-28 px-4 sm:px-6 lg:px-8 text-white">
                 <div class="max-w-7xl mx-auto">
                     <!-- Section Header -->
-                    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+                    <div class="landing-reveal flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
                         <div>
                             <div class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center font-heading font-extrabold text-sm text-white mb-4 bg-white/10">
                                 02
@@ -777,9 +830,10 @@ onBeforeUnmount(() => {
                     <!-- Cards Grid (4 Core Services from Riil Catalog) -->
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         <div
-                            v-for="service in services"
+                            v-for="(service, sIdx) in services"
                             :key="service.id"
-                            class="bg-white text-[#10194D] rounded-[28px] p-6 shadow-xl border border-slate-200 hover:shadow-[0_20px_48px_rgba(16,25,77,0.18)] transition-all duration-300 hover:-translate-y-2 flex flex-col justify-between relative group"
+                            class="landing-reveal bg-white text-[#10194D] rounded-[28px] p-6 shadow-xl border border-slate-200 hover:shadow-[0_20px_48px_rgba(16,25,77,0.18)] transition-all duration-300 hover:-translate-y-2 flex flex-col justify-between relative group"
+                            :style="{ transitionDelay: `${sIdx * 100}ms` }"
                         >
                             <!-- Top Info & Badges -->
                             <div>
@@ -851,7 +905,7 @@ onBeforeUnmount(() => {
             <section class="relative bg-gradient-to-b from-[#0A1033] to-[#10194D] pt-12 pb-24 px-4 sm:px-6 lg:px-8 text-white">
                 <div class="max-w-6xl mx-auto">
                     <!-- Big Curved Periwinkle Banner (Every Sunday Reference) -->
-                    <div class="bg-gradient-to-r from-[#6577F0] to-[#4F5FE8] rounded-[36px] md:rounded-[44px] p-8 sm:p-12 md:p-16 text-white relative shadow-2xl overflow-hidden pb-32 md:pb-36">
+                    <div class="landing-reveal bg-gradient-to-r from-[#6577F0] to-[#4F5FE8] rounded-[36px] md:rounded-[44px] p-8 sm:p-12 md:p-16 text-white relative shadow-2xl overflow-hidden pb-32 md:pb-36">
                         <!-- Background Glow & Shapes -->
                         <div class="absolute -right-16 -top-16 w-80 h-80 rounded-full bg-white/10 blur-2xl pointer-events-none"></div>
 
@@ -884,7 +938,7 @@ onBeforeUnmount(() => {
                     </div>
 
                     <!-- Overlapping White Ticket Card (Every Sunday Signature) -->
-                    <div class="relative -mt-24 sm:-mt-28 mx-auto max-w-4xl z-20 px-2 sm:px-4">
+                    <div class="landing-reveal delay-200 relative -mt-24 sm:-mt-28 mx-auto max-w-4xl z-20 px-2 sm:px-4">
                         <div class="bg-white text-[#10194D] rounded-[28px] sm:rounded-[32px] shadow-[0_20px_48px_rgba(16,25,77,0.22)] border border-slate-200 overflow-hidden flex flex-col md:flex-row items-stretch">
                             <!-- Left: Illustration Mini-car / Basket -->
                             <div class="md:w-5/12 bg-[#F6F4EF] p-6 sm:p-8 flex items-center justify-center border-b md:border-b-0 md:border-r border-slate-200">
@@ -959,7 +1013,7 @@ onBeforeUnmount(() => {
             <section class="relative bg-[#10194D] pt-16 pb-24 px-4 sm:px-6 lg:px-8 text-white">
                 <div class="max-w-7xl mx-auto">
                     <!-- Section Header -->
-                    <div class="mb-10">
+                    <div class="landing-reveal mb-10">
                         <div class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center font-heading font-extrabold text-sm text-white mb-4 bg-white/10">
                             04
                         </div>
@@ -974,7 +1028,7 @@ onBeforeUnmount(() => {
                     <!-- 2 Large Article Cards with Dark Gradient Overlay -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <!-- Article Card 1 -->
-                        <div class="group relative rounded-[28px] overflow-hidden shadow-xl bg-[#1A2566] min-h-[340px] flex flex-col justify-end p-8 border border-white/10 transition-all duration-300 hover:-translate-y-1.5">
+                        <div class="landing-reveal group relative rounded-[28px] overflow-hidden shadow-xl bg-[#1A2566] min-h-[340px] flex flex-col justify-end p-8 border border-white/10 transition-all duration-300 hover:-translate-y-1.5">
                             <!-- Background Pattern / Tint -->
                             <div class="absolute inset-0 bg-gradient-to-br from-[#4F5FE8]/40 via-[#10194D]/80 to-[#0A1033] z-10"></div>
                             <div class="absolute inset-0 bg-[radial-gradient(#FFE14D_1px,transparent_1px)] [background-size:16px_16px] opacity-20"></div>
@@ -998,7 +1052,7 @@ onBeforeUnmount(() => {
                         </div>
 
                         <!-- Article Card 2 -->
-                        <div class="group relative rounded-[28px] overflow-hidden shadow-xl bg-[#1A2566] min-h-[340px] flex flex-col justify-end p-8 border border-white/10 transition-all duration-300 hover:-translate-y-1.5">
+                        <div class="landing-reveal delay-150 group relative rounded-[28px] overflow-hidden shadow-xl bg-[#1A2566] min-h-[340px] flex flex-col justify-end p-8 border border-white/10 transition-all duration-300 hover:-translate-y-1.5">
                             <!-- Background Pattern / Tint -->
                             <div class="absolute inset-0 bg-gradient-to-br from-[#6577F0]/40 via-[#10194D]/80 to-[#0A1033] z-10"></div>
                             <div class="absolute inset-0 bg-[radial-gradient(#4F5FE8_1px,transparent_1px)] [background-size:16px_16px] opacity-20"></div>
@@ -1029,7 +1083,7 @@ onBeforeUnmount(() => {
             <!-- ======================================================== -->
             <section id="lokasi" class="relative bg-[#0A1033] pt-16 pb-24 px-4 sm:px-6 lg:px-8 text-white">
                 <div class="max-w-7xl mx-auto">
-                    <div class="mb-10">
+                    <div class="landing-reveal mb-10">
                         <div class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center font-heading font-extrabold text-sm text-white mb-4 bg-white/10">
                             05
                         </div>
@@ -1041,7 +1095,7 @@ onBeforeUnmount(() => {
                         </p>
                     </div>
 
-                    <div class="bg-white text-[#10194D] rounded-[28px] sm:rounded-[36px] p-6 sm:p-8 shadow-2xl border border-slate-200 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    <div class="landing-reveal bg-white text-[#10194D] rounded-[28px] sm:rounded-[36px] p-6 sm:p-8 shadow-2xl border border-slate-200 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                         <!-- Left Info Card -->
                         <div class="lg:col-span-5 flex flex-col justify-between h-full">
                             <div>
@@ -1128,7 +1182,7 @@ onBeforeUnmount(() => {
             <!-- ======================================================== -->
             <section id="faq" class="relative bg-[#10194D] pt-16 pb-24 px-4 sm:px-6 lg:px-8 text-white">
                 <div class="max-w-4xl mx-auto">
-                    <div class="text-center mb-12">
+                    <div class="landing-reveal text-center mb-12">
                         <div class="w-10 h-10 rounded-full border border-white/40 mx-auto flex items-center justify-center font-heading font-extrabold text-sm text-white mb-4 bg-white/10">
                             06
                         </div>
@@ -1141,7 +1195,7 @@ onBeforeUnmount(() => {
                     </div>
 
                     <!-- Accordion List -->
-                    <div class="space-y-4">
+                    <div class="landing-reveal space-y-4">
                         <div
                             v-for="(faq, fIdx) in faqs"
                             :key="fIdx"
@@ -1175,7 +1229,7 @@ onBeforeUnmount(() => {
             <!-- SECTION 07: CTA NEWSLETTER / KONSULTASI (Every Sunday)   -->
             <!-- ======================================================== -->
             <section id="lacak" class="relative bg-gradient-to-b from-[#10194D] via-[#0A1033] to-[#0A1033] pt-16 pb-24 px-4 sm:px-6 lg:px-8 text-white">
-                <div class="max-w-4xl mx-auto text-center">
+                <div class="landing-reveal max-w-4xl mx-auto text-center">
                     <!-- Heading Every Sunday Style with Yellow Highlight -->
                     <h2 class="font-heading font-extrabold text-3xl sm:text-5xl uppercase tracking-tight leading-tight text-white">
                         SIAP CUCIAN BERSIH TANPA REPOT? <br />
