@@ -1,286 +1,143 @@
-@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@600;700;800;900&family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
-@import url('https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap');
 @import "tailwindcss";
 
 @source "../views";
 @source "../js";
 
+/* ============================================================
+   DESIGN.md Section 2 & 10 — DataHarbor Design Tokens
+   Single source of truth. No hardcoded colors outside this file.
+   ============================================================ */
+
 @theme {
-  /* Typography Families (DESIGN.md) */
-  --font-heading: "Lexend", "General Sans", system-ui, -apple-system, sans-serif;
-  --font-body: "Poppins", "DM Sans", system-ui, -apple-system, sans-serif;
-  --font-display: "Lexend", "General Sans", system-ui, -apple-system, sans-serif;
-  --font-sans: "Poppins", "DM Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-mono: "JetBrains Mono", "Fira Code", monospace;
+  /* Brand — navy family */
+  --color-navy-950: #081050;
+  --color-navy-900: #13276F;
+  --color-navy-800: #1F3C88;
+  --color-navy-700: #2B4FA6;
 
-  /* Modern Design System Palette: Every Sunday Inspiration (DESIGN.md) */
-  --color-navy-950: #0A1033;
-  --color-navy-900: #10194D;
-  --color-navy-800: #1A2566;
-  --color-navy-700: #26338A;
-  --color-primary-600: #4F5FE8;
-  --color-primary-500: #6577F0;
-  --color-primary-100: #E6E9FD;
-  --color-accent-500: #FF8A5B;
-  --color-accent-600: #F26B3A;
-  --color-highlight: #FFE14D;
-  --color-cream: #F6F4EF;
+  /* Brand — primary blue family */
+  --color-primary-700: #1A6CAA;
+  --color-primary-600: #1F7FC4;
+  --color-primary-500: #3F98D8;
+  --color-primary-100: #D6ECFA;
+
+  /* Brand — accent teal family */
+  --color-accent-700: #0F7A66;
+  --color-accent-600: #2BA68C;
+  --color-accent-500: #39C5A8;
+  --color-accent-100: #C9F0E6;
+
+  /* Neutral */
+  --color-bg: #F4F8FB;
   --color-surface: #FFFFFF;
-  --color-border: #E3E1DA;
+  --color-border: #DCE5EE;
+  --color-text: #0E1B4D;
+  --color-text-muted: #5E6B8C;
+  --color-text-on-dark: #FFFFFF;
+  --color-text-on-dark-muted: #B8C6E8;
 
-  /* Legacy & Internal App Design Tokens */
-  --color-primary: #FFEB3B;
-  --color-primary-hover: #FDE047;
-  --color-secondary: #FF5252;
-  --color-neutral: #000000;
-  --color-background: #FFFDF5;
-  --color-text-primary: #000000;
-  --color-text-secondary: #374151;
-
-  /* Semantic Status Tokens */
-  --color-success: #22A06B;
+  /* Semantic */
+  --color-success: #1E9E6A;
   --color-warning: #F5A623;
-  --color-error: #E5484D;
+  --color-danger: #E5484D;
+  --color-info: #1F7FC4;
 
-  /* Border Radius Tokens (DESIGN.md) */
+  /* Gradient */
+  --gradient-hero: linear-gradient(180deg, #F4F8FB 0%, #1F3C88 55%, #081050 100%);
+  --gradient-dark-section: linear-gradient(180deg, #13276F 0%, #081050 100%);
+  --gradient-primary-card: linear-gradient(135deg, #1F7FC4 0%, #1F3C88 100%);
+  --gradient-accent-card: linear-gradient(135deg, #39C5A8 0%, #1F7FC4 100%);
+  --gradient-footer: linear-gradient(180deg, #13276F 0%, #081050 100%);
+
+  /* Typography families (DESIGN.md Section 3) */
+  --font-heading: "Lexend", system-ui, sans-serif;
+  --font-body: "Poppins", system-ui, sans-serif;
+  --font-sans: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Lexend", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* Radius (DESIGN.md Section 4) */
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 20px;
   --radius-xl: 28px;
   --radius-section: 40px;
-  --radius-pill: 9999px;
-  --radius-tag: 6px;
-  --radius-btn: 9999px;
-  --radius-card: 20px;
+  --radius-pill: 999px;
 
-  /* Elevation & Soft Shadows (DESIGN.md) */
-  --shadow-sm: 0 1px 2px rgba(16, 25, 77, 0.06);
-  --shadow-md: 0 8px 24px rgba(16, 25, 77, 0.10);
-  --shadow-lg: 0 20px 48px rgba(16, 25, 77, 0.18);
-  --shadow-card-hover: 0 12px 32px rgba(79, 95, 232, 0.16);
-  --shadow-button-glow: 0 4px 14px rgba(255, 138, 91, 0.4);
-  --shadow-focus-ring: 0 0 0 3px rgba(101, 119, 240, 0.4);
+  /* Shadow (DESIGN.md Section 4) */
+  --shadow-sm: 0 1px 2px rgba(8, 16, 80, 0.06);
+  --shadow-md: 0 8px 24px rgba(8, 16, 80, 0.10);
+  --shadow-lg: 0 20px 48px rgba(8, 16, 80, 0.18);
 
-  /* Short aliases */
-  --color-ink: #10194D;
-  --color-ink-muted: #6B7194;
-  --color-ink-subtle: #8E94B8;
-  --color-line: #E3E1DA;
-
-  /* Layer 1: Primitive Colors - Brand Primary Teal (Preserved for compatibility) */
-  --color-teal-50:  #f0fdfa;
-  --color-teal-100: #ccfbf1;
-  --color-teal-200: #99f6e4;
-  --color-teal-300: #5eead4;
-  --color-teal-400: #2dd4bf;
-  --color-teal-500: #14b8a6;
-  --color-teal-600: #0d9488;
-  --color-teal-700: #0f766e;
-  --color-teal-800: #115e59;
-  --color-teal-900: #134e4a;
-  --color-teal-950: #042f2e;
-
-  /* Layer 1: Primitive Colors - Neutral Slate */
-  --color-slate-50:  #f8fafc;
-  --color-slate-100: #f1f5f9;
-  --color-slate-200: #e2e8f0;
-  --color-slate-300: #cbd5e1;
-  --color-slate-400: #94a3b8;
-  --color-slate-500: #64748b;
-  --color-slate-600: #475569;
-  --color-slate-700: #334155;
-  --color-slate-800: #1e293b;
-  --color-slate-900: #0f172a;
-  --color-slate-950: #020617;
-
-  /* Layer 1: Primitive Colors - Semantics (Cyan, Emerald, Amber, Rose, WhatsApp) */
-  --color-cyan-500: #06b6d4;
-  --color-cyan-600: #0891b2;
-  --color-cyan-700: #0e7490;
-
-  --color-emerald-500: #10b981;
-  --color-emerald-600: #059669;
-  --color-emerald-700: #047857;
-
-  --color-amber-500: #f59e0b;
-  --color-amber-600: #d97706;
-  --color-amber-700: #b45309;
-
-  --color-rose-500: #f43f5e;
-  --color-rose-600: #e11d48;
-  --color-rose-700: #be123c;
-
-  --color-whatsapp-500: #25d366;
-  --color-whatsapp-600: #128c7e;
-  --color-whatsapp-700: #075e54;
-
-  /* Minimum Touch Target Baseline */
-  --size-touch-target: 44px;
+  /* Motion (DESIGN.md Section 8) */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --duration-slow: 320ms;
 }
 
-/* Layer 2: Semantic Tokens & shadcn-vue Theme Binding */
-:root {
-  /* Surface Semantics */
-  --surface-canvas: #FFFDF5;
-  --surface-card: #FFFFFF;
-  --surface-muted: #FEF9C3;
-  --surface-sidebar: #FFFDF5;
-
-  /* Text Semantics */
-  --text-primary: #000000;
-  --text-secondary: #374151;
-  --text-muted: #4B5563;
-  --text-inverse: #FFFFFF;
-
-  /* Border Semantics */
-  --border-subtle: #000000;
-  --border-strong: #000000;
-
-  /* Interactive Semantics */
-  --interactive-primary: #FFEB3B;
-  --interactive-primary-hover: #FDE047;
-  --interactive-focus-ring: #2196F3;
-
-  /* Status Badge Semantics */
-  --status-paid-bg: #22C55E;
-  --status-paid-text: #000000;
-  --status-unpaid-bg: #FF5252;
-  --status-unpaid-text: #FFFFFF;
-  --status-partial-bg: #F59E0B;
-  --status-partial-text: #000000;
-
-  /* shadcn-vue CSS Variables */
-  --background: 45 60% 98%;        /* #FFFDF5 */
-  --foreground: 0 0% 0%;           /* #000000 */
-
-  --card: 0 0% 100%;               /* #FFFFFF */
-  --card-foreground: 0 0% 0%;      /* #000000 */
-
-  --popover: 0 0% 100%;            /* #FFFFFF */
-  --popover-foreground: 0 0% 0%;   /* #000000 */
-
-  --primary: 54 100% 62%;          /* #FFEB3B */
-  --primary-foreground: 0 0% 0%;
-
-  --secondary: 48 96% 89%;         /* #FEF08A */
-  --secondary-foreground: 0 0% 0%;
-
-  --muted: 48 96% 89%;
-  --muted-foreground: 0 0% 20%;
-
-  --accent: 54 100% 62%;
-  --accent-foreground: 0 0% 0%;
-
-  --destructive: 0 100% 66%;       /* #FF5252 */
-  --destructive-foreground: 0 0% 100%;
-
-  --border: 0 0% 0%;               /* #000000 */
-  --input: 0 0% 0%;                /* #000000 */
-  --ring: 207 90% 54%;             /* #2196F3 */
-
-  --radius: 0.5rem;                /* 8px base */
-}
-
-/* Layer 2b: Editorial typography baseline (DESIGN.md: General Sans for headings) */
+/* ============================================================
+   Base layer — page background, default text, heading fonts
+   ============================================================ */
 @layer base {
-  h1,
-  h2,
-  h3 {
-    font-family: var(--font-display);
-    letter-spacing: -0.03em;
+  html {
+    scroll-padding-top: 84px;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-heading);
+  }
+
+  ::selection {
+    background-color: var(--color-primary-100);
+    color: var(--color-navy-950);
   }
 }
 
-/* Global Focus Utility: 3px indigo ring per DESIGN.md, tuned to stay visible on
-   both #FFFFFF surfaces and the #FAFAFA canvas (WCAG 2.4.11 focus appearance). */
+/* ============================================================
+   Global focus-visible — ring 3px primary-500 offset 2px (§6.1)
+   ============================================================ */
 *:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--surface-card), 0 0 0 4px rgba(99, 102, 241, 0.65);
+  box-shadow: 0 0 0 2px var(--color-surface), 0 0 0 5px var(--color-primary-500);
 }
 
-
-
-/* Layer 3: Component Tokens */
-.btn-numpad {
-  min-height: 48px;
-  min-width: 48px;
-  font-size: 1.25rem;
-  font-weight: 800;
-  border-radius: 12px;
-  background-color: #FFFFFF;
-  border: 1px solid #E2E8F0;
-  box-shadow: 0 1px 2px rgba(16, 25, 77, 0.05);
-  color: #0F172A;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  user-select: none;
-  font-family: var(--font-mono);
-  transition: all 0.15s ease-in-out;
-}
-.btn-numpad:hover {
-  background-color: #F8FAFC;
-  border-color: #4F5FE8;
-  color: #4F5FE8;
-  transform: translateY(-1px);
-}
-.btn-numpad:active {
-  background-color: #E6E9FD;
-  transform: translateY(0);
+/* ============================================================
+   Border on dark surfaces (DESIGN.md Section 4)
+   ============================================================ */
+.border-on-dark {
+  border: 2px solid rgba(255, 255, 255, 0.85);
 }
 
-.btn-quick-tender {
-  min-height: 44px;
-  padding: 0 1rem;
-  font-size: 0.875rem;
+/* ============================================================
+   Overline label (DESIGN.md Section 3 type scale)
+   ============================================================ */
+.overline-label {
+  font-size: 11px;
   font-weight: 600;
-  border-radius: 12px;
-  background-color: #FFFFFF;
-  border: 1px solid #E2E8F0;
-  color: #0F172A;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.15s ease-in-out;
-  box-shadow: 0 1px 2px rgba(16, 25, 77, 0.04);
-}
-.btn-quick-tender:hover {
-  background-color: #F8FAFC;
-  border-color: #4F5FE8;
-  color: #4F5FE8;
-  transform: translateY(-1px);
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-.tab-service-category {
-  min-height: 44px;
-  padding: 0 1.25rem;
-  font-weight: 500;
-  border-radius: 6px;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background-color: #FFFFFF;
-  border: 1px solid var(--border-subtle);
-  color: var(--text-secondary);
-  transition: all 0.15s ease-in-out;
-}
-.tab-service-category:hover {
-  color: var(--text-primary);
-  background-color: #FAFAFA;
-}
-.tab-service-category.active {
-  background-color: #6366F1;
-  border-color: #6366F1;
-  color: #ffffff;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+/* ============================================================
+   Tabular numbers for table/price columns (DESIGN.md Section 3)
+   ============================================================ */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
 }
 
-/* Every Sunday & Modern Landing Utilities (DESIGN.md) */
-html {
-  scroll-padding-top: 84px;
-  scroll-behavior: smooth;
-}
-
+/* ============================================================
+   Utilities kept from previous foundation (vertical text)
+   ============================================================ */
 .writing-vertical {
   writing-mode: vertical-rl;
   text-orientation: mixed;
@@ -293,100 +150,35 @@ html {
   }
 }
 
-/* Smooth Landing Motion & Animations (DESIGN.md Section 8) */
+/* ============================================================
+   Motion (DESIGN.md Section 8) — landing only, honour reduced motion
+   ============================================================ */
 @keyframes floatSlow {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
-}
-
-@keyframes floatGentle {
-  0%, 100% {
-    transform: translateY(0) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-4px) rotate(1.5deg);
-  }
-}
-
-@keyframes bubbleDrift1 {
-  0%, 100% {
-    transform: translateY(0) scale(1);
-    opacity: 0.9;
-  }
-  50% {
-    transform: translateY(-12px) scale(1.08);
-    opacity: 1;
-  }
-}
-
-@keyframes bubbleDrift2 {
-  0%, 100% {
-    transform: translateY(0) scale(1);
-    opacity: 0.85;
-  }
-  50% {
-    transform: translateY(-15px) scale(1.12);
-    opacity: 1;
-  }
-}
-
-@keyframes pulseGently {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.08);
-    opacity: 0.85;
-  }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
 }
 
 @keyframes fadeSlideUp {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
 
 .animate-float-slow {
   animation: floatSlow 4s ease-in-out infinite;
 }
 
-.animate-float-gentle {
-  animation: floatGentle 3s ease-in-out infinite;
-}
-
-.animate-bubble-1 {
-  animation: bubbleDrift1 4.5s ease-in-out infinite;
-}
-
-.animate-bubble-2 {
-  animation: bubbleDrift2 5.5s ease-in-out 1.5s infinite;
-}
-
-.animate-pulse-subtle {
-  animation: pulseGently 3s ease-in-out infinite;
-}
-
 .animate-fade-slide-up {
-  animation: fadeSlideUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: fadeSlideUp 0.65s var(--ease-standard) both;
 }
 
 .animate-fadeIn {
@@ -402,52 +194,49 @@ html {
 .delay-500 { animation-delay: 500ms; }
 
 /* Smooth scroll reveal */
-.landing-reveal {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
-}
-
-.landing-reveal.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.landing-reveal-left {
-  opacity: 0;
-  transform: translateX(-24px);
-  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
-}
-
-.landing-reveal-left.is-visible {
-  opacity: 1;
-  transform: translateX(0);
-}
-
+.landing-reveal,
+.landing-reveal-left,
 .landing-reveal-right {
   opacity: 0;
-  transform: translateX(24px);
-  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
+  transition: opacity 0.7s var(--ease-standard), transform 0.7s var(--ease-standard);
 }
 
+.landing-reveal { transform: translateY(24px); }
+.landing-reveal-left { transform: translateX(-24px); }
+.landing-reveal-right { transform: translateX(24px); }
+
+.landing-reveal.is-visible,
+.landing-reveal-left.is-visible,
 .landing-reveal-right.is-visible {
   opacity: 1;
-  transform: translateX(0);
+  transform: translateY(0) translateX(0);
 }
 
+/* Skeleton shimmer (DESIGN.md Section 6.8) */
+.skeleton-shimmer {
+  background: linear-gradient(90deg, var(--color-border) 25%, #E6EDF4 50%, var(--color-border) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+/* ============================================================
+   Reduced motion — global (DESIGN.md Section 8 requirement)
+   ============================================================ */
 @media (prefers-reduced-motion: reduce) {
-  .animate-float-slow,
-  .animate-float-gentle,
-  .animate-bubble-1,
-  .animate-bubble-2,
-  .animate-pulse-subtle,
-  .animate-fade-slide-up,
-  .animate-fadeIn {
-    animation: none !important;
+  html {
+    scroll-behavior: auto;
   }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
   .landing-reveal,
   .landing-reveal-left,
   .landing-reveal-right {
@@ -456,4 +245,3 @@ html {
     transition: none !important;
   }
 }
-

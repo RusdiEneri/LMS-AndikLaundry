@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-[#FFFDF5]">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,18 +11,16 @@
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v=1.1">
         <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}?v=1.1">
 
-        <!-- Fonts: Lexend (Heading), Poppins (Body), DM Sans, General Sans & JetBrains Mono -->
-        <link rel="preconnect" href="https://api.fontshare.com">
+        <!-- Fonts: Lexend (Heading), Poppins (Body), JetBrains Mono — DESIGN.md Section 10.3 -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@600;700;800;900&family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@600;700;800&family=Poppins:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 
         <!-- Scripts and Styles -->
         @vite(['resources/css/app.css', 'resources/js/app.ts'])
         @inertiaHead
     </head>
-    <body class="font-sans antialiased bg-[#FFFDF5] text-[#0A0A0A] h-full overflow-x-hidden selection:bg-[#FFEB3B] selection:text-black">
+    <body class="font-body antialiased bg-bg text-text h-full overflow-x-hidden">
         @inertia
     </body>
 </html>
