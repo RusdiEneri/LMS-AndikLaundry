@@ -11,7 +11,7 @@ const props = defineProps<Props>();
 </script>
 
 <template>
-    <DialogTitle :class="cn('font-display text-lg font-bold text-[#0A0A0A]', props.class)" v-bind="props">
+    <DialogTitle :class="cn('font-heading text-lg font-bold text-text', props.class)" v-bind="props">
         <slot />
     </DialogTitle>
 </template>

@@ -19,7 +19,7 @@ const props = withDefaults(defineProps<Props>(), {
         :orientation="orientation"
         :class="
             cn(
-                'shrink-0 bg-[#E8E8EC]',
+                'shrink-0 bg-border',
                 orientation === 'horizontal' ? 'h-[1px] w-full' : 'h-full w-[1px]',
                 props.class
             )
