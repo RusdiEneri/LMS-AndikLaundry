@@ -19,7 +19,7 @@ import {
     Truck,
     X,
 } from 'lucide-vue-next';
-import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
 const props = defineProps<{
     canLogin?: boolean;
@@ -356,10 +356,34 @@ function setupRevealObserver() {
     });
 }
 
+watch(menuOpen, (open) => {
+    if (typeof document !== 'undefined') {
+        if (open) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+    }
+});
+
+function handleKeydown(e: KeyboardEvent) {
+    if (e.key === 'Escape' && menuOpen.value) {
+        menuOpen.value = false;
+    }
+}
+
+function closeMenuAndNavigate() {
+    menuOpen.value = false;
+    if (typeof document !== 'undefined') {
+        document.body.style.overflow = '';
+    }
+}
+
 onMounted(() => {
     startCounterAnimation();
     startTypewriter();
     window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('keydown', handleKeydown);
     nextTick(() => {
         setupRevealObserver();
     });
@@ -375,6 +399,10 @@ onBeforeUnmount(() => {
         typewriterTimer = null;
     }
     window.removeEventListener('scroll', handleScroll);
+    window.removeEventListener('keydown', handleKeydown);
+    if (typeof document !== 'undefined') {
+        document.body.style.overflow = '';
+    }
     revealObserver?.disconnect();
 });
 </script>
@@ -399,7 +427,7 @@ onBeforeUnmount(() => {
         <!-- ======================================================== -->
         <!-- HEADER / NAVBAR FLOATING PILL (DESIGN.md)               -->
         <!-- ======================================================== -->
-        <header class="fixed top-3 sm:top-4 left-0 right-0 z-50 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pointer-events-none transition-all duration-300">
+        <header class="fixed top-3 sm:top-4 left-0 right-0 z-50 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pointer-events-none">
             <div
                 :class="[
                     'pointer-events-auto backdrop-blur-md text-[#10194D] rounded-full px-5 sm:px-7 py-3 border transition-all duration-300 flex items-center justify-between',
@@ -460,40 +488,108 @@ onBeforeUnmount(() => {
                     <X v-else class="w-6 h-6" />
                 </button>
             </div>
-
-            <!-- Mobile Navigation Drawer -->
-            <div
-                v-if="menuOpen"
-                class="pointer-events-auto lg:hidden mt-2 bg-white text-[#10194D] rounded-[24px] p-5 shadow-2xl border border-[#E3E1DA] flex flex-col gap-3 animate-fadeIn"
-            >
-                <a href="#keunggulan" class="px-3 py-2 font-medium hover:text-[#4F5FE8] rounded-lg" @click="menuOpen = false">Keunggulan</a>
-                <a href="#tarif" class="px-3 py-2 font-medium hover:text-[#4F5FE8] rounded-lg" @click="menuOpen = false">Layanan & Tarif</a>
-                <a href="#lacak" class="px-3 py-2 font-medium hover:text-[#4F5FE8] rounded-lg" @click="menuOpen = false">Lacak Nota</a>
-                <a href="#lokasi" class="px-3 py-2 font-medium hover:text-[#4F5FE8] rounded-lg" @click="menuOpen = false">Lokasi</a>
-                <a href="#faq" class="px-3 py-2 font-medium hover:text-[#4F5FE8] rounded-lg" @click="menuOpen = false">FAQ</a>
-                <hr class="border-[#E3E1DA]" />
-                <div class="flex flex-col gap-2 pt-1">
-                    <a
-                        :href="whatsappUrl"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="bg-[#FF8A5B] text-[#10194D] font-bold text-center py-2.5 rounded-full flex items-center justify-center gap-2"
-                        @click="menuOpen = false"
-                    >
-                        <MessageCircle class="w-4 h-4" />
-                        <span>Pesan Antar Jemput</span>
-                    </a>
-                    <Link
-                        v-if="canLogin"
-                        href="/login"
-                        class="text-center font-bold py-2 rounded-full border border-[#E3E1DA]"
-                        @click="menuOpen = false"
-                    >
-                        Masuk Staf
-                    </Link>
-                </div>
-            </div>
         </header>
+
+        <!-- Mobile Navigation Drawer Overlay (Teleported to body for zero layout shift) -->
+        <Teleport to="body">
+            <!-- Backdrop -->
+            <Transition
+                enter-active-class="transition-opacity duration-300 ease-out"
+                enter-from-class="opacity-0"
+                enter-to-class="opacity-100"
+                leave-active-class="transition-opacity duration-200 ease-in"
+                leave-from-class="opacity-100"
+                leave-to-class="opacity-0"
+            >
+                <div
+                    v-if="menuOpen"
+                    class="fixed inset-0 bg-[#0A1033]/60 backdrop-blur-sm z-50 lg:hidden"
+                    @click="menuOpen = false"
+                    aria-hidden="true"
+                ></div>
+            </Transition>
+
+            <!-- Floating Drawer Card -->
+            <Transition
+                enter-active-class="transition-all duration-300 cubic-bezier(0.16, 1, 0.3, 1)"
+                enter-from-class="opacity-0 -translate-y-4 scale-95"
+                enter-to-class="opacity-100 translate-y-0 scale-100"
+                leave-active-class="transition-all duration-200 ease-in"
+                leave-from-class="opacity-100 translate-y-0 scale-100"
+                leave-to-class="opacity-0 -translate-y-4 scale-95"
+            >
+                <div
+                    v-if="menuOpen"
+                    class="fixed top-18 left-4 right-4 z-50 lg:hidden bg-white text-[#10194D] rounded-[24px] p-5 shadow-[0_20px_48px_rgba(16,25,77,0.28)] border border-[#E3E1DA] flex flex-col gap-3 max-h-[calc(100dvh-90px)] overflow-y-auto"
+                >
+                    <div class="flex flex-col gap-1">
+                        <a
+                            href="#keunggulan"
+                            class="px-4 py-3 font-semibold text-base hover:bg-[#E6E9FD] hover:text-[#4F5FE8] rounded-xl transition-colors flex items-center justify-between min-h-[44px]"
+                            @click="closeMenuAndNavigate"
+                        >
+                            <span>Keunggulan Layanan</span>
+                            <ArrowRight class="w-4 h-4 text-slate-400" />
+                        </a>
+                        <a
+                            href="#tarif"
+                            class="px-4 py-3 font-semibold text-base hover:bg-[#E6E9FD] hover:text-[#4F5FE8] rounded-xl transition-colors flex items-center justify-between min-h-[44px]"
+                            @click="closeMenuAndNavigate"
+                        >
+                            <span>Daftar Layanan & Tarif</span>
+                            <ArrowRight class="w-4 h-4 text-slate-400" />
+                        </a>
+                        <a
+                            href="#lacak"
+                            class="px-4 py-3 font-semibold text-base hover:bg-[#E6E9FD] hover:text-[#4F5FE8] rounded-xl transition-colors flex items-center justify-between min-h-[44px]"
+                            @click="closeMenuAndNavigate"
+                        >
+                            <span>Cek Status / Lacak Nota</span>
+                            <ArrowRight class="w-4 h-4 text-slate-400" />
+                        </a>
+                        <a
+                            href="#lokasi"
+                            class="px-4 py-3 font-semibold text-base hover:bg-[#E6E9FD] hover:text-[#4F5FE8] rounded-xl transition-colors flex items-center justify-between min-h-[44px]"
+                            @click="closeMenuAndNavigate"
+                        >
+                            <span>Lokasi & Peta Outlet</span>
+                            <ArrowRight class="w-4 h-4 text-slate-400" />
+                        </a>
+                        <a
+                            href="#faq"
+                            class="px-4 py-3 font-semibold text-base hover:bg-[#E6E9FD] hover:text-[#4F5FE8] rounded-xl transition-colors flex items-center justify-between min-h-[44px]"
+                            @click="closeMenuAndNavigate"
+                        >
+                            <span>Pertanyaan Umum (FAQ)</span>
+                            <ArrowRight class="w-4 h-4 text-slate-400" />
+                        </a>
+                    </div>
+
+                    <hr class="border-[#E3E1DA]" />
+
+                    <div class="flex flex-col gap-2.5 pt-1">
+                        <a
+                            :href="whatsappUrl"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="bg-[#FF8A5B] hover:bg-[#F26B3A] text-[#10194D] font-bold text-sm text-center py-3 px-5 rounded-full flex items-center justify-center gap-2 shadow-sm transition-all min-h-[44px]"
+                            @click="closeMenuAndNavigate"
+                        >
+                            <MessageCircle class="w-4 h-4" />
+                            <span>Pesan Antar Jemput via WA</span>
+                        </a>
+                        <Link
+                            v-if="canLogin"
+                            href="/login"
+                            class="text-center font-bold text-sm py-3 px-5 rounded-full border border-[#E3E1DA] hover:bg-[#E6E9FD] hover:text-[#4F5FE8] transition-all min-h-[44px] flex items-center justify-center"
+                            @click="closeMenuAndNavigate"
+                        >
+                            Masuk Dashboard Staf
+                        </Link>
+                    </div>
+                </div>
+            </Transition>
+        </Teleport>
 
         <!-- ======================================================== -->
         <!-- MAIN CONTENT                                            -->
@@ -999,7 +1095,7 @@ onBeforeUnmount(() => {
                             </div>
 
                             <!-- Right: Signature Vertical Orange Ticket Stub (Every Sunday) -->
-                            <div class="md:w-1/12 bg-[#FF8A5B] text-[#10194D] font-extrabold text-xs uppercase tracking-widest writing-vertical flex items-center justify-center py-4 px-3 select-none">
+                            <div class="w-full md:w-1/12 bg-[#FF8A5B] text-[#10194D] font-extrabold text-xs uppercase tracking-widest md:writing-vertical flex items-center justify-center py-3 md:py-4 px-4 md:px-3 select-none border-t md:border-t-0 md:border-l-2 md:border-dashed border-[#10194D]/25">
                                 <span>ANDIK LAUNDRY • GRESIK</span>
                             </div>
                         </div>
@@ -1163,7 +1259,7 @@ onBeforeUnmount(() => {
                         </div>
 
                         <!-- Right Google Maps Interactive Embed -->
-                        <div class="lg:col-span-7 h-[360px] sm:h-[420px] rounded-[24px] overflow-hidden border border-slate-200 shadow-inner relative">
+                        <div class="lg:col-span-7 h-[280px] sm:h-[360px] md:h-[420px] rounded-[24px] overflow-hidden border border-slate-200 shadow-inner relative">
                             <iframe
                                 title="Peta Lokasi Resmi Andik Laundry Gresik"
                                 class="w-full h-full border-0"
@@ -1243,18 +1339,18 @@ onBeforeUnmount(() => {
                     <div class="max-w-xl mx-auto mt-8">
                         <form
                             @submit.prevent="submitOrderCheck"
-                            class="bg-white rounded-full p-2 pl-6 shadow-2xl border border-slate-200 flex items-center justify-between gap-2 transition-all focus-within:ring-3 focus-within:ring-[#4F5FE8]/40"
+                            class="bg-white rounded-full p-2 pl-4 sm:pl-6 shadow-2xl border border-slate-200 flex items-center justify-between gap-2 transition-all focus-within:ring-3 focus-within:ring-[#4F5FE8]/40"
                         >
                             <input
                                 v-model="orderQuery"
                                 type="text"
                                 placeholder="Masukkan nomor nota atau No. HP…"
-                                class="w-full bg-transparent text-[#10194D] text-sm sm:text-base font-semibold placeholder-slate-400 focus:outline-none"
+                                class="w-full bg-transparent text-[#10194D] text-xs sm:text-base font-semibold placeholder-slate-400 focus:outline-none"
                             />
                             <button
                                 type="submit"
                                 :disabled="isCheckingOrder"
-                                class="bg-[#FF8A5B] hover:bg-[#F26B3A] text-[#10194D] font-bold text-xs sm:text-sm px-6 py-3.5 rounded-full transition-all duration-200 shrink-0 shadow-sm hover:shadow-[0_4px_14px_rgba(255,138,91,0.4)] disabled:opacity-50 flex items-center gap-2"
+                                class="bg-[#FF8A5B] hover:bg-[#F26B3A] text-[#10194D] font-bold text-xs sm:text-sm px-4 sm:px-6 py-3 sm:py-3.5 rounded-full transition-all duration-200 shrink-0 shadow-sm hover:shadow-[0_4px_14px_rgba(255,138,91,0.4)] disabled:opacity-50 flex items-center gap-1.5 sm:gap-2 min-h-[44px]"
                             >
                                 <span v-if="!isCheckingOrder">Lacak Nota</span>
                                 <span v-else>Memeriksa…</span>

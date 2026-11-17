@@ -276,9 +276,21 @@
 }
 
 /* Every Sunday & Modern Landing Utilities (DESIGN.md) */
+html {
+  scroll-padding-top: 84px;
+  scroll-behavior: smooth;
+}
+
 .writing-vertical {
   writing-mode: vertical-rl;
   text-orientation: mixed;
+}
+
+@media (min-width: 768px) {
+  .md\:writing-vertical {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+  }
 }
 
 /* Smooth Landing Motion & Animations (DESIGN.md Section 8) */
