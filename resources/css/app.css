@@ -81,7 +81,7 @@
    ============================================================ */
 @layer base {
   html {
-    scroll-padding-top: 84px;
+    scroll-padding-top: 96px;
     scroll-behavior: smooth;
   }
 
@@ -153,13 +153,8 @@
 /* ============================================================
    Motion (DESIGN.md Section 8) — landing only, honour reduced motion
    ============================================================ */
-@keyframes floatSlow {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
-}
-
-@keyframes fadeSlideUp {
-  from { opacity: 0; transform: translateY(18px); }
+@keyframes heroEnter {
+  from { opacity: 0; transform: translateY(22px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -173,12 +168,10 @@
   100% { background-position: 200% 0; }
 }
 
-.animate-float-slow {
-  animation: floatSlow 4s ease-in-out infinite;
-}
-
-.animate-fade-slide-up {
-  animation: fadeSlideUp 0.65s var(--ease-standard) both;
+.landing-enter {
+  opacity: 0;
+  animation: heroEnter 0.8s var(--ease-standard) forwards;
+  animation-delay: var(--enter-delay, 0ms);
 }
 
 .animate-fadeIn {
@@ -199,12 +192,15 @@
 .landing-reveal-right {
   opacity: 0;
   will-change: opacity, transform;
-  transition: opacity 0.7s var(--ease-standard), transform 0.7s var(--ease-standard);
+  transition:
+    opacity 0.7s var(--ease-standard),
+    transform 0.7s var(--ease-standard);
+  transition-delay: var(--reveal-delay, 0ms);
 }
 
-.landing-reveal { transform: translateY(24px); }
-.landing-reveal-left { transform: translateX(-24px); }
-.landing-reveal-right { transform: translateX(24px); }
+.landing-reveal { transform: translateY(20px); }
+.landing-reveal-left { transform: translateX(-20px); }
+.landing-reveal-right { transform: translateX(20px); }
 
 .landing-reveal.is-visible,
 .landing-reveal-left.is-visible,
@@ -221,85 +217,11 @@
 }
 
 /* ============================================================
-   Washing Machine Hero Animations
+   Hero drum: rotation follows page scroll (set from Welcome.vue)
    ============================================================ */
-@keyframes washTumbleCycle {
-  0% { transform: rotate(0deg); }
-  20% { transform: rotate(140deg); }
-  25% { transform: rotate(120deg); }
-  50% { transform: rotate(400deg); }
-  55% { transform: rotate(380deg); }
-  75% { transform: rotate(200deg); }
-  90% { transform: rotate(-60deg); }
-  100% { transform: rotate(0deg); }
-}
-
-@keyframes washWaterWave {
-  0%, 100% { transform: translateY(0) scaleY(1); }
-  50% { transform: translateY(-7px) scaleY(1.08) rotate(4deg); }
-}
-
-@keyframes soapBubbleFloat {
-  0%, 100% { transform: translateY(0) translateX(0) scale(1); opacity: 0.85; }
-  33% { transform: translateY(-16px) translateX(8px) scale(1.08); opacity: 1; }
-  66% { transform: translateY(-8px) translateX(-6px) scale(0.95); opacity: 0.75; }
-}
-
-@keyframes bubbleDrift {
-  0% { transform: translateY(0) scale(0.85); opacity: 0; }
-  20% { opacity: 0.9; }
-  80% { opacity: 0.7; }
-  100% { transform: translateY(-65px) translateX(25px) scale(1.15); opacity: 0; }
-}
-
-@keyframes machineHum {
-  0%, 100% { transform: translate(0, 0); }
-  25% { transform: translate(-0.6px, 0.4px); }
-  50% { transform: translate(0.6px, -0.4px); }
-  75% { transform: translate(-0.4px, -0.5px); }
-}
-
-@keyframes ledBlinkLive {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
-
-.animate-wash-tumble {
-  animation: washTumbleCycle 9s cubic-bezier(0.42, 0, 0.58, 1) infinite;
-  transform-origin: center;
-}
-
-.animate-water-slosh {
-  animation: washWaterWave 3s ease-in-out infinite;
-  transform-origin: center;
-}
-
-.animate-soap-bubble-1 {
-  animation: soapBubbleFloat 4s ease-in-out infinite;
-}
-
-.animate-soap-bubble-2 {
-  animation: soapBubbleFloat 5s ease-in-out infinite 1.5s;
-}
-
-.animate-soap-bubble-3 {
-  animation: soapBubbleFloat 3.8s ease-in-out infinite 0.8s;
-}
-
-.animate-bubble-drift-1 {
-  animation: bubbleDrift 4.5s ease-out infinite;
-}
-
-.animate-bubble-drift-2 {
-  animation: bubbleDrift 6s ease-out infinite 2s;
-}
-
-.animate-machine-hum {
-  animation: machineHum 0.4s linear infinite;
-}
-
-.animate-led-live {
-  animation: ledBlinkLive 1.4s ease-in-out infinite;
+.drum-scroll {
+  transform: rotate(var(--drum-angle, 0deg));
+  will-change: transform;
 }
 
 /* ============================================================
@@ -321,9 +243,15 @@
 
   .landing-reveal,
   .landing-reveal-left,
-  .landing-reveal-right {
+  .landing-reveal-right,
+  .landing-enter {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
+    animation: none !important;
+  }
+
+  .drum-scroll {
+    transform: none !important;
   }
 }

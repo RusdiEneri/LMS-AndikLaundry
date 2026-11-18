@@ -39,8 +39,6 @@ Route::get('/', function () {
         };
     }
 
-    // Statistik publik landing page: hitungan riil dari database + basis dummy
-    // agar toko yang baru beroperasi tetap tampil kredibel.
     $customerCount = 0;
     $orderCount = 0;
     $laundryKg = 0.0;
@@ -55,7 +53,7 @@ Route::get('/', function () {
             ->where('transactions.production_status', '!=', ProductionStatus::CANCELLED->value)
             ->sum('transaction_items.actual_quantity');
     } catch (Throwable) {
-        // Fallback anggun ke basis angka jika tabel belum termigrasi.
+        // Fallback ke nol jika tabel belum termigrasi.
     }
 
     $storeName = 'Andik Laundry';
@@ -73,9 +71,9 @@ Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'stats' => [
-            'customers' => 1250 + $customerCount,
-            'orders' => 3400 + $orderCount,
-            'laundry_kg' => 8200 + (int) floor($laundryKg),
+            'customers' => $customerCount,
+            'orders' => $orderCount,
+            'laundry_kg' => (int) floor($laundryKg),
         ],
         'store' => [
             'name' => $storeName,
