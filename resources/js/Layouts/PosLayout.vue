@@ -380,7 +380,7 @@ onUnmounted(() => {
                         method="post"
                         as="button"
                         @click="isMobileNavOpen = false"
-                        class="flex w-full items-center justify-center space-x-2 px-4 py-2.5 rounded-pill min-h-[40px] text-xs font-bold text-[#F5B8BC] hover:bg-danger/15 hover:text-white transition-all duration-[120ms] ease-standard cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
+                        class="flex w-full items-center justify-center space-x-2 px-4 py-2.5 rounded-pill min-h-[40px] text-xs font-bold text-danger/80 hover:bg-danger/15 hover:text-white transition-all duration-[120ms] ease-standard cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
                     >
                         <LogOut class="h-4 w-4 shrink-0" />
                         <span>Keluar dari Aplikasi</span>

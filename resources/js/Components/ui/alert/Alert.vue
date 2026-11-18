@@ -16,9 +16,9 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const config = {
-    success: { icon: CheckCircle2, bg: 'bg-[#C9F0E6]', text: 'text-[#0F6F5B]', border: 'border-l-success' },
-    error: { icon: XCircle, bg: 'bg-[#FDE3E4]', text: 'text-[#B3262B]', border: 'border-l-danger' },
-    warning: { icon: AlertTriangle, bg: 'bg-[#FFF1D6]', text: 'text-[#8A5A00]', border: 'border-l-warning' },
+    success: { icon: CheckCircle2, bg: 'bg-success/15', text: 'text-success', border: 'border-l-success' },
+    error: { icon: XCircle, bg: 'bg-danger/10', text: 'text-danger', border: 'border-l-danger' },
+    warning: { icon: AlertTriangle, bg: 'bg-warning/15', text: 'text-warning', border: 'border-l-warning' },
     info: { icon: Info, bg: 'bg-primary-100', text: 'text-primary-700', border: 'border-l-info' },
 } as const;
 </script>

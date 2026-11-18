@@ -380,7 +380,7 @@ const roleLabel = computed(() => {
                         href="/logout"
                         method="post"
                         as="button"
-                        class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-surface text-text-muted hover:text-danger hover:bg-[#FDE3E4] hover:border-danger/40 transition-all duration-[120ms] ease-standard cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
+                        class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-surface text-text-muted hover:text-danger hover:bg-danger/10 hover:border-danger/40 transition-all duration-[120ms] ease-standard cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
                         title="Keluar dari Aplikasi"
                         aria-label="Keluar dari Aplikasi"
                     >
@@ -485,7 +485,7 @@ const roleLabel = computed(() => {
                         method="post"
                         as="button"
                         @click="isMobileMenuOpen = false"
-                        class="flex w-full items-center justify-center space-x-2 px-4 py-2.5 rounded-pill min-h-[40px] text-xs font-bold text-[#F5B8BC] hover:bg-danger/15 hover:text-white transition-all duration-[120ms] ease-standard cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
+                        class="flex w-full items-center justify-center space-x-2 px-4 py-2.5 rounded-pill min-h-[40px] text-xs font-bold text-danger/80 hover:bg-danger/15 hover:text-white transition-all duration-[120ms] ease-standard cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
                     >
                         <LogOut class="h-4 w-4 shrink-0" />
                         <span>Keluar dari Aplikasi</span>

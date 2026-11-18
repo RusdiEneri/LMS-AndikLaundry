@@ -13,7 +13,7 @@ const props = defineProps<Props>();
     <th
         :class="
             cn(
-                'h-10 bg-[#EDF3F9] px-4 text-left align-middle text-xs font-semibold uppercase tracking-wide text-text-muted select-none',
+                'h-10 bg-bg px-4 text-left align-middle text-xs font-semibold uppercase tracking-wide text-text-muted select-none',
                 props.class
             )
         "

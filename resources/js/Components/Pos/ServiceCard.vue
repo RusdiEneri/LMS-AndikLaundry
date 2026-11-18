@@ -51,7 +51,7 @@ const categoryBadgeClass = computed(() => {
         return 'bg-primary-100 text-primary-700';
     }
     if (cat.includes('meteran') || cat.includes('karpet')) {
-        return 'bg-[#FFF1D6] text-[#8A5A00]';
+        return 'bg-warning/15 text-warning border border-warning/20';
     }
     return 'bg-accent-100 text-accent-700';
 });
@@ -97,7 +97,7 @@ function handleClick() {
                 Estimasi: {{ service.estimated_hours }} Jam
             </p>
 
-            <p v-if="isMeterService" class="text-[10px] text-[#8A5A00] font-bold mt-1">
+            <p v-if="isMeterService" class="text-[10px] text-warning font-bold mt-1">
                 Input P × L (m²)
             </p>
         </div>

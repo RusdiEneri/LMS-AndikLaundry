@@ -735,32 +735,32 @@ const submitSettings = () => {
     <AppLayout title="Pengaturan Toko & Bisnis">
         <div class="space-y-6">
             <!-- Header Title Banner -->
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-surface p-5 rounded-2xl border border-border shadow-xs">
                 <div>
                     <div class="flex items-center gap-2.5">
-                        <h1 class="font-display text-2xl sm:text-3xl font-extrabold tracking-tight text-[#10194D]">Pengaturan Toko & Bisnis</h1>
-                        <span class="px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider bg-[#FFF0EB] text-[#FF8A5B]">
+                        <h1 class="font-display text-2xl sm:text-3xl font-extrabold tracking-tight text-navy-900">Pengaturan Toko & Bisnis</h1>
+                        <span class="px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider bg-accent-100 text-accent-700 font-bold">
                             Owner Control
                         </span>
                     </div>
-                    <p class="text-xs sm:text-sm font-medium text-slate-500 mt-1">Parameter operasional, batas piutang, hardware thermal & gateway WhatsApp</p>
+                    <p class="text-xs sm:text-sm font-medium text-text-muted mt-1">Parameter operasional, batas piutang, hardware thermal & gateway WhatsApp</p>
                 </div>
             </div>
 
             <!-- Flash Message Banner -->
             <div
                 v-if="flashSuccess"
-                class="flex items-center gap-3 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 font-semibold shadow-xs"
+                class="flex items-center gap-3 p-4 rounded-xl bg-success/10 border border-success/20 text-success font-semibold shadow-xs"
             >
-                <CheckCircle2 class="w-5 h-5 text-emerald-600 shrink-0 stroke-[2.5]" />
+                <CheckCircle2 class="w-5 h-5 text-success shrink-0 stroke-[2.5]" />
                 <span class="text-sm">{{ flashSuccess }}</span>
             </div>
 
             <div
                 v-if="flashError"
-                class="flex items-center gap-3 p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 font-semibold shadow-xs"
+                class="flex items-center gap-3 p-4 rounded-xl bg-danger/10 border border-danger/20 text-danger font-semibold shadow-xs"
             >
-                <AlertCircle class="w-5 h-5 text-rose-600 shrink-0 stroke-[2.5]" />
+                <AlertCircle class="w-5 h-5 text-danger shrink-0 stroke-[2.5]" />
                 <span class="text-sm">{{ flashError }}</span>
             </div>
 
@@ -768,7 +768,7 @@ const submitSettings = () => {
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
                 <!-- Navigation Tabs Rail -->
                 <aside class="lg:col-span-1 space-y-4">
-                    <div class="bg-white rounded-2xl border border-slate-200/90 p-3 shadow-xs space-y-1.5">
+                    <div class="bg-surface rounded-2xl border border-border p-3 shadow-xs space-y-1.5">
                         <button
                             v-for="tab in tabs"
                             :key="tab.key"
@@ -777,20 +777,20 @@ const submitSettings = () => {
                             :class="[
                                 'w-full flex items-start gap-3 p-3 rounded-xl text-left transition-all min-h-[48px] cursor-pointer',
                                 activeTab === tab.key
-                                    ? 'bg-[#4F5FE8] text-white font-bold shadow-xs'
-                                    : 'bg-white text-slate-700 hover:bg-slate-50 font-medium'
+                                    ? 'bg-primary-600 text-white font-bold shadow-xs'
+                                    : 'bg-surface text-text hover:bg-bg font-medium'
                             ]"
                         >
                             <component
                                 :is="tab.icon"
-                                :class="['w-5 h-5 mt-0.5 shrink-0 stroke-[2.2]', activeTab === tab.key ? 'text-white' : 'text-slate-500']"
+                                :class="['w-5 h-5 mt-0.5 shrink-0 stroke-[2.2]', activeTab === tab.key ? 'text-white' : 'text-text-muted']"
                             />
                             <div>
                                 <div class="text-sm font-bold leading-tight">{{ tab.label }}</div>
                                 <div
                                     :class="[
                                         'text-xs mt-0.5 leading-tight font-medium',
-                                        activeTab === tab.key ? 'text-white/80' : 'text-slate-400'
+                                        activeTab === tab.key ? 'text-white/80' : 'text-text-muted'
                                     ]"
                                 >
                                     {{ tab.desc }}
@@ -800,12 +800,12 @@ const submitSettings = () => {
                     </div>
 
                     <!-- Quick Info Card -->
-                    <div class="bg-[#E8EBFD] rounded-2xl border border-[#4F5FE8]/20 p-4 text-[#10194D] shadow-xs space-y-2">
-                        <div class="font-bold flex items-center gap-2 text-sm uppercase tracking-wide text-[#4F5FE8]">
+                    <div class="bg-primary-50 rounded-2xl border border-primary-600/20 p-4 text-navy-900 shadow-xs space-y-2">
+                        <div class="font-bold flex items-center gap-2 text-sm uppercase tracking-wide text-primary-600">
                             <CheckCircle2 class="w-4 h-4 stroke-[2.5]" />
                             Audit Compliance
                         </div>
-                        <p class="text-xs font-medium leading-relaxed text-slate-600">
+                        <p class="text-xs font-medium leading-relaxed text-text">
                             Setiap perubahan parameter dicatat secara otomatis dalam buku audit digital yang tidak dapat dimanipulasi.
                         </p>
                     </div>
@@ -816,25 +816,25 @@ const submitSettings = () => {
                     <!-- Tab 0: Layanan & Tarif (POS Master Catalog CRUD) -->
                     <div v-show="activeTab === 'services'" class="space-y-6">
                         <!-- Header Card -->
-                        <div class="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-xs">
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4 mb-4">
+                        <div class="bg-surface rounded-2xl border border-border p-5 sm:p-6 shadow-xs">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-4 mb-4">
                                 <div>
                                     <div class="flex items-center gap-2">
-                                        <h2 class="text-lg sm:text-xl font-bold text-[#10194D] tracking-tight">
+                                        <h2 class="text-lg sm:text-xl font-bold text-navy-900 tracking-tight">
                                             Katalog Layanan & Tarif
                                         </h2>
-                                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#E8EBFD] text-[#4F5FE8]">
+                                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-primary-50 text-primary-600">
                                             POS Realtime
                                         </span>
                                     </div>
-                                    <p class="text-xs sm:text-sm font-medium text-slate-500 mt-0.5">
+                                    <p class="text-xs sm:text-sm font-medium text-text-muted mt-0.5">
                                         Kelola varian cuci, harga per kg/pcs, batas minimal timbangan, serta biaya kilat ekspres kasir.
                                     </p>
                                 </div>
                                 <button
                                     type="button"
                                     @click="openCreateServiceModal"
-                                    class="bg-[#FF8A5B] hover:bg-[#ff7640] text-white rounded-xl min-h-[44px] px-4 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer shadow-xs transition-colors shrink-0"
+                                    class="bg-accent-500 hover:bg-accent-600 text-navy-950 font-bold rounded-xl min-h-[44px] px-4 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer shadow-xs transition-colors shrink-0"
                                 >
                                     <Plus class="w-4 h-4 stroke-[2.5]" />
                                     <span>+ Tambah Layanan</span>
@@ -851,8 +851,8 @@ const submitSettings = () => {
                                         :class="[
                                             'px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer',
                                             selectedCategory === 'all'
-                                                ? 'bg-[#4F5FE8] text-white shadow-xs'
-                                                : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+                                                ? 'bg-primary-600 text-white shadow-xs'
+                                                : 'bg-surface text-text border border-border hover:bg-bg'
                                         ]"
                                     >
                                         Semua ({{ props.services?.length ?? 0 }})
@@ -865,8 +865,8 @@ const submitSettings = () => {
                                         :class="[
                                             'px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer',
                                             selectedCategory === cat.slug
-                                                ? 'bg-[#4F5FE8] text-white shadow-xs'
-                                                : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+                                                ? 'bg-primary-600 text-white shadow-xs'
+                                                : 'bg-surface text-text border border-border hover:bg-bg'
                                         ]"
                                     >
                                         {{ cat.name }}
@@ -875,12 +875,12 @@ const submitSettings = () => {
 
                                 <!-- Search Bar -->
                                 <div class="relative w-full sm:w-64">
-                                    <Search class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 stroke-[2]" />
+                                    <Search class="w-4 h-4 text-text-muted absolute left-3 top-1/2 -translate-y-1/2 stroke-[2]" />
                                     <input
                                         v-model="serviceSearchQuery"
                                         type="text"
                                         placeholder="Cari layanan / kode..."
-                                        class="w-full pl-9 pr-3 py-2 text-xs font-semibold rounded-xl border border-slate-200 bg-white text-slate-800 shadow-xs focus:outline-hidden focus:border-[#4F5FE8] focus:ring-2 focus:ring-[#4F5FE8]/20 transition"
+                                        class="w-full pl-9 pr-3 py-2 text-xs font-semibold rounded-xl border border-border bg-surface text-text shadow-xs focus:outline-hidden focus:border-primary-600 focus:ring-2 focus:ring-primary-100 transition"
                                     />
                                 </div>
                             </div>
@@ -889,17 +889,17 @@ const submitSettings = () => {
                         <!-- Empty State -->
                         <div
                             v-if="filteredServices.length === 0"
-                            class="bg-white rounded-2xl border border-slate-200/90 p-8 text-center shadow-xs space-y-3"
+                            class="bg-surface rounded-2xl border border-border p-8 text-center shadow-xs space-y-3"
                         >
                             <Shirt class="w-12 h-12 mx-auto text-slate-300 stroke-[1.5]" />
-                            <h3 class="text-base font-bold text-[#10194D]">Tidak ada layanan ditemukan</h3>
-                            <p class="text-xs font-medium text-slate-500 max-w-sm mx-auto">
+                            <h3 class="text-base font-bold text-navy-900">Tidak ada layanan ditemukan</h3>
+                            <p class="text-xs font-medium text-text-muted max-w-sm mx-auto">
                                 Belum ada varian layanan yang cocok dengan kata kunci atau filter kategori yang dipilih.
                             </p>
                             <button
                                 type="button"
                                 @click="openCreateServiceModal"
-                                class="inline-flex items-center gap-2 px-4 py-2 bg-[#FF8A5B] hover:bg-[#ff7640] text-white rounded-xl font-bold text-xs shadow-xs transition-colors"
+                                class="inline-flex items-center gap-2 px-4 py-2 bg-accent-500 hover:bg-accent-600 text-navy-950 font-bold rounded-xl font-bold text-xs shadow-xs transition-colors"
                             >
                                 <Plus class="w-4 h-4 stroke-[2.5]" />
                                 Tambah Layanan Baru Sekarang
@@ -912,87 +912,87 @@ const submitSettings = () => {
                                 v-for="svc in filteredServices"
                                 :key="svc.id"
                                 :class="[
-                                    'bg-white rounded-2xl border border-slate-200/90 p-4 shadow-xs hover:border-[#4F5FE8]/40 hover:shadow-sm transition-all flex flex-col justify-between relative',
-                                    !svc.is_active ? 'opacity-60 bg-slate-50/70' : ''
+                                    'bg-surface rounded-2xl border border-border p-4 shadow-xs hover:border-primary-600/40 hover:shadow-sm transition-all flex flex-col justify-between relative',
+                                    !svc.is_active ? 'opacity-60 bg-bg/70' : ''
                                 ]"
                             >
                                 <!-- Card Header: Badges & Title -->
                                 <div>
                                     <div class="flex items-center justify-between gap-2 mb-2">
-                                        <span class="px-2.5 py-0.5 rounded-full bg-[#E8EBFD] text-[#4F5FE8] text-[10px] font-bold uppercase tracking-wider">
+                                        <span class="px-2.5 py-0.5 rounded-full bg-primary-50 text-primary-600 text-[10px] font-bold uppercase tracking-wider">
                                             {{ svc.category?.name ?? 'Layanan' }}
                                         </span>
                                         <span
                                             :class="[
                                                 'px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 border',
-                                                svc.is_active ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-slate-100 text-slate-500 border-slate-200'
+                                                svc.is_active ? 'bg-success/10 text-emerald-700 border-success/20' : 'bg-bg text-text-muted border-border'
                                             ]"
                                         >
-                                            <span :class="['w-1.5 h-1.5 rounded-full', svc.is_active ? 'bg-emerald-500' : 'bg-slate-400']"></span>
+                                            <span :class="['w-1.5 h-1.5 rounded-full', svc.is_active ? 'bg-success/100' : 'bg-slate-400']"></span>
                                             {{ svc.is_active ? 'Aktif di POS' : 'Nonaktif' }}
                                         </span>
                                     </div>
 
-                                    <h3 class="text-base font-bold text-[#10194D] leading-snug">{{ svc.name }}</h3>
-                                    <div class="text-[11px] font-mono font-medium text-slate-400 mt-0.5">Kode: {{ svc.code }}</div>
+                                    <h3 class="text-base font-bold text-navy-900 leading-snug">{{ svc.name }}</h3>
+                                    <div class="text-[11px] font-mono font-medium text-text-muted mt-0.5">Kode: {{ svc.code }}</div>
                                     
-                                    <p v-if="svc.description" class="text-xs font-medium text-slate-500 mt-2 line-clamp-2">
+                                    <p v-if="svc.description" class="text-xs font-medium text-text-muted mt-2 line-clamp-2">
                                         {{ svc.description }}
                                     </p>
                                 </div>
 
                                 <!-- Price & Specs Box -->
-                                <div class="my-3 p-3 bg-slate-50/80 border border-slate-200/80 rounded-xl space-y-1.5">
+                                <div class="my-3 p-3 bg-bg border border-border rounded-xl space-y-1.5">
                                     <div class="flex items-baseline justify-between">
-                                        <span class="text-xs font-semibold text-slate-500 uppercase">Tarif Dasar:</span>
-                                        <span class="text-base font-extrabold text-[#10194D]">
-                                            {{ formatRupiah(svc.base_price) }} <span class="text-xs font-medium text-slate-500">/ {{ formatUnitLabel(svc.unit) }}</span>
+                                        <span class="text-xs font-semibold text-text-muted uppercase">Tarif Dasar:</span>
+                                        <span class="text-base font-extrabold text-navy-900">
+                                            {{ formatRupiah(svc.base_price) }} <span class="text-xs font-medium text-text-muted">/ {{ formatUnitLabel(svc.unit) }}</span>
                                         </span>
                                     </div>
 
-                                    <div class="flex items-center justify-between text-xs font-medium text-slate-600 pt-1 border-t border-slate-200/60">
+                                    <div class="flex items-center justify-between text-xs font-medium text-text pt-1 border-t border-border/60">
                                         <span class="flex items-center gap-1">
-                                            <Tag class="w-3.5 h-3.5 text-slate-400 stroke-[2]" />
+                                            <Tag class="w-3.5 h-3.5 text-text-muted stroke-[2]" />
                                             Min. Order:
                                         </span>
-                                        <span class="font-bold text-slate-800">{{ svc.min_weight ? Number(svc.min_weight) : (svc.unit === 'kg' ? 2 : 1) }} {{ formatUnitLabel(svc.unit) }}</span>
+                                        <span class="font-bold text-text">{{ svc.min_weight ? Number(svc.min_weight) : (svc.unit === 'kg' ? 2 : 1) }} {{ formatUnitLabel(svc.unit) }}</span>
                                     </div>
 
-                                    <div class="flex items-center justify-between text-xs font-medium text-slate-600">
+                                    <div class="flex items-center justify-between text-xs font-medium text-text">
                                         <span class="flex items-center gap-1">
-                                            <Clock class="w-3.5 h-3.5 text-slate-400 stroke-[2]" />
+                                            <Clock class="w-3.5 h-3.5 text-text-muted stroke-[2]" />
                                             Durasi Reguler:
                                         </span>
-                                        <span class="font-bold text-slate-800">{{ svc.estimated_duration_hours }} Jam ({{ Math.round(svc.estimated_duration_hours / 24) }} Hari)</span>
+                                        <span class="font-bold text-text">{{ svc.estimated_duration_hours }} Jam ({{ Math.round(svc.estimated_duration_hours / 24) }} Hari)</span>
                                     </div>
 
                                     <!-- Ekspres Tier Indicator -->
-                                    <div class="pt-1.5 border-t border-slate-200/60">
+                                    <div class="pt-1.5 border-t border-border/60">
                                         <div
                                             v-if="svc.tiers?.some(t => t.tier_code === 'ekspres' && t.is_active)"
-                                            class="bg-[#FFF0EB] border border-[#FF8A5B]/30 rounded-lg p-1.5 text-[11px] font-bold text-[#FF8A5B] flex items-center justify-between"
+                                            class="bg-warning/15 border border-warning/20 rounded-md p-1.5 text-[11px] font-bold text-warning flex items-center justify-between"
                                         >
                                             <span class="flex items-center gap-1">
-                                                <Zap class="w-3.5 h-3.5 text-[#FF8A5B] fill-[#FF8A5B] stroke-[1.5]" />
+                                                <Zap class="w-3.5 h-3.5 text-warning fill-warning stroke-[1.5]" />
                                                 Kilat Ekspres:
                                             </span>
-                                            <span class="font-extrabold text-[#10194D]">
+                                            <span class="font-extrabold text-navy-900">
                                                 +{{ formatRupiah(svc.tiers?.find(t => t.tier_code === 'ekspres')?.flat_surcharge ?? 2000) }}
-                                                <span class="text-[10px] font-normal text-slate-500">({{ svc.tiers?.find(t => t.tier_code === 'ekspres')?.duration_hours ?? 12 }} Jam)</span>
+                                                <span class="text-[10px] font-normal text-text-muted">({{ svc.tiers?.find(t => t.tier_code === 'ekspres')?.duration_hours ?? 12 }} Jam)</span>
                                             </span>
                                         </div>
-                                        <div v-else class="text-[11px] font-medium text-slate-400 italic">
+                                        <div v-else class="text-[11px] font-medium text-text-muted italic">
                                             Tanpa opsi pengerjaan ekspres
                                         </div>
                                     </div>
                                 </div>
 
                                 <!-- Action Buttons -->
-                                <div class="flex items-center gap-2 pt-1 border-t border-slate-100">
+                                <div class="flex items-center gap-2 pt-1 border-t border-border">
                                     <button
                                         type="button"
                                         @click="openEditServiceModal(svc)"
-                                        class="flex-1 py-1.5 px-2 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 shadow-xs flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+                                        class="flex-1 py-1.5 px-2 bg-surface hover:bg-bg border border-border rounded-xl text-xs font-bold text-text shadow-xs flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
                                     >
                                         <Pencil class="w-3.5 h-3.5 stroke-[2]" />
                                         Edit
@@ -1003,7 +1003,7 @@ const submitSettings = () => {
                                         :title="svc.is_active ? 'Nonaktifkan dari POS' : 'Aktifkan di POS'"
                                         :class="[
                                             'py-1.5 px-2.5 border rounded-xl text-xs font-bold shadow-xs flex items-center justify-center cursor-pointer transition-colors',
-                                            svc.is_active ? 'bg-amber-50 hover:bg-amber-100 border-amber-200 text-amber-700' : 'bg-emerald-50 hover:bg-emerald-100 border-emerald-200 text-emerald-700'
+                                            svc.is_active ? 'bg-amber-50 hover:bg-amber-100 border-amber-200 text-amber-700' : 'bg-success/10 hover:bg-emerald-100 border-success/20 text-emerald-700'
                                         ]"
                                     >
                                         <Power class="w-3.5 h-3.5 stroke-[2]" />
@@ -1012,7 +1012,7 @@ const submitSettings = () => {
                                         type="button"
                                         @click="confirmDeleteService(svc)"
                                         title="Hapus Layanan"
-                                        class="py-1.5 px-2.5 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-xl text-xs font-bold text-rose-600 shadow-xs flex items-center justify-center cursor-pointer transition-colors"
+                                        class="py-1.5 px-2.5 bg-danger/10 hover:bg-rose-100 border border-danger/20 rounded-xl text-xs font-bold text-danger shadow-xs flex items-center justify-center cursor-pointer transition-colors"
                                     >
                                         <Trash2 class="w-3.5 h-3.5 stroke-[2]" />
                                     </button>
@@ -1024,83 +1024,83 @@ const submitSettings = () => {
                     <!-- General Settings Form -->
                     <form v-show="activeTab !== 'services'" @submit.prevent="submitSettings" class="space-y-6">
                         <!-- Tab 1: Identitas Toko -->
-                        <div v-show="activeTab === 'store'" class="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs space-y-6">
-                            <div class="border-b border-slate-100 pb-4">
-                                <h2 class="text-lg sm:text-xl font-bold text-[#10194D] flex items-center gap-2.5 tracking-tight">
-                                    <Store class="w-5 h-5 text-[#4F5FE8] stroke-[2]" />
+                        <div v-show="activeTab === 'store'" class="bg-surface rounded-2xl border border-border p-6 shadow-xs space-y-6">
+                            <div class="border-b border-border pb-4">
+                                <h2 class="text-lg sm:text-xl font-bold text-navy-900 flex items-center gap-2.5 tracking-tight">
+                                    <Store class="w-5 h-5 text-primary-600 stroke-[2]" />
                                     Profil & Identitas Toko
                                 </h2>
-                                <p class="text-xs sm:text-sm font-medium text-slate-500 mt-0.5">Informasi resmi yang tertera pada nota cetak dan pesan pelanggan</p>
+                                <p class="text-xs sm:text-sm font-medium text-text-muted mt-0.5">Informasi resmi yang tertera pada nota cetak dan pesan pelanggan</p>
                             </div>
 
                             <div class="space-y-4">
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">
+                                    <label class="block text-xs font-bold text-text mb-1.5 uppercase tracking-wide">
                                         Nama Toko / Outlet <span class="text-rose-500">*</span>
                                     </label>
                                     <input
                                         v-model="form['store.name']"
                                         type="text"
-                                        class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 font-semibold text-sm min-h-[44px] shadow-xs focus:outline-hidden focus:border-[#4F5FE8] focus:ring-2 focus:ring-[#4F5FE8]/20 transition"
+                                        class="w-full px-3.5 py-2.5 rounded-xl border border-border bg-surface text-text font-semibold text-sm min-h-[44px] shadow-xs focus:outline-hidden focus:border-primary-600 focus:ring-2 focus:ring-primary-100 transition"
                                         placeholder="Contoh: Andik Laundry"
                                         required
                                     />
                                 </div>
 
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">
+                                    <label class="block text-xs font-bold text-text mb-1.5 uppercase tracking-wide">
                                         Nomor WhatsApp Toko <span class="text-rose-500">*</span>
                                     </label>
                                     <input
                                         v-model="form['store.phone']"
                                         type="text"
-                                        class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 font-semibold text-sm min-h-[44px] shadow-xs focus:outline-hidden focus:border-[#4F5FE8] focus:ring-2 focus:ring-[#4F5FE8]/20 transition"
+                                        class="w-full px-3.5 py-2.5 rounded-xl border border-border bg-surface text-text font-semibold text-sm min-h-[44px] shadow-xs focus:outline-hidden focus:border-primary-600 focus:ring-2 focus:ring-primary-100 transition"
                                         placeholder="081234567890 / 6281234567890"
                                         required
                                     />
-                                    <p class="text-xs font-medium text-slate-500 mt-1">Nomor kontak resmi yang digunakan untuk pengiriman nota dan konfirmasi.</p>
+                                    <p class="text-xs font-medium text-text-muted mt-1">Nomor kontak resmi yang digunakan untuk pengiriman nota dan konfirmasi.</p>
                                 </div>
 
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">
+                                    <label class="block text-xs font-bold text-text mb-1.5 uppercase tracking-wide">
                                         Alamat Fisik Outlet
                                     </label>
                                     <textarea
                                         v-model="form['store.address']"
                                         rows="2"
-                                        class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 font-semibold text-sm shadow-xs focus:outline-hidden focus:border-[#4F5FE8] focus:ring-2 focus:ring-[#4F5FE8]/20 transition"
+                                        class="w-full px-3.5 py-2.5 rounded-xl border border-border bg-surface text-text font-semibold text-sm shadow-xs focus:outline-hidden focus:border-primary-600 focus:ring-2 focus:ring-primary-100 transition"
                                         placeholder="Alamat lengkap outlet untuk kepala nota..."
                                     ></textarea>
                                 </div>
 
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">
+                                    <label class="block text-xs font-bold text-text mb-1.5 uppercase tracking-wide">
                                         Catatan Kaki Nota (Receipt Footer)
                                     </label>
                                     <textarea
                                         v-model="form['store.receipt_footer']"
                                         rows="3"
-                                        class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 font-semibold text-sm shadow-xs focus:outline-hidden focus:border-[#4F5FE8] focus:ring-2 focus:ring-[#4F5FE8]/20 transition"
+                                        class="w-full px-3.5 py-2.5 rounded-xl border border-border bg-surface text-text font-semibold text-sm shadow-xs focus:outline-hidden focus:border-primary-600 focus:ring-2 focus:ring-primary-100 transition"
                                         placeholder="Syarat, ketentuan, dan garansi cuci bersih pada bagian bawah nota thermal..."
                                     ></textarea>
-                                    <p class="text-xs font-medium text-slate-500 mt-1">Dapat memuat teks panjang hingga ketentuan klaim kehilangan/kerusakan.</p>
+                                    <p class="text-xs font-medium text-text-muted mt-1">Dapat memuat teks panjang hingga ketentuan klaim kehilangan/kerusakan.</p>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Tab 2: Operasional -->
-                        <div v-show="activeTab === 'operational'" class="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs space-y-6">
-                            <div class="border-b border-slate-100 pb-4">
-                                <h2 class="text-lg sm:text-xl font-bold text-[#10194D] flex items-center gap-2.5 tracking-tight">
-                                    <Sliders class="w-5 h-5 text-[#4F5FE8] stroke-[2]" />
+                        <div v-show="activeTab === 'operational'" class="bg-surface rounded-2xl border border-border p-6 shadow-xs space-y-6">
+                            <div class="border-b border-border pb-4">
+                                <h2 class="text-lg sm:text-xl font-bold text-navy-900 flex items-center gap-2.5 tracking-tight">
+                                    <Sliders class="w-5 h-5 text-primary-600 stroke-[2]" />
                                     Batas & Ambang Batas Operasional
                                 </h2>
-                                <p class="text-xs sm:text-sm font-medium text-slate-500 mt-0.5">Aturan kasir, minimum kiloan, plafon piutang, dan cuci ulang</p>
+                                <p class="text-xs sm:text-sm font-medium text-text-muted mt-0.5">Aturan kasir, minimum kiloan, plafon piutang, dan cuci ulang</p>
                             </div>
 
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">
+                                    <label class="block text-xs font-bold text-text mb-1.5 uppercase tracking-wide">
                                         Cas Kiloan Minimum Default (kg)
                                     </label>
                                     <div class="relative">
@@ -1109,34 +1109,34 @@ const submitSettings = () => {
                                             type="number"
                                             step="0.01"
                                             min="0"
-                                            class="w-full pl-3.5 pr-12 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 font-semibold text-sm min-h-[44px] shadow-xs focus:outline-hidden focus:border-[#4F5FE8] focus:ring-2 focus:ring-[#4F5FE8]/20 transition"
+                                            class="w-full pl-3.5 pr-12 py-2.5 rounded-xl border border-border bg-surface text-text font-semibold text-sm min-h-[44px] shadow-xs focus:outline-hidden focus:border-primary-600 focus:ring-2 focus:ring-primary-100 transition"
                                             required
                                         />
-                                        <span class="absolute right-3.5 top-3 text-xs font-bold text-slate-400">KG</span>
+                                        <span class="absolute right-3.5 top-3 text-xs font-bold text-text-muted">KG</span>
                                     </div>
-                                    <p class="text-xs font-medium text-slate-500 mt-1">Berat pesanan kiloan di bawah angka ini akan dibulatkan ke batas ini.</p>
+                                    <p class="text-xs font-medium text-text-muted mt-1">Berat pesanan kiloan di bawah angka ini akan dibulatkan ke batas ini.</p>
                                 </div>
 
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">
+                                    <label class="block text-xs font-bold text-text mb-1.5 uppercase tracking-wide">
                                         Plafon Piutang Pelanggan (Rp)
                                     </label>
                                     <div class="relative">
-                                        <span class="absolute left-3.5 top-3 text-xs font-bold text-slate-400">RP</span>
+                                        <span class="absolute left-3.5 top-3 text-xs font-bold text-text-muted">RP</span>
                                         <input
                                             v-model="form['operational.customer_credit_ceiling']"
                                             type="number"
                                             step="1000"
                                             min="0"
-                                            class="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 font-semibold text-sm min-h-[44px] shadow-xs focus:outline-hidden focus:border-[#4F5FE8] focus:ring-2 focus:ring-[#4F5FE8]/20 transition"
+                                            class="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-border bg-surface text-text font-semibold text-sm min-h-[44px] shadow-xs focus:outline-hidden focus:border-primary-600 focus:ring-2 focus:ring-primary-100 transition"
                                             required
                                         />
                                     </div>
-                                    <p class="text-xs font-medium text-slate-500 mt-1">Batas maksimal saldo belum lunas per pelanggan sebelum dicegat sistem.</p>
+                                    <p class="text-xs font-medium text-text-muted mt-1">Batas maksimal saldo belum lunas per pelanggan sebelum dicegat sistem.</p>
                                 </div>
 
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">
+                                    <label class="block text-xs font-bold text-text mb-1.5 uppercase tracking-wide">
                                         Jatuh Tempo Piutang (Hari)
                                     </label>
                                     <div class="relative">
@@ -1144,34 +1144,34 @@ const submitSettings = () => {
                                             v-model.number="form['operational.default_debt_due_days']"
                                             type="number"
                                             min="1"
-                                            class="w-full pl-3.5 pr-16 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 font-semibold text-sm min-h-[44px] shadow-xs focus:outline-hidden focus:border-[#4F5FE8] focus:ring-2 focus:ring-[#4F5FE8]/20 transition"
+                                            class="w-full pl-3.5 pr-16 py-2.5 rounded-xl border border-border bg-surface text-text font-semibold text-sm min-h-[44px] shadow-xs focus:outline-hidden focus:border-primary-600 focus:ring-2 focus:ring-primary-100 transition"
                                             required
                                         />
-                                        <span class="absolute right-3.5 top-3 text-xs font-bold text-slate-400">HARI</span>
+                                        <span class="absolute right-3.5 top-3 text-xs font-bold text-text-muted">HARI</span>
                                     </div>
-                                    <p class="text-xs font-medium text-slate-500 mt-1">Tenggat pembayaran sebelum peringatan WhatsApp dikirim.</p>
+                                    <p class="text-xs font-medium text-text-muted mt-1">Tenggat pembayaran sebelum peringatan WhatsApp dikirim.</p>
                                 </div>
 
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">
+                                    <label class="block text-xs font-bold text-text mb-1.5 uppercase tracking-wide">
                                         Batas Kas Kecil Kasir (Rp)
                                     </label>
                                     <div class="relative">
-                                        <span class="absolute left-3.5 top-3 text-xs font-bold text-slate-400">RP</span>
+                                        <span class="absolute left-3.5 top-3 text-xs font-bold text-text-muted">RP</span>
                                         <input
                                             v-model="form['operational.cashier_petty_cash_limit']"
                                             type="number"
                                             step="1000"
                                             min="0"
-                                            class="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 font-semibold text-sm min-h-[44px] shadow-xs focus:outline-hidden focus:border-[#4F5FE8] focus:ring-2 focus:ring-[#4F5FE8]/20 transition"
+                                            class="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-border bg-surface text-text font-semibold text-sm min-h-[44px] shadow-xs focus:outline-hidden focus:border-primary-600 focus:ring-2 focus:ring-primary-100 transition"
                                             required
                                         />
                                     </div>
-                                    <p class="text-xs font-medium text-slate-500 mt-1">Pengeluaran kas kecil kasir di atas batas ini memerlukan persetujuan Owner.</p>
+                                    <p class="text-xs font-medium text-text-muted mt-1">Pengeluaran kas kecil kasir di atas batas ini memerlukan persetujuan Owner.</p>
                                 </div>
 
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">
+                                    <label class="block text-xs font-bold text-text mb-1.5 uppercase tracking-wide">
                                         Batas Siklus Cuci Ulang (Maksimal)
                                     </label>
                                     <div class="relative">
@@ -1180,29 +1180,29 @@ const submitSettings = () => {
                                             type="number"
                                             min="1"
                                             max="5"
-                                            class="w-full pl-3.5 pr-16 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 font-semibold text-sm min-h-[44px] shadow-xs focus:outline-hidden focus:border-[#4F5FE8] focus:ring-2 focus:ring-[#4F5FE8]/20 transition"
+                                            class="w-full pl-3.5 pr-16 py-2.5 rounded-xl border border-border bg-surface text-text font-semibold text-sm min-h-[44px] shadow-xs focus:outline-hidden focus:border-primary-600 focus:ring-2 focus:ring-primary-100 transition"
                                             required
                                         />
-                                        <span class="absolute right-3.5 top-3 text-xs font-bold text-slate-400">KALI</span>
+                                        <span class="absolute right-3.5 top-3 text-xs font-bold text-text-muted">KALI</span>
                                     </div>
-                                    <p class="text-xs font-medium text-slate-500 mt-1">Jika cuci ulang melebihi batas ini, order dialihkan untuk review Owner.</p>
+                                    <p class="text-xs font-medium text-text-muted mt-1">Jika cuci ulang melebihi batas ini, order dialihkan untuk review Owner.</p>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Tab 3: Finansial -->
-                        <div v-show="activeTab === 'financial'" class="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs space-y-6">
-                            <div class="border-b border-slate-100 pb-4">
-                                <h2 class="text-lg sm:text-xl font-bold text-[#10194D] flex items-center gap-2.5 tracking-tight">
-                                    <Coins class="w-5 h-5 text-[#4F5FE8] stroke-[2]" />
+                        <div v-show="activeTab === 'financial'" class="bg-surface rounded-2xl border border-border p-6 shadow-xs space-y-6">
+                            <div class="border-b border-border pb-4">
+                                <h2 class="text-lg sm:text-xl font-bold text-navy-900 flex items-center gap-2.5 tracking-tight">
+                                    <Coins class="w-5 h-5 text-primary-600 stroke-[2]" />
                                     Finansial & Perpajakan
                                 </h2>
-                                <p class="text-xs sm:text-sm font-medium text-slate-500 mt-0.5">Konfigurasi tarif PPN dan kode mata uang transaksi</p>
+                                <p class="text-xs sm:text-sm font-medium text-text-muted mt-0.5">Konfigurasi tarif PPN dan kode mata uang transaksi</p>
                             </div>
 
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">
+                                    <label class="block text-xs font-bold text-text mb-1.5 uppercase tracking-wide">
                                         Tarif Pajak PPN (%)
                                     </label>
                                     <div class="relative">
@@ -1212,21 +1212,21 @@ const submitSettings = () => {
                                             step="0.01"
                                             min="0"
                                             max="100"
-                                            class="w-full pl-3.5 pr-10 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 font-semibold text-sm min-h-[44px] shadow-xs focus:outline-hidden focus:border-[#4F5FE8] focus:ring-2 focus:ring-[#4F5FE8]/20 transition"
+                                            class="w-full pl-3.5 pr-10 py-2.5 rounded-xl border border-border bg-surface text-text font-semibold text-sm min-h-[44px] shadow-xs focus:outline-hidden focus:border-primary-600 focus:ring-2 focus:ring-primary-100 transition"
                                             required
                                         />
-                                        <span class="absolute right-3.5 top-3 text-xs font-bold text-slate-400">%</span>
+                                        <span class="absolute right-3.5 top-3 text-xs font-bold text-text-muted">%</span>
                                     </div>
-                                    <p class="text-xs font-medium text-slate-500 mt-1">0.00% untuk UMKM non-PKP.</p>
+                                    <p class="text-xs font-medium text-text-muted mt-1">0.00% untuk UMKM non-PKP.</p>
                                 </div>
 
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">
+                                    <label class="block text-xs font-bold text-text mb-1.5 uppercase tracking-wide">
                                         Mata Uang Standar
                                     </label>
                                     <select
                                         v-model="form['financial.currency_code']"
-                                        class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 font-semibold text-sm min-h-[44px] shadow-xs focus:outline-hidden focus:border-[#4F5FE8] focus:ring-2 focus:ring-[#4F5FE8]/20 transition"
+                                        class="w-full px-3.5 py-2.5 rounded-xl border border-border bg-surface text-text font-semibold text-sm min-h-[44px] shadow-xs focus:outline-hidden focus:border-primary-600 focus:ring-2 focus:ring-primary-100 transition"
                                     >
                                         <option value="IDR">IDR — Rupiah Indonesia</option>
                                         <option value="USD">USD — US Dollar</option>
@@ -1236,18 +1236,18 @@ const submitSettings = () => {
                         </div>
 
                         <!-- Tab 4: Printer -->
-                        <div v-show="activeTab === 'printer'" class="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs space-y-6">
-                            <div class="border-b border-slate-100 pb-4">
-                                <h2 class="text-lg sm:text-xl font-bold text-[#10194D] flex items-center gap-2.5 tracking-tight">
-                                    <Printer class="w-5 h-5 text-[#4F5FE8] stroke-[2]" />
+                        <div v-show="activeTab === 'printer'" class="bg-surface rounded-2xl border border-border p-6 shadow-xs space-y-6">
+                            <div class="border-b border-border pb-4">
+                                <h2 class="text-lg sm:text-xl font-bold text-navy-900 flex items-center gap-2.5 tracking-tight">
+                                    <Printer class="w-5 h-5 text-primary-600 stroke-[2]" />
                                     Printer Nota Thermal (ESC/POS)
                                 </h2>
-                                <p class="text-xs sm:text-sm font-medium text-slate-500 mt-0.5">Pengaturan ukuran kertas dan perilaku pencetakan otomatis kasir</p>
+                                <p class="text-xs sm:text-sm font-medium text-text-muted mt-0.5">Pengaturan ukuran kertas dan perilaku pencetakan otomatis kasir</p>
                             </div>
 
                             <div class="space-y-4">
                                 <div>
-                                    <label class="block text-xs sm:text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">
+                                    <label class="block text-xs sm:text-sm font-bold text-text mb-2 uppercase tracking-wide">
                                         Lebar Kertas Printer Nota
                                     </label>
                                     <div class="grid grid-cols-2 gap-3 max-w-md">
@@ -1255,8 +1255,8 @@ const submitSettings = () => {
                                             :class="[
                                                 'relative flex items-center justify-center gap-2 p-3.5 rounded-xl border cursor-pointer min-h-[44px] transition-all',
                                                 form['printer.paper_width'] === '58mm'
-                                                    ? 'bg-[#E8EBFD] border-2 border-[#4F5FE8] text-[#4F5FE8] font-bold shadow-xs'
-                                                    : 'bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-semibold shadow-xs'
+                                                    ? 'bg-primary-50 border-2 border-primary-600 text-primary-600 font-bold shadow-xs'
+                                                    : 'bg-surface hover:bg-bg border border-border text-text font-semibold shadow-xs'
                                             ]"
                                         >
                                             <input
@@ -1272,8 +1272,8 @@ const submitSettings = () => {
                                             :class="[
                                                 'relative flex items-center justify-center gap-2 p-3.5 rounded-xl border cursor-pointer min-h-[44px] transition-all',
                                                 form['printer.paper_width'] === '80mm'
-                                                    ? 'bg-[#E8EBFD] border-2 border-[#4F5FE8] text-[#4F5FE8] font-bold shadow-xs'
-                                                    : 'bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-semibold shadow-xs'
+                                                    ? 'bg-primary-50 border-2 border-primary-600 text-primary-600 font-bold shadow-xs'
+                                                    : 'bg-surface hover:bg-bg border border-border text-text font-semibold shadow-xs'
                                             ]"
                                         >
                                             <input
@@ -1292,13 +1292,13 @@ const submitSettings = () => {
                                         <input
                                             type="checkbox"
                                             v-model="form['printer.auto_print']"
-                                            class="w-5 h-5 rounded-md border-slate-300 text-[#4F5FE8] focus:ring-0 accent-[#4F5FE8] cursor-pointer"
+                                            class="w-5 h-5 rounded-md border-border text-primary-600 focus:ring-0 accent-primary-600 cursor-pointer"
                                         />
                                         <div>
-                                            <div class="text-sm font-bold text-slate-800">
+                                            <div class="text-sm font-bold text-text">
                                                 Cetak Nota Otomatis Saat Transaksi Selesai
                                             </div>
-                                            <div class="text-xs font-medium text-slate-500">
+                                            <div class="text-xs font-medium text-text-muted">
                                                 Dialog cetak browser/ESC-POS akan langsung terbuka tanpa klik tombol cetak manual.
                                             </div>
                                         </div>
@@ -1310,13 +1310,13 @@ const submitSettings = () => {
                         <!-- Tab 5: WhatsApp Gateway (Comprehensive Interface) -->
                         <div v-show="activeTab === 'whatsapp'" class="space-y-6">
                             <!-- Section 1: Mode Gateway Toggle -->
-                            <div class="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs space-y-4">
-                                <div class="border-b border-slate-100 pb-3">
-                                    <h2 class="text-lg sm:text-xl font-bold text-[#10194D] flex items-center gap-2.5 tracking-tight">
-                                        <MessageSquare class="w-5 h-5 text-[#4F5FE8] stroke-[2]" />
+                            <div class="bg-surface rounded-2xl border border-border p-6 shadow-xs space-y-4">
+                                <div class="border-b border-border pb-3">
+                                    <h2 class="text-lg sm:text-xl font-bold text-navy-900 flex items-center gap-2.5 tracking-tight">
+                                        <MessageSquare class="w-5 h-5 text-primary-600 stroke-[2]" />
                                         Mode Operasi WhatsApp
                                     </h2>
-                                    <p class="text-xs sm:text-sm font-medium text-slate-500 mt-0.5">
+                                    <p class="text-xs sm:text-sm font-medium text-text-muted mt-0.5">
                                         Tentukan metode pengiriman pesan: Gateway Otomatis di latar belakang atau tautan Manual wa.me
                                     </p>
                                 </div>
@@ -1328,8 +1328,8 @@ const submitSettings = () => {
                                         :class="[
                                             'p-4 rounded-2xl border cursor-pointer transition-all flex flex-col justify-between space-y-3 shadow-xs',
                                             form['whatsapp.mode'] === 'automatic'
-                                                ? 'border-2 border-[#4F5FE8] bg-[#E8EBFD]/40 text-[#10194D]'
-                                                : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'
+                                                ? 'border-2 border-primary-600 bg-primary-50/40 text-navy-900'
+                                                : 'border-border bg-surface hover:bg-bg text-text'
                                         ]"
                                     >
                                         <div class="flex items-start justify-between">
@@ -1337,18 +1337,18 @@ const submitSettings = () => {
                                                 <div
                                                     :class="[
                                                         'w-4 h-4 rounded-full border flex items-center justify-center shrink-0',
-                                                        form['whatsapp.mode'] === 'automatic' ? 'border-[#4F5FE8] bg-[#4F5FE8]' : 'border-slate-300 bg-white'
+                                                        form['whatsapp.mode'] === 'automatic' ? 'border-primary-600 bg-primary-600' : 'border-border bg-surface'
                                                     ]"
                                                 >
-                                                    <div v-if="form['whatsapp.mode'] === 'automatic'" class="w-1.5 h-1.5 rounded-full bg-white"></div>
+                                                    <div v-if="form['whatsapp.mode'] === 'automatic'" class="w-1.5 h-1.5 rounded-full bg-surface"></div>
                                                 </div>
-                                                <span class="font-bold text-sm text-[#10194D]">Automatic Gateway (WuzAPI)</span>
+                                                <span class="font-bold text-sm text-navy-900">Automatic Gateway (WuzAPI)</span>
                                             </div>
-                                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#FFF0EB] text-[#FF8A5B]">
+                                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-accent-100 text-accent-700 font-bold">
                                                 Rekomendasi
                                             </span>
                                         </div>
-                                        <p class="text-xs font-medium text-slate-600 leading-relaxed">
+                                        <p class="text-xs font-medium text-text leading-relaxed">
                                             Notifikasi dikirim otomatis di latar belakang melalui server gateway (WuzAPI). Bebas pulsa, tanpa repot klik kirim manual per transaksi.
                                         </p>
                                     </div>
@@ -1359,8 +1359,8 @@ const submitSettings = () => {
                                         :class="[
                                             'p-4 rounded-2xl border cursor-pointer transition-all flex flex-col justify-between space-y-3 shadow-xs',
                                             form['whatsapp.mode'] === 'manual'
-                                                ? 'border-2 border-[#4F5FE8] bg-[#E8EBFD]/40 text-[#10194D]'
-                                                : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'
+                                                ? 'border-2 border-primary-600 bg-primary-50/40 text-navy-900'
+                                                : 'border-border bg-surface hover:bg-bg text-text'
                                         ]"
                                     >
                                         <div class="flex items-start justify-between">
@@ -1368,18 +1368,18 @@ const submitSettings = () => {
                                                 <div
                                                     :class="[
                                                         'w-4 h-4 rounded-full border flex items-center justify-center shrink-0',
-                                                        form['whatsapp.mode'] === 'manual' ? 'border-[#4F5FE8] bg-[#4F5FE8]' : 'border-slate-300 bg-white'
+                                                        form['whatsapp.mode'] === 'manual' ? 'border-primary-600 bg-primary-600' : 'border-border bg-surface'
                                                     ]"
                                                 >
-                                                    <div v-if="form['whatsapp.mode'] === 'manual'" class="w-1.5 h-1.5 rounded-full bg-white"></div>
+                                                    <div v-if="form['whatsapp.mode'] === 'manual'" class="w-1.5 h-1.5 rounded-full bg-surface"></div>
                                                 </div>
-                                                <span class="font-bold text-sm text-[#10194D]">Manual wa.me Fallback</span>
+                                                <span class="font-bold text-sm text-navy-900">Manual wa.me Fallback</span>
                                             </div>
-                                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-slate-600 border border-slate-200">
+                                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-bg text-text border border-border">
                                                 Tanpa Server
                                             </span>
                                         </div>
-                                        <p class="text-xs font-medium text-slate-600 leading-relaxed">
+                                        <p class="text-xs font-medium text-text leading-relaxed">
                                             Sistem menghasilkan tombol klik `wa.me` langsung di antarmuka kasir. Membuka aplikasi WhatsApp Web/HP dengan pesan siap kirim.
                                         </p>
                                     </div>
@@ -1387,14 +1387,14 @@ const submitSettings = () => {
                             </div>
 
                             <!-- Section 1.5: WhatsApp Multi-Device Session Connection -->
-                            <div v-if="form['whatsapp.mode'] === 'automatic'" class="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs space-y-5">
-                                <div class="border-b border-slate-100 pb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                            <div v-if="form['whatsapp.mode'] === 'automatic'" class="bg-surface rounded-2xl border border-border p-6 shadow-xs space-y-5">
+                                <div class="border-b border-border pb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                                     <div>
-                                        <h3 class="text-base sm:text-lg font-bold text-[#10194D] flex items-center gap-2">
-                                            <Radio class="w-4 h-4 text-[#4F5FE8] stroke-[2]" />
+                                        <h3 class="text-base sm:text-lg font-bold text-navy-900 flex items-center gap-2">
+                                            <Radio class="w-4 h-4 text-primary-600 stroke-[2]" />
                                             Penyambungan Sesi WhatsApp Gateway
                                         </h3>
-                                        <p class="text-xs sm:text-sm font-medium text-slate-500 mt-0.5">
+                                        <p class="text-xs sm:text-sm font-medium text-text-muted mt-0.5">
                                             Hubungkan nomor WhatsApp outlet Anda ke gateway otomatis menggunakan Scan QR Code atau Kode OTP Pairing
                                         </p>
                                     </div>
@@ -1403,29 +1403,29 @@ const submitSettings = () => {
                                     <div class="flex items-center gap-2">
                                         <span
                                             v-if="sessionState.isLoggedIn"
-                                            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-xs"
+                                            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-success/10 text-emerald-700 border border-success/20 shadow-xs"
                                         >
-                                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                                            <span class="w-2 h-2 rounded-full bg-success/100"></span>
                                             Sesi Terhubung ({{ sessionState.jid || 'Aktif' }})
                                         </span>
                                         <span
                                             v-else
                                             class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200 shadow-xs"
                                         >
-                                            <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+                                            <span class="w-2 h-2 rounded-full bg-danger/100 animate-pulse"></span>
                                             Belum Terhubung (Unpaired)
                                         </span>
                                     </div>
                                 </div>
 
                                 <!-- Active Connected State View -->
-                                <div v-if="sessionState.isLoggedIn" class="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 shadow-xs">
+                                <div v-if="sessionState.isLoggedIn" class="p-4 rounded-2xl bg-success/10/60 border border-success/20 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 shadow-xs">
                                     <div class="space-y-1">
                                         <div class="text-sm font-bold text-emerald-900 flex items-center gap-2">
-                                            <CheckCircle2 class="w-4 h-4 text-emerald-600 stroke-[2.5] shrink-0" />
+                                            <CheckCircle2 class="w-4 h-4 text-success stroke-[2.5] shrink-0" />
                                             WhatsApp Siap Digunakan untuk Notifikasi Otomatis
                                         </div>
-                                        <p class="text-xs font-medium text-emerald-800 leading-relaxed">
+                                        <p class="text-xs font-medium text-success leading-relaxed">
                                             Nomor akun: <span class="font-mono font-bold">{{ sessionState.jid }}</span>. Notifikasi intake, cucian selesai, dan pengingat tagihan akan dikirim otomatis dari nomor ini.
                                         </p>
                                     </div>
@@ -1433,7 +1433,7 @@ const submitSettings = () => {
                                         type="button"
                                         @click="disconnectWhatsAppSession"
                                         :disabled="isDisconnectingSession"
-                                        class="bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 rounded-xl text-xs font-bold uppercase tracking-wider px-3.5 py-2 shadow-xs transition-colors flex items-center gap-1.5 shrink-0 cursor-pointer"
+                                        class="bg-danger/10 hover:bg-rose-100 text-danger border border-danger/20 rounded-xl text-xs font-bold uppercase tracking-wider px-3.5 py-2 shadow-xs transition-colors flex items-center gap-1.5 shrink-0 cursor-pointer"
                                     >
                                         <LogOut class="w-3.5 h-3.5 stroke-[2]" />
                                         <span>{{ isDisconnectingSession ? 'Memutuskan...' : 'Putuskan Sesi' }}</span>
@@ -1444,7 +1444,7 @@ const submitSettings = () => {
                                 <div v-else class="space-y-5">
                                     <!-- Step 1: Select Pairing Method -->
                                     <div>
-                                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                                        <label class="block text-xs font-bold uppercase tracking-wider text-text mb-2">
                                             Pilih Metode Penyambungan Sesi
                                         </label>
                                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -1454,19 +1454,19 @@ const submitSettings = () => {
                                                 :class="[
                                                     'p-4 rounded-2xl border cursor-pointer transition-all flex items-start gap-3.5 shadow-xs',
                                                     pairingMethod === 'qr'
-                                                        ? 'border-2 border-[#4F5FE8] bg-[#E8EBFD]/40 text-[#10194D]'
-                                                        : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'
+                                                        ? 'border-2 border-primary-600 bg-primary-50/40 text-navy-900'
+                                                        : 'border-border bg-surface hover:bg-bg text-text'
                                                 ]"
                                             >
-                                                <div :class="['w-9 h-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5', pairingMethod === 'qr' ? 'bg-[#4F5FE8] text-white' : 'bg-slate-100 text-slate-500']">
+                                                <div :class="['w-9 h-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5', pairingMethod === 'qr' ? 'bg-primary-600 text-white' : 'bg-bg text-text-muted']">
                                                     <QrCode class="w-5 h-5 stroke-[2]" />
                                                 </div>
                                                 <div class="space-y-1">
                                                     <div class="flex items-center gap-2">
-                                                        <span class="text-sm font-bold text-[#10194D]">Pindai Kode QR (Scan QR)</span>
-                                                        <span v-if="pairingMethod === 'qr'" class="w-2 h-2 rounded-full bg-[#4F5FE8]"></span>
+                                                        <span class="text-sm font-bold text-navy-900">Pindai Kode QR (Scan QR)</span>
+                                                        <span v-if="pairingMethod === 'qr'" class="w-2 h-2 rounded-full bg-primary-600"></span>
                                                     </div>
-                                                    <p class="text-xs font-medium text-slate-500 leading-relaxed">
+                                                    <p class="text-xs font-medium text-text-muted leading-relaxed">
                                                         Pindai kode QR langsung dari aplikasi WhatsApp di HP Anda (menu Perangkat Tertaut).
                                                     </p>
                                                 </div>
@@ -1478,19 +1478,19 @@ const submitSettings = () => {
                                                 :class="[
                                                     'p-4 rounded-2xl border cursor-pointer transition-all flex items-start gap-3.5 shadow-xs',
                                                     pairingMethod === 'otp'
-                                                        ? 'border-2 border-[#4F5FE8] bg-[#E8EBFD]/40 text-[#10194D]'
-                                                        : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'
+                                                        ? 'border-2 border-primary-600 bg-primary-50/40 text-navy-900'
+                                                        : 'border-border bg-surface hover:bg-bg text-text'
                                                 ]"
                                             >
-                                                <div :class="['w-9 h-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5', pairingMethod === 'otp' ? 'bg-[#4F5FE8] text-white' : 'bg-slate-100 text-slate-500']">
+                                                <div :class="['w-9 h-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5', pairingMethod === 'otp' ? 'bg-primary-600 text-white' : 'bg-bg text-text-muted']">
                                                     <KeyRound class="w-5 h-5 stroke-[2]" />
                                                 </div>
                                                 <div class="space-y-1">
                                                     <div class="flex items-center gap-2">
-                                                        <span class="text-sm font-bold text-[#10194D]">Kode OTP / Pairing Code</span>
-                                                        <span v-if="pairingMethod === 'otp'" class="w-2 h-2 rounded-full bg-[#4F5FE8]"></span>
+                                                        <span class="text-sm font-bold text-navy-900">Kode OTP / Pairing Code</span>
+                                                        <span v-if="pairingMethod === 'otp'" class="w-2 h-2 rounded-full bg-primary-600"></span>
                                                     </div>
-                                                    <p class="text-xs font-medium text-slate-500 leading-relaxed">
+                                                    <p class="text-xs font-medium text-text-muted leading-relaxed">
                                                         Tautkan dengan nomor HP tanpa kamera. Cukup masukkan kode 8 karakter di WhatsApp HP.
                                                     </p>
                                                 </div>
@@ -1499,11 +1499,11 @@ const submitSettings = () => {
                                     </div>
 
                                     <!-- Step 2: Content for Method: Scan QR Code -->
-                                    <div v-if="pairingMethod === 'qr'" class="bg-slate-50/70 border border-slate-200 rounded-2xl p-5 shadow-xs space-y-4">
+                                    <div v-if="pairingMethod === 'qr'" class="bg-bg/70 border border-border rounded-2xl p-5 shadow-xs space-y-4">
                                         <div class="flex flex-col md:flex-row items-center gap-6">
                                             <!-- QR Code Box -->
                                             <div class="shrink-0 flex flex-col items-center gap-3">
-                                                <div class="w-56 h-56 bg-white border border-slate-200 rounded-2xl p-3 shadow-xs flex items-center justify-center relative overflow-hidden">
+                                                <div class="w-56 h-56 bg-surface border border-border rounded-2xl p-3 shadow-xs flex items-center justify-center relative overflow-hidden">
                                                     <img
                                                         v-if="sessionState.qr_image"
                                                         :src="sessionState.qr_image"
@@ -1511,12 +1511,12 @@ const submitSettings = () => {
                                                         class="w-full h-full object-contain"
                                                     />
                                                     <div v-else-if="isConnectingSession" class="text-center p-4 space-y-2">
-                                                        <RefreshCw class="w-8 h-8 text-[#4F5FE8] animate-spin mx-auto stroke-[2]" />
-                                                        <p class="text-xs text-[#10194D] font-bold uppercase tracking-wider">Memuat QR Code...</p>
+                                                        <RefreshCw class="w-8 h-8 text-primary-600 animate-spin mx-auto stroke-[2]" />
+                                                        <p class="text-xs text-navy-900 font-bold uppercase tracking-wider">Memuat QR Code...</p>
                                                     </div>
                                                     <div v-else class="text-center p-4 space-y-2">
                                                         <QrCode class="w-10 h-10 text-slate-300 mx-auto" />
-                                                        <p class="text-xs text-slate-500 font-medium">Klik tombol di bawah untuk menampilkan QR code</p>
+                                                        <p class="text-xs text-text-muted font-medium">Klik tombol di bawah untuk menampilkan QR code</p>
                                                     </div>
                                                 </div>
 
@@ -1524,7 +1524,7 @@ const submitSettings = () => {
                                                     type="button"
                                                     @click="connectWhatsAppSession"
                                                     :disabled="isConnectingSession"
-                                                    class="bg-[#FF8A5B] hover:bg-[#ff7640] text-white rounded-xl text-xs font-bold uppercase tracking-wider px-4 min-h-[40px] flex items-center gap-2 w-full justify-center shadow-xs transition-colors cursor-pointer"
+                                                    class="bg-accent-500 hover:bg-accent-600 text-navy-950 font-bold rounded-xl text-xs font-bold uppercase tracking-wider px-4 min-h-[40px] flex items-center gap-2 w-full justify-center shadow-xs transition-colors cursor-pointer"
                                                 >
                                                     <RefreshCw :class="['w-3.5 h-3.5 stroke-[2]', isConnectingSession ? 'animate-spin' : '']" />
                                                     <span>{{ sessionState.qr_image ? 'Perbarui QR Code' : 'Sambungkan & Tampilkan QR' }}</span>
@@ -1532,20 +1532,20 @@ const submitSettings = () => {
                                             </div>
 
                                             <!-- Instructions -->
-                                            <div class="space-y-3 text-sm text-slate-700 font-medium">
-                                                <div class="font-bold text-[#10194D] flex items-center gap-2 uppercase tracking-wide text-xs">
-                                                    <Smartphone class="w-4 h-4 text-[#4F5FE8] stroke-[2]" />
+                                            <div class="space-y-3 text-sm text-text font-medium">
+                                                <div class="font-bold text-navy-900 flex items-center gap-2 uppercase tracking-wide text-xs">
+                                                    <Smartphone class="w-4 h-4 text-primary-600 stroke-[2]" />
                                                     Langkah Menghubungkan via Scan QR:
                                                 </div>
-                                                <ol class="space-y-2 text-xs text-slate-600 font-medium list-decimal list-inside leading-relaxed pl-1">
-                                                    <li>Buka aplikasi <span class="font-bold text-slate-900">WhatsApp</span> di HP Anda.</li>
-                                                    <li>Ketuk menu <span class="font-bold text-slate-900">Titik Tiga</span> (Android) atau <span class="font-bold text-slate-900">Pengaturan</span> (iPhone).</li>
-                                                    <li>Pilih <span class="font-bold text-slate-900">Perangkat Tertaut (Linked Devices)</span>.</li>
-                                                    <li>Ketuk tombol <span class="font-bold text-slate-900">Tautkan Perangkat</span>.</li>
-                                                    <li>Arahkan kamera HP ke gambar <span class="font-bold text-slate-900">QR Code</span> di samping.</li>
+                                                <ol class="space-y-2 text-xs text-text font-medium list-decimal list-inside leading-relaxed pl-1">
+                                                    <li>Buka aplikasi <span class="font-bold text-text">WhatsApp</span> di HP Anda.</li>
+                                                    <li>Ketuk menu <span class="font-bold text-text">Titik Tiga</span> (Android) atau <span class="font-bold text-text">Pengaturan</span> (iPhone).</li>
+                                                    <li>Pilih <span class="font-bold text-text">Perangkat Tertaut (Linked Devices)</span>.</li>
+                                                    <li>Ketuk tombol <span class="font-bold text-text">Tautkan Perangkat</span>.</li>
+                                                    <li>Arahkan kamera HP ke gambar <span class="font-bold text-text">QR Code</span> di samping.</li>
                                                 </ol>
-                                                <div class="text-[11px] font-semibold text-emerald-800 bg-emerald-50 p-3 rounded-xl border border-emerald-200 flex items-center gap-2">
-                                                    <CheckCircle2 class="w-4 h-4 text-emerald-600 stroke-[2.5] shrink-0" />
+                                                <div class="text-[11px] font-semibold text-success bg-success/10 p-3 rounded-xl border border-success/20 flex items-center gap-2">
+                                                    <CheckCircle2 class="w-4 h-4 text-success stroke-[2.5] shrink-0" />
                                                     <span>Halaman ini akan otomatis mendeteksi ketika WhatsApp di ponsel Anda berhasil dipindai.</span>
                                                 </div>
                                             </div>
@@ -1553,73 +1553,73 @@ const submitSettings = () => {
                                     </div>
 
                                     <!-- Step 2: Content for Method: Kode OTP / Pairing Code -->
-                                    <div v-else class="bg-slate-50/70 border border-slate-200 rounded-2xl p-5 shadow-xs space-y-5">
+                                    <div v-else class="bg-bg/70 border border-border rounded-2xl p-5 shadow-xs space-y-5">
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5 items-start">
                                             <div class="space-y-4">
                                                 <div>
-                                                    <label class="block text-xs sm:text-sm font-bold text-slate-700 mb-1.5 uppercase tracking-wide">
+                                                    <label class="block text-xs sm:text-sm font-bold text-text mb-1.5 uppercase tracking-wide">
                                                         Nomor WhatsApp HP Anda <span class="text-rose-500">*</span>
                                                     </label>
                                                     <div class="flex gap-2">
                                                         <input
                                                             v-model="pairingPhone"
                                                             type="text"
-                                                            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 font-mono font-semibold text-sm shadow-xs focus:outline-hidden focus:border-[#4F5FE8] focus:ring-2 focus:ring-[#4F5FE8]/20 transition"
+                                                            class="w-full px-3.5 py-2.5 rounded-xl border border-border bg-surface text-text font-mono font-semibold text-sm shadow-xs focus:outline-hidden focus:border-primary-600 focus:ring-2 focus:ring-primary-100 transition"
                                                             placeholder="Contoh: 081234567890 / 6281234567890"
                                                         />
                                                         <button
                                                             type="button"
                                                             @click="connectWhatsAppSession"
                                                             :disabled="isConnectingSession || !pairingPhone"
-                                                            class="bg-[#FF8A5B] hover:bg-[#ff7640] text-white rounded-xl text-xs font-bold uppercase tracking-wider px-4 min-h-[42px] shrink-0 flex items-center gap-1.5 shadow-xs transition-colors cursor-pointer"
+                                                            class="bg-accent-500 hover:bg-accent-600 text-navy-950 font-bold rounded-xl text-xs font-bold uppercase tracking-wider px-4 min-h-[42px] shrink-0 flex items-center gap-1.5 shadow-xs transition-colors cursor-pointer"
                                                         >
                                                             <RefreshCw :class="['w-3.5 h-3.5 stroke-[2]', isConnectingSession ? 'animate-spin' : '']" />
                                                             <span>{{ isConnectingSession ? 'Meminta...' : 'Dapatkan OTP' }}</span>
                                                         </button>
                                                     </div>
-                                                    <p class="text-xs font-medium text-slate-500 mt-1">Masukkan nomor WhatsApp HP yang akan dijadikan pengirim notifikasi.</p>
+                                                    <p class="text-xs font-medium text-text-muted mt-1">Masukkan nomor WhatsApp HP yang akan dijadikan pengirim notifikasi.</p>
                                                 </div>
 
                                                 <!-- Pairing Code Display Box -->
-                                                <div v-if="sessionState.pairing_code || sessionState.formatted_code" class="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-3">
-                                                    <div class="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                                                <div v-if="sessionState.pairing_code || sessionState.formatted_code" class="p-4 rounded-2xl bg-surface border border-border shadow-xs space-y-3">
+                                                    <div class="text-xs font-bold text-text uppercase tracking-wider">
                                                         Kode Pairing WhatsApp Anda:
                                                     </div>
-                                                    <div class="flex items-center justify-between gap-3 bg-[#10194D] text-[#FF8A5B] p-3.5 rounded-xl">
-                                                        <span class="font-mono text-2xl font-black tracking-widest text-[#FF8A5B]">
+                                                    <div class="flex items-center justify-between gap-3 bg-navy-900 text-accent-400 p-3.5 rounded-xl">
+                                                        <span class="font-mono text-2xl font-black tracking-widest text-accent-500">
                                                             {{ sessionState.formatted_code || sessionState.pairing_code }}
                                                         </span>
                                                         <button
                                                             type="button"
                                                             @click="copyPairingCode(sessionState.formatted_code || sessionState.pairing_code || '')"
-                                                            class="bg-white/10 hover:bg-white/20 text-white rounded-lg text-xs font-bold uppercase tracking-wider px-3 py-1.5 min-h-[36px] flex items-center gap-1.5 transition-colors cursor-pointer"
+                                                            class="bg-surface/10 hover:bg-surface/20 text-white rounded-lg text-xs font-bold uppercase tracking-wider px-3 py-1.5 min-h-[36px] flex items-center gap-1.5 transition-colors cursor-pointer"
                                                         >
                                                             <Check v-if="codeCopied" class="w-3.5 h-3.5 stroke-[2.5] text-emerald-400" />
                                                             <Copy v-else class="w-3.5 h-3.5 stroke-[2]" />
                                                             <span>{{ codeCopied ? 'Tersalin!' : 'Salin' }}</span>
                                                         </button>
                                                     </div>
-                                                    <p class="text-xs font-medium text-slate-500 leading-relaxed">
+                                                    <p class="text-xs font-medium text-text-muted leading-relaxed">
                                                         Kode ini berlaku sekitar 2-3 menit. Masukkan segera pada WhatsApp di ponsel Anda.
                                                     </p>
                                                 </div>
                                             </div>
 
                                             <!-- Instructions for OTP Code -->
-                                            <div class="space-y-3 text-sm text-slate-700 font-medium bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
-                                                <div class="font-bold text-[#10194D] flex items-center gap-2 uppercase tracking-wide text-xs">
-                                                    <KeyRound class="w-4 h-4 text-[#4F5FE8] stroke-[2]" />
+                                            <div class="space-y-3 text-sm text-text font-medium bg-surface p-4 rounded-2xl border border-border shadow-xs">
+                                                <div class="font-bold text-navy-900 flex items-center gap-2 uppercase tracking-wide text-xs">
+                                                    <KeyRound class="w-4 h-4 text-primary-600 stroke-[2]" />
                                                     Cara Memasukkan Kode di WhatsApp Ponsel:
                                                 </div>
-                                                <ol class="space-y-2 text-xs text-slate-600 font-medium list-decimal list-inside leading-relaxed pl-1">
-                                                    <li>Buka aplikasi <span class="font-bold text-slate-900">WhatsApp</span> di HP Anda.</li>
-                                                    <li>Masuk ke menu <span class="font-bold text-slate-900">Perangkat Tertaut (Linked Devices)</span>.</li>
-                                                    <li>Ketuk <span class="font-bold text-slate-900">Tautkan Perangkat</span>.</li>
-                                                    <li>Ketuk opsi <span class="font-bold text-slate-900">"Tautkan dengan nomor telepon saja"</span> di bagian bawah.</li>
-                                                    <li>Masukkan <span class="font-bold text-slate-900">8 karakter kode pairing</span> di samping.</li>
+                                                <ol class="space-y-2 text-xs text-text font-medium list-decimal list-inside leading-relaxed pl-1">
+                                                    <li>Buka aplikasi <span class="font-bold text-text">WhatsApp</span> di HP Anda.</li>
+                                                    <li>Masuk ke menu <span class="font-bold text-text">Perangkat Tertaut (Linked Devices)</span>.</li>
+                                                    <li>Ketuk <span class="font-bold text-text">Tautkan Perangkat</span>.</li>
+                                                    <li>Ketuk opsi <span class="font-bold text-text">"Tautkan dengan nomor telepon saja"</span> di bagian bawah.</li>
+                                                    <li>Masukkan <span class="font-bold text-text">8 karakter kode pairing</span> di samping.</li>
                                                 </ol>
-                                                <div class="text-[11px] font-semibold text-emerald-800 bg-emerald-50 p-2.5 rounded-xl border border-emerald-200 flex items-center gap-2">
-                                                    <CheckCircle2 class="w-4 h-4 text-emerald-600 stroke-[2.5] shrink-0" />
+                                                <div class="text-[11px] font-semibold text-success bg-success/10 p-2.5 rounded-xl border border-success/20 flex items-center gap-2">
+                                                    <CheckCircle2 class="w-4 h-4 text-success stroke-[2.5] shrink-0" />
                                                     <span>Sistem otomatis menyambungkan begitu kode dimasukkan di WhatsApp Anda.</span>
                                                 </div>
                                             </div>
@@ -1627,25 +1627,25 @@ const submitSettings = () => {
                                     </div>
 
                                     <!-- Session Error Alert -->
-                                    <div v-if="sessionError" class="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 font-medium text-xs flex items-center gap-2 shadow-xs">
-                                        <AlertCircle class="w-4 h-4 text-rose-600 stroke-[2.5] shrink-0" />
+                                    <div v-if="sessionError" class="p-3.5 rounded-xl bg-danger/10 border border-danger/20 text-rose-700 font-medium text-xs flex items-center gap-2 shadow-xs">
+                                        <AlertCircle class="w-4 h-4 text-danger stroke-[2.5] shrink-0" />
                                         <span>{{ sessionError }}</span>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Section 2: Gateway Connection Parameters -->
-                            <div class="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs space-y-5">
-                                <div class="border-b border-slate-100 pb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                            <div class="bg-surface rounded-2xl border border-border p-6 shadow-xs space-y-5">
+                                <div class="border-b border-border pb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                                     <div>
-                                        <h3 class="text-base sm:text-lg font-bold text-[#10194D]">
+                                        <h3 class="text-base sm:text-lg font-bold text-navy-900">
                                             Parameter Koneksi Gateway
                                         </h3>
-                                        <p class="text-xs sm:text-sm font-medium text-slate-500 mt-0.5">
+                                        <p class="text-xs sm:text-sm font-medium text-text-muted mt-0.5">
                                             Konfigurasi server backend pengirim pesan WhatsApp (WuzAPI REST API)
                                         </p>
                                     </div>
-                                    <div v-if="form['whatsapp.mode'] === 'manual'" class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
+                                    <div v-if="form['whatsapp.mode'] === 'manual'" class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-bg text-text border border-border">
                                         Mode manual aktif: Gateway dilewati
                                     </div>
                                 </div>
@@ -1653,60 +1653,60 @@ const submitSettings = () => {
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <!-- Server URL -->
                                     <div class="sm:col-span-2">
-                                        <label class="block text-xs sm:text-sm font-bold text-slate-700 mb-1.5 uppercase tracking-wide">
+                                        <label class="block text-xs sm:text-sm font-bold text-text mb-1.5 uppercase tracking-wide">
                                             URL Endpoint Server Gateway <span class="text-rose-500">*</span>
                                         </label>
                                         <input
                                             v-model="form['whatsapp.server_url']"
                                             type="url"
-                                            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 font-mono font-semibold text-sm min-h-[44px] shadow-xs focus:outline-hidden focus:border-[#4F5FE8] focus:ring-2 focus:ring-[#4F5FE8]/20 transition"
+                                            class="w-full px-3.5 py-2.5 rounded-xl border border-border bg-surface text-text font-mono font-semibold text-sm min-h-[44px] shadow-xs focus:outline-hidden focus:border-primary-600 focus:ring-2 focus:ring-primary-100 transition"
                                             placeholder="http://localhost:8080 atau https://wa-gateway.internal"
                                             :required="form['whatsapp.mode'] === 'automatic'"
                                         />
-                                        <p class="text-xs font-medium text-slate-500 mt-1">Alamat host dan port binary whatsapp-gateway atau API gateway WhatsApp Anda.</p>
+                                        <p class="text-xs font-medium text-text-muted mt-1">Alamat host dan port binary whatsapp-gateway atau API gateway WhatsApp Anda.</p>
                                     </div>
 
                                     <!-- API Key / Token -->
                                     <div>
-                                        <label class="block text-xs sm:text-sm font-bold text-slate-700 mb-1.5 uppercase tracking-wide">
+                                        <label class="block text-xs sm:text-sm font-bold text-text mb-1.5 uppercase tracking-wide">
                                             API Key / Secret Token
                                         </label>
                                         <div class="relative">
                                             <input
                                                 v-model="form['whatsapp.api_key']"
                                                 :type="showApiKey ? 'text' : 'password'"
-                                                class="w-full pl-3.5 pr-10 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 font-mono font-semibold text-sm min-h-[44px] shadow-xs focus:outline-hidden focus:border-[#4F5FE8] focus:ring-2 focus:ring-[#4F5FE8]/20 transition"
+                                                class="w-full pl-3.5 pr-10 py-2.5 rounded-xl border border-border bg-surface text-text font-mono font-semibold text-sm min-h-[44px] shadow-xs focus:outline-hidden focus:border-primary-600 focus:ring-2 focus:ring-primary-100 transition"
                                                 placeholder="Token autentikasi WuzAPI..."
                                             />
                                             <button
                                                 type="button"
                                                 @click="showApiKey = !showApiKey"
-                                                class="absolute right-3 top-3 text-slate-400 hover:text-slate-600 cursor-pointer"
+                                                class="absolute right-3 top-3 text-text-muted hover:text-text cursor-pointer"
                                                 tabindex="-1"
                                             >
                                                 <component :is="showApiKey ? EyeOff : Eye" class="w-4 h-4 stroke-[2]" />
                                             </button>
                                         </div>
-                                        <p class="text-xs font-medium text-slate-500 mt-1">Digunakan untuk header autentikasi `Authorization: Bearer` dan `Token:`.</p>
+                                        <p class="text-xs font-medium text-text-muted mt-1">Digunakan untuk header autentikasi `Authorization: Bearer` dan `Token:`.</p>
                                     </div>
 
                                     <!-- Session ID / Phone -->
                                     <div>
-                                        <label class="block text-xs sm:text-sm font-bold text-slate-700 mb-1.5 uppercase tracking-wide">
+                                        <label class="block text-xs sm:text-sm font-bold text-text mb-1.5 uppercase tracking-wide">
                                             Session ID / Nomor WhatsApp Pengirim
                                         </label>
                                         <input
                                             v-model="form['whatsapp.session_id']"
                                             type="text"
-                                            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 font-semibold text-sm min-h-[44px] shadow-xs focus:outline-hidden focus:border-[#4F5FE8] focus:ring-2 focus:ring-[#4F5FE8]/20 transition"
+                                            class="w-full px-3.5 py-2.5 rounded-xl border border-border bg-surface text-text font-semibold text-sm min-h-[44px] shadow-xs focus:outline-hidden focus:border-primary-600 focus:ring-2 focus:ring-primary-100 transition"
                                             placeholder="Contoh: 6281234567890"
                                         />
-                                        <p class="text-xs font-medium text-slate-500 mt-1">Identitas nomor WhatsApp yang telah terhubung pada multi-device gateway.</p>
+                                        <p class="text-xs font-medium text-text-muted mt-1">Identitas nomor WhatsApp yang telah terhubung pada multi-device gateway.</p>
                                     </div>
 
                                     <!-- Rate Limit -->
                                     <div>
-                                        <label class="block text-xs sm:text-sm font-bold text-slate-700 mb-1.5 uppercase tracking-wide">
+                                        <label class="block text-xs sm:text-sm font-bold text-text mb-1.5 uppercase tracking-wide">
                                             Anti-Ban Rate Limit (Pesan / Menit)
                                         </label>
                                         <div class="relative">
@@ -1715,25 +1715,25 @@ const submitSettings = () => {
                                                 type="number"
                                                 min="1"
                                                 max="60"
-                                                class="w-full pl-3.5 pr-28 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 font-semibold text-sm min-h-[44px] shadow-xs focus:outline-hidden focus:border-[#4F5FE8] focus:ring-2 focus:ring-[#4F5FE8]/20 transition"
+                                                class="w-full pl-3.5 pr-28 py-2.5 rounded-xl border border-border bg-surface text-text font-semibold text-sm min-h-[44px] shadow-xs focus:outline-hidden focus:border-primary-600 focus:ring-2 focus:ring-primary-100 transition"
                                                 required
                                             />
-                                            <span class="absolute right-3.5 top-3 text-xs font-bold text-slate-400 uppercase">PESAN/MENIT</span>
+                                            <span class="absolute right-3.5 top-3 text-xs font-bold text-text-muted uppercase">PESAN/MENIT</span>
                                         </div>
-                                        <p class="text-xs font-medium text-slate-500 mt-1">Batas aman pengiriman pesan berkala guna mencegah pencekalan spam oleh WhatsApp.</p>
+                                        <p class="text-xs font-medium text-text-muted mt-1">Batas aman pengiriman pesan berkala guna mencegah pencekalan spam oleh WhatsApp.</p>
                                     </div>
                                 </div>
 
                                 <!-- Action: Test Gateway Connectivity -->
-                                <div class="pt-3 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                                    <div class="text-xs font-medium text-slate-500">
+                                <div class="pt-3 border-t border-border flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                    <div class="text-xs font-medium text-text-muted">
                                         Periksa kesehatan sesi dan komunikasi dengan server gateway secara langsung.
                                     </div>
                                     <button
                                         type="button"
                                         @click="runConnectionTest"
                                         :disabled="isTestingConnection"
-                                        class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl min-h-[42px] px-4 font-bold text-xs flex items-center gap-2 cursor-pointer shrink-0 shadow-xs transition-colors"
+                                        class="bg-surface hover:bg-bg text-text border border-border rounded-xl min-h-[42px] px-4 font-bold text-xs flex items-center gap-2 cursor-pointer shrink-0 shadow-xs transition-colors"
                                     >
                                         <RefreshCw :class="['w-4 h-4 stroke-[2]', isTestingConnection ? 'animate-spin' : '']" />
                                         <span>{{ isTestingConnection ? 'Memeriksa...' : 'Uji Koneksi Gateway' }}</span>
@@ -1746,53 +1746,53 @@ const submitSettings = () => {
                                     :class="[
                                         'p-4 rounded-xl border text-sm space-y-1 transition shadow-xs',
                                         connectionTestResult.success
-                                            ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
-                                            : 'bg-rose-50 text-rose-800 border-rose-200'
+                                            ? 'bg-success/10 text-success border-success/20'
+                                            : 'bg-danger/10 text-danger border-danger/20'
                                     ]"
                                 >
                                     <div class="font-bold flex items-center gap-2">
-                                        <CheckCircle2 v-if="connectionTestResult.success" class="w-4 h-4 text-emerald-600 stroke-[2.5] shrink-0" />
-                                        <AlertCircle v-else class="w-4 h-4 text-rose-600 stroke-[2.5] shrink-0" />
+                                        <CheckCircle2 v-if="connectionTestResult.success" class="w-4 h-4 text-success stroke-[2.5] shrink-0" />
+                                        <AlertCircle v-else class="w-4 h-4 text-danger stroke-[2.5] shrink-0" />
                                         <span>{{ connectionTestResult.message }}</span>
                                     </div>
-                                    <div v-if="connectionTestResult.data" class="text-xs font-mono font-medium mt-1 pt-1 border-t border-slate-200 break-all overflow-x-auto">
+                                    <div v-if="connectionTestResult.data" class="text-xs font-mono font-medium mt-1 pt-1 border-t border-border break-all overflow-x-auto">
                                         {{ typeof connectionTestResult.data === 'string' ? connectionTestResult.data : JSON.stringify(connectionTestResult.data) }}
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Section 3: Diagnostic Test Message Delivery -->
-                            <div class="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs space-y-4">
-                                <div class="border-b border-slate-100 pb-3">
-                                    <h3 class="text-base sm:text-lg font-bold text-[#10194D] flex items-center gap-2">
-                                        <Send class="w-4 h-4 text-[#4F5FE8] stroke-[2]" />
+                            <div class="bg-surface rounded-2xl border border-border p-6 shadow-xs space-y-4">
+                                <div class="border-b border-border pb-3">
+                                    <h3 class="text-base sm:text-lg font-bold text-navy-900 flex items-center gap-2">
+                                        <Send class="w-4 h-4 text-primary-600 stroke-[2]" />
                                         Kirim Pesan Uji Coba (Live Test)
                                     </h3>
-                                    <p class="text-xs sm:text-sm font-medium text-slate-500 mt-0.5">
+                                    <p class="text-xs sm:text-sm font-medium text-text-muted mt-0.5">
                                         Kirimkan pesan uji coba ke nomor Anda untuk memastikan kredensial dan pesan terkirim dengan sempurna
                                     </p>
                                 </div>
 
                                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                     <div>
-                                        <label class="block text-xs sm:text-sm font-bold text-slate-700 mb-1.5 uppercase tracking-wide">
+                                        <label class="block text-xs sm:text-sm font-bold text-text mb-1.5 uppercase tracking-wide">
                                             Nomor Tujuan Uji Coba
                                         </label>
                                         <input
                                             v-model="testPhone"
                                             type="text"
-                                            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 font-semibold text-sm min-h-[44px] shadow-xs focus:outline-hidden focus:border-[#4F5FE8] focus:ring-2 focus:ring-[#4F5FE8]/20 transition"
+                                            class="w-full px-3.5 py-2.5 rounded-xl border border-border bg-surface text-text font-semibold text-sm min-h-[44px] shadow-xs focus:outline-hidden focus:border-primary-600 focus:ring-2 focus:ring-primary-100 transition"
                                             placeholder="Contoh: 081234567890"
                                         />
                                     </div>
 
                                     <div>
-                                        <label class="block text-xs sm:text-sm font-bold text-slate-700 mb-1.5 uppercase tracking-wide">
+                                        <label class="block text-xs sm:text-sm font-bold text-text mb-1.5 uppercase tracking-wide">
                                             Jenis Pesan Uji Coba
                                         </label>
                                         <select
                                             v-model="testTemplateType"
-                                            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 font-semibold text-sm min-h-[44px] shadow-xs focus:outline-hidden focus:border-[#4F5FE8] focus:ring-2 focus:ring-[#4F5FE8]/20 transition"
+                                            class="w-full px-3.5 py-2.5 rounded-xl border border-border bg-surface text-text font-semibold text-sm min-h-[44px] shadow-xs focus:outline-hidden focus:border-primary-600 focus:ring-2 focus:ring-primary-100 transition"
                                         >
                                             <option value="intake">Contoh Template Intake (Penerimaan)</option>
                                             <option value="ready">Contoh Template Siap Ambil (Ready)</option>
@@ -1806,7 +1806,7 @@ const submitSettings = () => {
                                             type="button"
                                             @click="runTestMessage"
                                             :disabled="isSendingTestMessage || !testPhone"
-                                            class="w-full bg-[#FF8A5B] hover:bg-[#ff7640] text-white rounded-xl min-h-[44px] px-4 font-bold text-xs flex items-center justify-center gap-2 cursor-pointer shadow-xs transition-colors"
+                                            class="w-full bg-accent-500 hover:bg-accent-600 text-navy-950 font-bold rounded-xl min-h-[44px] px-4 font-bold text-xs flex items-center justify-center gap-2 cursor-pointer shadow-xs transition-colors"
                                         >
                                             <Send class="w-4 h-4 stroke-[2]" />
                                             <span>{{ isSendingTestMessage ? 'Mengirim...' : 'Kirim Uji Coba' }}</span>
@@ -1815,13 +1815,13 @@ const submitSettings = () => {
                                 </div>
 
                                 <div v-if="testTemplateType === 'custom'">
-                                    <label class="block text-xs sm:text-sm font-bold text-slate-700 mb-1.5 uppercase tracking-wide">
+                                    <label class="block text-xs sm:text-sm font-bold text-text mb-1.5 uppercase tracking-wide">
                                         Isi Teks Uji Coba
                                     </label>
                                     <textarea
                                         v-model="testCustomMessage"
                                         rows="2"
-                                        class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 font-semibold text-sm shadow-xs focus:outline-hidden focus:border-[#4F5FE8] focus:ring-2 focus:ring-[#4F5FE8]/20 transition"
+                                        class="w-full px-3.5 py-2.5 rounded-xl border border-border bg-surface text-text font-semibold text-sm shadow-xs focus:outline-hidden focus:border-primary-600 focus:ring-2 focus:ring-primary-100 transition"
                                         placeholder="Tulis pesan pengujian di sini..."
                                     ></textarea>
                                 </div>
@@ -1832,13 +1832,13 @@ const submitSettings = () => {
                                     :class="[
                                         'p-4 rounded-xl border text-sm space-y-2 transition shadow-xs',
                                         testMessageResult.success
-                                            ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
-                                            : 'bg-rose-50 text-rose-800 border-rose-200'
+                                            ? 'bg-success/10 text-success border-success/20'
+                                            : 'bg-danger/10 text-danger border-danger/20'
                                     ]"
                                 >
                                     <div class="font-bold flex items-center gap-2">
-                                        <CheckCircle2 v-if="testMessageResult.success" class="w-4 h-4 text-emerald-600 stroke-[2.5] shrink-0" />
-                                        <AlertCircle v-else class="w-4 h-4 text-rose-600 stroke-[2.5] shrink-0" />
+                                        <CheckCircle2 v-if="testMessageResult.success" class="w-4 h-4 text-success stroke-[2.5] shrink-0" />
+                                        <AlertCircle v-else class="w-4 h-4 text-danger stroke-[2.5] shrink-0" />
                                         <span>{{ testMessageResult.message }}</span>
                                     </div>
 
@@ -1856,28 +1856,28 @@ const submitSettings = () => {
                             </div>
 
                             <!-- Section 4: Notification Message Templates -->
-                            <div class="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs space-y-5">
-                                <div class="border-b border-slate-100 pb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                            <div class="bg-surface rounded-2xl border border-border p-6 shadow-xs space-y-5">
+                                <div class="border-b border-border pb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                                     <div>
-                                        <h3 class="text-base sm:text-lg font-bold text-[#10194D] flex items-center gap-2">
-                                            <Sparkles class="w-4 h-4 text-[#4F5FE8] stroke-[2]" />
+                                        <h3 class="text-base sm:text-lg font-bold text-navy-900 flex items-center gap-2">
+                                            <Sparkles class="w-4 h-4 text-primary-600 stroke-[2]" />
                                             Template Pesan Notifikasi Otomatis
                                         </h3>
-                                        <p class="text-xs sm:text-sm font-medium text-slate-500 mt-0.5">
+                                        <p class="text-xs sm:text-sm font-medium text-text-muted mt-0.5">
                                             Sesuaikan format pesan WhatsApp untuk Intake, Siap Ambil, dan Pengingat Piutang
                                         </p>
                                     </div>
 
                                     <!-- Template Sub-tabs Selector -->
-                                    <div class="flex items-center gap-1.5 p-1 bg-slate-100 rounded-xl shrink-0">
+                                    <div class="flex items-center gap-1.5 p-1 bg-bg rounded-xl shrink-0">
                                         <button
                                             type="button"
                                             @click="activeTemplateTab = 'intake'"
                                             :class="[
                                                 'px-3 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer',
                                                 activeTemplateTab === 'intake'
-                                                    ? 'bg-white text-[#10194D] shadow-xs'
-                                                    : 'text-slate-600 hover:text-slate-900'
+                                                    ? 'bg-surface text-navy-900 shadow-xs'
+                                                    : 'text-text hover:text-text'
                                             ]"
                                         >
                                             Intake (Penerimaan)
@@ -1888,8 +1888,8 @@ const submitSettings = () => {
                                             :class="[
                                                 'px-3 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer',
                                                 activeTemplateTab === 'ready'
-                                                    ? 'bg-white text-[#10194D] shadow-xs'
-                                                    : 'text-slate-600 hover:text-slate-900'
+                                                    ? 'bg-surface text-navy-900 shadow-xs'
+                                                    : 'text-text hover:text-text'
                                             ]"
                                         >
                                             Siap Ambil (Ready)
@@ -1900,8 +1900,8 @@ const submitSettings = () => {
                                             :class="[
                                                 'px-3 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer',
                                                 activeTemplateTab === 'reminder'
-                                                    ? 'bg-white text-[#10194D] shadow-xs'
-                                                    : 'text-slate-600 hover:text-slate-900'
+                                                    ? 'bg-surface text-navy-900 shadow-xs'
+                                                    : 'text-text hover:text-text'
                                             ]"
                                         >
                                             Pengingat Tagihan
@@ -1910,13 +1910,13 @@ const submitSettings = () => {
                                 </div>
 
                                 <!-- Variable Chips Helper -->
-                                <div class="bg-slate-50/80 p-4 rounded-2xl border border-slate-200/80 shadow-xs space-y-2.5">
-                                    <div class="text-xs font-bold text-slate-700 flex items-center justify-between uppercase tracking-wide">
+                                <div class="bg-bg p-4 rounded-2xl border border-border shadow-xs space-y-2.5">
+                                    <div class="text-xs font-bold text-text flex items-center justify-between uppercase tracking-wide">
                                         <span>Klik variabel untuk disisipkan ke template:</span>
                                         <button
                                             type="button"
                                             @click="resetTemplate(activeTemplateTab)"
-                                            class="text-slate-500 hover:text-rose-600 font-semibold text-xs cursor-pointer transition"
+                                            class="text-text-muted hover:text-danger font-semibold text-xs cursor-pointer transition"
                                         >
                                             Kembalikan ke Template Default
                                         </button>
@@ -1927,7 +1927,7 @@ const submitSettings = () => {
                                             :key="v"
                                             type="button"
                                             @click="insertVariable(v)"
-                                            class="px-2.5 py-1 rounded-lg border border-slate-200 bg-white text-xs font-mono font-semibold text-slate-700 hover:bg-[#E8EBFD] hover:text-[#4F5FE8] hover:border-[#4F5FE8]/30 transition-colors shadow-2xs cursor-pointer"
+                                            class="px-2.5 py-1 rounded-lg border border-border bg-surface text-xs font-mono font-semibold text-text hover:bg-primary-50 hover:text-primary-600 hover:border-primary-600/30 transition-colors shadow-2xs cursor-pointer"
                                         >
                                             + {{ v }}
                                         </button>
@@ -1938,7 +1938,7 @@ const submitSettings = () => {
                                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                                     <!-- Editor Column -->
                                     <div>
-                                        <label class="block text-xs sm:text-sm font-bold text-slate-700 mb-1.5 uppercase tracking-wide">
+                                        <label class="block text-xs sm:text-sm font-bold text-text mb-1.5 uppercase tracking-wide">
                                             Teks Template (Markdown WhatsApp: *bold*, _italic_)
                                         </label>
 
@@ -1946,7 +1946,7 @@ const submitSettings = () => {
                                             v-if="activeTemplateTab === 'intake'"
                                             v-model="form['whatsapp.template_intake']"
                                             rows="12"
-                                            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 font-mono font-medium text-xs leading-relaxed shadow-xs focus:outline-hidden focus:border-[#4F5FE8] focus:ring-2 focus:ring-[#4F5FE8]/20 transition"
+                                            class="w-full px-3.5 py-2.5 rounded-xl border border-border bg-surface text-text font-mono font-medium text-xs leading-relaxed shadow-xs focus:outline-hidden focus:border-primary-600 focus:ring-2 focus:ring-primary-100 transition"
                                             placeholder="Tulis template konfirmasi intake..."
                                         ></textarea>
 
@@ -1954,7 +1954,7 @@ const submitSettings = () => {
                                             v-else-if="activeTemplateTab === 'ready'"
                                             v-model="form['whatsapp.template_ready']"
                                             rows="12"
-                                            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 font-mono font-medium text-xs leading-relaxed shadow-xs focus:outline-hidden focus:border-[#4F5FE8] focus:ring-2 focus:ring-[#4F5FE8]/20 transition"
+                                            class="w-full px-3.5 py-2.5 rounded-xl border border-border bg-surface text-text font-mono font-medium text-xs leading-relaxed shadow-xs focus:outline-hidden focus:border-primary-600 focus:ring-2 focus:ring-primary-100 transition"
                                             placeholder="Tulis template siap ambil..."
                                         ></textarea>
 
@@ -1962,17 +1962,17 @@ const submitSettings = () => {
                                             v-else
                                             v-model="form['whatsapp.template_reminder']"
                                             rows="12"
-                                            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 font-mono font-medium text-xs leading-relaxed shadow-xs focus:outline-hidden focus:border-[#4F5FE8] focus:ring-2 focus:ring-[#4F5FE8]/20 transition"
+                                            class="w-full px-3.5 py-2.5 rounded-xl border border-border bg-surface text-text font-mono font-medium text-xs leading-relaxed shadow-xs focus:outline-hidden focus:border-primary-600 focus:ring-2 focus:ring-primary-100 transition"
                                             placeholder="Tulis template pengingat piutang..."
                                         ></textarea>
                                     </div>
 
                                     <!-- Live Preview Column -->
                                     <div>
-                                        <label class="block text-xs sm:text-sm font-bold text-slate-700 mb-1.5 uppercase tracking-wide">
+                                        <label class="block text-xs sm:text-sm font-bold text-text mb-1.5 uppercase tracking-wide">
                                             Pratinjau Tampilan Pesan Pelanggan
                                         </label>
-                                        <div class="bg-emerald-50/40 border border-emerald-200/70 rounded-2xl p-4 text-xs font-mono font-medium text-slate-800 whitespace-pre-wrap break-words leading-relaxed shadow-xs min-h-[260px] max-h-[480px] overflow-y-auto">
+                                        <div class="bg-success/10/40 border border-success/20/70 rounded-2xl p-4 text-xs font-mono font-medium text-text whitespace-pre-wrap break-words leading-relaxed shadow-xs min-h-[260px] max-h-[480px] overflow-y-auto">
                                             {{ previewText }}
                                         </div>
                                     </div>
@@ -1981,14 +1981,14 @@ const submitSettings = () => {
                         </div>
 
                         <!-- Sticky Actions Footer -->
-                        <div class="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
-                            <div class="text-xs sm:text-sm font-medium text-slate-500">
+                        <div class="bg-surface rounded-2xl border border-border p-5 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
+                            <div class="text-xs sm:text-sm font-medium text-text-muted">
                                 Pastikan seluruh parameter telah ditinjau sebelum disimpan ke database.
                             </div>
                             <button
                                 type="submit"
                                 :disabled="form.processing"
-                                class="bg-[#FF8A5B] hover:bg-[#ff7640] text-white rounded-xl min-h-[46px] px-6 font-bold text-sm flex items-center justify-center gap-2 cursor-pointer shadow-xs transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                class="bg-accent-500 hover:bg-accent-600 text-navy-950 font-bold rounded-xl min-h-[46px] px-6 font-bold text-sm flex items-center justify-center gap-2 cursor-pointer shadow-xs transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <Save class="w-4 h-4 stroke-[2.5]" />
                                 <span v-if="form.processing">Menyimpan...</span>
@@ -2003,13 +2003,13 @@ const submitSettings = () => {
         <!-- Modal Add / Edit Service -->
         <div
             v-if="isServiceModalOpen"
-            class="fixed inset-0 z-50 flex items-center justify-center bg-[#0A1033]/60 p-4 backdrop-blur-xs overflow-y-auto"
+            class="fixed inset-0 z-50 flex items-center justify-center bg-navy-950/60 p-4 backdrop-blur-xs overflow-y-auto"
         >
             <div
-                class="bg-white rounded-3xl border border-slate-200 w-full max-w-lg shadow-2xl my-8 overflow-hidden animate-in fade-in zoom-in-95 duration-150"
+                class="bg-surface rounded-3xl border border-border w-full max-w-lg shadow-2xl my-8 overflow-hidden animate-in fade-in zoom-in-95 duration-150"
             >
                 <!-- Modal Header -->
-                <div class="bg-[#10194D] px-6 py-4 text-white flex items-center justify-between">
+                <div class="bg-navy-900 px-6 py-4 text-white flex items-center justify-between">
                     <div class="flex items-center gap-2">
                         <Shirt class="w-5 h-5 text-white stroke-[2]" />
                         <h3 class="font-bold text-lg text-white">
@@ -2019,7 +2019,7 @@ const submitSettings = () => {
                     <button
                         type="button"
                         @click="isServiceModalOpen = false"
-                        class="w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 text-white flex items-center justify-center cursor-pointer transition-colors"
+                        class="w-8 h-8 rounded-xl bg-surface/10 hover:bg-surface/20 text-white flex items-center justify-center cursor-pointer transition-colors"
                     >
                         <X class="w-4 h-4 stroke-[2.5]" />
                     </button>
@@ -2029,7 +2029,7 @@ const submitSettings = () => {
                 <form @submit.prevent="saveService" class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
                     <!-- Nama Layanan -->
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">
+                        <label class="block text-xs font-bold text-text mb-1 uppercase tracking-wider">
                             Nama Layanan / Varian <span class="text-rose-500">*</span>
                         </label>
                         <input
@@ -2037,7 +2037,7 @@ const submitSettings = () => {
                             type="text"
                             required
                             placeholder="Contoh: Cuci Setrika Komplit"
-                            class="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-slate-800 font-semibold text-sm shadow-xs focus:outline-hidden focus:border-[#4F5FE8] focus:ring-2 focus:ring-[#4F5FE8]/20 transition"
+                            class="w-full px-3.5 py-2 rounded-xl border border-border bg-surface text-text font-semibold text-sm shadow-xs focus:outline-hidden focus:border-primary-600 focus:ring-2 focus:ring-primary-100 transition"
                         />
                         <span v-if="serviceForm.errors.name" class="text-xs font-semibold text-rose-500 mt-1 block">
                             {{ serviceForm.errors.name }}
@@ -2047,13 +2047,13 @@ const submitSettings = () => {
                     <!-- Kategori & Satuan Hitung -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">
+                            <label class="block text-xs font-bold text-text mb-1 uppercase tracking-wider">
                                 Kategori <span class="text-rose-500">*</span>
                             </label>
                             <select
                                 v-model="serviceForm.category_id"
                                 required
-                                class="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-slate-800 font-semibold text-sm shadow-xs focus:outline-hidden focus:border-[#4F5FE8] focus:ring-2 focus:ring-[#4F5FE8]/20 transition"
+                                class="w-full px-3.5 py-2 rounded-xl border border-border bg-surface text-text font-semibold text-sm shadow-xs focus:outline-hidden focus:border-primary-600 focus:ring-2 focus:ring-primary-100 transition"
                             >
                                 <option v-for="cat in props.categories" :key="cat.id" :value="cat.id">
                                     {{ cat.name }}
@@ -2062,13 +2062,13 @@ const submitSettings = () => {
                         </div>
 
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">
+                            <label class="block text-xs font-bold text-text mb-1 uppercase tracking-wider">
                                 Satuan Hitung <span class="text-rose-500">*</span>
                             </label>
                             <select
                                 v-model="serviceForm.unit"
                                 required
-                                class="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-slate-800 font-semibold text-sm shadow-xs focus:outline-hidden focus:border-[#4F5FE8] focus:ring-2 focus:ring-[#4F5FE8]/20 transition"
+                                class="w-full px-3.5 py-2 rounded-xl border border-border bg-surface text-text font-semibold text-sm shadow-xs focus:outline-hidden focus:border-primary-600 focus:ring-2 focus:ring-primary-100 transition"
                             >
                                 <option value="kg">Kilogram (kg)</option>
                                 <option value="pcs">Satuan (pcs)</option>
@@ -2080,7 +2080,7 @@ const submitSettings = () => {
                     <!-- Harga Dasar & Min Order -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">
+                            <label class="block text-xs font-bold text-text mb-1 uppercase tracking-wider">
                                 Harga Dasar (Rp) <span class="text-rose-500">*</span>
                             </label>
                             <input
@@ -2090,7 +2090,7 @@ const submitSettings = () => {
                                 step="500"
                                 required
                                 placeholder="Contoh: 8000"
-                                class="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-slate-800 font-semibold text-sm shadow-xs focus:outline-hidden focus:border-[#4F5FE8] focus:ring-2 focus:ring-[#4F5FE8]/20 transition"
+                                class="w-full px-3.5 py-2 rounded-xl border border-border bg-surface text-text font-semibold text-sm shadow-xs focus:outline-hidden focus:border-primary-600 focus:ring-2 focus:ring-primary-100 transition"
                             />
                             <span v-if="serviceForm.errors.base_price" class="text-xs font-semibold text-rose-500 mt-1 block">
                                 {{ serviceForm.errors.base_price }}
@@ -2098,7 +2098,7 @@ const submitSettings = () => {
                         </div>
 
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">
+                            <label class="block text-xs font-bold text-text mb-1 uppercase tracking-wider">
                                 Minimal Order (Qty)
                             </label>
                             <input
@@ -2107,15 +2107,15 @@ const submitSettings = () => {
                                 min="0.1"
                                 step="0.5"
                                 placeholder="Contoh: 2.0"
-                                class="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-slate-800 font-semibold text-sm shadow-xs focus:outline-hidden focus:border-[#4F5FE8] focus:ring-2 focus:ring-[#4F5FE8]/20 transition"
+                                class="w-full px-3.5 py-2 rounded-xl border border-border bg-surface text-text font-semibold text-sm shadow-xs focus:outline-hidden focus:border-primary-600 focus:ring-2 focus:ring-primary-100 transition"
                             />
-                            <p class="text-[10px] font-medium text-slate-400 mt-1">Default 2 kg untuk kiloan, 1 pcs untuk satuan.</p>
+                            <p class="text-[10px] font-medium text-text-muted mt-1">Default 2 kg untuk kiloan, 1 pcs untuk satuan.</p>
                         </div>
                     </div>
 
                     <!-- Estimasi Durasi Reguler -->
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">
+                        <label class="block text-xs font-bold text-text mb-1 uppercase tracking-wider">
                             Estimasi Waktu Pengerjaan Reguler (Jam) <span class="text-rose-500">*</span>
                         </label>
                         <div class="flex items-center gap-2">
@@ -2125,31 +2125,31 @@ const submitSettings = () => {
                                 min="1"
                                 required
                                 placeholder="48"
-                                class="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-slate-800 font-semibold text-sm shadow-xs focus:outline-hidden focus:border-[#4F5FE8] focus:ring-2 focus:ring-[#4F5FE8]/20 transition"
+                                class="w-full px-3.5 py-2 rounded-xl border border-border bg-surface text-text font-semibold text-sm shadow-xs focus:outline-hidden focus:border-primary-600 focus:ring-2 focus:ring-primary-100 transition"
                             />
-                            <span class="text-xs font-medium text-slate-500 shrink-0">
+                            <span class="text-xs font-medium text-text-muted shrink-0">
                                 = {{ Math.round(serviceForm.estimated_duration_hours / 24) }} Hari
                             </span>
                         </div>
                     </div>
 
                     <!-- Opsi Layanan Kilat / Ekspres -->
-                    <div class="p-3.5 bg-slate-50/80 border border-slate-200 rounded-xl space-y-3">
+                    <div class="p-3.5 bg-bg border border-border rounded-xl space-y-3">
                         <label class="flex items-center gap-2.5 cursor-pointer">
                             <input
                                 v-model="serviceForm.has_express"
                                 type="checkbox"
-                                class="w-4 h-4 rounded-md border-slate-300 text-[#4F5FE8] focus:ring-0 accent-[#4F5FE8] cursor-pointer"
+                                class="w-4 h-4 rounded-md border-border text-primary-600 focus:ring-0 accent-primary-600 cursor-pointer"
                             />
-                            <span class="text-xs font-bold text-slate-800 flex items-center gap-1">
-                                <Zap class="w-3.5 h-3.5 text-[#FF8A5B] fill-[#FF8A5B]" />
+                            <span class="text-xs font-bold text-text flex items-center gap-1">
+                                <Zap class="w-3.5 h-3.5 text-warning fill-warning" />
                                 Aktifkan Pilihan Kilat / Ekspres untuk Layanan Ini
                             </span>
                         </label>
 
-                        <div v-if="serviceForm.has_express" class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-200/80">
+                        <div v-if="serviceForm.has_express" class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-border">
                             <div>
-                                <label class="block text-[11px] font-bold text-slate-700 mb-1">
+                                <label class="block text-[11px] font-bold text-text mb-1">
                                     Biaya Tambahan Kilat (+Rp)
                                 </label>
                                 <input
@@ -2158,12 +2158,12 @@ const submitSettings = () => {
                                     min="0"
                                     step="500"
                                     placeholder="2000"
-                                    class="w-full px-2.5 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 bg-white text-slate-800"
+                                    class="w-full px-2.5 py-1.5 text-xs font-semibold rounded-lg border border-border bg-surface text-text"
                                 />
-                                <p class="text-[10px] font-medium text-slate-400 mt-0.5">Biaya tambahan flat atau per kg</p>
+                                <p class="text-[10px] font-medium text-text-muted mt-0.5">Biaya tambahan flat atau per kg</p>
                             </div>
                             <div>
-                                <label class="block text-[11px] font-bold text-slate-700 mb-1">
+                                <label class="block text-[11px] font-bold text-text mb-1">
                                     Durasi Kilat (Jam)
                                 </label>
                                 <input
@@ -2171,23 +2171,23 @@ const submitSettings = () => {
                                     type="number"
                                     min="1"
                                     placeholder="12"
-                                    class="w-full px-2.5 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 bg-white text-slate-800"
+                                    class="w-full px-2.5 py-1.5 text-xs font-semibold rounded-lg border border-border bg-surface text-text"
                                 />
-                                <p class="text-[10px] font-medium text-slate-400 mt-0.5">Misal 12 jam (pagi ambil sore)</p>
+                                <p class="text-[10px] font-medium text-text-muted mt-0.5">Misal 12 jam (pagi ambil sore)</p>
                             </div>
                         </div>
                     </div>
 
                     <!-- Deskripsi Singkat -->
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">
+                        <label class="block text-xs font-bold text-text mb-1 uppercase tracking-wider">
                             Deskripsi / Catatan Layanan (Opsional)
                         </label>
                         <textarea
                             v-model="serviceForm.description"
                             rows="2"
                             placeholder="Contoh: Cuci bersih, pengeringan mesin tumbler, parfum wangi, packing rapi."
-                            class="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-slate-800 font-semibold text-xs shadow-xs focus:outline-hidden focus:border-[#4F5FE8] focus:ring-2 focus:ring-[#4F5FE8]/20 transition"
+                            class="w-full px-3.5 py-2 rounded-xl border border-border bg-surface text-text font-semibold text-xs shadow-xs focus:outline-hidden focus:border-primary-600 focus:ring-2 focus:ring-primary-100 transition"
                         ></textarea>
                     </div>
 
@@ -2196,26 +2196,26 @@ const submitSettings = () => {
                         <input
                             v-model="serviceForm.is_active"
                             type="checkbox"
-                            class="w-4 h-4 rounded-md border-slate-300 text-[#4F5FE8] focus:ring-0 accent-[#4F5FE8] cursor-pointer"
+                            class="w-4 h-4 rounded-md border-border text-primary-600 focus:ring-0 accent-primary-600 cursor-pointer"
                         />
-                        <span class="text-xs font-bold text-slate-800">
+                        <span class="text-xs font-bold text-text">
                             Layanan aktif dan langsung dapat dipilih kasir di menu POS
                         </span>
                     </label>
 
                     <!-- Modal Action Buttons -->
-                    <div class="flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
+                    <div class="flex items-center justify-end gap-3 pt-3 border-t border-border">
                         <button
                             type="button"
                             @click="isServiceModalOpen = false"
-                            class="px-4 py-2 border border-slate-200 rounded-xl text-xs font-bold bg-white hover:bg-slate-50 text-slate-700 shadow-xs cursor-pointer transition-colors"
+                            class="px-4 py-2 border border-border rounded-xl text-xs font-bold bg-surface hover:bg-bg text-text shadow-xs cursor-pointer transition-colors"
                         >
                             Batal
                         </button>
                         <button
                             type="submit"
                             :disabled="serviceForm.processing"
-                            class="px-5 py-2 rounded-xl text-xs font-bold bg-[#FF8A5B] hover:bg-[#ff7640] text-white shadow-xs cursor-pointer transition-colors disabled:opacity-50"
+                            class="px-5 py-2 rounded-xl text-xs font-bold bg-accent-500 hover:bg-accent-600 text-navy-950 font-bold shadow-xs cursor-pointer transition-colors disabled:opacity-50"
                         >
                             {{ serviceForm.processing ? 'Menyimpan...' : (isEditingService ? 'Simpan Perubahan' : 'Tambahkan Layanan') }}
                         </button>

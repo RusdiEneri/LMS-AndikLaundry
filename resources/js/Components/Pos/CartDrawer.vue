@@ -143,7 +143,7 @@ function isKarpetService(item: CartLineItem): boolean {
 
                         <div
                             v-if="item.item_condition_notes"
-                            class="inline-flex items-center space-x-1 px-2 py-0.5 rounded-pill text-[10px] bg-[#FDE3E4] text-[#B3262B] font-semibold"
+                            class="inline-flex items-center space-x-1 px-2 py-0.5 rounded-pill text-[10px] bg-danger/10 text-danger font-semibold"
                         >
                             <AlertTriangle class="h-3 w-3 shrink-0" />
                             <span class="truncate max-w-[200px]">{{ item.item_condition_notes }}</span>
@@ -153,21 +153,21 @@ function isKarpetService(item: CartLineItem): boolean {
                     <button
                         type="button"
                         @click="emits('remove-item', idx)"
-                        class="inline-flex h-8 w-8 items-center justify-center rounded-md text-text-muted hover:text-danger hover:bg-[#FDE3E4] transition-all duration-[120ms] ease-standard cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
+                        class="inline-flex h-8 w-8 items-center justify-center rounded-md text-text-muted hover:text-danger hover:bg-danger/10 transition-all duration-[120ms] ease-standard cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
                         aria-label="Hapus item cucian"
                     >
                         <Trash2 class="h-4 w-4" />
                     </button>
                 </div>
 
-                <div v-if="isKarpetService(item)" class="p-3 bg-[#FFF1D6]/70 rounded-md border border-[#FFF1D6] space-y-2">
+                <div v-if="isKarpetService(item)" class="p-3 bg-warning/15 rounded-md border border-warning/30 space-y-2">
                     <div class="flex items-center space-x-1.5">
-                        <MapPin class="h-3.5 w-3.5 text-[#8A5A00]" />
-                        <span class="text-xs font-bold text-[#8A5A00]">Ukuran Karpet</span>
+                        <MapPin class="h-3.5 w-3.5 text-warning" />
+                        <span class="text-xs font-bold text-warning">Ukuran Karpet</span>
                     </div>
                     <div class="flex gap-2">
                         <div class="flex-1">
-                            <label class="overline-label text-[#8A5A00] block mb-0.5">Panjang (m)</label>
+                            <label class="overline-label text-warning block mb-0.5">Panjang (m)</label>
                             <input
                                 type="number"
                                 step="0.1"
@@ -179,7 +179,7 @@ function isKarpetService(item: CartLineItem): boolean {
                             />
                         </div>
                         <div class="flex-1">
-                            <label class="overline-label text-[#8A5A00] block mb-0.5">Lebar (m)</label>
+                            <label class="overline-label text-warning block mb-0.5">Lebar (m)</label>
                             <input
                                 type="number"
                                 step="0.1"
@@ -191,7 +191,7 @@ function isKarpetService(item: CartLineItem): boolean {
                             />
                         </div>
                     </div>
-                    <div class="flex justify-between items-center pt-1 text-xs font-bold text-[#8A5A00]">
+                    <div class="flex justify-between items-center pt-1 text-xs font-bold text-warning">
                         <span>Luas: {{ item.calculated_area || 0 }} m²</span>
                         <span v-if="(item.calculated_area ?? 0) > 0" class="font-mono tabular-nums">
                             {{ formatRupiah((item.calculated_area || 0) * item.service.price) }}
@@ -319,7 +319,7 @@ function isKarpetService(item: CartLineItem): boolean {
                 <span class="font-mono font-semibold tabular-nums">+{{ formatRupiah(tierSurcharge) }}</span>
             </div>
 
-            <div v-if="discountTotal > 0" class="flex justify-between text-xs text-[#F5B8BC]">
+            <div v-if="discountTotal > 0" class="flex justify-between text-xs text-accent-100">
                 <span>Potongan Diskon</span>
                 <span class="font-mono font-semibold tabular-nums">-{{ formatRupiah(discountTotal) }}</span>
             </div>

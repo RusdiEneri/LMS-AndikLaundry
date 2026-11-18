@@ -91,32 +91,33 @@ function printDailySlip() {
     <AppLayout title="Rekap Kas Harian">
         <div class="space-y-6">
             <!-- Header with Date Picker and Print Button -->
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-5 rounded-xl border border-slate-200 shadow-xs print:hidden">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-surface p-5 rounded-lg border border-border shadow-sm print:hidden">
                 <div>
                     <div class="flex items-center space-x-2">
-                        <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Rekap Kas Harian</h1>
+                        <h1 class="text-2xl font-heading font-bold text-text tracking-tight">Rekap Kas Harian</h1>
                         <Badge variant="teal" class="text-xs">Usaha Rumahan</Badge>
                     </div>
-                    <p class="text-sm text-slate-500 mt-1">
+                    <p class="text-sm text-text-muted mt-1">
                         Ringkasan transaksi, pembayaran tunai/digital, pengeluaran toko, dan sisa uang bersih di laci.
                     </p>
                 </div>
 
                 <div class="flex flex-wrap items-center gap-3">
-                    <div class="flex items-center space-x-2 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200">
-                        <Calendar class="h-4 w-4 text-slate-500" />
+                    <div class="flex items-center space-x-2 bg-bg px-3 py-1.5 rounded-pill border border-border">
+                        <Calendar class="h-4 w-4 text-text-muted" />
                         <input
                             v-model="currentDate"
                             @change="onDateChange"
                             type="date"
-                            class="bg-transparent border-none text-sm font-semibold focus:outline-none min-h-[44px]"
+                            class="bg-transparent border-none text-sm font-semibold text-text focus:outline-none min-h-[44px]"
                         />
                     </div>
 
                     <Button
                         type="button"
+                        variant="default"
                         @click="printDailySlip"
-                        class="min-h-[44px] gap-2 font-bold shadow-sm bg-slate-900 hover:bg-slate-800 text-white"
+                        class="min-h-[44px] gap-2 font-bold shadow-sm"
                     >
                         <Printer class="h-4 w-4" />
                         <span>Cetak Struk Rekap</span>
@@ -127,57 +128,57 @@ function printDailySlip() {
             <!-- 4 Primary Metric Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 print:hidden">
                 <!-- 1. Total Pembayaran Diterima -->
-                <Card class="border-slate-200 shadow-xs">
+                <Card class="border-border shadow-sm rounded-lg bg-surface">
                     <CardHeader class="pb-2">
-                        <CardTitle class="text-xs uppercase font-bold text-slate-500">Total Uang Masuk</CardTitle>
+                        <CardTitle class="text-xs uppercase font-bold text-text-muted">Total Uang Masuk</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div class="text-2xl font-bold font-mono text-emerald-700">
+                        <div class="text-2xl font-bold font-mono text-success tabular-nums">
                             Rp {{ formatNumber(recap.revenue_summary.total_payments_received) }}
                         </div>
-                        <div class="flex items-center space-x-2 text-xs text-slate-500 mt-1">
+                        <div class="flex items-center space-x-2 text-xs text-text-muted mt-1">
                             <span>Tunai + QRIS + Transfer</span>
                         </div>
                     </CardContent>
                 </Card>
 
                 <!-- 2. Kas Tunai Masuk -->
-                <Card class="border-slate-200 shadow-xs">
+                <Card class="border-border shadow-sm rounded-lg bg-surface">
                     <CardHeader class="pb-2">
-                        <CardTitle class="text-xs uppercase font-bold text-slate-500">Kas Masuk Tunai</CardTitle>
+                        <CardTitle class="text-xs uppercase font-bold text-text-muted">Kas Masuk Tunai</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div class="text-2xl font-bold font-mono text-slate-900">
+                        <div class="text-2xl font-bold font-mono text-text tabular-nums">
                             Rp {{ formatNumber(recap.cash_summary.cash_in) }}
                         </div>
-                        <p class="text-xs text-slate-500 mt-1">Uang fisik masuk laci</p>
+                        <p class="text-xs text-text-muted mt-1">Uang fisik masuk laci</p>
                     </CardContent>
                 </Card>
 
                 <!-- 3. Pengeluaran Toko Tunai -->
-                <Card class="border-slate-200 shadow-xs">
+                <Card class="border-border shadow-sm rounded-lg bg-surface">
                     <CardHeader class="pb-2">
-                        <CardTitle class="text-xs uppercase font-bold text-slate-500">Pengeluaran Kas Tunai</CardTitle>
+                        <CardTitle class="text-xs uppercase font-bold text-text-muted">Pengeluaran Kas Tunai</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div class="text-2xl font-bold font-mono text-rose-600">
+                        <div class="text-2xl font-bold font-mono text-danger tabular-nums">
                             Rp {{ formatNumber(recap.cash_summary.cash_out) }}
                         </div>
-                        <p class="text-xs text-slate-500 mt-1">Beli gas, sabun, plastik, dll</p>
+                        <p class="text-xs text-text-muted mt-1">Beli gas, sabun, plastik, dll</p>
                     </CardContent>
                 </Card>
 
                 <!-- 4. Hero: Sisa Bersih Kas Tunai di Laci -->
-                <Card class="border-[#10B981]/30 bg-[#10B981]/10 shadow-sm rounded-[12px]">
+                <Card class="border border-success/30 bg-success/10 shadow-sm rounded-lg">
                     <CardHeader class="pb-2">
-                        <CardTitle class="text-xs uppercase font-bold text-[#10B981]">Sisa Kas Bersih di Laci</CardTitle>
+                        <CardTitle class="text-xs uppercase font-bold text-success">Sisa Kas Bersih di Laci</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div class="text-2xl font-bold font-mono text-[#0A0A0A]">
+                        <div class="text-2xl font-bold font-mono text-text tabular-nums">
                             Rp {{ formatNumber(recap.cash_summary.net_cash_on_hand) }}
                         </div>
-                        <div class="flex items-center space-x-1.5 text-xs text-[#10B981] mt-1 font-semibold">
-                            <CheckCircle2 class="h-3.5 w-3.5 text-[#10B981]" />
+                        <div class="flex items-center space-x-1.5 text-xs text-success mt-1 font-semibold">
+                            <CheckCircle2 class="h-3.5 w-3.5 text-success" />
                             <span>Uang Fisik Kas Toko</span>
                         </div>
                     </CardContent>
@@ -187,89 +188,89 @@ function printDailySlip() {
             <!-- Detailed Breakdowns: Digital Payments & Operational Volume -->
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 print:hidden">
                 <!-- Digital Non-Cash (Col 6) -->
-                <Card class="lg:col-span-6 border-slate-200 shadow-xs">
+                <Card class="lg:col-span-6 border-border shadow-sm rounded-lg bg-surface">
                     <CardHeader>
-                        <CardTitle class="text-base font-bold text-slate-900">Rincian Pembayaran Non-Tunai</CardTitle>
-                        <CardDescription class="text-xs text-slate-500">
+                        <CardTitle class="text-base font-heading font-bold text-text">Rincian Pembayaran Non-Tunai</CardTitle>
+                        <CardDescription class="text-xs text-text-muted">
                             Masuk langsung ke rekening / e-wallet
                         </CardDescription>
                     </CardHeader>
                     <CardContent class="space-y-4">
-                        <div class="flex items-center justify-between p-3 rounded-lg bg-slate-50 border border-slate-200">
+                        <div class="flex items-center justify-between p-3 rounded-md bg-bg border border-border">
                             <div class="flex items-center space-x-3">
-                                <QrCode class="h-5 w-5 text-indigo-600" />
+                                <QrCode class="h-5 w-5 text-primary-700" />
                                 <div>
-                                    <div class="text-sm font-bold text-slate-800">QRIS</div>
-                                    <div class="text-xs text-slate-500">Statis / Merchant QR</div>
+                                    <div class="text-sm font-bold text-text">QRIS</div>
+                                    <div class="text-xs text-text-muted">Statis / Merchant QR</div>
                                 </div>
                             </div>
-                            <div class="font-mono font-bold text-slate-900">
+                            <div class="font-mono font-bold text-text tabular-nums">
                                 Rp {{ formatNumber(recap.digital_summary.qris) }}
                             </div>
                         </div>
 
-                        <div class="flex items-center justify-between p-3 rounded-lg bg-slate-50 border border-slate-200">
+                        <div class="flex items-center justify-between p-3 rounded-md bg-bg border border-border">
                             <div class="flex items-center space-x-3">
-                                <CreditCard class="h-5 w-5 text-[#6366F1]" />
+                                <CreditCard class="h-5 w-5 text-primary-600" />
                                 <div>
-                                    <div class="text-sm font-bold text-slate-800">Transfer Bank</div>
-                                    <div class="text-xs text-slate-500">BCA / Mandiri / BRI</div>
+                                    <div class="text-sm font-bold text-text">Transfer Bank</div>
+                                    <div class="text-xs text-text-muted">BCA / Mandiri / BRI</div>
                                 </div>
                             </div>
-                            <div class="font-mono font-bold text-slate-900">
+                            <div class="font-mono font-bold text-text tabular-nums">
                                 Rp {{ formatNumber(recap.digital_summary.bank_transfer) }}
                             </div>
                         </div>
 
-                        <div class="pt-2 border-t border-slate-200 flex justify-between items-center text-sm font-bold text-slate-900">
+                        <div class="pt-2 border-t border-border flex justify-between items-center text-sm font-bold text-text">
                             <span>Total Non-Tunai</span>
-                            <span class="font-mono text-indigo-700">Rp {{ formatNumber(recap.digital_summary.total_digital) }}</span>
+                            <span class="font-mono text-primary-700 tabular-nums">Rp {{ formatNumber(recap.digital_summary.total_digital) }}</span>
                         </div>
                     </CardContent>
                 </Card>
 
                 <!-- Operational Volume & Receivables (Col 6) -->
-                <Card class="lg:col-span-6 border-slate-200 shadow-xs">
+                <Card class="lg:col-span-6 border-border shadow-sm rounded-lg bg-surface">
                     <CardHeader>
-                        <CardTitle class="text-base font-bold text-slate-900">Volume Cucian & Piutang</CardTitle>
-                        <CardDescription class="text-xs text-slate-500">
+                        <CardTitle class="text-base font-heading font-bold text-text">Volume Cucian & Piutang</CardTitle>
+                        <CardDescription class="text-xs text-text-muted">
                             Beban cucian fisik dan status piutang hari ini
                         </CardDescription>
                     </CardHeader>
                     <CardContent class="space-y-3">
                         <div class="grid grid-cols-3 gap-2 text-center">
-                            <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
-                                <div class="text-xs text-slate-500">Total Nota</div>
-                                <div class="text-xl font-bold font-mono text-slate-900 mt-1">
+                            <div class="p-3 bg-bg rounded-md border border-border">
+                                <div class="text-xs text-text-muted">Total Nota</div>
+                                <div class="text-xl font-bold font-mono text-text mt-1">
                                     {{ recap.operational_volume.total_orders }}
                                 </div>
                             </div>
-                            <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
-                                <div class="text-xs text-slate-500">Berat Kiloan</div>
-                                <div class="text-xl font-bold font-mono text-cyan-700 mt-1">
+                            <div class="p-3 bg-bg rounded-md border border-border">
+                                <div class="text-xs text-text-muted">Berat Kiloan</div>
+                                <div class="text-xl font-bold font-mono text-primary-700 mt-1">
                                     {{ recap.operational_volume.total_weight_kg }} kg
                                 </div>
                             </div>
-                            <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
-                                <div class="text-xs text-slate-500">Item Satuan</div>
-                                <div class="text-xl font-bold font-mono text-amber-700 mt-1">
+                            <div class="p-3 bg-bg rounded-md border border-border">
+                                <div class="text-xs text-text-muted">Item Satuan</div>
+                                <div class="text-xl font-bold font-mono text-warning mt-1">
                                     {{ recap.operational_volume.total_pieces }} pcs
                                 </div>
                             </div>
                         </div>
 
-                        <div class="p-3 bg-slate-50 rounded-lg border border-slate-200 text-xs space-y-1.5">
+                        <div class="p-3 bg-bg rounded-md border border-border text-xs space-y-1.5">
                             <div class="flex justify-between">
-                                <span class="text-slate-600">Total Nilai Nota Diterima:</span>
-                                <span class="font-mono font-bold">Rp {{ formatNumber(recap.revenue_summary.total_orders_invoiced) }}</span>
+                                <span class="text-text-muted">Total Nilai Nota Diterima:</span>
+                                <span class="font-mono font-bold text-text tabular-nums">Rp {{ formatNumber(recap.revenue_summary.total_orders_invoiced) }}</span>
                             </div>
-                            <div class="flex justify-between text-amber-700">
+                            <div class="flex justify-between text-warning">
                                 <span>Piutang Baru (Bayar Nanti):</span>
-                                <span class="font-mono font-bold">Rp {{ formatNumber(recap.revenue_summary.new_receivables) }}</span>
+                                <span class="font-mono font-bold tabular-nums">Rp {{ formatNumber(recap.revenue_summary.new_receivables) }}</span>
                             </div>
-                            <div class="flex justify-between text-emerald-700">
+                            <div class="flex justify-between text-success">
                                 <span>Pelunasan Piutang Lama:</span>
-                                <span class="font-mono font-bold">Rp {{ formatNumber(recap.revenue_summary.debt_settled_today) }}</span>
+                                <span class="font-mono font-bold tabular-nums">Rp {{ formatNumber(recap.revenue_summary.debt_settled_today) }}</span>
                             </div>
                         </div>
                     </CardContent>
@@ -277,12 +278,12 @@ function printDailySlip() {
             </div>
 
             <!-- List of Expenses Today -->
-            <Card class="border-slate-200 shadow-xs print:hidden">
+            <Card class="border-border shadow-sm rounded-lg bg-surface print:hidden">
                 <CardHeader>
                     <div class="flex items-center justify-between">
                         <div>
-                            <CardTitle class="text-base font-bold text-slate-900">Rincian Pengeluaran Toko Hari Ini</CardTitle>
-                            <CardDescription class="text-xs text-slate-500">
+                            <CardTitle class="text-base font-heading font-bold text-text">Rincian Pengeluaran Toko Hari Ini</CardTitle>
+                            <CardDescription class="text-xs text-text-muted">
                                 Catatan belanja gas, deterjen, dan bahan operasional
                             </CardDescription>
                         </div>
@@ -291,8 +292,8 @@ function printDailySlip() {
                 </CardHeader>
                 <CardContent class="p-0">
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm text-slate-700">
-                            <thead class="bg-slate-50 border-y border-slate-200 text-[11px] uppercase tracking-wider text-slate-500 font-bold">
+                        <table class="w-full text-left text-sm text-text">
+                            <thead class="bg-bg border-y border-border text-[11px] uppercase tracking-wider text-text-muted font-semibold">
                                 <tr>
                                     <th class="px-5 py-3">No. Nota</th>
                                     <th class="px-5 py-3">Kategori</th>
@@ -301,22 +302,22 @@ function printDailySlip() {
                                     <th class="px-5 py-3 text-right">Nominal</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-slate-200">
+                            <tbody class="divide-y divide-border">
                                 <tr v-if="recap.expenses_list.length === 0">
-                                    <td colspan="5" class="px-5 py-6 text-center text-slate-400 text-xs">
+                                    <td colspan="5" class="px-5 py-6 text-center text-text-muted text-xs">
                                         Tidak ada pengeluaran operasional yang dicatat pada tanggal ini.
                                     </td>
                                 </tr>
-                                <tr v-for="exp in recap.expenses_list" :key="exp.id">
-                                    <td class="px-5 py-3 font-mono font-bold text-xs">{{ exp.expense_number }}</td>
-                                    <td class="px-5 py-3 text-xs">{{ exp.category }}</td>
-                                    <td class="px-5 py-3 text-sm">{{ exp.description }}</td>
+                                <tr v-for="exp in recap.expenses_list" :key="exp.id" class="hover:bg-bg transition-colors">
+                                    <td class="px-5 py-3 font-mono font-bold text-xs text-text">{{ exp.expense_number }}</td>
+                                    <td class="px-5 py-3 text-xs text-text-muted">{{ exp.category }}</td>
+                                    <td class="px-5 py-3 text-sm text-text">{{ exp.description }}</td>
                                     <td class="px-5 py-3 text-xs">
                                         <Badge :variant="exp.payment_method === 'cash' ? 'outline' : 'secondary'">
                                             {{ exp.payment_method === 'cash' ? 'Tunai Laci' : 'Transfer' }}
                                         </Badge>
                                     </td>
-                                    <td class="px-5 py-3 font-mono font-bold text-sm text-right text-rose-600">
+                                    <td class="px-5 py-3 font-mono font-bold text-sm text-right text-danger tabular-nums">
                                         Rp {{ formatNumber(exp.amount) }}
                                     </td>
                                 </tr>

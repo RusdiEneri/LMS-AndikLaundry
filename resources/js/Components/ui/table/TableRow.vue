@@ -13,7 +13,7 @@ const props = defineProps<Props>();
     <tr
         :class="
             cn(
-                'h-[52px] border-b border-border transition-colors duration-[120ms] ease-standard hover:bg-[#F7FAFD] data-[state=selected]:bg-primary-100/50',
+                'h-[52px] border-b border-border transition-colors duration-[120ms] ease-standard hover:bg-bg data-[state=selected]:bg-primary-100/50',
                 props.class
             )
         "

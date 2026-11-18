@@ -263,7 +263,7 @@ function handleNewTransaction() {
                                 </span>
                             </div>
 
-                            <div v-if="item.item_condition_notes" class="text-[9px] text-black bg-[#FFF9D2] border border-black/30 px-1 py-0.5 rounded-sm">
+                            <div v-if="item.item_condition_notes" class="text-[9px] text-text bg-warning/15 border border-border px-1 py-0.5 rounded-sm">
                                 Catatan: {{ item.item_condition_notes }}
                             </div>
                         </div>

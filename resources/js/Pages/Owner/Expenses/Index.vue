@@ -155,17 +155,17 @@ function getCategoryIcon(cat: string) {
 function getCategoryColor(cat: string) {
     switch (cat) {
         case 'gas_lpg':
-            return 'bg-amber-100 text-amber-800 border-amber-300';
+            return 'bg-warning/15 text-warning border-warning/30';
         case 'detergent_chemicals':
-            return 'bg-cyan-100 text-cyan-800 border-cyan-300';
+            return 'bg-primary-100 text-primary-700 border-primary-500/30';
         case 'packaging_plastic':
-            return 'bg-indigo-100 text-indigo-800 border-indigo-300';
+            return 'bg-accent-100 text-accent-700 border-accent-500/30';
         case 'utilities':
-            return 'bg-yellow-100 text-yellow-800 border-yellow-300';
+            return 'bg-warning/15 text-warning border-warning/30';
         case 'maintenance':
-            return 'bg-rose-100 text-rose-800 border-rose-300';
+            return 'bg-danger/15 text-danger border-danger/30';
         default:
-            return 'bg-slate-100 text-slate-800 border-slate-300';
+            return 'bg-primary-100 text-navy-800 border-border';
     }
 }
 </script>
@@ -174,13 +174,13 @@ function getCategoryColor(cat: string) {
     <AppLayout title="Pengeluaran Operasional Toko">
         <div class="space-y-6">
             <!-- Header Title and Add Button -->
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-surface p-5 rounded-lg border border-border shadow-sm">
                 <div>
                     <div class="flex items-center space-x-2">
-                        <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Pengeluaran Toko</h1>
+                        <h1 class="text-2xl font-heading font-bold text-text tracking-tight">Pengeluaran Toko</h1>
                         <Badge variant="teal" class="text-xs">Buku Kas</Badge>
                     </div>
-                    <p class="text-sm text-slate-500 mt-1">
+                    <p class="text-sm text-text-muted mt-1">
                         Pencatatan biaya beli gas LPG, sabun, deterjen, plastik, dan kebutuhan operasional harian.
                     </p>
                 </div>
@@ -188,8 +188,9 @@ function getCategoryColor(cat: string) {
                 <div class="flex items-center gap-3">
                     <Button
                         type="button"
+                        variant="default"
                         @click="isAddModalOpen = true"
-                        class="min-h-[44px] gap-2 font-bold shadow-[0_4px_12px_rgba(99,102,241,0.35)] bg-[#6366F1] hover:bg-[#4F46E5] text-white rounded-[6px]"
+                        class="min-h-[44px] gap-2 font-bold shadow-sm"
                     >
                         <PlusCircle class="h-4 w-4" />
                         <span>Catat Pengeluaran Baru</span>
@@ -199,73 +200,73 @@ function getCategoryColor(cat: string) {
 
             <!-- Top Summary KPI Cards (Today) -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <Card class="border-slate-200 shadow-xs">
+                <Card class="border-border shadow-sm rounded-lg bg-surface">
                     <CardHeader class="pb-2">
-                        <CardTitle class="text-xs uppercase font-bold text-slate-500">Total Pengeluaran Hari Ini</CardTitle>
+                        <CardTitle class="text-xs uppercase font-bold text-text-muted">Total Pengeluaran Hari Ini</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div class="text-2xl font-bold font-mono text-rose-600">
+                        <div class="text-2xl font-bold font-mono text-danger tabular-nums">
                             Rp {{ formatNumber(today_summary?.total_expenses ?? 0) }}
                         </div>
-                        <p class="text-xs text-slate-500 mt-1">{{ today_summary?.expense_count ?? 0 }} transaksi belanja</p>
+                        <p class="text-xs text-text-muted mt-1">{{ today_summary?.expense_count ?? 0 }} transaksi belanja</p>
                     </CardContent>
                 </Card>
 
-                <Card class="border-slate-200 shadow-xs">
+                <Card class="border-border shadow-sm rounded-lg bg-surface">
                     <CardHeader class="pb-2">
-                        <CardTitle class="text-xs uppercase font-bold text-slate-500">Kas Tunai Keluar (Laci)</CardTitle>
+                        <CardTitle class="text-xs uppercase font-bold text-text-muted">Kas Tunai Keluar (Laci)</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div class="text-2xl font-bold font-mono text-amber-700">
+                        <div class="text-2xl font-bold font-mono text-warning tabular-nums">
                             Rp {{ formatNumber(today_summary?.cash_expenses ?? 0) }}
                         </div>
-                        <p class="text-xs text-slate-500 mt-1">Mengurangi uang tunai di laci</p>
+                        <p class="text-xs text-text-muted mt-1">Mengurangi uang tunai di laci</p>
                     </CardContent>
                 </Card>
 
-                <Card class="border-slate-200 shadow-xs">
+                <Card class="border-border shadow-sm rounded-lg bg-surface">
                     <CardHeader class="pb-2">
-                        <CardTitle class="text-xs uppercase font-bold text-slate-500">Non-Tunai / Transfer</CardTitle>
+                        <CardTitle class="text-xs uppercase font-bold text-text-muted">Non-Tunai / Transfer</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div class="text-2xl font-bold font-mono text-indigo-700">
+                        <div class="text-2xl font-bold font-mono text-primary-700 tabular-nums">
                             Rp {{ formatNumber(today_summary?.transfer_expenses ?? 0) }}
                         </div>
-                        <p class="text-xs text-slate-500 mt-1">Dibayar via rekening bank</p>
+                        <p class="text-xs text-text-muted mt-1">Dibayar via rekening bank</p>
                     </CardContent>
                 </Card>
 
-                <Card class="border border-slate-200 shadow-xs rounded-2xl bg-white">
+                <Card class="border border-border shadow-sm rounded-lg bg-surface">
                     <CardHeader class="pb-2">
-                        <CardTitle class="text-xs uppercase font-bold text-slate-500">Status Buku Kas</CardTitle>
+                        <CardTitle class="text-xs uppercase font-bold text-text-muted">Status Buku Kas</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div class="text-base font-bold text-slate-900 flex items-center space-x-1.5">
-                            <CheckCircle2 class="h-4 w-4 text-emerald-600" />
+                        <div class="text-base font-bold text-text flex items-center space-x-1.5">
+                            <CheckCircle2 class="h-4 w-4 text-success" />
                             <span>Tercatat Otomatis</span>
                         </div>
-                        <p class="text-xs font-medium text-slate-500 mt-1">Masuk ke Rekap Kas Harian</p>
+                        <p class="text-xs font-medium text-text-muted mt-1">Masuk ke Rekap Kas Harian</p>
                     </CardContent>
                 </Card>
             </div>
 
             <!-- Filter Controls -->
-            <div class="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-xs flex flex-wrap items-center gap-3">
+            <div class="bg-surface p-4 rounded-lg border border-border shadow-sm flex flex-wrap items-center gap-3">
                 <div class="relative flex-1 min-w-[200px]">
-                    <Search class="h-4 w-4 text-slate-400 absolute left-3 top-3.5" />
+                    <Search class="h-4 w-4 text-text-muted absolute left-3 top-3.5" />
                     <input
                         v-model="search"
                         @keydown.enter="applyFilter"
                         type="text"
                         placeholder="Cari nomor nota atau keterangan..."
-                        class="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-xl text-sm font-semibold text-slate-900 min-h-[44px] focus:outline-none focus:ring-2 focus:ring-[#4F5FE8]"
+                        class="w-full pl-9 pr-4 py-2 border border-border rounded-md text-sm font-medium text-text bg-surface min-h-[44px] focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-600"
                     />
                 </div>
 
                 <select
                     v-model="selectedCategory"
                     @change="applyFilter"
-                    class="border border-slate-200 rounded-xl px-3 py-2 text-sm font-semibold text-slate-900 min-h-[44px] bg-white focus:outline-none focus:ring-2 focus:ring-[#4F5FE8]"
+                    class="border border-border rounded-md px-3 py-2 text-sm font-medium text-text min-h-[44px] bg-surface focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-600"
                 >
                     <option value="">Semua Kategori</option>
                     <option v-for="cat in categories" :key="cat.value" :value="cat.value">
@@ -278,34 +279,34 @@ function getCategoryColor(cat: string) {
                         v-model="startDate"
                         @change="applyFilter"
                         type="date"
-                        class="border border-slate-200 rounded-xl px-3 py-2 text-sm font-semibold text-slate-900 min-h-[44px] bg-white focus:outline-none focus:ring-2 focus:ring-[#4F5FE8]"
+                        class="border border-border rounded-md px-3 py-2 text-sm font-medium text-text min-h-[44px] bg-surface focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-600"
                     />
-                    <span class="text-xs font-bold text-slate-500">s/d</span>
+                    <span class="text-xs font-semibold text-text-muted">s/d</span>
                     <input
                         v-model="endDate"
                         @change="applyFilter"
                         type="date"
-                        class="border border-slate-200 rounded-xl px-3 py-2 text-sm font-semibold text-slate-900 min-h-[44px] bg-white focus:outline-none focus:ring-2 focus:ring-[#4F5FE8]"
+                        class="border border-border rounded-md px-3 py-2 text-sm font-medium text-text min-h-[44px] bg-surface focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-600"
                     />
                 </div>
 
-                <Button type="button" variant="outline" @click="resetFilter" class="min-h-[44px] text-xs font-bold uppercase tracking-wider rounded-xl">
+                <Button type="button" variant="outline" @click="resetFilter" class="min-h-[44px] text-xs font-bold uppercase tracking-wider">
                     Reset
                 </Button>
             </div>
 
             <!-- Table of Expenses -->
-            <Card class="border border-slate-200/90 shadow-xs rounded-2xl overflow-hidden">
+            <Card class="border border-border shadow-sm rounded-lg overflow-hidden bg-surface">
                 <CardHeader>
-                    <CardTitle class="text-base font-bold text-slate-900">Daftar Pengeluaran Operasional</CardTitle>
-                    <CardDescription class="text-xs font-medium text-slate-500">
+                    <CardTitle class="text-base font-heading font-bold text-text">Daftar Pengeluaran Operasional</CardTitle>
+                    <CardDescription class="text-xs font-medium text-text-muted">
                         Total {{ expenses.total }} catatan transaksi
                     </CardDescription>
                 </CardHeader>
                 <CardContent class="p-0">
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm text-slate-900">
-                            <thead class="bg-slate-50 border-y border-slate-200 text-xs uppercase tracking-wider text-slate-600 font-bold">
+                        <table class="w-full text-left text-sm text-text">
+                            <thead class="bg-bg border-y border-border text-xs uppercase tracking-wider text-text-muted font-semibold">
                                 <tr>
                                     <th class="px-5 py-3">No. Pengeluaran</th>
                                     <th class="px-5 py-3">Tanggal</th>
@@ -316,26 +317,26 @@ function getCategoryColor(cat: string) {
                                     <th class="px-5 py-3 text-center">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-slate-200">
+                            <tbody class="divide-y divide-border">
                                 <tr v-if="expenses.data.length === 0">
-                                    <td colspan="7" class="px-5 py-8 text-center text-slate-400 text-sm">
+                                    <td colspan="7" class="px-5 py-8 text-center text-text-muted text-sm">
                                         Belum ada catatan pengeluaran operasional.
                                     </td>
                                 </tr>
-                                <tr v-for="exp in expenses.data" :key="exp.id" class="hover:bg-slate-50 transition-colors">
-                                    <td class="px-5 py-4 font-mono font-bold text-xs text-slate-900">
+                                <tr v-for="exp in expenses.data" :key="exp.id" class="hover:bg-bg transition-colors">
+                                    <td class="px-5 py-4 font-mono font-bold text-xs text-text">
                                         {{ exp.expense_number }}
                                     </td>
-                                    <td class="px-5 py-4 text-xs text-slate-600">
+                                    <td class="px-5 py-4 text-xs text-text-muted">
                                         {{ exp.expense_date }}
                                     </td>
                                     <td class="px-5 py-4">
-                                        <span :class="['inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold border', getCategoryColor(exp.category)]">
+                                        <span :class="['inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-pill text-xs font-semibold border', getCategoryColor(exp.category)]">
                                             <component :is="getCategoryIcon(exp.category)" class="h-3 w-3" />
                                             {{ categories.find(c => c.value === exp.category)?.label ?? exp.category }}
                                         </span>
                                     </td>
-                                    <td class="px-5 py-4 text-sm text-slate-800">
+                                    <td class="px-5 py-4 text-sm text-text">
                                         {{ exp.description }}
                                     </td>
                                     <td class="px-5 py-4 text-xs font-semibold">
@@ -343,14 +344,14 @@ function getCategoryColor(cat: string) {
                                             {{ exp.payment_method === 'cash' ? 'Tunai Laci' : 'Transfer' }}
                                         </Badge>
                                     </td>
-                                    <td class="px-5 py-4 font-mono font-bold text-sm text-right text-rose-700">
+                                    <td class="px-5 py-4 font-mono font-bold text-sm text-right text-danger tabular-nums">
                                         Rp {{ formatNumber(exp.amount) }}
                                     </td>
                                     <td class="px-5 py-4 text-center">
                                         <button
                                             type="button"
                                             @click="deleteExpense(exp)"
-                                            class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                                            class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center text-text-muted hover:text-danger hover:bg-danger/10 rounded-md transition-colors cursor-pointer"
                                             title="Hapus Pengeluaran"
                                         >
                                             <Trash2 class="h-4 w-4" />
@@ -366,18 +367,19 @@ function getCategoryColor(cat: string) {
             <!-- Add Expense Modal Dialog -->
             <div
                 v-if="isAddModalOpen"
-                class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-4"
+                class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/60 backdrop-blur-xs"
+                @click.self="isAddModalOpen = false"
             >
-                <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-5 animate-in fade-in-0 zoom-in-95">
-                    <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <div class="bg-surface rounded-xl max-w-lg w-full p-6 shadow-lg border border-border space-y-5 animate-in fade-in-0 zoom-in-95">
+                    <div class="flex items-center justify-between pb-3 border-b border-border">
                         <div>
-                            <h2 class="text-lg font-bold text-slate-900">Catat Pengeluaran Operasional</h2>
-                            <p class="text-xs text-slate-500">Mencatat pembelian bahan / pengeluaran kas toko</p>
+                            <h2 class="text-lg font-heading font-bold text-text">Catat Pengeluaran Operasional</h2>
+                            <p class="text-xs text-text-muted">Mencatat pembelian bahan / pengeluaran kas toko</p>
                         </div>
                         <button
                             type="button"
                             @click="isAddModalOpen = false"
-                            class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center text-slate-400 hover:text-slate-700 rounded-lg"
+                            class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center text-text-muted hover:text-text rounded-md cursor-pointer"
                         >
                             <X class="h-5 w-5" />
                         </button>
@@ -386,7 +388,7 @@ function getCategoryColor(cat: string) {
                     <form @submit.prevent="submitExpense" class="space-y-4">
                         <!-- Nominal -->
                         <div>
-                            <label class="block text-xs font-bold text-[#0A0A0A] uppercase mb-1">
+                            <label class="block text-xs font-bold text-text uppercase mb-1">
                                 Nominal Pengeluaran (Rp) *
                             </label>
                             <input
@@ -394,9 +396,9 @@ function getCategoryColor(cat: string) {
                                 type="number"
                                 placeholder="Contoh: 44000"
                                 required
-                                class="w-full px-4 py-2.5 rounded-[6px] border border-[#E8E8EC] font-mono text-lg font-bold min-h-[44px] text-[#0A0A0A] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12"
+                                class="w-full px-4 py-2.5 rounded-md border border-border font-mono text-lg font-bold min-h-[44px] text-text bg-surface focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-600"
                             />
-                            <div v-if="form.errors.amount" class="text-[#EF4444] text-xs mt-1">
+                            <div v-if="form.errors.amount" class="text-danger text-xs mt-1">
                                 {{ form.errors.amount }}
                             </div>
 
@@ -405,28 +407,28 @@ function getCategoryColor(cat: string) {
                                 <button
                                     type="button"
                                     @click="setQuickNominal(22000)"
-                                    class="text-xs px-2.5 py-1 rounded-[6px] border border-[#E8E8EC] bg-[#FAFAFA] text-[#0A0A0A] hover:bg-white font-mono cursor-pointer"
+                                    class="text-xs px-2.5 py-1 rounded-pill border border-border bg-bg text-text hover:bg-primary-100 font-mono cursor-pointer"
                                 >
                                     +22.000 (1 Gas)
                                 </button>
                                 <button
                                     type="button"
                                     @click="setQuickNominal(44000)"
-                                    class="text-xs px-2.5 py-1 rounded-[6px] border border-[#E8E8EC] bg-[#FAFAFA] text-[#0A0A0A] hover:bg-white font-mono cursor-pointer"
+                                    class="text-xs px-2.5 py-1 rounded-pill border border-border bg-bg text-text hover:bg-primary-100 font-mono cursor-pointer"
                                 >
                                     +44.000 (2 Gas)
                                 </button>
                                 <button
                                     type="button"
                                     @click="setQuickNominal(50000)"
-                                    class="text-xs px-2.5 py-1 rounded-[6px] border border-[#E8E8EC] bg-[#FAFAFA] text-[#0A0A0A] hover:bg-white font-mono cursor-pointer"
+                                    class="text-xs px-2.5 py-1 rounded-pill border border-border bg-bg text-text hover:bg-primary-100 font-mono cursor-pointer"
                                 >
                                     +50.000
                                 </button>
                                 <button
                                     type="button"
                                     @click="setQuickNominal(100000)"
-                                    class="text-xs px-2.5 py-1 rounded-[6px] border border-[#E8E8EC] bg-[#FAFAFA] text-[#0A0A0A] hover:bg-white font-mono cursor-pointer"
+                                    class="text-xs px-2.5 py-1 rounded-pill border border-border bg-bg text-text hover:bg-primary-100 font-mono cursor-pointer"
                                 >
                                     +100.000
                                 </button>
@@ -435,12 +437,12 @@ function getCategoryColor(cat: string) {
 
                         <!-- Category -->
                         <div>
-                            <label class="block text-xs font-bold text-[#0A0A0A] uppercase mb-1">
+                            <label class="block text-xs font-bold text-text uppercase mb-1">
                                 Kategori *
                             </label>
                             <select
                                 v-model="form.category"
-                                class="w-full px-4 py-2.5 rounded-[6px] border border-[#E8E8EC] text-sm text-[#0A0A0A] min-h-[44px] bg-white focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12"
+                                class="w-full px-4 py-2.5 rounded-md border border-border text-sm text-text min-h-[44px] bg-surface focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-600"
                             >
                                 <option v-for="cat in categories" :key="cat.value" :value="cat.value">
                                     {{ cat.label }}
@@ -450,7 +452,7 @@ function getCategoryColor(cat: string) {
 
                         <!-- Description -->
                         <div>
-                            <label class="block text-xs font-bold text-[#0A0A0A] uppercase mb-1">
+                            <label class="block text-xs font-bold text-text uppercase mb-1">
                                 Keterangan Pembelian *
                             </label>
                             <input
@@ -458,9 +460,9 @@ function getCategoryColor(cat: string) {
                                 type="text"
                                 placeholder="Contoh: Beli 2 tabung gas LPG 3kg di Toko Bu Joko"
                                 required
-                                class="w-full px-4 py-2.5 rounded-[6px] border border-[#E8E8EC] text-sm text-[#0A0A0A] min-h-[44px] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12"
+                                class="w-full px-4 py-2.5 rounded-md border border-border text-sm text-text min-h-[44px] bg-surface focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-600"
                             />
-                            <div v-if="form.errors.description" class="text-[#EF4444] text-xs mt-1">
+                            <div v-if="form.errors.description" class="text-danger text-xs mt-1">
                                 {{ form.errors.description }}
                             </div>
                         </div>
@@ -468,12 +470,12 @@ function getCategoryColor(cat: string) {
                         <!-- Payment Method & Date -->
                         <div class="grid grid-cols-2 gap-3">
                             <div>
-                                <label class="block text-xs font-bold text-[#0A0A0A] uppercase mb-1">
+                                <label class="block text-xs font-bold text-text uppercase mb-1">
                                     Metode Pembayaran
                                 </label>
                                 <select
                                     v-model="form.payment_method"
-                                    class="w-full px-3 py-2.5 rounded-[6px] border border-[#E8E8EC] text-sm text-[#0A0A0A] min-h-[44px] bg-white focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12"
+                                    class="w-full px-3 py-2.5 rounded-md border border-border text-sm text-text min-h-[44px] bg-surface focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-600"
                                 >
                                     <option value="cash">Kas Tunai (Laci)</option>
                                     <option value="bank_transfer">Transfer Bank</option>
@@ -481,30 +483,31 @@ function getCategoryColor(cat: string) {
                             </div>
 
                             <div>
-                                <label class="block text-xs font-bold text-[#0A0A0A] uppercase mb-1">
+                                <label class="block text-xs font-bold text-text uppercase mb-1">
                                     Tanggal
                                 </label>
                                 <input
                                     v-model="form.expense_date"
                                     type="date"
-                                    class="w-full px-3 py-2.5 rounded-[6px] border border-[#E8E8EC] text-sm text-[#0A0A0A] min-h-[44px] bg-white focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#6366F1]/12"
+                                    class="w-full px-3 py-2.5 rounded-md border border-border text-sm text-text min-h-[44px] bg-surface focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-600"
                                 />
                             </div>
                         </div>
 
-                        <div class="pt-3 border-t border-[#E8E8EC] flex items-center justify-end gap-3">
+                        <div class="pt-3 border-t border-border flex items-center justify-end gap-3">
                             <Button
                                 type="button"
                                 variant="outline"
                                 @click="isAddModalOpen = false"
-                                class="min-h-[44px] rounded-[6px]"
+                                class="min-h-[44px]"
                             >
                                 Batal
                             </Button>
                             <Button
                                 type="submit"
+                                variant="default"
                                 :disabled="form.processing"
-                                class="min-h-[44px] bg-[#6366F1] hover:bg-[#4F46E5] text-white font-bold rounded-[6px] shadow-[0_4px_12px_rgba(99,102,241,0.35)]"
+                                class="min-h-[44px] font-bold"
                             >
                                 {{ form.processing ? 'Menyimpan...' : 'Simpan Pengeluaran' }}
                             </Button>

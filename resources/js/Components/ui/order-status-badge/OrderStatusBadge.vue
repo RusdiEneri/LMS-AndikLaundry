@@ -21,13 +21,13 @@ interface Props {
 const props = defineProps<Props>();
 
 const STATUS_CONFIG = {
-    diterima: { bg: '#E3E8F7', text: '#1F3C88', label: 'Diterima' },
-    dicuci: { bg: '#D6ECFA', text: '#14598F', label: 'Dicuci' },
-    dikeringkan: { bg: '#FFF1D6', text: '#8A5A00', label: 'Dikeringkan' },
-    disetrika: { bg: '#FFE8D6', text: '#A84A12', label: 'Disetrika' },
-    siap: { bg: '#C9F0E6', text: '#0F6F5B', label: 'Siap diambil' },
-    selesai: { bg: '#E8EAF2', text: '#4A4F73', label: 'Selesai' },
-    dibatalkan: { bg: '#FDE3E4', text: '#B3262B', label: 'Dibatalkan' },
+    diterima: { bgClass: 'bg-primary-100', textClass: 'text-primary-700', dotClass: 'bg-primary-700', label: 'Diterima' },
+    dicuci: { bgClass: 'bg-primary-100', textClass: 'text-primary-700', dotClass: 'bg-primary-700', label: 'Dicuci' },
+    dikeringkan: { bgClass: 'bg-warning/15', textClass: 'text-warning', dotClass: 'bg-warning', label: 'Dikeringkan' },
+    disetrika: { bgClass: 'bg-warning/15', textClass: 'text-warning', dotClass: 'bg-warning', label: 'Disetrika' },
+    siap: { bgClass: 'bg-accent-100', textClass: 'text-accent-700', dotClass: 'bg-accent-700', label: 'Siap diambil' },
+    selesai: { bgClass: 'bg-success/15', textClass: 'text-success', dotClass: 'bg-success', label: 'Selesai' },
+    dibatalkan: { bgClass: 'bg-danger/10', textClass: 'text-danger', dotClass: 'bg-danger', label: 'Dibatalkan' },
 } as const;
 
 const config = computed(() => STATUS_CONFIG[props.status] ?? STATUS_CONFIG.diterima);
@@ -35,10 +35,14 @@ const config = computed(() => STATUS_CONFIG[props.status] ?? STATUS_CONFIG.diter
 
 <template>
     <span
-        :class="cn('inline-flex items-center gap-1.5 rounded-pill px-3 py-1 text-xs font-semibold select-none', props.class)"
-        :style="{ backgroundColor: config.bg, color: config.text }"
+        :class="cn(
+            'inline-flex items-center gap-1.5 rounded-pill px-3 py-1 text-xs font-semibold select-none border border-current/15',
+            config.bgClass,
+            config.textClass,
+            props.class
+        )"
     >
-        <span class="h-1.5 w-1.5 rounded-full" :style="{ backgroundColor: config.text }" aria-hidden="true" />
+        <span class="h-1.5 w-1.5 rounded-pill" :class="config.dotClass" aria-hidden="true" />
         {{ label ?? config.label }}
     </span>
 </template>

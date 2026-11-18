@@ -235,7 +235,7 @@ async function processOrderSubmit() {
                     <div
                         :class="[
                             'shrink-0 flex items-center space-x-1 px-3 py-1 rounded-pill text-xs font-semibold',
-                            paymentTiming === 'paid' ? 'bg-accent-100 text-accent-700' : 'bg-[#FFF1D6] text-[#8A5A00]'
+                            paymentTiming === 'paid' ? 'bg-accent-100 text-accent-700' : 'bg-warning/15 text-warning'
                         ]"
                     >
                         <ShieldCheck v-if="paymentTiming === 'paid'" class="h-3.5 w-3.5" />
@@ -244,7 +244,7 @@ async function processOrderSubmit() {
                     </div>
                 </div>
 
-                <div v-if="errorMessage" class="p-3.5 rounded-md bg-[#FDE3E4] border-l-4 border-l-danger text-[#B3262B] text-xs flex items-start space-x-2">
+                <div v-if="errorMessage" class="p-3.5 rounded-md bg-danger/10 border-l-4 border-l-danger text-danger text-xs flex items-start space-x-2">
                     <AlertTriangle class="h-4 w-4 shrink-0 mt-0.5" />
                     <span class="font-medium">{{ errorMessage }}</span>
                 </div>
@@ -349,7 +349,7 @@ async function processOrderSubmit() {
                             placeholder="Ketik uang tunai diterima"
                             :class="[
                                 'min-h-[46px] w-full rounded-md border border-border bg-surface px-3.5 py-2 text-lg font-mono font-bold text-text focus-visible:outline-none focus-visible:border-primary-600 focus-visible:ring-3 focus-visible:ring-primary-100 transition-all duration-[120ms] ease-standard tabular-nums',
-                                isCashUnderpaid ? 'border-danger bg-[#FDE3E4]/50' : '',
+                                isCashUnderpaid ? 'border-danger bg-danger/10' : '',
                             ]"
                         />
                         <div v-if="isCashUnderpaid" class="mt-1 text-[11px] font-medium text-danger flex items-center space-x-1">

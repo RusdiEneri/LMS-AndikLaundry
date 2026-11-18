@@ -415,11 +415,11 @@ onBeforeUnmount(() => {
         />
     </Head>
 
-    <div class="min-h-screen bg-[#F6F4EF] text-white font-sans antialiased selection:bg-[#FF8A5B] selection:text-[#10194D]">
+    <div class="min-h-screen bg-bg text-white font-sans antialiased selection:bg-accent-500 selection:text-navy-900">
         <!-- Skip link a11y -->
         <a
             href="#main-content"
-            class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#FF8A5B] focus:text-[#10194D] focus:font-bold focus:rounded-full focus:shadow-lg focus:outline-none"
+            class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-accent-500 focus:text-navy-900 focus:font-bold focus:rounded-pill focus:shadow-lg focus:outline-none"
         >
             Lewati ke konten utama
         </a>
@@ -430,29 +430,29 @@ onBeforeUnmount(() => {
         <header class="fixed top-3 sm:top-4 left-0 right-0 z-50 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pointer-events-none">
             <div
                 :class="[
-                    'pointer-events-auto backdrop-blur-md text-[#10194D] rounded-full px-5 sm:px-7 py-3 border transition-all duration-300 flex items-center justify-between',
+                    'pointer-events-auto backdrop-blur-md text-navy-900 rounded-pill px-5 sm:px-7 py-3 border transition-all duration-300 flex items-center justify-between',
                     isScrolled
-                        ? 'bg-white/98 shadow-[0_12px_32px_rgba(16,25,77,0.16)] border-[#E3E1DA]'
-                        : 'bg-white/95 shadow-[0_8px_24px_rgba(16,25,77,0.08)] border-[#E3E1DA]/80'
+                        ? 'bg-white/98 shadow-[0_12px_32px_rgba(16,25,77,0.16)] border-border'
+                        : 'bg-white/95 shadow-[0_8px_24px_rgba(16,25,77,0.08)] border-border/80'
                 ]"
             >
                 <!-- Logo -->
-                <Link href="/" class="flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F5FE8] rounded-lg">
-                    <span class="font-heading font-extrabold text-2xl tracking-tight text-[#10194D]">
-                        andik<span class="text-[#FF8A5B]">.</span>
+                <Link href="/" class="flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 rounded-lg">
+                    <span class="font-heading font-extrabold text-2xl tracking-tight text-navy-900">
+                        andik<span class="text-accent-500">.</span>
                     </span>
-                    <span class="text-[10px] font-bold tracking-widest text-[#4F5FE8] uppercase bg-[#E6E9FD] px-2 py-0.5 rounded-full ml-1">
+                    <span class="text-[10px] font-bold tracking-widest text-primary-600 uppercase bg-primary-100 px-2 py-0.5 rounded-pill ml-1">
                         LAUNDRY
                     </span>
                 </Link>
 
                 <!-- Desktop Navigation Links -->
-                <nav class="hidden lg:flex items-center gap-7 text-[14px] font-medium text-[#10194D]" aria-label="Navigasi Utama">
-                    <a href="#keunggulan" class="hover:text-[#4F5FE8] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F5FE8] rounded-md px-1 py-0.5">Keunggulan</a>
-                    <a href="#tarif" class="hover:text-[#4F5FE8] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F5FE8] rounded-md px-1 py-0.5">Layanan & Tarif</a>
-                    <a href="#lacak" class="hover:text-[#4F5FE8] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F5FE8] rounded-md px-1 py-0.5">Lacak Nota</a>
-                    <a href="#lokasi" class="hover:text-[#4F5FE8] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F5FE8] rounded-md px-1 py-0.5">Lokasi</a>
-                    <a href="#faq" class="hover:text-[#4F5FE8] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F5FE8] rounded-md px-1 py-0.5">FAQ</a>
+                <nav class="hidden lg:flex items-center gap-7 text-[14px] font-medium text-navy-900" aria-label="Navigasi Utama">
+                    <a href="#keunggulan" class="hover:text-primary-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 rounded-md px-1 py-0.5">Keunggulan</a>
+                    <a href="#tarif" class="hover:text-primary-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 rounded-md px-1 py-0.5">Layanan & Tarif</a>
+                    <a href="#lacak" class="hover:text-primary-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 rounded-md px-1 py-0.5">Lacak Nota</a>
+                    <a href="#lokasi" class="hover:text-primary-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 rounded-md px-1 py-0.5">Lokasi</a>
+                    <a href="#faq" class="hover:text-primary-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 rounded-md px-1 py-0.5">FAQ</a>
                 </nav>
 
                 <!-- Right Action Buttons -->
@@ -461,16 +461,16 @@ onBeforeUnmount(() => {
                         :href="whatsappUrl"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="bg-[#FF8A5B] hover:bg-[#F26B3A] text-[#10194D] font-bold text-xs sm:text-sm px-4 sm:px-5 py-2.5 rounded-full transition-all duration-200 shadow-sm hover:shadow-[0_4px_14px_rgba(255,138,91,0.4)] hover:-translate-y-0.5 flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#10194D]"
+                        class="bg-accent-500 hover:bg-accent-600 text-navy-900 font-bold text-xs sm:text-sm px-4 sm:px-5 py-2.5 rounded-pill transition-all duration-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
                     >
-                        <MessageCircle class="w-4 h-4 text-[#10194D]" />
+                        <MessageCircle class="w-4 h-4 text-navy-900" />
                         <span>Pesan Antar Jemput</span>
                     </a>
 
                     <Link
                         v-if="canLogin"
                         href="/login"
-                        class="text-[#10194D] hover:bg-[#E6E9FD] hover:text-[#4F5FE8] font-bold text-xs sm:text-sm px-4 py-2.5 rounded-full border border-[#E3E1DA] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F5FE8]"
+                        class="text-navy-900 hover:bg-primary-100 hover:text-primary-600 font-bold text-xs sm:text-sm px-4 py-2.5 rounded-pill border border-border transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
                     >
                         Masuk Staf
                     </Link>
@@ -479,7 +479,7 @@ onBeforeUnmount(() => {
                 <!-- Mobile Menu Toggle -->
                 <button
                     type="button"
-                    class="lg:hidden p-2 rounded-full text-[#10194D] hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F5FE8]"
+                    class="lg:hidden p-2 rounded-pill text-navy-900 hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
                     :aria-expanded="menuOpen"
                     aria-label="Buka menu navigasi"
                     @click="menuOpen = !menuOpen"
@@ -503,7 +503,7 @@ onBeforeUnmount(() => {
             >
                 <div
                     v-if="menuOpen"
-                    class="fixed inset-0 bg-[#0A1033]/60 backdrop-blur-sm z-50 lg:hidden"
+                    class="fixed inset-0 bg-navy-950/60 backdrop-blur-sm z-50 lg:hidden"
                     @click="menuOpen = false"
                     aria-hidden="true"
                 ></div>
@@ -520,12 +520,12 @@ onBeforeUnmount(() => {
             >
                 <div
                     v-if="menuOpen"
-                    class="fixed top-18 left-4 right-4 z-50 lg:hidden bg-white text-[#10194D] rounded-[24px] p-5 shadow-[0_20px_48px_rgba(16,25,77,0.28)] border border-[#E3E1DA] flex flex-col gap-3 max-h-[calc(100dvh-90px)] overflow-y-auto"
+                    class="fixed top-18 left-4 right-4 z-50 lg:hidden bg-white text-navy-900 rounded-[24px] p-5 shadow-[0_20px_48px_rgba(16,25,77,0.28)] border border-border flex flex-col gap-3 max-h-[calc(100dvh-90px)] overflow-y-auto"
                 >
                     <div class="flex flex-col gap-1">
                         <a
                             href="#keunggulan"
-                            class="px-4 py-3 font-semibold text-base hover:bg-[#E6E9FD] hover:text-[#4F5FE8] rounded-xl transition-colors flex items-center justify-between min-h-[44px]"
+                            class="px-4 py-3 font-semibold text-base hover:bg-primary-100 hover:text-primary-600 rounded-xl transition-colors flex items-center justify-between min-h-[44px]"
                             @click="closeMenuAndNavigate"
                         >
                             <span>Keunggulan Layanan</span>
@@ -533,7 +533,7 @@ onBeforeUnmount(() => {
                         </a>
                         <a
                             href="#tarif"
-                            class="px-4 py-3 font-semibold text-base hover:bg-[#E6E9FD] hover:text-[#4F5FE8] rounded-xl transition-colors flex items-center justify-between min-h-[44px]"
+                            class="px-4 py-3 font-semibold text-base hover:bg-primary-100 hover:text-primary-600 rounded-xl transition-colors flex items-center justify-between min-h-[44px]"
                             @click="closeMenuAndNavigate"
                         >
                             <span>Daftar Layanan & Tarif</span>
@@ -541,7 +541,7 @@ onBeforeUnmount(() => {
                         </a>
                         <a
                             href="#lacak"
-                            class="px-4 py-3 font-semibold text-base hover:bg-[#E6E9FD] hover:text-[#4F5FE8] rounded-xl transition-colors flex items-center justify-between min-h-[44px]"
+                            class="px-4 py-3 font-semibold text-base hover:bg-primary-100 hover:text-primary-600 rounded-xl transition-colors flex items-center justify-between min-h-[44px]"
                             @click="closeMenuAndNavigate"
                         >
                             <span>Cek Status / Lacak Nota</span>
@@ -549,7 +549,7 @@ onBeforeUnmount(() => {
                         </a>
                         <a
                             href="#lokasi"
-                            class="px-4 py-3 font-semibold text-base hover:bg-[#E6E9FD] hover:text-[#4F5FE8] rounded-xl transition-colors flex items-center justify-between min-h-[44px]"
+                            class="px-4 py-3 font-semibold text-base hover:bg-primary-100 hover:text-primary-600 rounded-xl transition-colors flex items-center justify-between min-h-[44px]"
                             @click="closeMenuAndNavigate"
                         >
                             <span>Lokasi & Peta Outlet</span>
@@ -557,7 +557,7 @@ onBeforeUnmount(() => {
                         </a>
                         <a
                             href="#faq"
-                            class="px-4 py-3 font-semibold text-base hover:bg-[#E6E9FD] hover:text-[#4F5FE8] rounded-xl transition-colors flex items-center justify-between min-h-[44px]"
+                            class="px-4 py-3 font-semibold text-base hover:bg-primary-100 hover:text-primary-600 rounded-xl transition-colors flex items-center justify-between min-h-[44px]"
                             @click="closeMenuAndNavigate"
                         >
                             <span>Pertanyaan Umum (FAQ)</span>
@@ -565,14 +565,14 @@ onBeforeUnmount(() => {
                         </a>
                     </div>
 
-                    <hr class="border-[#E3E1DA]" />
+                    <hr class="border-border" />
 
                     <div class="flex flex-col gap-2.5 pt-1">
                         <a
                             :href="whatsappUrl"
                             target="_blank"
                             rel="noopener noreferrer"
-                            class="bg-[#FF8A5B] hover:bg-[#F26B3A] text-[#10194D] font-bold text-sm text-center py-3 px-5 rounded-full flex items-center justify-center gap-2 shadow-sm transition-all min-h-[44px]"
+                            class="bg-accent-500 hover:bg-accent-600 text-navy-900 font-bold text-sm text-center py-3 px-5 rounded-pill flex items-center justify-center gap-2 shadow-sm transition-all min-h-[44px]"
                             @click="closeMenuAndNavigate"
                         >
                             <MessageCircle class="w-4 h-4" />
@@ -581,7 +581,7 @@ onBeforeUnmount(() => {
                         <Link
                             v-if="canLogin"
                             href="/login"
-                            class="text-center font-bold text-sm py-3 px-5 rounded-full border border-[#E3E1DA] hover:bg-[#E6E9FD] hover:text-[#4F5FE8] transition-all min-h-[44px] flex items-center justify-center"
+                            class="text-center font-bold text-sm py-3 px-5 rounded-pill border border-border hover:bg-primary-100 hover:text-primary-600 transition-all min-h-[44px] flex items-center justify-center"
                             @click="closeMenuAndNavigate"
                         >
                             Masuk Dashboard Staf
@@ -594,15 +594,15 @@ onBeforeUnmount(() => {
         <!-- ======================================================== -->
         <!-- MAIN CONTENT                                            -->
         <!-- ======================================================== -->
-        <main id="main-content" class="overflow-hidden bg-[#10194D]">
+        <main id="main-content" class="overflow-hidden bg-navy-900">
             <!-- ======================================================== -->
             <!-- HERO SECTION: WARM CREAM HERO (Every Sunday Style)        -->
             <!-- ======================================================== -->
-            <section class="relative bg-[#F6F4EF] pt-24 sm:pt-28 md:pt-32 pb-20 md:pb-24 px-4 sm:px-6 lg:px-8 text-[#10194D] rounded-b-[40px] md:rounded-b-[60px] shadow-xl">
+            <section class="relative bg-bg pt-24 sm:pt-28 md:pt-32 pb-20 md:pb-24 px-4 sm:px-6 lg:px-8 text-navy-900 rounded-b-[40px] md:rounded-b-[60px] shadow-xl">
                 <!-- Decorative subtle road curve in background -->
                 <div class="absolute inset-0 pointer-events-none opacity-40 overflow-hidden">
                     <svg class="w-full h-full object-cover" viewBox="0 0 1440 800" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M-100 500 C 300 350, 700 700, 1540 400" stroke="#E3E1DA" stroke-width="120" stroke-linecap="round" opacity="0.6"/>
+                        <path d="M-100 500 C 300 350, 700 700, 1540 400" stroke="#E0E8F0" stroke-width="120" stroke-linecap="round" opacity="0.6"/>
                         <path d="M-100 500 C 300 350, 700 700, 1540 400" stroke="#FFFFFF" stroke-width="6" stroke-dasharray="24 24" stroke-linecap="round"/>
                     </svg>
                 </div>
@@ -611,15 +611,15 @@ onBeforeUnmount(() => {
                     <!-- Left Hero Content -->
                     <div class="lg:col-span-7 flex flex-col items-start pt-4 sm:pt-6">
                         <!-- Sub-heading Tag / Overline -->
-                        <div class="animate-fade-slide-up inline-flex items-center gap-2 bg-[#E6E9FD] text-[#26338A] px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-5 shadow-xs">
-                            <Sparkles class="w-4 h-4 text-[#4F5FE8] animate-pulse-subtle" />
+                        <div class="animate-fade-slide-up inline-flex items-center gap-2 bg-primary-100 text-primary-700 px-3.5 py-1.5 rounded-pill text-xs font-bold uppercase tracking-wider mb-5 shadow-xs">
+                            <Sparkles class="w-4 h-4 text-primary-600 animate-pulse-subtle" />
                             <span>SEJAK 2009 • 1 MESIN 1 PELANGGAN</span>
                         </div>
 
                         <!-- Main Display Heading (Every Sunday Style) -->
-                        <h1 class="animate-fade-slide-up delay-100 font-heading font-extrabold text-4xl sm:text-5xl lg:text-6xl tracking-tight leading-[1.08] text-[#10194D] uppercase">
+                        <h1 class="animate-fade-slide-up delay-100 font-heading font-extrabold text-4xl sm:text-5xl lg:text-6xl tracking-tight leading-[1.08] text-navy-900 uppercase">
                             CUCI BERSIH,<br />
-                            <span class="text-[#4F5FE8]">WANGI & RAPI!</span>
+                            <span class="text-primary-600">WANGI & RAPI!</span>
                             <span class="inline-block ml-3 text-3xl sm:text-4xl">🧺</span>
                         </h1>
 
@@ -632,15 +632,15 @@ onBeforeUnmount(() => {
                         <div class="animate-fade-slide-up delay-300 w-full max-w-xl mt-8">
                             <form
                                 @submit.prevent="submitOrderCheck"
-                                class="bg-white rounded-full p-2 pl-5 sm:pl-6 shadow-[0_12px_32px_rgba(16,25,77,0.12)] border border-[#E3E1DA] flex items-center justify-between gap-2 transition-all focus-within:ring-3 focus-within:ring-[#4F5FE8]/40"
+                                class="bg-white rounded-pill p-2 pl-5 sm:pl-6 shadow-[0_12px_32px_rgba(16,25,77,0.12)] border border-border flex items-center justify-between gap-2 transition-all focus-within:ring-3 focus-within:ring-primary-500/40"
                             >
                                 <div class="flex items-center gap-3 flex-1 min-w-0">
-                                    <Search class="w-5 h-5 text-[#4F5FE8] shrink-0" />
+                                    <Search class="w-5 h-5 text-primary-600 shrink-0" />
                                     <input
                                         v-model="orderQuery"
                                         type="text"
                                         :placeholder="typewriterPlaceholder"
-                                        class="w-full bg-transparent text-[#10194D] text-sm sm:text-base font-semibold placeholder-slate-400 focus:outline-none"
+                                        class="w-full bg-transparent text-navy-900 text-sm sm:text-base font-semibold placeholder-slate-400 focus:outline-none"
                                         aria-label="Nomor nota laundry atau nomor WhatsApp"
                                         @focus="onInputFocus"
                                         @blur="onInputBlur"
@@ -649,7 +649,7 @@ onBeforeUnmount(() => {
                                 <button
                                     type="submit"
                                     :disabled="isCheckingOrder"
-                                    class="bg-[#FF8A5B] hover:bg-[#F26B3A] text-[#10194D] font-bold text-xs sm:text-sm px-5 sm:px-7 py-3 rounded-full transition-all duration-200 shrink-0 shadow-sm hover:shadow-[0_4px_14px_rgba(255,138,91,0.4)] disabled:opacity-50 flex items-center gap-2"
+                                    class="bg-accent-500 hover:bg-accent-600 text-navy-900 font-bold text-xs sm:text-sm px-5 sm:px-7 py-3 rounded-pill transition-all duration-200 shrink-0 shadow-sm hover:shadow-md disabled:opacity-50 flex items-center gap-2"
                                 >
                                     <span v-if="!isCheckingOrder">Cek Pesanan</span>
                                     <span v-else>Memeriksa…</span>
@@ -658,7 +658,7 @@ onBeforeUnmount(() => {
                             </form>
 
                             <!-- Error Message -->
-                            <p v-if="orderQueryError" class="text-xs text-[#E5484D] font-bold mt-2 pl-4" role="alert">
+                            <p v-if="orderQueryError" class="text-xs text-danger font-bold mt-2 pl-4" role="alert">
                                 {{ orderQueryError }}
                             </p>
                         </div>
@@ -667,13 +667,13 @@ onBeforeUnmount(() => {
                         <div class="animate-fade-slide-up delay-400 flex flex-wrap items-center gap-4 sm:gap-6 mt-8 pt-4 border-t border-slate-300/80 w-full max-w-xl">
                             <div class="flex items-center gap-2.5">
                                 <div class="flex -space-x-2">
-                                    <div class="w-8 h-8 rounded-full bg-[#4F5FE8] text-white font-extrabold text-xs flex items-center justify-center border-2 border-white shadow-xs">A</div>
-                                    <div class="w-8 h-8 rounded-full bg-[#FF8A5B] text-[#10194D] font-extrabold text-xs flex items-center justify-center border-2 border-white shadow-xs">N</div>
-                                    <div class="w-8 h-8 rounded-full bg-[#22A06B] text-white font-extrabold text-xs flex items-center justify-center border-2 border-white shadow-xs">D</div>
+                                    <div class="w-8 h-8 rounded-pill bg-primary-600 text-white font-extrabold text-xs flex items-center justify-center border-2 border-white shadow-xs">A</div>
+                                    <div class="w-8 h-8 rounded-pill bg-accent-500 text-navy-900 font-extrabold text-xs flex items-center justify-center border-2 border-white shadow-xs">N</div>
+                                    <div class="w-8 h-8 rounded-pill bg-success text-white font-extrabold text-xs flex items-center justify-center border-2 border-white shadow-xs">D</div>
                                 </div>
                                 <div class="text-xs">
-                                    <div class="font-extrabold text-[#10194D] flex items-center gap-1">
-                                        <Star class="w-3.5 h-3.5 fill-[#F5A623] text-[#F5A623]" />
+                                    <div class="font-extrabold text-navy-900 flex items-center gap-1">
+                                        <Star class="w-3.5 h-3.5 fill-warning text-warning" />
                                         <span>{{ ratingScore }} / 5.0 Rating</span>
                                     </div>
                                     <div class="text-slate-600 font-semibold">{{ customersLabel }} Pelanggan Puas</div>
@@ -683,7 +683,7 @@ onBeforeUnmount(() => {
                             <div class="h-6 w-[1px] bg-slate-300 hidden sm:block"></div>
 
                             <div class="text-xs">
-                                <div class="font-extrabold text-[#10194D]">{{ ordersLabel }} Nota Dikerjakan</div>
+                                <div class="font-extrabold text-navy-900">{{ ordersLabel }} Nota Dikerjakan</div>
                                 <div class="text-slate-600 font-semibold">Standar 1 Mesin 1 Pelanggan</div>
                             </div>
                         </div>
@@ -696,20 +696,20 @@ onBeforeUnmount(() => {
                             <svg class="w-full h-auto drop-shadow-2xl" viewBox="0 0 540 440" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <defs>
                                     <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="0%" stop-color="#E6E9FD"/>
+                                        <stop offset="0%" stop-color="#D8EDF8"/>
                                         <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
                                     </linearGradient>
                                     <linearGradient id="vanGrad" x1="0" y1="0" x2="1" y2="1">
-                                        <stop offset="0%" stop-color="#4F5FE8"/>
-                                        <stop offset="100%" stop-color="#26338A"/>
+                                        <stop offset="0%" stop-color="#1F7FC4"/>
+                                        <stop offset="100%" stop-color="#1565A0"/>
                                     </linearGradient>
                                     <linearGradient id="basketGrad" x1="0" y1="0" x2="1" y2="1">
-                                        <stop offset="0%" stop-color="#FF8A5B"/>
-                                        <stop offset="100%" stop-color="#F26B3A"/>
+                                        <stop offset="0%" stop-color="#39C5A8"/>
+                                        <stop offset="100%" stop-color="#2BA88E"/>
                                     </linearGradient>
                                     <linearGradient id="bubbleGrad" x1="0" y1="0" x2="1" y2="1">
                                         <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9"/>
-                                        <stop offset="100%" stop-color="#6577F0" stop-opacity="0.3"/>
+                                        <stop offset="100%" stop-color="#2F8FD8" stop-opacity="0.3"/>
                                     </linearGradient>
                                 </defs>
 
@@ -717,8 +717,8 @@ onBeforeUnmount(() => {
                                 <circle cx="270" cy="220" r="180" fill="url(#skyGrad)"/>
 
                                 <!-- Road track -->
-                                <path d="M40 370 C 180 340, 360 380, 500 350" stroke="#10194D" stroke-width="46" stroke-linecap="round"/>
-                                <path d="M60 370 C 180 340, 360 380, 480 350" stroke="#FFE14D" stroke-width="5" stroke-dasharray="16 14" stroke-linecap="round"/>
+                                <path d="M40 370 C 180 340, 360 380, 500 350" stroke="#13276F" stroke-width="46" stroke-linecap="round"/>
+                                <path d="M60 370 C 180 340, 360 380, 480 350" stroke="#F59E0B" stroke-width="5" stroke-dasharray="16 14" stroke-linecap="round"/>
 
                                 <!-- Decorative Floating Soap Bubbles -->
                                 <circle cx="90" cy="180" r="22" fill="url(#bubbleGrad)" stroke="#FFFFFF" stroke-width="2" class="animate-bubble-1" />
@@ -728,79 +728,79 @@ onBeforeUnmount(() => {
                                 <circle cx="410" cy="90" r="12" fill="url(#bubbleGrad)" stroke="#FFFFFF" stroke-width="1" class="animate-bubble-1" />
 
                                 <!-- Sparkles -->
-                                <path d="M100 110 Q 100 125, 115 125 Q 100 125, 100 140 Q 100 125, 85 125 Q 100 125, 100 110 Z" fill="#FFE14D" class="animate-pulse-subtle" />
-                                <path d="M460 70 Q 460 82, 472 82 Q 460 82, 460 94 Q 460 82, 448 82 Q 460 82, 460 70 Z" fill="#FFE14D" class="animate-pulse-subtle delay-200" />
+                                <path d="M100 110 Q 100 125, 115 125 Q 100 125, 100 140 Q 100 125, 85 125 Q 100 125, 100 110 Z" fill="#F59E0B" class="animate-pulse-subtle" />
+                                <path d="M460 70 Q 460 82, 472 82 Q 460 82, 460 94 Q 460 82, 448 82 Q 460 82, 460 70 Z" fill="#F59E0B" class="animate-pulse-subtle delay-200" />
 
                                 <!-- Laundry Car / Van Body -->
                                 <g transform="translate(100, 140)">
                                     <!-- Roof Luggage Rack with Fresh Laundry Baskets -->
-                                    <rect x="50" y="25" width="180" height="8" rx="4" fill="#10194D"/>
-                                    <line x1="75" y1="33" x2="75" y2="40" stroke="#10194D" stroke-width="4"/>
-                                    <line x1="205" y1="33" x2="205" y2="40" stroke="#10194D" stroke-width="4"/>
+                                    <rect x="50" y="25" width="180" height="8" rx="4" fill="#13276F"/>
+                                    <line x1="75" y1="33" x2="75" y2="40" stroke="#13276F" stroke-width="4"/>
+                                    <line x1="205" y1="33" x2="205" y2="40" stroke="#13276F" stroke-width="4"/>
 
                                     <!-- Laundry Basket 1 (Orange) on roof -->
                                     <rect x="60" y="-15" width="70" height="40" rx="8" fill="url(#basketGrad)"/>
                                     <!-- Folded Towels overflowing -->
                                     <path d="M65 -15 Q 75 -28, 85 -15" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round"/>
-                                    <path d="M85 -15 Q 95 -28, 105 -15" stroke="#FFE14D" stroke-width="8" stroke-linecap="round"/>
-                                    <path d="M105 -15 Q 115 -28, 125 -15" stroke="#38BDF8" stroke-width="8" stroke-linecap="round"/>
+                                    <path d="M85 -15 Q 95 -28, 105 -15" stroke="#F59E0B" stroke-width="8" stroke-linecap="round"/>
+                                    <path d="M105 -15 Q 115 -28, 125 -15" stroke="#60A5FA" stroke-width="8" stroke-linecap="round"/>
 
                                     <!-- Laundry Basket 2 (White/Clean) on roof -->
-                                    <rect x="140" y="-8" width="75" height="33" rx="8" fill="#FFFFFF" stroke="#E3E1DA" stroke-width="2"/>
-                                    <path d="M148 -8 Q 160 -22, 172 -8" stroke="#FF8A5B" stroke-width="8" stroke-linecap="round"/>
-                                    <path d="M172 -8 Q 185 -22, 198 -8" stroke="#6577F0" stroke-width="8" stroke-linecap="round"/>
+                                    <rect x="140" y="-8" width="75" height="33" rx="8" fill="#FFFFFF" stroke="#E0E8F0" stroke-width="2"/>
+                                    <path d="M148 -8 Q 160 -22, 172 -8" stroke="#39C5A8" stroke-width="8" stroke-linecap="round"/>
+                                    <path d="M172 -8 Q 185 -22, 198 -8" stroke="#2F8FD8" stroke-width="8" stroke-linecap="round"/>
 
                                     <!-- Cheerful Smiley Mascot on roof basket -->
                                     <g class="animate-float-gentle">
-                                        <circle cx="230" cy="5" r="18" fill="#FFE14D"/>
+                                        <circle cx="230" cy="5" r="18" fill="#F59E0B"/>
                                         <!-- eyes & smile -->
-                                        <circle cx="225" cy="2" r="2.5" fill="#10194D"/>
-                                        <circle cx="235" cy="2" r="2.5" fill="#10194D"/>
-                                        <path d="M225 9 Q 230 15, 235 9" stroke="#10194D" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                                        <circle cx="225" cy="2" r="2.5" fill="#13276F"/>
+                                        <circle cx="235" cy="2" r="2.5" fill="#13276F"/>
+                                        <path d="M225 9 Q 230 15, 235 9" stroke="#13276F" stroke-width="2.5" stroke-linecap="round" fill="none"/>
                                     </g>
 
                                     <!-- Main Van Cabin -->
                                     <path d="M40 90 L 60 40 Q 65 35, 75 35 L 210 35 Q 220 35, 230 48 L 270 95 L 285 105 Q 295 115, 295 125 L 295 180 Q 295 190, 285 190 L 30 190 Q 20 190, 20 180 L 20 115 Q 20 95, 40 90 Z" fill="url(#vanGrad)"/>
 
                                     <!-- Front Hood Highlight -->
-                                    <path d="M270 95 L 285 105 L 295 125 L 225 125 Z" fill="#6577F0" opacity="0.4"/>
+                                    <path d="M270 95 L 285 105 L 295 125 L 225 125 Z" fill="#2F8FD8" opacity="0.4"/>
 
                                     <!-- Windows (Cab & Driver) -->
                                     <path d="M68 45 L 140 45 L 140 90 L 52 90 Z" fill="#FFFFFF" opacity="0.9" rx="4"/>
                                     <path d="M152 45 L 215 45 L 255 90 L 152 90 Z" fill="#FFFFFF" opacity="0.9" rx="4"/>
 
                                     <!-- Happy Driver in front window -->
-                                    <circle cx="185" cy="65" r="14" fill="#FF8A5B"/>
-                                    <circle cx="182" cy="63" r="2" fill="#10194D"/>
-                                    <circle cx="189" cy="63" r="2" fill="#10194D"/>
-                                    <path d="M182 69 Q 186 73, 190 69" stroke="#10194D" stroke-width="1.8" stroke-linecap="round" fill="none"/>
-                                    <path d="M175 56 Q 185 50, 195 56" fill="#10194D"/> <!-- cap -->
+                                    <circle cx="185" cy="65" r="14" fill="#39C5A8"/>
+                                    <circle cx="182" cy="63" r="2" fill="#13276F"/>
+                                    <circle cx="189" cy="63" r="2" fill="#13276F"/>
+                                    <path d="M182 69 Q 186 73, 190 69" stroke="#13276F" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+                                    <path d="M175 56 Q 185 50, 195 56" fill="#13276F"/> <!-- cap -->
 
                                     <!-- Van Door Line & Handle -->
-                                    <line x1="145" y1="45" x2="145" y2="185" stroke="#1A2566" stroke-width="3"/>
-                                    <rect x="155" y="105" width="16" height="5" rx="2.5" fill="#FFE14D"/>
+                                    <line x1="145" y1="45" x2="145" y2="185" stroke="#1F3C88" stroke-width="3"/>
+                                    <rect x="155" y="105" width="16" height="5" rx="2.5" fill="#F59E0B"/>
 
                                     <!-- Van Brand Wordmark on Side -->
                                     <rect x="42" y="108" width="90" height="34" rx="8" fill="#FFFFFF"/>
-                                    <text x="50" y="130" font-family="Lexend, sans-serif" font-weight="800" font-size="14" fill="#10194D">andik<tspan fill="#FF8A5B">.</tspan></text>
-                                    <text x="96" y="125" font-family="Poppins, sans-serif" font-weight="700" font-size="7" fill="#4F5FE8">LAUNDRY</text>
+                                    <text x="50" y="130" font-family="Lexend, sans-serif" font-weight="800" font-size="14" fill="#13276F">andik<tspan fill="#39C5A8">.</tspan></text>
+                                    <text x="96" y="125" font-family="Poppins, sans-serif" font-weight="700" font-size="7" fill="#1F7FC4">LAUNDRY</text>
 
                                     <!-- Front Bumper & Headlight -->
-                                    <rect x="280" y="145" width="22" height="30" rx="6" fill="#FFE14D"/>
-                                    <rect x="290" y="165" width="18" height="15" rx="4" fill="#10194D"/>
+                                    <rect x="280" y="145" width="22" height="30" rx="6" fill="#F59E0B"/>
+                                    <rect x="290" y="165" width="18" height="15" rx="4" fill="#13276F"/>
 
                                     <!-- Left Wheel -->
                                     <g transform="translate(65, 185)">
-                                        <circle cx="0" cy="0" r="30" fill="#0A1033"/>
-                                        <circle cx="0" cy="0" r="16" fill="#E3E1DA"/>
-                                        <circle cx="0" cy="0" r="6" fill="#4F5FE8"/>
+                                        <circle cx="0" cy="0" r="30" fill="#081050"/>
+                                        <circle cx="0" cy="0" r="16" fill="#E0E8F0"/>
+                                        <circle cx="0" cy="0" r="6" fill="#1F7FC4"/>
                                     </g>
 
                                     <!-- Right Wheel -->
                                     <g transform="translate(245, 185)">
-                                        <circle cx="0" cy="0" r="30" fill="#0A1033"/>
-                                        <circle cx="0" cy="0" r="16" fill="#E3E1DA"/>
-                                        <circle cx="0" cy="0" r="6" fill="#4F5FE8"/>
+                                        <circle cx="0" cy="0" r="30" fill="#081050"/>
+                                        <circle cx="0" cy="0" r="16" fill="#E0E8F0"/>
+                                        <circle cx="0" cy="0" r="6" fill="#1F7FC4"/>
                                     </g>
                                 </g>
                             </svg>
@@ -812,13 +812,13 @@ onBeforeUnmount(() => {
             <!-- ======================================================== -->
             <!-- SECTION 01: LAYANAN UTAMA KAMI (OUR SERVICES)            -->
             <!-- ======================================================== -->
-            <section id="keunggulan" class="relative bg-[#10194D] pt-20 pb-24 px-4 sm:px-6 lg:px-8 text-white">
+            <section id="keunggulan" class="relative bg-navy-900 pt-20 pb-24 px-4 sm:px-6 lg:px-8 text-white">
                 <div class="max-w-7xl mx-auto">
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
                         <!-- Left 3 Feature Cards (Every Sunday Reference Layout) -->
                         <div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-3 gap-5">
                             <!-- Card 1: Highlight Periwinkle Card -->
-                            <div class="landing-reveal bg-gradient-to-br from-[#6577F0] to-[#4F5FE8] text-white rounded-[24px] p-6 shadow-xl relative overflow-hidden transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between">
+                            <div class="landing-reveal bg-gradient-to-br from-primary-600 to-primary-700 text-white rounded-[24px] p-6 shadow-xl relative overflow-hidden transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between">
                                 <div>
                                     <div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center mb-5">
                                         <ShieldCheck class="w-6 h-6 text-white" />
@@ -828,40 +828,40 @@ onBeforeUnmount(() => {
                                         Pakaian Anda tidak pernah dicampur dengan orang lain. 100% higienis, bersih suci, dan aman tanpa risiko tertukar.
                                     </p>
                                 </div>
-                                <div class="mt-6 flex items-center text-xs font-bold text-[#FFE14D] gap-1">
+                                <div class="mt-6 flex items-center text-xs font-bold text-warning gap-1">
                                     <span>Standar Mutlak</span>
                                     <Check class="w-4 h-4" />
                                 </div>
                             </div>
 
                             <!-- Card 2: Navy Outline Card -->
-                            <div class="landing-reveal delay-150 bg-[#1A2566]/90 border border-white/20 text-white rounded-[24px] p-6 shadow-lg transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between">
+                            <div class="landing-reveal delay-150 bg-navy-800/90 border border-white/20 text-white rounded-[24px] p-6 shadow-lg transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between">
                                 <div>
                                     <div class="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center mb-5">
-                                        <Sparkles class="w-6 h-6 text-[#FFE14D]" />
+                                        <Sparkles class="w-6 h-6 text-warning" />
                                     </div>
                                     <h3 class="font-heading font-bold text-lg mb-2">Pewangi & Sabun Premium</h3>
                                     <p class="font-sans text-xs sm:text-sm text-slate-200 leading-relaxed">
                                         Deterjen ramah serat kain dipadukan setrika uap boiler profesional, pakaian rapi licin bebas noda gosong.
                                     </p>
                                 </div>
-                                <div class="mt-6 text-xs font-semibold text-[#FFE14D]">
+                                <div class="mt-6 text-xs font-semibold text-warning">
                                     Aroma Tahan Lama
                                 </div>
                             </div>
 
                             <!-- Card 3: Navy Outline Card -->
-                            <div class="landing-reveal delay-300 bg-[#1A2566]/90 border border-white/20 text-white rounded-[24px] p-6 shadow-lg transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between">
+                            <div class="landing-reveal delay-300 bg-navy-800/90 border border-white/20 text-white rounded-[24px] p-6 shadow-lg transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between">
                                 <div>
                                     <div class="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center mb-5">
-                                        <Truck class="w-6 h-6 text-[#FF8A5B]" />
+                                        <Truck class="w-6 h-6 text-accent-500" />
                                     </div>
                                     <h3 class="font-heading font-bold text-lg mb-2">Free Ongkir Maks 3 kg</h3>
                                     <p class="font-sans text-xs sm:text-sm text-slate-200 leading-relaxed">
                                         Layanan antar jemput cucian praktis langsung ke depan pintu rumah Anda di area Hendrosari & sekitarnya.
                                     </p>
                                 </div>
-                                <div class="mt-6 text-xs font-semibold text-[#FF8A5B]">
+                                <div class="mt-6 text-xs font-semibold text-accent-500">
                                     Antar Jemput Cepat
                                 </div>
                             </div>
@@ -870,7 +870,7 @@ onBeforeUnmount(() => {
                         <!-- Right Section Header / Description -->
                         <div class="landing-reveal-right lg:col-span-4 flex flex-col items-start lg:pl-6">
                             <!-- Section Number Badge 01 -->
-                            <div class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center font-heading font-extrabold text-sm text-white mb-4 bg-white/10">
+                            <div class="w-10 h-10 rounded-pill border border-white/40 flex items-center justify-center font-heading font-extrabold text-sm text-white mb-4 bg-white/10">
                                 01
                             </div>
                             <h2 class="font-heading font-extrabold text-3xl sm:text-4xl uppercase tracking-tight text-white leading-tight">
@@ -881,7 +881,7 @@ onBeforeUnmount(() => {
                             </p>
                             <a
                                 href="#tarif"
-                                class="mt-6 bg-[#FF8A5B] hover:bg-[#F26B3A] text-[#10194D] font-bold text-sm px-6 py-3 rounded-full transition-all duration-200 shadow-sm hover:shadow-[0_4px_14px_rgba(255,138,91,0.4)] inline-flex items-center gap-2"
+                                class="mt-6 bg-accent-500 hover:bg-accent-600 text-navy-900 font-bold text-sm px-6 py-3 rounded-pill transition-all duration-200 shadow-sm hover:shadow-md inline-flex items-center gap-2"
                             >
                                 <span>Lihat Daftar Tarif</span>
                                 <ArrowRight class="w-4 h-4" />
@@ -894,12 +894,12 @@ onBeforeUnmount(() => {
             <!-- ======================================================== -->
             <!-- SECTION 02: PAKET SPESIAL & TARIF (SPECIAL PACKAGE)      -->
             <!-- ======================================================== -->
-            <section id="tarif" class="relative bg-[#0A1033] pt-20 pb-28 px-4 sm:px-6 lg:px-8 text-white">
+            <section id="tarif" class="relative bg-navy-950 pt-20 pb-28 px-4 sm:px-6 lg:px-8 text-white">
                 <div class="max-w-7xl mx-auto">
                     <!-- Section Header -->
                     <div class="landing-reveal flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
                         <div>
-                            <div class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center font-heading font-extrabold text-sm text-white mb-4 bg-white/10">
+                            <div class="w-10 h-10 rounded-pill border border-white/40 flex items-center justify-center font-heading font-extrabold text-sm text-white mb-4 bg-white/10">
                                 02
                             </div>
                             <h2 class="font-heading font-extrabold text-3xl sm:text-4xl uppercase tracking-tight text-white">
@@ -915,7 +915,7 @@ onBeforeUnmount(() => {
                                 :href="whatsappUrl"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                class="bg-[#FF8A5B] hover:bg-[#F26B3A] text-[#10194D] font-bold text-sm px-6 py-3 rounded-full transition-all duration-200 shadow-sm hover:shadow-[0_4px_14px_rgba(255,138,91,0.4)] flex items-center gap-2"
+                                class="bg-accent-500 hover:bg-accent-600 text-navy-900 font-bold text-sm px-6 py-3 rounded-pill transition-all duration-200 shadow-sm hover:shadow-md flex items-center gap-2"
                             >
                                 <MessageCircle class="w-4 h-4" />
                                 <span>Pesan via WhatsApp</span>
@@ -928,25 +928,25 @@ onBeforeUnmount(() => {
                         <div
                             v-for="(service, sIdx) in services"
                             :key="service.id"
-                            class="landing-reveal bg-white text-[#10194D] rounded-[28px] p-6 shadow-xl border border-slate-200 hover:shadow-[0_20px_48px_rgba(16,25,77,0.18)] transition-all duration-300 hover:-translate-y-2 flex flex-col justify-between relative group"
+                            class="landing-reveal bg-white text-navy-900 rounded-[28px] p-6 shadow-xl border border-slate-200 hover:shadow-[0_20px_48px_rgba(16,25,77,0.18)] transition-all duration-300 hover:-translate-y-2 flex flex-col justify-between relative group"
                             :style="{ transitionDelay: `${sIdx * 100}ms` }"
                         >
                             <!-- Top Info & Badges -->
                             <div>
                                 <div class="flex items-center justify-between mb-4">
                                     <span
-                                        class="text-[11px] font-extrabold uppercase px-3 py-1 rounded-full"
-                                        :class="service.featured ? 'bg-[#FF8A5B] text-[#10194D]' : 'bg-[#E6E9FD] text-[#26338A]'"
+                                        class="text-[11px] font-extrabold uppercase px-3 py-1 rounded-pill"
+                                        :class="service.featured ? 'bg-accent-500 text-navy-900' : 'bg-primary-100 text-primary-700'"
                                     >
                                         {{ service.badge }}
                                     </span>
-                                    <div class="flex items-center gap-1 text-xs font-bold text-[#10194D]">
-                                        <Star class="w-3.5 h-3.5 fill-[#F5A623] text-[#F5A623]" />
+                                    <div class="flex items-center gap-1 text-xs font-bold text-navy-900">
+                                        <Star class="w-3.5 h-3.5 fill-warning text-warning" />
                                         <span>{{ service.rating }}</span>
                                     </div>
                                 </div>
 
-                                <h3 class="font-heading font-extrabold text-xl text-[#10194D] mb-1">
+                                <h3 class="font-heading font-extrabold text-xl text-navy-900 mb-1">
                                     {{ service.name }}
                                 </h3>
                                 <p class="text-xs text-slate-500 font-semibold mb-4">
@@ -954,10 +954,10 @@ onBeforeUnmount(() => {
                                 </p>
 
                                 <!-- Price Tag -->
-                                <div class="bg-[#F8FAFC] rounded-[20px] p-4 mb-5 border border-slate-200">
+                                <div class="bg-bg rounded-[20px] p-4 mb-5 border border-slate-200">
                                     <div class="text-xs text-slate-500 font-medium">Tarif Mulai</div>
                                     <div class="flex items-baseline gap-1 mt-0.5">
-                                        <span class="font-heading font-extrabold text-2xl sm:text-3xl text-[#10194D]">
+                                        <span class="font-heading font-extrabold text-2xl sm:text-3xl text-navy-900">
                                             {{ service.price }}
                                         </span>
                                         <span class="text-xs font-bold text-slate-500">/ {{ service.unit }}</span>
@@ -971,7 +971,7 @@ onBeforeUnmount(() => {
                                 <!-- Feature Checklist -->
                                 <ul class="space-y-2 text-xs text-slate-800 font-medium mb-6">
                                     <li v-for="(feat, fIdx) in service.features" :key="fIdx" class="flex items-start gap-2">
-                                        <Check class="w-4 h-4 text-[#22A06B] shrink-0 mt-0.5" />
+                                        <Check class="w-4 h-4 text-success shrink-0 mt-0.5" />
                                         <span>{{ feat }}</span>
                                     </li>
                                 </ul>
@@ -982,10 +982,10 @@ onBeforeUnmount(() => {
                                 :href="getServiceWhatsappUrl(service.name)"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                class="w-full text-center py-3 rounded-full font-bold text-xs transition-all duration-200 flex items-center justify-center gap-2"
+                                class="w-full text-center py-3 rounded-pill font-bold text-xs transition-all duration-200 flex items-center justify-center gap-2"
                                 :class="service.featured
-                                    ? 'bg-[#FF8A5B] hover:bg-[#F26B3A] text-[#10194D] shadow-sm'
-                                    : 'bg-[#10194D] hover:bg-[#1A2566] text-white'"
+                                    ? 'bg-accent-500 hover:bg-accent-600 text-navy-900 shadow-sm'
+                                    : 'bg-navy-900 hover:bg-navy-800 text-white'"
                             >
                                 <MessageCircle class="w-3.5 h-3.5" />
                                 <span>Pesan {{ service.name }}</span>
@@ -998,15 +998,15 @@ onBeforeUnmount(() => {
             <!-- ======================================================== -->
             <!-- SECTION 03: FULL FEATURED BANNER & OVERLAPPING TICKET     -->
             <!-- ======================================================== -->
-            <section class="relative bg-gradient-to-b from-[#0A1033] to-[#10194D] pt-12 pb-24 px-4 sm:px-6 lg:px-8 text-white">
+            <section class="relative bg-gradient-to-b from-navy-950 to-navy-900 pt-12 pb-24 px-4 sm:px-6 lg:px-8 text-white">
                 <div class="max-w-6xl mx-auto">
                     <!-- Big Curved Periwinkle Banner (Every Sunday Reference) -->
-                    <div class="landing-reveal bg-gradient-to-r from-[#6577F0] to-[#4F5FE8] rounded-[36px] md:rounded-[44px] p-8 sm:p-12 md:p-16 text-white relative shadow-2xl overflow-hidden pb-32 md:pb-36">
+                    <div class="landing-reveal bg-gradient-to-r from-primary-600 to-primary-700 rounded-[36px] md:rounded-[44px] p-8 sm:p-12 md:p-16 text-white relative shadow-2xl overflow-hidden pb-32 md:pb-36">
                         <!-- Background Glow & Shapes -->
-                        <div class="absolute -right-16 -top-16 w-80 h-80 rounded-full bg-white/10 blur-2xl pointer-events-none"></div>
+                        <div class="absolute -right-16 -top-16 w-80 h-80 rounded-pill bg-white/10 blur-2xl pointer-events-none"></div>
 
                         <div class="relative z-10 max-w-2xl">
-                            <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-4">
+                            <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-3.5 py-1 rounded-pill text-xs font-bold uppercase tracking-wider mb-4">
                                 <span>03</span>
                                 <span>•</span>
                                 <span>KOMITMEN TERBAIK</span>
@@ -1020,13 +1020,13 @@ onBeforeUnmount(() => {
 
                             <!-- Stat Pill Chips -->
                             <div class="flex flex-wrap gap-3 mt-6">
-                                <span class="bg-white/20 backdrop-blur-md text-white text-xs font-bold px-4 py-2 rounded-full">
+                                <span class="bg-white/20 backdrop-blur-md text-white text-xs font-bold px-4 py-2 rounded-pill">
                                     {{ customersLabel }} Pelanggan Setia
                                 </span>
-                                <span class="bg-white/20 backdrop-blur-md text-white text-xs font-bold px-4 py-2 rounded-full">
+                                <span class="bg-white/20 backdrop-blur-md text-white text-xs font-bold px-4 py-2 rounded-pill">
                                     {{ ordersLabel }} Nota Dikerjakan
                                 </span>
-                                <span class="bg-white/20 backdrop-blur-md text-white text-xs font-bold px-4 py-2 rounded-full">
+                                <span class="bg-white/20 backdrop-blur-md text-white text-xs font-bold px-4 py-2 rounded-pill">
                                     {{ laundryKgLabel }} Pakaian Bersih
                                 </span>
                             </div>
@@ -1035,16 +1035,16 @@ onBeforeUnmount(() => {
 
                     <!-- Overlapping White Ticket Card (Every Sunday Signature) -->
                     <div class="landing-reveal delay-200 relative -mt-24 sm:-mt-28 mx-auto max-w-4xl z-20 px-2 sm:px-4">
-                        <div class="bg-white text-[#10194D] rounded-[28px] sm:rounded-[32px] shadow-[0_20px_48px_rgba(16,25,77,0.22)] border border-slate-200 overflow-hidden flex flex-col md:flex-row items-stretch">
+                        <div class="bg-white text-navy-900 rounded-[28px] sm:rounded-[32px] shadow-[0_20px_48px_rgba(16,25,77,0.22)] border border-slate-200 overflow-hidden flex flex-col md:flex-row items-stretch">
                             <!-- Left: Illustration Mini-car / Basket -->
-                            <div class="md:w-5/12 bg-[#F6F4EF] p-6 sm:p-8 flex items-center justify-center border-b md:border-b-0 md:border-r border-slate-200">
+                            <div class="md:w-5/12 bg-bg p-6 sm:p-8 flex items-center justify-center border-b md:border-b-0 md:border-r border-slate-200">
                                 <div class="text-center">
-                                    <div class="w-24 h-24 mx-auto rounded-full bg-[#E6E9FD] flex items-center justify-center text-4xl mb-4 shadow-sm">
+                                    <div class="w-24 h-24 mx-auto rounded-pill bg-primary-100 flex items-center justify-center text-4xl mb-4 shadow-sm">
                                         👕
                                     </div>
-                                    <div class="font-heading font-extrabold text-lg text-[#10194D]">Paket All-In-One</div>
+                                    <div class="font-heading font-extrabold text-lg text-navy-900">Paket All-In-One</div>
                                     <p class="text-xs text-slate-600 mt-1 font-medium">Cuci + Kering Mesin + Setrika Uap</p>
-                                    <span class="inline-block mt-3 bg-[#22A06B]/15 text-[#12724A] font-bold text-[11px] px-3 py-1 rounded-full">
+                                    <span class="inline-block mt-3 bg-success/15 text-success font-bold text-[11px] px-3 py-1 rounded-pill">
                                         Higienis 1 Mesin 1 Pelanggan
                                     </span>
                                 </div>
@@ -1053,11 +1053,11 @@ onBeforeUnmount(() => {
                             <!-- Center: Package Features & Details -->
                             <div class="md:w-6/12 p-6 sm:p-8 flex flex-col justify-between">
                                 <div>
-                                    <div class="text-[11px] font-bold tracking-wider text-[#4F5FE8] uppercase mb-1">
+                                    <div class="text-[11px] font-bold tracking-wider text-primary-600 uppercase mb-1">
                                         PAKET PALING LARIS
                                     </div>
                                     <div class="flex items-baseline gap-2 mb-4">
-                                        <span class="font-heading font-extrabold text-3xl sm:text-4xl text-[#F26B3A]">
+                                        <span class="font-heading font-extrabold text-3xl sm:text-4xl text-primary-700">
                                             Rp 8.000
                                         </span>
                                         <span class="text-sm font-bold text-slate-500">/ kg</span>
@@ -1065,19 +1065,19 @@ onBeforeUnmount(() => {
 
                                     <ul class="space-y-2.5 text-xs sm:text-sm text-slate-800 font-medium mb-6">
                                         <li class="flex items-center gap-2">
-                                            <Check class="w-4 h-4 text-[#22A06B] shrink-0" />
+                                            <Check class="w-4 h-4 text-success shrink-0" />
                                             <span>1 Mesin 1 Pelanggan (Tidak pernah dicampur)</span>
                                         </li>
                                         <li class="flex items-center gap-2">
-                                            <Check class="w-4 h-4 text-[#22A06B] shrink-0" />
+                                            <Check class="w-4 h-4 text-success shrink-0" />
                                             <span>Setrika Uap Boiler Rapi & Halus</span>
                                         </li>
                                         <li class="flex items-center gap-2">
-                                            <Check class="w-4 h-4 text-[#22A06B] shrink-0" />
+                                            <Check class="w-4 h-4 text-success shrink-0" />
                                             <span>Pewangi Grade Premium Tahan Lama</span>
                                         </li>
                                         <li class="flex items-center gap-2">
-                                            <Check class="w-4 h-4 text-[#22A06B] shrink-0" />
+                                            <Check class="w-4 h-4 text-success shrink-0" />
                                             <span>Free Ongkir Antar-Jemput (Maksimal 3 kg)</span>
                                         </li>
                                     </ul>
@@ -1087,7 +1087,7 @@ onBeforeUnmount(() => {
                                     :href="getServiceWhatsappUrl('Cuci Setrika Rp 8.000/kg')"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    class="inline-flex items-center gap-2 text-sm font-bold text-[#4F5FE8] hover:text-[#26338A] transition-colors"
+                                    class="inline-flex items-center gap-2 text-sm font-bold text-primary-600 hover:text-primary-700 transition-colors"
                                 >
                                     <span>Pesan Paket Ini via WhatsApp</span>
                                     <ArrowRight class="w-4 h-4" />
@@ -1095,7 +1095,7 @@ onBeforeUnmount(() => {
                             </div>
 
                             <!-- Right: Signature Vertical Orange Ticket Stub (Every Sunday) -->
-                            <div class="w-full md:w-1/12 bg-[#FF8A5B] text-[#10194D] font-extrabold text-xs uppercase tracking-widest md:writing-vertical flex items-center justify-center py-3 md:py-4 px-4 md:px-3 select-none border-t md:border-t-0 md:border-l-2 md:border-dashed border-[#10194D]/25">
+                            <div class="w-full md:w-1/12 bg-accent-500 text-navy-900 font-extrabold text-xs uppercase tracking-widest md:writing-vertical flex items-center justify-center py-3 md:py-4 px-4 md:px-3 select-none border-t md:border-t-0 md:border-l-2 md:border-dashed border-navy-900/25">
                                 <span>ANDIK LAUNDRY • GRESIK</span>
                             </div>
                         </div>
@@ -1106,11 +1106,11 @@ onBeforeUnmount(() => {
             <!-- ======================================================== -->
             <!-- SECTION 04: TIPS & ARTIKEL (ARTICLES)                    -->
             <!-- ======================================================== -->
-            <section class="relative bg-[#10194D] pt-16 pb-24 px-4 sm:px-6 lg:px-8 text-white">
+            <section class="relative bg-navy-900 pt-16 pb-24 px-4 sm:px-6 lg:px-8 text-white">
                 <div class="max-w-7xl mx-auto">
                     <!-- Section Header -->
                     <div class="landing-reveal mb-10">
-                        <div class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center font-heading font-extrabold text-sm text-white mb-4 bg-white/10">
+                        <div class="w-10 h-10 rounded-pill border border-white/40 flex items-center justify-center font-heading font-extrabold text-sm text-white mb-4 bg-white/10">
                             04
                         </div>
                         <h2 class="font-heading font-extrabold text-3xl sm:text-4xl uppercase tracking-tight text-white">
@@ -1124,16 +1124,16 @@ onBeforeUnmount(() => {
                     <!-- 2 Large Article Cards with Dark Gradient Overlay -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <!-- Article Card 1 -->
-                        <div class="landing-reveal group relative rounded-[28px] overflow-hidden shadow-xl bg-[#1A2566] min-h-[340px] flex flex-col justify-end p-8 border border-white/10 transition-all duration-300 hover:-translate-y-1.5">
+                        <div class="landing-reveal group relative rounded-[28px] overflow-hidden shadow-xl bg-navy-800 min-h-[340px] flex flex-col justify-end p-8 border border-white/10 transition-all duration-300 hover:-translate-y-1.5">
                             <!-- Background Pattern / Tint -->
-                            <div class="absolute inset-0 bg-gradient-to-br from-[#4F5FE8]/40 via-[#10194D]/80 to-[#0A1033] z-10"></div>
-                            <div class="absolute inset-0 bg-[radial-gradient(#FFE14D_1px,transparent_1px)] [background-size:16px_16px] opacity-20"></div>
+                            <div class="absolute inset-0 bg-gradient-to-br from-[#1F7FC4]/40 via-navy-900/80 to-navy-950 z-10"></div>
+                            <div class="absolute inset-0 bg-[radial-gradient(var(--color-accent-400)_1px,transparent_1px)] [background-size:16px_16px] opacity-20"></div>
 
                             <div class="relative z-20">
-                                <span class="bg-[#FF8A5B] text-[#10194D] font-bold text-xs px-3 py-1 rounded-full uppercase tracking-wider mb-3 inline-block">
+                                <span class="bg-accent-500 text-navy-900 font-bold text-xs px-3 py-1 rounded-pill uppercase tracking-wider mb-3 inline-block">
                                     Tips Perawatan
                                 </span>
-                                <h3 class="font-heading font-bold text-xl sm:text-2xl text-white group-hover:text-[#FFE14D] transition-colors leading-snug">
+                                <h3 class="font-heading font-bold text-xl sm:text-2xl text-white group-hover:text-warning transition-colors leading-snug">
                                     Tips Merawat Baju & Sprei Agar Tidak Cepat Kusam dan Tetap Wangi Semerbak
                                 </h3>
                                 <p class="text-xs sm:text-sm text-slate-200 mt-2 line-clamp-2">
@@ -1148,16 +1148,16 @@ onBeforeUnmount(() => {
                         </div>
 
                         <!-- Article Card 2 -->
-                        <div class="landing-reveal delay-150 group relative rounded-[28px] overflow-hidden shadow-xl bg-[#1A2566] min-h-[340px] flex flex-col justify-end p-8 border border-white/10 transition-all duration-300 hover:-translate-y-1.5">
+                        <div class="landing-reveal delay-150 group relative rounded-[28px] overflow-hidden shadow-xl bg-navy-800 min-h-[340px] flex flex-col justify-end p-8 border border-white/10 transition-all duration-300 hover:-translate-y-1.5">
                             <!-- Background Pattern / Tint -->
-                            <div class="absolute inset-0 bg-gradient-to-br from-[#6577F0]/40 via-[#10194D]/80 to-[#0A1033] z-10"></div>
-                            <div class="absolute inset-0 bg-[radial-gradient(#4F5FE8_1px,transparent_1px)] [background-size:16px_16px] opacity-20"></div>
+                            <div class="absolute inset-0 bg-gradient-to-br from-[#2F8FD8]/40 via-navy-900/80 to-navy-950 z-10"></div>
+                            <div class="absolute inset-0 bg-[radial-gradient(var(--color-primary-400)_1px,transparent_1px)] [background-size:16px_16px] opacity-20"></div>
 
                             <div class="relative z-20">
-                                <span class="bg-[#FFE14D] text-[#10194D] font-bold text-xs px-3 py-1 rounded-full uppercase tracking-wider mb-3 inline-block">
+                                <span class="bg-warning text-navy-900 font-bold text-xs px-3 py-1 rounded-pill uppercase tracking-wider mb-3 inline-block">
                                     Edukasi Higienis
                                 </span>
-                                <h3 class="font-heading font-bold text-xl sm:text-2xl text-white group-hover:text-[#FFE14D] transition-colors leading-snug">
+                                <h3 class="font-heading font-bold text-xl sm:text-2xl text-white group-hover:text-warning transition-colors leading-snug">
                                     Mengapa Standar 1 Mesin 1 Pelanggan Sangat Penting Bagi Kesehatan & Kesucian?
                                 </h3>
                                 <p class="text-xs sm:text-sm text-slate-200 mt-2 line-clamp-2">
@@ -1177,10 +1177,10 @@ onBeforeUnmount(() => {
             <!-- ======================================================== -->
             <!-- SECTION 05: LOKASI & PETA OUTLET (GOOGLE MAPS RESMI)     -->
             <!-- ======================================================== -->
-            <section id="lokasi" class="relative bg-[#0A1033] pt-16 pb-24 px-4 sm:px-6 lg:px-8 text-white">
+            <section id="lokasi" class="relative bg-navy-950 pt-16 pb-24 px-4 sm:px-6 lg:px-8 text-white">
                 <div class="max-w-7xl mx-auto">
                     <div class="landing-reveal mb-10">
-                        <div class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center font-heading font-extrabold text-sm text-white mb-4 bg-white/10">
+                        <div class="w-10 h-10 rounded-pill border border-white/40 flex items-center justify-center font-heading font-extrabold text-sm text-white mb-4 bg-white/10">
                             05
                         </div>
                         <h2 class="font-heading font-extrabold text-3xl sm:text-4xl uppercase tracking-tight text-white">
@@ -1191,20 +1191,20 @@ onBeforeUnmount(() => {
                         </p>
                     </div>
 
-                    <div class="landing-reveal bg-white text-[#10194D] rounded-[28px] sm:rounded-[36px] p-6 sm:p-8 shadow-2xl border border-slate-200 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    <div class="landing-reveal bg-white text-navy-900 rounded-[28px] sm:rounded-[36px] p-6 sm:p-8 shadow-2xl border border-slate-200 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                         <!-- Left Info Card -->
                         <div class="lg:col-span-5 flex flex-col justify-between h-full">
                             <div>
-                                <span class="bg-[#E6E9FD] text-[#26338A] text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                                <span class="bg-primary-100 text-primary-700 text-xs font-bold px-3 py-1 rounded-pill uppercase tracking-wider">
                                     Outlet Resmi
                                 </span>
-                                <h3 class="font-heading font-extrabold text-2xl sm:text-3xl text-[#10194D] mt-3 mb-4">
+                                <h3 class="font-heading font-extrabold text-2xl sm:text-3xl text-navy-900 mt-3 mb-4">
                                     Andik Laundry
                                 </h3>
 
-                                <div class="space-y-4 text-xs sm:text-sm text-[#10194D]">
+                                <div class="space-y-4 text-xs sm:text-sm text-navy-900">
                                     <div class="flex items-start gap-3">
-                                        <MapPin class="w-5 h-5 text-[#4F5FE8] shrink-0 mt-0.5" />
+                                        <MapPin class="w-5 h-5 text-primary-600 shrink-0 mt-0.5" />
                                         <div>
                                             <div class="font-bold">Alamat Lengkap:</div>
                                             <p class="text-slate-600 font-medium leading-relaxed mt-0.5">
@@ -1214,7 +1214,7 @@ onBeforeUnmount(() => {
                                     </div>
 
                                     <div class="flex items-start gap-3">
-                                        <Clock class="w-5 h-5 text-[#22A06B] shrink-0 mt-0.5" />
+                                        <Clock class="w-5 h-5 text-success shrink-0 mt-0.5" />
                                         <div>
                                             <div class="font-bold">Jam Operasional:</div>
                                             <p class="text-slate-600 font-medium mt-0.5">
@@ -1224,7 +1224,7 @@ onBeforeUnmount(() => {
                                     </div>
 
                                     <div class="flex items-start gap-3">
-                                        <Truck class="w-5 h-5 text-[#FF8A5B] shrink-0 mt-0.5" />
+                                        <Truck class="w-5 h-5 text-accent-500 shrink-0 mt-0.5" />
                                         <div>
                                             <div class="font-bold">Antar Jemput:</div>
                                             <p class="text-slate-600 font-medium mt-0.5">
@@ -1240,7 +1240,7 @@ onBeforeUnmount(() => {
                                     :href="whatsappUrl"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    class="bg-[#22A06B] hover:bg-[#12724A] text-white font-bold text-xs sm:text-sm px-5 py-3 rounded-full transition-all duration-200 flex items-center justify-center gap-2 shadow-sm"
+                                    class="bg-success hover:bg-success/90 text-white font-bold font-bold text-xs sm:text-sm px-5 py-3 rounded-pill transition-all duration-200 flex items-center justify-center gap-2 shadow-sm"
                                 >
                                     <MessageCircle class="w-4 h-4" />
                                     <span>Hubungi WhatsApp Toko</span>
@@ -1250,7 +1250,7 @@ onBeforeUnmount(() => {
                                     href="https://www.google.com/maps/place/Andik+Laundry/@-7.2392419,112.581764,21z/data=!4m12!1m5!3m4!2zN8KwMTQnMjEuMyJTIDExMsKwMzQnNTQuMyJF!8m2!3d-7.2392469!4d112.5817531!3m5!1s0x2e7800f99a230c6b:0xb287a654290078e9!8m2!3d-7.239213!4d112.5817581!16s%2Fg%2F11gdlxnlmk?hl=id-ID"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    class="bg-[#10194D] hover:bg-[#1A2566] text-white font-bold text-xs sm:text-sm px-5 py-3 rounded-full transition-all duration-200 flex items-center justify-center gap-2"
+                                    class="bg-navy-900 hover:bg-navy-800 text-white font-bold text-xs sm:text-sm px-5 py-3 rounded-pill transition-all duration-200 flex items-center justify-center gap-2"
                                 >
                                     <ExternalLink class="w-4 h-4" />
                                     <span>Buka di Google Maps</span>
@@ -1276,10 +1276,10 @@ onBeforeUnmount(() => {
             <!-- ======================================================== -->
             <!-- SECTION 06: PERTANYAAN UMUM (FAQ)                        -->
             <!-- ======================================================== -->
-            <section id="faq" class="relative bg-[#10194D] pt-16 pb-24 px-4 sm:px-6 lg:px-8 text-white">
+            <section id="faq" class="relative bg-navy-900 pt-16 pb-24 px-4 sm:px-6 lg:px-8 text-white">
                 <div class="max-w-4xl mx-auto">
                     <div class="landing-reveal text-center mb-12">
-                        <div class="w-10 h-10 rounded-full border border-white/40 mx-auto flex items-center justify-center font-heading font-extrabold text-sm text-white mb-4 bg-white/10">
+                        <div class="w-10 h-10 rounded-pill border border-white/40 mx-auto flex items-center justify-center font-heading font-extrabold text-sm text-white mb-4 bg-white/10">
                             06
                         </div>
                         <h2 class="font-heading font-extrabold text-3xl sm:text-4xl uppercase tracking-tight text-white">
@@ -1295,17 +1295,17 @@ onBeforeUnmount(() => {
                         <div
                             v-for="(faq, fIdx) in faqs"
                             :key="fIdx"
-                            class="bg-[#1A2566]/80 border border-white/10 rounded-[20px] overflow-hidden transition-all duration-200"
+                            class="bg-navy-800/80 border border-white/10 rounded-[20px] overflow-hidden transition-all duration-200"
                         >
                             <button
                                 type="button"
-                                class="w-full text-left px-6 py-5 flex items-center justify-between gap-4 font-heading font-bold text-base sm:text-lg text-white hover:text-[#FFE14D] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFE14D]"
+                                class="w-full text-left px-6 py-5 flex items-center justify-between gap-4 font-heading font-bold text-base sm:text-lg text-white hover:text-warning transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warning"
                                 :aria-expanded="activeFaqIndex === fIdx"
                                 @click="toggleFaq(fIdx)"
                             >
                                 <span>{{ faq.q }}</span>
                                 <ChevronDown
-                                    class="w-5 h-5 text-[#FFE14D] shrink-0 transition-transform duration-300"
+                                    class="w-5 h-5 text-warning shrink-0 transition-transform duration-300"
                                     :class="{ 'rotate-180': activeFaqIndex === fIdx }"
                                 />
                             </button>
@@ -1324,12 +1324,12 @@ onBeforeUnmount(() => {
             <!-- ======================================================== -->
             <!-- SECTION 07: CTA NEWSLETTER / KONSULTASI (Every Sunday)   -->
             <!-- ======================================================== -->
-            <section id="lacak" class="relative bg-gradient-to-b from-[#10194D] via-[#0A1033] to-[#0A1033] pt-16 pb-24 px-4 sm:px-6 lg:px-8 text-white">
+            <section id="lacak" class="relative bg-gradient-to-b from-navy-900 via-navy-950 to-navy-950 pt-16 pb-24 px-4 sm:px-6 lg:px-8 text-white">
                 <div class="landing-reveal max-w-4xl mx-auto text-center">
                     <!-- Heading Every Sunday Style with Yellow Highlight -->
                     <h2 class="font-heading font-extrabold text-3xl sm:text-5xl uppercase tracking-tight leading-tight text-white">
                         SIAP CUCIAN BERSIH TANPA REPOT? <br />
-                        <span class="text-[#FFE14D]">PESAN SEKARANG</span> JUGA!
+                        <span class="text-warning">PESAN SEKARANG</span> JUGA!
                     </h2>
                     <p class="font-sans text-sm sm:text-base text-slate-200 mt-4 max-w-xl mx-auto leading-relaxed">
                         Kirim pesan ke admin WhatsApp kami untuk penjemputan cucian gratis (maks 3 kg) atau lacak langsung progres nota Anda.
@@ -1339,18 +1339,18 @@ onBeforeUnmount(() => {
                     <div class="max-w-xl mx-auto mt-8">
                         <form
                             @submit.prevent="submitOrderCheck"
-                            class="bg-white rounded-full p-2 pl-4 sm:pl-6 shadow-2xl border border-slate-200 flex items-center justify-between gap-2 transition-all focus-within:ring-3 focus-within:ring-[#4F5FE8]/40"
+                            class="bg-white rounded-pill p-2 pl-4 sm:pl-6 shadow-2xl border border-slate-200 flex items-center justify-between gap-2 transition-all focus-within:ring-3 focus-within:ring-primary-500/40"
                         >
                             <input
                                 v-model="orderQuery"
                                 type="text"
                                 placeholder="Masukkan nomor nota atau No. HP…"
-                                class="w-full bg-transparent text-[#10194D] text-xs sm:text-base font-semibold placeholder-slate-400 focus:outline-none"
+                                class="w-full bg-transparent text-navy-900 text-xs sm:text-base font-semibold placeholder-slate-400 focus:outline-none"
                             />
                             <button
                                 type="submit"
                                 :disabled="isCheckingOrder"
-                                class="bg-[#FF8A5B] hover:bg-[#F26B3A] text-[#10194D] font-bold text-xs sm:text-sm px-4 sm:px-6 py-3 sm:py-3.5 rounded-full transition-all duration-200 shrink-0 shadow-sm hover:shadow-[0_4px_14px_rgba(255,138,91,0.4)] disabled:opacity-50 flex items-center gap-1.5 sm:gap-2 min-h-[44px]"
+                                class="bg-accent-500 hover:bg-accent-600 text-navy-900 font-bold text-xs sm:text-sm px-4 sm:px-6 py-3 sm:py-3.5 rounded-pill transition-all duration-200 shrink-0 shadow-sm hover:shadow-md disabled:opacity-50 flex items-center gap-1.5 sm:gap-2 min-h-[44px]"
                             >
                                 <span v-if="!isCheckingOrder">Lacak Nota</span>
                                 <span v-else>Memeriksa…</span>
@@ -1365,9 +1365,9 @@ onBeforeUnmount(() => {
                             :href="whatsappUrl"
                             target="_blank"
                             rel="noopener noreferrer"
-                            class="inline-flex items-center gap-2.5 bg-transparent border-2 border-white/60 hover:border-white text-white font-bold text-sm px-6 py-3 rounded-full transition-all hover:bg-white/10"
+                            class="inline-flex items-center gap-2.5 bg-transparent border-2 border-white/60 hover:border-white text-white font-bold text-sm px-6 py-3 rounded-pill transition-all hover:bg-white/10"
                         >
-                            <Phone class="w-4 h-4 text-[#FFE14D]" />
+                            <Phone class="w-4 h-4 text-warning" />
                             <span>Hubungi Admin: {{ storePhone }}</span>
                         </a>
                     </div>
@@ -1378,23 +1378,23 @@ onBeforeUnmount(() => {
         <!-- ======================================================== -->
         <!-- FOOTER (DESIGN.md)                                       -->
         <!-- ======================================================== -->
-        <footer class="bg-[#070B24] text-slate-300 border-t border-white/10 pt-16 pb-12 px-4 sm:px-6 lg:px-8">
+        <footer class="bg-navy-950 text-slate-300 border-t border-white/10 pt-16 pb-12 px-4 sm:px-6 lg:px-8">
             <div class="max-w-7xl mx-auto">
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-white/10">
                     <!-- Brand Column -->
                     <div class="md:col-span-5">
                         <Link href="/" class="flex items-center gap-1.5 focus-visible:outline-none">
                             <span class="font-heading font-extrabold text-2xl tracking-tight text-white">
-                                andik<span class="text-[#FF8A5B]">.</span>
+                                andik<span class="text-accent-500">.</span>
                             </span>
-                            <span class="text-[10px] font-bold tracking-widest text-[#4F5FE8] uppercase bg-[#E6E9FD] px-2 py-0.5 rounded-full ml-1">
+                            <span class="text-[10px] font-bold tracking-widest text-primary-600 uppercase bg-primary-100 px-2 py-0.5 rounded-pill ml-1">
                                 LAUNDRY
                             </span>
                         </Link>
                         <p class="font-sans text-xs sm:text-sm text-slate-300 mt-4 max-w-sm leading-relaxed font-normal">
                             Layanan binatu harian higienis dan terpercaya di Gresik sejak 2009. Berprinsip 1 mesin 1 pelanggan, menjaga kesucian dan kebersihan pakaian keluarga Anda.
                         </p>
-                        <div class="text-xs text-[#FFE14D] font-bold mt-4">
+                        <div class="text-xs text-warning font-bold mt-4">
                             Buka Setiap Hari: 07.00 – 20.00 WIB
                         </div>
                     </div>
@@ -1421,7 +1421,7 @@ onBeforeUnmount(() => {
                             <li><a href="#lacak" class="hover:text-white transition-colors">Cek Status Nota Digital</a></li>
                             <li><a href="#lokasi" class="hover:text-white transition-colors">Petunjuk Arah Google Maps</a></li>
                             <li><a :href="whatsappUrl" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">Chat Admin WhatsApp</a></li>
-                            <li><Link v-if="canLogin" href="/login" class="hover:text-white transition-colors font-bold text-[#FF8A5B]">Masuk Dashboard Kasir / Owner</Link></li>
+                            <li><Link v-if="canLogin" href="/login" class="hover:text-white transition-colors font-bold text-accent-500">Masuk Dashboard Kasir / Owner</Link></li>
                         </ul>
                     </div>
                 </div>

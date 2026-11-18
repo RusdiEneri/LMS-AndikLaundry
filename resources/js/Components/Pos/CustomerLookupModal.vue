@@ -269,7 +269,7 @@ function closeModal() {
                                 <span class="font-bold text-sm text-text group-hover:text-primary-700 transition-colors">{{ cust.name }}</span>
                                 <span
                                     v-if="Number(cust.outstanding_receivables ?? 0) > 0"
-                                    class="inline-flex items-center space-x-1 px-2 py-0.5 rounded-pill text-[10px] font-bold bg-[#FDE3E4] text-[#B3262B]"
+                                    class="inline-flex items-center space-x-1 px-2 py-0.5 rounded-pill text-[10px] font-bold bg-danger/10 text-danger border border-danger/20"
                                 >
                                     <AlertCircle class="h-3 w-3 stroke-[2.5]" />
                                     <span>Piutang: {{ formatRupiah(cust.outstanding_receivables) }}</span>
@@ -299,7 +299,7 @@ function closeModal() {
             </div>
 
             <div v-else class="p-5 flex-1 overflow-y-auto space-y-4">
-                <div v-if="formError" class="p-3 rounded-md bg-[#FDE3E4] border-l-4 border-l-danger text-[#B3262B] text-xs font-semibold flex items-center space-x-2">
+                <div v-if="formError" class="p-3 rounded-md bg-danger/10 border-l-4 border-l-danger text-danger text-xs font-semibold flex items-center space-x-2">
                     <AlertCircle class="h-4 w-4 shrink-0 stroke-[2.5]" />
                     <span>{{ formError }}</span>
                 </div>

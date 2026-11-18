@@ -11,8 +11,6 @@ import {
     XCircle,
     Edit2,
     Trash2,
-    ArrowLeft,
-    LogOut,
     Mail,
     Phone,
     X,
@@ -164,17 +162,17 @@ const confirmDelete = () => {
     });
 };
 
-// Role styling helpers
+// Role styling helpers per DESIGN.md
 const getRoleBadgeClass = (role: string) => {
     switch (role) {
         case 'owner':
-            return 'bg-teal-50 text-teal-800 border-teal-200';
+            return 'bg-primary-100 text-primary-700 border-primary-200';
         case 'cashier':
-            return 'bg-cyan-50 text-cyan-800 border-cyan-200';
+            return 'bg-accent-100 text-accent-700 border-accent-200';
         case 'operator':
-            return 'bg-amber-50 text-amber-800 border-amber-200';
+            return 'bg-warning/15 text-warning border-warning/20';
         default:
-            return 'bg-slate-100 text-slate-800 border-slate-200';
+            return 'bg-bg text-text-muted border-border';
     }
 };
 
@@ -196,52 +194,53 @@ const getRoleLabel = (role: string) => {
     <AppLayout title="Manajemen Pengguna">
         <div class="space-y-6">
             <!-- Header Title Banner -->
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-surface p-5 rounded-lg border border-border shadow-xs">
                 <div>
                     <div class="flex items-center gap-2">
-                        <h1 class="text-xl font-bold text-slate-900">Manajemen Pengguna & Staf</h1>
-                        <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-teal-50 text-teal-800 border border-teal-200">
+                        <h1 class="text-xl font-bold font-heading text-text">Manajemen Pengguna & Staf</h1>
+                        <span class="px-2.5 py-0.5 rounded-pill text-xs font-semibold bg-primary-100 text-primary-700 border border-primary-200">
                             RBAC Security
                         </span>
                     </div>
-                    <p class="text-xs text-slate-500 mt-1">Kelola akun kasir, operator produksi, dan hak akses sistem</p>
+                    <p class="text-xs text-text-muted mt-1">Kelola akun kasir, operator produksi, dan hak akses sistem</p>
                 </div>
             </div>
+
             <!-- Flash Banners -->
             <div
                 v-if="flashSuccess"
-                class="flex items-center gap-3 p-4 rounded-xl bg-teal-50 border border-teal-200 text-teal-900"
+                class="flex items-center gap-3 p-4 rounded-lg bg-success/10 border border-success/20 text-success font-medium text-sm"
             >
-                <CheckCircle2 class="w-5 h-5 text-teal-600 shrink-0" />
-                <span class="text-sm font-medium">{{ flashSuccess }}</span>
+                <CheckCircle2 class="w-5 h-5 shrink-0 stroke-[2.5]" />
+                <span>{{ flashSuccess }}</span>
             </div>
 
             <div
                 v-if="flashError"
-                class="flex items-center gap-3 p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-900"
+                class="flex items-center gap-3 p-4 rounded-lg bg-danger/10 border border-danger/20 text-danger font-medium text-sm"
             >
-                <AlertTriangle class="w-5 h-5 text-rose-600 shrink-0" />
-                <span class="text-sm font-medium">{{ flashError }}</span>
+                <AlertTriangle class="w-5 h-5 shrink-0 stroke-[2.5]" />
+                <span>{{ flashError }}</span>
             </div>
 
             <!-- Header Controls: Search, Filter, Add Action -->
-            <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-xs flex flex-col sm:flex-row gap-4 items-center justify-between">
+            <div class="bg-surface rounded-lg border border-border p-4 shadow-xs flex flex-col sm:flex-row gap-4 items-center justify-between">
                 <div class="flex flex-1 items-center gap-3 w-full sm:w-auto">
                     <!-- Search Input -->
                     <div class="relative flex-1 max-w-md">
-                        <Search class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+                        <Search class="w-4 h-4 text-text-muted absolute left-3.5 top-1/2 -translate-y-1/2 stroke-[2]" />
                         <input
                             v-model="search"
                             type="text"
                             placeholder="Cari nama, email, atau no. telepon..."
-                            class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-sm min-h-[44px]"
+                            class="w-full pl-10 pr-4 py-2.5 rounded-md border border-border bg-surface text-text placeholder:text-text-muted focus:outline-none focus:border-primary-600 focus:ring-3 focus:ring-primary-100 text-sm min-h-[44px]"
                         />
                     </div>
 
                     <!-- Role Filter -->
                     <select
                         v-model="selectedRole"
-                        class="px-3.5 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-sm min-h-[44px] bg-white text-slate-700"
+                        class="px-3.5 py-2.5 rounded-md border border-border bg-surface text-text focus:outline-none focus:border-primary-600 focus:ring-3 focus:ring-primary-100 text-sm min-h-[44px]"
                     >
                         <option value="">Semua Peranan</option>
                         <option value="owner">Owner</option>
@@ -250,21 +249,21 @@ const getRoleLabel = (role: string) => {
                     </select>
                 </div>
 
-                <Button
+                <button
                     type="button"
                     @click="openCreateModal"
-                    class="w-full sm:w-auto bg-teal-600 hover:bg-teal-700 text-white min-h-[44px] px-5 font-semibold flex items-center justify-center gap-2 cursor-pointer"
+                    class="w-full sm:w-auto bg-accent-500 hover:bg-accent-600 text-navy-950 rounded-pill min-h-[44px] px-5 font-bold text-sm flex items-center justify-center gap-2 cursor-pointer shadow-xs transition-all duration-[120ms] ease-standard focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
                 >
-                    <UserPlus class="w-4 h-4" />
-                    Tambah Staf Baru
-                </Button>
+                    <UserPlus class="w-4 h-4 stroke-[2.5]" />
+                    <span>Tambah Staf Baru</span>
+                </button>
             </div>
 
             <!-- Users Data Table -->
-            <div class="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
+            <div class="bg-surface rounded-lg border border-border shadow-xs overflow-hidden">
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm text-slate-800">
-                        <thead class="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                    <table class="w-full text-left text-sm text-text">
+                        <thead class="bg-bg border-b border-border text-xs font-semibold text-text-muted uppercase tracking-wider">
                             <tr>
                                 <th class="px-6 py-4">Nama & Email</th>
                                 <th class="px-6 py-4">Kontak Telepon</th>
@@ -273,25 +272,25 @@ const getRoleLabel = (role: string) => {
                                 <th class="px-6 py-4 text-right">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100">
-                            <tr v-for="user in users.data" :key="user.id" class="hover:bg-slate-50/80 transition">
+                        <tbody class="divide-y divide-border">
+                            <tr v-for="user in users.data" :key="user.id" class="hover:bg-bg/60 transition-colors">
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-3">
-                                        <div class="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center font-bold text-slate-700 shrink-0">
+                                        <div class="w-10 h-10 rounded-full bg-primary-100 border border-primary-200 flex items-center justify-center font-bold font-mono text-primary-700 shrink-0">
                                             {{ user.name.slice(0, 2).toUpperCase() }}
                                         </div>
                                         <div>
-                                            <div class="font-bold text-slate-900 flex items-center gap-2">
+                                            <div class="font-bold text-text flex items-center gap-2">
                                                 {{ user.name }}
                                                 <span
                                                     v-if="user.id === currentUser?.id"
-                                                    class="text-[10px] px-1.5 py-0.5 rounded bg-teal-100 text-teal-800 font-semibold"
+                                                    class="text-[10px] px-1.5 py-0.5 rounded-pill bg-accent-100 text-accent-700 font-bold"
                                                 >
                                                     Anda
                                                 </span>
                                             </div>
-                                            <div class="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
-                                                <Mail class="w-3 h-3 text-slate-400" />
+                                            <div class="text-xs text-text-muted flex items-center gap-1 mt-0.5">
+                                                <Mail class="w-3 h-3 text-text-muted" />
                                                 {{ user.email }}
                                             </div>
                                         </div>
@@ -302,9 +301,9 @@ const getRoleLabel = (role: string) => {
                                     <a
                                         :href="`https://wa.me/${user.phone}`"
                                         target="_blank"
-                                        class="inline-flex items-center gap-1.5 text-xs font-mono font-medium text-slate-700 hover:text-teal-600 transition"
+                                        class="inline-flex items-center gap-1.5 text-xs font-mono font-medium text-text hover:text-primary-700 transition-colors"
                                     >
-                                        <Phone class="w-3.5 h-3.5 text-teal-600" />
+                                        <Phone class="w-3.5 h-3.5 text-primary-600" />
                                         {{ user.phone }}
                                     </a>
                                 </td>
@@ -312,7 +311,7 @@ const getRoleLabel = (role: string) => {
                                 <td class="px-6 py-4">
                                     <span
                                         :class="[
-                                            'px-2.5 py-1 rounded-full text-xs font-semibold border inline-flex items-center gap-1',
+                                            'px-2.5 py-1 rounded-pill text-xs font-semibold border inline-flex items-center gap-1',
                                             getRoleBadgeClass(user.role)
                                         ]"
                                     >
@@ -328,15 +327,15 @@ const getRoleLabel = (role: string) => {
                                         :disabled="user.id === currentUser?.id"
                                         :title="user.id === currentUser?.id ? 'Tidak dapat menonaktifkan akun sendiri' : 'Klik untuk ubah status'"
                                         :class="[
-                                            'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition min-h-[36px]',
+                                            'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill text-xs font-bold transition-all min-h-[36px]',
                                             user.is_active
-                                                ? 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100'
-                                                : 'bg-rose-50 text-rose-800 hover:bg-rose-100',
+                                                ? 'bg-success/10 text-success hover:bg-success/20 border border-success/20'
+                                                : 'bg-danger/10 text-danger hover:bg-danger/20 border border-danger/20',
                                             user.id === currentUser?.id ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'
                                         ]"
                                     >
-                                        <CheckCircle2 v-if="user.is_active" class="w-3.5 h-3.5 text-emerald-600" />
-                                        <XCircle v-else class="w-3.5 h-3.5 text-rose-600" />
+                                        <CheckCircle2 v-if="user.is_active" class="w-3.5 h-3.5 stroke-[2.5]" />
+                                        <XCircle v-else class="w-3.5 h-3.5 stroke-[2.5]" />
                                         <span>{{ user.is_active ? 'Aktif' : 'Non-Aktif' }}</span>
                                     </button>
                                 </td>
@@ -346,7 +345,7 @@ const getRoleLabel = (role: string) => {
                                         <button
                                             type="button"
                                             @click="openEditModal(user)"
-                                            class="p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 min-h-[44px] min-w-[44px] inline-flex items-center justify-center transition cursor-pointer"
+                                            class="p-2 rounded-md text-text-muted hover:text-text hover:bg-bg min-h-[44px] min-w-[44px] inline-flex items-center justify-center transition-colors cursor-pointer"
                                             title="Ubah Data"
                                         >
                                             <Edit2 class="w-4 h-4" />
@@ -357,10 +356,10 @@ const getRoleLabel = (role: string) => {
                                             @click="openDeleteModal(user)"
                                             :disabled="user.id === currentUser?.id"
                                             :class="[
-                                                'p-2 rounded-lg min-h-[44px] min-w-[44px] inline-flex items-center justify-center transition',
+                                                'p-2 rounded-md min-h-[44px] min-w-[44px] inline-flex items-center justify-center transition-colors',
                                                 user.id === currentUser?.id
-                                                    ? 'text-slate-300 cursor-not-allowed'
-                                                    : 'text-rose-600 hover:text-rose-700 hover:bg-rose-50 cursor-pointer'
+                                                    ? 'text-text-muted/40 cursor-not-allowed'
+                                                    : 'text-danger hover:text-danger hover:bg-danger/10 cursor-pointer'
                                             ]"
                                             :title="user.id === currentUser?.id ? 'Akun Anda tidak dapat dihapus' : 'Hapus Staf'"
                                         >
@@ -371,10 +370,10 @@ const getRoleLabel = (role: string) => {
                             </tr>
 
                             <tr v-if="users.data.length === 0">
-                                <td colspan="5" class="px-6 py-12 text-center text-slate-500">
-                                    <Users class="w-10 h-10 text-slate-300 mx-auto mb-3" />
-                                    <div class="font-semibold text-slate-700">Tidak ada pengguna ditemukan</div>
-                                    <p class="text-xs text-slate-400 mt-1">Coba sesuaikan kata kunci pencarian atau filter peranan.</p>
+                                <td colspan="5" class="px-6 py-12 text-center text-text-muted">
+                                    <Users class="w-10 h-10 text-text-muted/50 mx-auto mb-3" />
+                                    <div class="font-semibold text-text">Tidak ada pengguna ditemukan</div>
+                                    <p class="text-xs text-text-muted mt-1">Coba sesuaikan kata kunci pencarian atau filter peranan.</p>
                                 </td>
                             </tr>
                         </tbody>
@@ -382,9 +381,9 @@ const getRoleLabel = (role: string) => {
                 </div>
 
                 <!-- Pagination Footer -->
-                <div v-if="users.total > 0" class="border-t border-slate-200 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-600">
+                <div v-if="users.total > 0" class="border-t border-border px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-text-muted">
                     <div>
-                        Menampilkan <span class="font-semibold">{{ users.from }}</span> hingga <span class="font-semibold">{{ users.to }}</span> dari <span class="font-semibold">{{ users.total }}</span> staf
+                        Menampilkan <span class="font-semibold text-text">{{ users.from }}</span> hingga <span class="font-semibold text-text">{{ users.to }}</span> dari <span class="font-semibold text-text">{{ users.total }}</span> staf
                     </div>
                     <div class="flex items-center gap-1">
                         <Link
@@ -393,7 +392,7 @@ const getRoleLabel = (role: string) => {
                             :href="link.url ?? '#'"
                             :class="[
                                 'px-3 py-1.5 rounded-md min-h-[36px] inline-flex items-center justify-center transition font-medium',
-                                link.active ? 'bg-teal-600 text-white font-bold' : 'hover:bg-slate-100 text-slate-700',
+                                link.active ? 'bg-primary-600 text-white font-bold' : 'hover:bg-bg text-text',
                                 !link.url ? 'opacity-40 pointer-events-none' : ''
                             ]"
                             v-html="link.label"
@@ -404,110 +403,110 @@ const getRoleLabel = (role: string) => {
         </div>
 
         <!-- Create User Dialog Modal -->
-        <div v-if="isCreateOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4">
-            <div class="bg-white rounded-2xl max-w-lg w-full shadow-xl overflow-hidden border border-slate-200">
-                <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
-                    <h3 class="font-bold text-lg text-slate-900 flex items-center gap-2">
-                        <UserPlus class="w-5 h-5 text-teal-600" />
+        <div v-if="isCreateOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-navy-950/60 backdrop-blur-xs p-4">
+            <div class="bg-surface rounded-lg max-w-lg w-full shadow-xl overflow-hidden border border-border">
+                <div class="px-6 py-4 border-b border-border flex items-center justify-between">
+                    <h3 class="font-bold text-lg text-text flex items-center gap-2 font-heading">
+                        <UserPlus class="w-5 h-5 text-primary-600" />
                         Tambah Pengguna Staf Baru
                     </h3>
-                    <button @click="isCreateOpen = false" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg cursor-pointer">
+                    <button @click="isCreateOpen = false" class="text-text-muted hover:text-text p-1 rounded-md cursor-pointer">
                         <X class="w-5 h-5" />
                     </button>
                 </div>
 
                 <form @submit.prevent="submitCreate" class="p-6 space-y-4">
                     <div>
-                        <label class="block text-sm font-semibold text-slate-800 mb-1">Nama Lengkap *</label>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-text mb-1">Nama Lengkap *</label>
                         <input
                             v-model="createForm.name"
                             type="text"
                             required
-                            class="w-full px-3.5 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-teal-500 text-sm min-h-[44px]"
+                            class="w-full px-3.5 py-2 rounded-md border border-border bg-surface text-text placeholder:text-text-muted focus:outline-none focus:border-primary-600 focus:ring-3 focus:ring-primary-100 text-sm min-h-[44px]"
                             placeholder="Contoh: Siti Aminah"
                         />
-                        <div v-if="createForm.errors.name" class="text-xs text-rose-600 mt-1">{{ createForm.errors.name }}</div>
+                        <div v-if="createForm.errors.name" class="text-xs text-danger mt-1 font-semibold">{{ createForm.errors.name }}</div>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-semibold text-slate-800 mb-1">Alamat Email *</label>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-text mb-1">Alamat Email *</label>
                             <input
                                 v-model="createForm.email"
                                 type="email"
                                 required
-                                class="w-full px-3.5 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-teal-500 text-sm min-h-[44px]"
+                                class="w-full px-3.5 py-2 rounded-md border border-border bg-surface text-text placeholder:text-text-muted focus:outline-none focus:border-primary-600 focus:ring-3 focus:ring-primary-100 text-sm min-h-[44px]"
                                 placeholder="siti@andiklaundry.test"
                             />
-                            <div v-if="createForm.errors.email" class="text-xs text-rose-600 mt-1">{{ createForm.errors.email }}</div>
+                            <div v-if="createForm.errors.email" class="text-xs text-danger mt-1 font-semibold">{{ createForm.errors.email }}</div>
                         </div>
 
                         <div>
-                            <label class="block text-sm font-semibold text-slate-800 mb-1">No. WhatsApp *</label>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-text mb-1">No. WhatsApp *</label>
                             <input
                                 v-model="createForm.phone"
                                 type="text"
                                 required
-                                class="w-full px-3.5 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-teal-500 text-sm min-h-[44px]"
+                                class="w-full px-3.5 py-2 rounded-md border border-border bg-surface text-text font-mono placeholder:text-text-muted focus:outline-none focus:border-primary-600 focus:ring-3 focus:ring-primary-100 text-sm min-h-[44px]"
                                 placeholder="0812-3456-7890"
                             />
-                            <div v-if="createForm.errors.phone" class="text-xs text-rose-600 mt-1">{{ createForm.errors.phone }}</div>
+                            <div v-if="createForm.errors.phone" class="text-xs text-danger mt-1 font-semibold">{{ createForm.errors.phone }}</div>
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-slate-800 mb-1">Peranan Akses *</label>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-text mb-1">Peranan Akses *</label>
                         <select
                             v-model="createForm.role"
                             required
-                            class="w-full px-3.5 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-teal-500 text-sm min-h-[44px] bg-white text-slate-800"
+                            class="w-full px-3.5 py-2 rounded-md border border-border bg-surface text-text focus:outline-none focus:border-primary-600 focus:ring-3 focus:ring-primary-100 text-sm min-h-[44px]"
                         >
                             <option value="cashier">Kasir POS (Front-Desk)</option>
                             <option value="operator">Operator Produksi (Cuci / Finishing)</option>
                             <option value="owner">Owner (Hak Penuh)</option>
                         </select>
-                        <div v-if="createForm.errors.role" class="text-xs text-rose-600 mt-1">{{ createForm.errors.role }}</div>
+                        <div v-if="createForm.errors.role" class="text-xs text-danger mt-1 font-semibold">{{ createForm.errors.role }}</div>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-semibold text-slate-800 mb-1">Kata Sandi *</label>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-text mb-1">Kata Sandi *</label>
                             <input
                                 v-model="createForm.password"
                                 type="password"
                                 required
                                 minlength="8"
-                                class="w-full px-3.5 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-teal-500 text-sm min-h-[44px]"
+                                class="w-full px-3.5 py-2 rounded-md border border-border bg-surface text-text placeholder:text-text-muted focus:outline-none focus:border-primary-600 focus:ring-3 focus:ring-primary-100 text-sm min-h-[44px]"
                                 placeholder="Min. 8 karakter"
                             />
-                            <div v-if="createForm.errors.password" class="text-xs text-rose-600 mt-1">{{ createForm.errors.password }}</div>
+                            <div v-if="createForm.errors.password" class="text-xs text-danger mt-1 font-semibold">{{ createForm.errors.password }}</div>
                         </div>
 
                         <div>
-                            <label class="block text-sm font-semibold text-slate-800 mb-1">Konfirmasi Sandi *</label>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-text mb-1">Konfirmasi Sandi *</label>
                             <input
                                 v-model="createForm.password_confirmation"
                                 type="password"
                                 required
-                                class="w-full px-3.5 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-teal-500 text-sm min-h-[44px]"
+                                class="w-full px-3.5 py-2 rounded-md border border-border bg-surface text-text placeholder:text-text-muted focus:outline-none focus:border-primary-600 focus:ring-3 focus:ring-primary-100 text-sm min-h-[44px]"
                                 placeholder="Ulangi kata sandi"
                             />
                         </div>
                     </div>
 
-                    <div class="pt-2 flex items-center justify-between border-t border-slate-100">
+                    <div class="pt-2 flex items-center justify-between border-t border-border">
                         <label class="flex items-center gap-2 cursor-pointer select-none">
                             <input
                                 type="checkbox"
                                 v-model="createForm.is_active"
-                                class="w-4 h-4 text-teal-600 rounded border-slate-300"
+                                class="w-4 h-4 text-primary-600 rounded border-border focus:ring-primary-500"
                             />
-                            <span class="text-sm font-medium text-slate-700">Langsung aktifkan akun</span>
+                            <span class="text-sm font-medium text-text">Langsung aktifkan akun</span>
                         </label>
 
                         <div class="flex items-center gap-2">
                             <Button type="button" variant="outline" @click="isCreateOpen = false" class="min-h-[44px] cursor-pointer">Batal</Button>
-                            <Button type="submit" :disabled="createForm.processing" class="bg-teal-600 hover:bg-teal-700 text-white min-h-[44px] cursor-pointer">
+                            <Button type="submit" :disabled="createForm.processing" class="bg-accent-500 hover:bg-accent-600 text-navy-950 font-bold min-h-[44px] cursor-pointer">
                                 {{ createForm.processing ? 'Menyimpan...' : 'Simpan Staf' }}
                             </Button>
                         </div>
@@ -517,108 +516,108 @@ const getRoleLabel = (role: string) => {
         </div>
 
         <!-- Edit User Dialog Modal -->
-        <div v-if="isEditOpen && userToEdit" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4">
-            <div class="bg-white rounded-2xl max-w-lg w-full shadow-xl overflow-hidden border border-slate-200">
-                <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
-                    <h3 class="font-bold text-lg text-slate-900 flex items-center gap-2">
-                        <Edit2 class="w-5 h-5 text-teal-600" />
+        <div v-if="isEditOpen && userToEdit" class="fixed inset-0 z-50 flex items-center justify-center bg-navy-950/60 backdrop-blur-xs p-4">
+            <div class="bg-surface rounded-lg max-w-lg w-full shadow-xl overflow-hidden border border-border">
+                <div class="px-6 py-4 border-b border-border flex items-center justify-between">
+                    <h3 class="font-bold text-lg text-text flex items-center gap-2 font-heading">
+                        <Edit2 class="w-5 h-5 text-primary-600" />
                         Ubah Data Staf: {{ userToEdit.name }}
                     </h3>
-                    <button @click="isEditOpen = false" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg cursor-pointer">
+                    <button @click="isEditOpen = false" class="text-text-muted hover:text-text p-1 rounded-md cursor-pointer">
                         <X class="w-5 h-5" />
                     </button>
                 </div>
 
                 <form @submit.prevent="submitEdit" class="p-6 space-y-4">
                     <div>
-                        <label class="block text-sm font-semibold text-slate-800 mb-1">Nama Lengkap *</label>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-text mb-1">Nama Lengkap *</label>
                         <input
                             v-model="editForm.name"
                             type="text"
                             required
-                            class="w-full px-3.5 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-teal-500 text-sm min-h-[44px]"
+                            class="w-full px-3.5 py-2 rounded-md border border-border bg-surface text-text placeholder:text-text-muted focus:outline-none focus:border-primary-600 focus:ring-3 focus:ring-primary-100 text-sm min-h-[44px]"
                         />
-                        <div v-if="editForm.errors.name" class="text-xs text-rose-600 mt-1">{{ editForm.errors.name }}</div>
+                        <div v-if="editForm.errors.name" class="text-xs text-danger mt-1 font-semibold">{{ editForm.errors.name }}</div>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-semibold text-slate-800 mb-1">Alamat Email *</label>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-text mb-1">Alamat Email *</label>
                             <input
                                 v-model="editForm.email"
                                 type="email"
                                 required
-                                class="w-full px-3.5 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-teal-500 text-sm min-h-[44px]"
+                                class="w-full px-3.5 py-2 rounded-md border border-border bg-surface text-text placeholder:text-text-muted focus:outline-none focus:border-primary-600 focus:ring-3 focus:ring-primary-100 text-sm min-h-[44px]"
                             />
-                            <div v-if="editForm.errors.email" class="text-xs text-rose-600 mt-1">{{ editForm.errors.email }}</div>
+                            <div v-if="editForm.errors.email" class="text-xs text-danger mt-1 font-semibold">{{ editForm.errors.email }}</div>
                         </div>
 
                         <div>
-                            <label class="block text-sm font-semibold text-slate-800 mb-1">No. WhatsApp *</label>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-text mb-1">No. WhatsApp *</label>
                             <input
                                 v-model="editForm.phone"
                                 type="text"
                                 required
-                                class="w-full px-3.5 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-teal-500 text-sm min-h-[44px]"
+                                class="w-full px-3.5 py-2 rounded-md border border-border bg-surface text-text font-mono placeholder:text-text-muted focus:outline-none focus:border-primary-600 focus:ring-3 focus:ring-primary-100 text-sm min-h-[44px]"
                             />
-                            <div v-if="editForm.errors.phone" class="text-xs text-rose-600 mt-1">{{ editForm.errors.phone }}</div>
+                            <div v-if="editForm.errors.phone" class="text-xs text-danger mt-1 font-semibold">{{ editForm.errors.phone }}</div>
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-slate-800 mb-1">Peranan Akses *</label>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-text mb-1">Peranan Akses *</label>
                         <select
                             v-model="editForm.role"
                             :disabled="userToEdit.id === currentUser?.id"
-                            class="w-full px-3.5 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-teal-500 text-sm min-h-[44px] bg-white text-slate-800 disabled:opacity-60 disabled:cursor-not-allowed"
+                            class="w-full px-3.5 py-2 rounded-md border border-border bg-surface text-text focus:outline-none focus:border-primary-600 focus:ring-3 focus:ring-primary-100 text-sm min-h-[44px] disabled:opacity-60 disabled:cursor-not-allowed"
                         >
                             <option value="cashier">Kasir POS (Front-Desk)</option>
                             <option value="operator">Operator Produksi (Cuci / Finishing)</option>
                             <option value="owner">Owner (Hak Penuh)</option>
                         </select>
-                        <p v-if="userToEdit.id === currentUser?.id" class="text-xs text-amber-700 mt-1">
+                        <p v-if="userToEdit.id === currentUser?.id" class="text-xs text-warning mt-1 font-medium">
                             Peranan Owner untuk akun login Anda sendiri tidak dapat diturunkan.
                         </p>
-                        <div v-if="editForm.errors.role" class="text-xs text-rose-600 mt-1">{{ editForm.errors.role }}</div>
+                        <div v-if="editForm.errors.role" class="text-xs text-danger mt-1 font-semibold">{{ editForm.errors.role }}</div>
                     </div>
 
-                    <div class="border-t border-slate-100 pt-3">
-                        <div class="text-xs font-semibold text-slate-500 mb-2">Ganti Kata Sandi (Opsional, min. 8 karakter)</div>
+                    <div class="border-t border-border pt-3">
+                        <div class="text-xs font-bold uppercase tracking-wider text-text-muted mb-2">Ganti Kata Sandi (Opsional, min. 8 karakter)</div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <input
                                     v-model="editForm.password"
                                     type="password"
-                                    class="w-full px-3.5 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-teal-500 text-sm min-h-[44px]"
+                                    class="w-full px-3.5 py-2 rounded-md border border-border bg-surface text-text placeholder:text-text-muted focus:outline-none focus:border-primary-600 focus:ring-3 focus:ring-primary-100 text-sm min-h-[44px]"
                                     placeholder="Kosongkan jika tetap"
                                 />
-                                <div v-if="editForm.errors.password" class="text-xs text-rose-600 mt-1">{{ editForm.errors.password }}</div>
+                                <div v-if="editForm.errors.password" class="text-xs text-danger mt-1 font-semibold">{{ editForm.errors.password }}</div>
                             </div>
                             <div>
                                 <input
                                     v-model="editForm.password_confirmation"
                                     type="password"
-                                    class="w-full px-3.5 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-teal-500 text-sm min-h-[44px]"
+                                    class="w-full px-3.5 py-2 rounded-md border border-border bg-surface text-text placeholder:text-text-muted focus:outline-none focus:border-primary-600 focus:ring-3 focus:ring-primary-100 text-sm min-h-[44px]"
                                     placeholder="Konfirmasi sandi baru"
                                 />
                             </div>
                         </div>
                     </div>
 
-                    <div class="pt-2 flex items-center justify-between border-t border-slate-100">
+                    <div class="pt-2 flex items-center justify-between border-t border-border">
                         <label class="flex items-center gap-2 cursor-pointer select-none">
                             <input
                                 type="checkbox"
                                 v-model="editForm.is_active"
                                 :disabled="userToEdit.id === currentUser?.id"
-                                class="w-4 h-4 text-teal-600 rounded border-slate-300 disabled:opacity-50"
+                                class="w-4 h-4 text-primary-600 rounded border-border focus:ring-primary-500 disabled:opacity-50"
                             />
-                            <span class="text-sm font-medium text-slate-700">Akun Aktif</span>
+                            <span class="text-sm font-medium text-text">Akun Aktif</span>
                         </label>
 
                         <div class="flex items-center gap-2">
                             <Button type="button" variant="outline" @click="isEditOpen = false" class="min-h-[44px] cursor-pointer">Batal</Button>
-                            <Button type="submit" :disabled="editForm.processing" class="bg-teal-600 hover:bg-teal-700 text-white min-h-[44px] cursor-pointer">
+                            <Button type="submit" :disabled="editForm.processing" class="bg-accent-500 hover:bg-accent-600 text-navy-950 font-bold min-h-[44px] cursor-pointer">
                                 {{ editForm.processing ? 'Menyimpan...' : 'Perbarui Staf' }}
                             </Button>
                         </div>
@@ -628,27 +627,27 @@ const getRoleLabel = (role: string) => {
         </div>
 
         <!-- Delete User Confirmation Modal -->
-        <div v-if="isDeleteOpen && userToDelete" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4">
-            <div class="bg-white rounded-2xl max-w-md w-full shadow-xl p-6 border border-slate-200 space-y-4">
-                <div class="flex items-center gap-3 text-rose-600">
-                    <div class="w-10 h-10 rounded-full bg-rose-50 flex items-center justify-center shrink-0">
-                        <AlertTriangle class="w-5 h-5" />
+        <div v-if="isDeleteOpen && userToDelete" class="fixed inset-0 z-50 flex items-center justify-center bg-navy-950/60 backdrop-blur-xs p-4">
+            <div class="bg-surface rounded-lg max-w-md w-full shadow-xl p-6 border border-border space-y-4">
+                <div class="flex items-center gap-3 text-danger">
+                    <div class="w-10 h-10 rounded-full bg-danger/10 flex items-center justify-center shrink-0">
+                        <AlertTriangle class="w-5 h-5 stroke-[2.5]" />
                     </div>
                     <div>
-                        <h3 class="font-bold text-slate-900">Konfirmasi Hapus Staf</h3>
-                        <p class="text-xs text-slate-500">Tindakan ini akan menonaktifkan akun staf terkait.</p>
+                        <h3 class="font-bold text-text font-heading">Konfirmasi Hapus Staf</h3>
+                        <p class="text-xs text-text-muted">Tindakan ini akan menonaktifkan akun staf terkait.</p>
                     </div>
                 </div>
 
-                <p class="text-sm text-slate-600">
-                    Apakah Anda yakin ingin menghapus akun staf <span class="font-bold text-slate-900">{{ userToDelete.name }}</span> ({{ userToDelete.email }})?
+                <p class="text-sm text-text">
+                    Apakah Anda yakin ingin menghapus akun staf <span class="font-bold text-text">{{ userToDelete.name }}</span> ({{ userToDelete.email }})?
                 </p>
 
-                <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+                <div class="flex items-center justify-end gap-2 pt-2 border-t border-border">
                     <Button type="button" variant="outline" @click="isDeleteOpen = false" class="min-h-[44px] cursor-pointer">Batal</Button>
-                    <Button type="button" @click="confirmDelete" class="bg-rose-600 hover:bg-rose-700 text-white min-h-[44px] px-4 font-semibold cursor-pointer">
+                    <button type="button" @click="confirmDelete" class="bg-danger hover:bg-danger/90 text-white rounded-md min-h-[44px] px-4 font-bold text-sm cursor-pointer transition-colors">
                         Ya, Hapus Staf
-                    </Button>
+                    </button>
                 </div>
             </div>
         </div>
