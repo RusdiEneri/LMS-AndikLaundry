@@ -55,7 +55,7 @@ Seluruh komponen, layout, halaman publik, dan halaman operasional internal telah
 
 ## 4. Halaman yang Dimigrasi
 
-- **`Welcome.vue`**: Landing page publik dengan pola section gelap-terang (`bg-bg` -> `bg-navy-950` -> `bg-bg` -> `bg-gradient` -> `bg-navy-950`), animasi mulus reveal, floating pill navbar, hero car SVG illustration selaras token.
+- **`Welcome.vue`**: Landing page publik dengan pola section gelap-terang (`bg-bg` -> `bg-navy-950` -> `bg-bg` -> `bg-gradient` -> `bg-navy-950`), animasi mulus reveal, floating pill navbar, dan ilustrasi hero animasi mesin cuci front-loading interaktif yang sedang mencuci pakaian (drum putar, pakaian berguling, gelombang air, busa sabun melimpah, dan panel kontrol LED andik. PRO).
 - **`Auth/Login.vue`**: Login kasir & owner dengan tema `navy-950`, container `surface`, input ber-token, dan CTA teal `text-navy-950`.
 - **`Error/403.vue`**: Halaman akses ditolak ber-token navy & surface.
 - **`Receipt/Show.vue`**: Nota digital publik & pelacakan live pelanggan dengan QRIS dan aksi pelunasan kasir ber-token.
@@ -78,3 +78,4 @@ Seluruh komponen, layout, halaman publik, dan halaman operasional internal telah
    Untuk mencegah anomali checkout terpotong pada layar beresolusi pendek/kecil (seperti di attachment user), footer subtotal dan tombol bayar dibuat sticky di bawah dengan container daftar cucian memakai `flex-1 overflow-y-auto`.
 3. **SVG Illustration di Landing Page**:
    Atribut fill dan stroke pada ilustrasi mobil binatu SVG di `Welcome.vue` diselaraskan secara matematis ke palet warna resmi `DESIGN.md` (`#081050`, `#13276F`, `#1F7FC4`, `#39C5A8`, `#F59E0B`, `#E0E8F0`).
+

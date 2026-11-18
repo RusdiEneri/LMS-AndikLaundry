@@ -689,118 +689,305 @@ onBeforeUnmount(() => {
                         </div>
                     </div>
 
-                    <!-- Right Hero Illustration: Playful Laundry Delivery Van (Every Sunday Style) -->
+                    <!-- Right Hero Illustration: Animated Smart Washing Machine (Front-Load Laundry Cycle) -->
                     <div class="lg:col-span-5 flex justify-center items-center relative">
-                        <div class="relative w-full max-w-md lg:max-w-none animate-float-slow">
-                            <!-- SVG Laundry Delivery Van & Happy Characters -->
-                            <svg class="w-full h-auto drop-shadow-2xl" viewBox="0 0 540 440" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <div class="relative w-full max-w-[420px] lg:max-w-none">
+                            <!-- Floating Top-Right Badge -->
+                            <div class="absolute -top-3 -right-2 sm:right-2 bg-white/95 backdrop-blur-md rounded-pill px-3.5 py-1.5 shadow-[0_8px_20px_rgba(16,25,77,0.12)] border border-border flex items-center gap-2 z-20 animate-float-slow">
+                                <span class="relative flex h-2.5 w-2.5">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-pill bg-success opacity-75"></span>
+                                    <span class="relative inline-flex rounded-pill h-2.5 w-2.5 bg-success"></span>
+                                </span>
+                                <span class="text-xs font-bold text-navy-900">1 Mesin 1 Pelanggan</span>
+                            </div>
+
+                            <!-- Floating Bottom-Left Badge -->
+                            <div class="absolute -bottom-3 -left-2 sm:left-2 bg-white/95 backdrop-blur-md rounded-pill px-3.5 py-1.5 shadow-[0_8px_20px_rgba(16,25,77,0.12)] border border-border flex items-center gap-2 z-20 animate-float-slow delay-300">
+                                <Sparkles class="w-4 h-4 text-warning" />
+                                <span class="text-xs font-bold text-navy-900">Busa Melimpah & Wangi</span>
+                            </div>
+
+                            <!-- SVG Washing Machine Animation -->
+                            <svg class="w-full h-auto drop-shadow-2xl select-none" viewBox="0 0 520 540" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <defs>
-                                    <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="0%" stop-color="#D8EDF8"/>
+                                    <!-- Machine Chassis Gradient -->
+                                    <linearGradient id="wmBodyGrad" x1="0" y1="0" x2="1" y2="1">
+                                        <stop offset="0%" stop-color="#FFFFFF"/>
+                                        <stop offset="60%" stop-color="#F8FAFC"/>
+                                        <stop offset="100%" stop-color="#EBF1F6"/>
+                                    </linearGradient>
+
+                                    <!-- Top Panel Shading -->
+                                    <linearGradient id="wmPanelGrad" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stop-color="#FFFFFF"/>
+                                        <stop offset="100%" stop-color="#F1F5F9"/>
+                                    </linearGradient>
+
+                                    <!-- Ambient Background Aura Glow -->
+                                    <radialGradient id="wmAura" cx="50%" cy="50%" r="50%">
+                                        <stop offset="0%" stop-color="#D8EDF8" stop-opacity="0.85"/>
+                                        <stop offset="70%" stop-color="#D8EDF8" stop-opacity="0.3"/>
                                         <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+                                    </radialGradient>
+
+                                    <!-- Outer Door Chrome Bezel Gradient -->
+                                    <linearGradient id="wmDoorOuter" x1="0" y1="0" x2="1" y2="1">
+                                        <stop offset="0%" stop-color="#FFFFFF"/>
+                                        <stop offset="25%" stop-color="#E2E8F0"/>
+                                        <stop offset="50%" stop-color="#CBD5E1"/>
+                                        <stop offset="75%" stop-color="#E2E8F0"/>
+                                        <stop offset="100%" stop-color="#94A3B8"/>
                                     </linearGradient>
-                                    <linearGradient id="vanGrad" x1="0" y1="0" x2="1" y2="1">
-                                        <stop offset="0%" stop-color="#1F7FC4"/>
-                                        <stop offset="100%" stop-color="#1565A0"/>
+
+                                    <!-- Inner Door Ring -->
+                                    <linearGradient id="wmDoorInner" x1="0" y1="0" x2="1" y2="1">
+                                        <stop offset="0%" stop-color="#F1F5F9"/>
+                                        <stop offset="50%" stop-color="#E2E8F0"/>
+                                        <stop offset="100%" stop-color="#CBD5E1"/>
                                     </linearGradient>
-                                    <linearGradient id="basketGrad" x1="0" y1="0" x2="1" y2="1">
-                                        <stop offset="0%" stop-color="#39C5A8"/>
+
+                                    <!-- Deep Stainless Drum Cavity Gradient -->
+                                    <radialGradient id="wmDrumCavity" cx="45%" cy="45%" r="55%">
+                                        <stop offset="0%" stop-color="#1E293B"/>
+                                        <stop offset="70%" stop-color="#0F172A"/>
+                                        <stop offset="100%" stop-color="#081050"/>
+                                    </radialGradient>
+
+                                    <!-- Water Pool Gradient -->
+                                    <linearGradient id="wmWaterGrad" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.75"/>
+                                        <stop offset="50%" stop-color="#1F7FC4" stop-opacity="0.85"/>
+                                        <stop offset="100%" stop-color="#1565A0" stop-opacity="0.95"/>
+                                    </linearGradient>
+
+                                    <!-- Clothes: Orange Towel Gradient (Matches Reference Image) -->
+                                    <linearGradient id="wmOrangeTowel" x1="0" y1="0" x2="1" y2="1">
+                                        <stop offset="0%" stop-color="#FBBF24"/>
+                                        <stop offset="50%" stop-color="#F59E0B"/>
+                                        <stop offset="100%" stop-color="#D97706"/>
+                                    </linearGradient>
+
+                                    <!-- Clothes: Denim Blue Laundry Fabric -->
+                                    <linearGradient id="wmBlueShirt" x1="0" y1="0" x2="1" y2="1">
+                                        <stop offset="0%" stop-color="#60A5FA"/>
+                                        <stop offset="60%" stop-color="#1F7FC4"/>
+                                        <stop offset="100%" stop-color="#13276F"/>
+                                    </linearGradient>
+
+                                    <!-- Clothes: Teal Brand Clean Towel -->
+                                    <linearGradient id="wmTealCloth" x1="0" y1="0" x2="1" y2="1">
+                                        <stop offset="0%" stop-color="#5EEAD4"/>
+                                        <stop offset="60%" stop-color="#39C5A8"/>
                                         <stop offset="100%" stop-color="#2BA88E"/>
                                     </linearGradient>
-                                    <linearGradient id="bubbleGrad" x1="0" y1="0" x2="1" y2="1">
+
+                                    <!-- Soap Bubble Iridescent Gradient -->
+                                    <linearGradient id="wmBubbleGrad" x1="0" y1="0" x2="1" y2="1">
                                         <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9"/>
-                                        <stop offset="100%" stop-color="#2F8FD8" stop-opacity="0.3"/>
+                                        <stop offset="50%" stop-color="#E0F2FE" stop-opacity="0.75"/>
+                                        <stop offset="100%" stop-color="#38BDF8" stop-opacity="0.4"/>
                                     </linearGradient>
+
+                                    <!-- Rotary Knob Gradient -->
+                                    <linearGradient id="wmKnobGrad" x1="0" y1="0" x2="1" y2="1">
+                                        <stop offset="0%" stop-color="#FFFFFF"/>
+                                        <stop offset="50%" stop-color="#E2E8F0"/>
+                                        <stop offset="100%" stop-color="#94A3B8"/>
+                                    </linearGradient>
+
+                                    <!-- Glass Door Clipping Mask -->
+                                    <clipPath id="wmDrumClip">
+                                        <circle cx="260" cy="285" r="102"/>
+                                    </clipPath>
                                 </defs>
 
-                                <!-- Circular soft backdrop glow -->
-                                <circle cx="270" cy="220" r="180" fill="url(#skyGrad)"/>
+                                <!-- Circular Ambient Backdrop Glow -->
+                                <circle cx="260" cy="285" r="210" fill="url(#wmAura)"/>
 
-                                <!-- Road track -->
-                                <path d="M40 370 C 180 340, 360 380, 500 350" stroke="#13276F" stroke-width="46" stroke-linecap="round"/>
-                                <path d="M60 370 C 180 340, 360 380, 480 350" stroke="#F59E0B" stroke-width="5" stroke-dasharray="16 14" stroke-linecap="round"/>
+                                <!-- Ambient Soap Bubbles Floating in Room Air -->
+                                <circle cx="55" cy="210" r="18" fill="url(#wmBubbleGrad)" stroke="#FFFFFF" stroke-width="1.5" class="animate-soap-bubble-1" />
+                                <circle cx="475" cy="180" r="24" fill="url(#wmBubbleGrad)" stroke="#FFFFFF" stroke-width="2" class="animate-soap-bubble-2" />
+                                <circle cx="490" cy="290" r="14" fill="url(#wmBubbleGrad)" stroke="#FFFFFF" stroke-width="1.5" class="animate-soap-bubble-3" />
+                                <circle cx="45" cy="350" r="15" fill="url(#wmBubbleGrad)" stroke="#FFFFFF" stroke-width="1.5" class="animate-soap-bubble-2" />
+                                <circle cx="85" cy="120" r="10" fill="url(#wmBubbleGrad)" stroke="#FFFFFF" stroke-width="1" class="animate-soap-bubble-3" />
 
-                                <!-- Decorative Floating Soap Bubbles -->
-                                <circle cx="90" cy="180" r="22" fill="url(#bubbleGrad)" stroke="#FFFFFF" stroke-width="2" class="animate-bubble-1" />
-                                <circle cx="130" cy="140" r="14" fill="url(#bubbleGrad)" stroke="#FFFFFF" stroke-width="1.5" class="animate-bubble-2" />
-                                <circle cx="440" cy="120" r="26" fill="url(#bubbleGrad)" stroke="#FFFFFF" stroke-width="2" class="animate-bubble-1" />
-                                <circle cx="480" cy="170" r="16" fill="url(#bubbleGrad)" stroke="#FFFFFF" stroke-width="1.5" class="animate-bubble-2" />
-                                <circle cx="410" cy="90" r="12" fill="url(#bubbleGrad)" stroke="#FFFFFF" stroke-width="1" class="animate-bubble-1" />
+                                <!-- Ambient Sparkles -->
+                                <path d="M 60 150 Q 60 162 72 162 Q 60 162 60 174 Q 60 162 48 162 Q 60 162 60 150 Z" fill="#F59E0B" class="animate-pulse-subtle" />
+                                <path d="M 460 120 Q 460 132 472 132 Q 460 132 460 144 Q 460 132 448 132 Q 460 132 460 120 Z" fill="#39C5A8" class="animate-pulse-subtle delay-200" />
+                                <path d="M 445 420 Q 445 430 455 430 Q 445 430 445 440 Q 445 430 435 430 Q 445 430 445 420 Z" fill="#F59E0B" class="animate-pulse-subtle delay-400" />
 
-                                <!-- Sparkles -->
-                                <path d="M100 110 Q 100 125, 115 125 Q 100 125, 100 140 Q 100 125, 85 125 Q 100 125, 100 110 Z" fill="#F59E0B" class="animate-pulse-subtle" />
-                                <path d="M460 70 Q 460 82, 472 82 Q 460 82, 460 94 Q 460 82, 448 82 Q 460 82, 460 70 Z" fill="#F59E0B" class="animate-pulse-subtle delay-200" />
+                                <!-- Floor Base Shadow -->
+                                <ellipse cx="260" cy="505" rx="195" ry="18" fill="#081050" opacity="0.14" />
+                                <ellipse cx="260" cy="505" rx="145" ry="10" fill="#081050" opacity="0.12" />
 
-                                <!-- Laundry Car / Van Body -->
-                                <g transform="translate(100, 140)">
-                                    <!-- Roof Luggage Rack with Fresh Laundry Baskets -->
-                                    <rect x="50" y="25" width="180" height="8" rx="4" fill="#13276F"/>
-                                    <line x1="75" y1="33" x2="75" y2="40" stroke="#13276F" stroke-width="4"/>
-                                    <line x1="205" y1="33" x2="205" y2="40" stroke="#13276F" stroke-width="4"/>
+                                <!-- Whole Washing Machine Assembly (With active gentle vibration hum) -->
+                                <g class="animate-machine-hum">
+                                    <!-- Rubber Anti-Vibration Feet -->
+                                    <rect x="105" y="475" width="46" height="20" rx="4" fill="#081050"/>
+                                    <rect x="369" y="475" width="46" height="20" rx="4" fill="#081050"/>
 
-                                    <!-- Laundry Basket 1 (Orange) on roof -->
-                                    <rect x="60" y="-15" width="70" height="40" rx="8" fill="url(#basketGrad)"/>
-                                    <!-- Folded Towels overflowing -->
-                                    <path d="M65 -15 Q 75 -28, 85 -15" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round"/>
-                                    <path d="M85 -15 Q 95 -28, 105 -15" stroke="#F59E0B" stroke-width="8" stroke-linecap="round"/>
-                                    <path d="M105 -15 Q 115 -28, 125 -15" stroke="#60A5FA" stroke-width="8" stroke-linecap="round"/>
+                                    <!-- Main Cabinet Body -->
+                                    <rect x="80" y="45" width="360" height="435" rx="26" fill="url(#wmBodyGrad)" stroke="#D8E2EC" stroke-width="3"/>
 
-                                    <!-- Laundry Basket 2 (White/Clean) on roof -->
-                                    <rect x="140" y="-8" width="75" height="33" rx="8" fill="#FFFFFF" stroke="#E0E8F0" stroke-width="2"/>
-                                    <path d="M148 -8 Q 160 -22, 172 -8" stroke="#39C5A8" stroke-width="8" stroke-linecap="round"/>
-                                    <path d="M172 -8 Q 185 -22, 198 -8" stroke="#2F8FD8" stroke-width="8" stroke-linecap="round"/>
+                                    <!-- Body Surface Bevel / Chamfer lines -->
+                                    <line x1="82" y1="46" x2="438" y2="46" stroke="#FFFFFF" stroke-width="3"/>
+                                    <line x1="80" y1="135" x2="440" y2="135" stroke="#E2E8F0" stroke-width="2"/>
+                                    <line x1="80" y1="440" x2="440" y2="440" stroke="#CBD5E1" stroke-width="2"/>
 
-                                    <!-- Cheerful Smiley Mascot on roof basket -->
-                                    <g class="animate-float-gentle">
-                                        <circle cx="230" cy="5" r="18" fill="#F59E0B"/>
-                                        <!-- eyes & smile -->
-                                        <circle cx="225" cy="2" r="2.5" fill="#13276F"/>
-                                        <circle cx="235" cy="2" r="2.5" fill="#13276F"/>
-                                        <path d="M225 9 Q 230 15, 235 9" stroke="#13276F" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                                    <!-- Bottom Maintenance Filter Door (Bottom-Left) -->
+                                    <rect x="105" y="447" width="34" height="24" rx="4" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1.5"/>
+                                    <line x1="117" y1="459" x2="127" y2="459" stroke="#94A3B8" stroke-width="2" stroke-linecap="round"/>
+
+                                    <!-- TOP CONTROL FASCIA (y: 45 - 135) -->
+                                    <!-- 1. Detergent Dispenser Drawer (Left) -->
+                                    <rect x="96" y="58" width="94" height="66" rx="8" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.5"/>
+                                    <!-- Handle indent -->
+                                    <rect x="106" y="72" width="74" height="15" rx="4" fill="#E2E8F0"/>
+                                    <!-- Logo on drawer -->
+                                    <text x="114" y="108" font-family="Lexend, sans-serif" font-weight="800" font-size="13" fill="#13276F">andik<tspan fill="#39C5A8">.</tspan></text>
+                                    <text x="156" y="104" font-family="Poppins, sans-serif" font-weight="700" font-size="6" fill="#1F7FC4">PRO</text>
+
+                                    <!-- 2. Digital LED Control Display (Center) -->
+                                    <rect x="202" y="58" width="108" height="66" rx="8" fill="#081050" stroke="#13276F" stroke-width="2"/>
+                                    <!-- Digital LED Glow Status -->
+                                    <circle cx="215" cy="71" r="3" fill="#39C5A8" class="animate-led-live"/>
+                                    <text x="223" y="74" font-family="Poppins, sans-serif" font-weight="700" font-size="7" fill="#39C5A8" letter-spacing="1">WASHING</text>
+                                    <!-- Digital Timer Readout -->
+                                    <text x="212" y="101" font-family="JetBrains Mono, monospace" font-weight="800" font-size="20" fill="#39C5A8" letter-spacing="0.5">38:40</text>
+                                    <!-- Parameter Readout -->
+                                    <text x="212" y="116" font-family="Poppins, sans-serif" font-weight="600" font-size="7" fill="#60A5FA">40°C • 1200 RPM</text>
+
+                                    <!-- 3. Program Rotary Dial Selector (Center-Right) -->
+                                    <g transform="translate(345, 91)">
+                                        <!-- Outer dial ring with notch markings -->
+                                        <circle cx="0" cy="0" r="26" fill="url(#wmDoorOuter)" stroke="#CBD5E1" stroke-width="1.5"/>
+                                        <circle cx="0" cy="0" r="20" fill="url(#wmKnobGrad)" stroke="#94A3B8" stroke-width="1.5"/>
+                                        <!-- Dial grip grooves -->
+                                        <line x1="0" y1="-20" x2="0" y2="-12" stroke="#1F7FC4" stroke-width="3" stroke-linecap="round"/>
+                                        <circle cx="0" cy="0" r="6" fill="#CBD5E1"/>
+                                        <!-- Program Indicator Dots around dial -->
+                                        <circle cx="0" cy="-23" r="1.5" fill="#1F7FC4"/>
+                                        <circle cx="16" cy="-16" r="1.5" fill="#64748B"/>
+                                        <circle cx="23" cy="0" r="1.5" fill="#64748B"/>
+                                        <circle cx="-16" cy="-16" r="1.5" fill="#64748B"/>
+                                        <circle cx="-23" cy="0" r="1.5" fill="#64748B"/>
                                     </g>
 
-                                    <!-- Main Van Cabin -->
-                                    <path d="M40 90 L 60 40 Q 65 35, 75 35 L 210 35 Q 220 35, 230 48 L 270 95 L 285 105 Q 295 115, 295 125 L 295 180 Q 295 190, 285 190 L 30 190 Q 20 190, 20 180 L 20 115 Q 20 95, 40 90 Z" fill="url(#vanGrad)"/>
-
-                                    <!-- Front Hood Highlight -->
-                                    <path d="M270 95 L 285 105 L 295 125 L 225 125 Z" fill="#2F8FD8" opacity="0.4"/>
-
-                                    <!-- Windows (Cab & Driver) -->
-                                    <path d="M68 45 L 140 45 L 140 90 L 52 90 Z" fill="#FFFFFF" opacity="0.9" rx="4"/>
-                                    <path d="M152 45 L 215 45 L 255 90 L 152 90 Z" fill="#FFFFFF" opacity="0.9" rx="4"/>
-
-                                    <!-- Happy Driver in front window -->
-                                    <circle cx="185" cy="65" r="14" fill="#39C5A8"/>
-                                    <circle cx="182" cy="63" r="2" fill="#13276F"/>
-                                    <circle cx="189" cy="63" r="2" fill="#13276F"/>
-                                    <path d="M182 69 Q 186 73, 190 69" stroke="#13276F" stroke-width="1.8" stroke-linecap="round" fill="none"/>
-                                    <path d="M175 56 Q 185 50, 195 56" fill="#13276F"/> <!-- cap -->
-
-                                    <!-- Van Door Line & Handle -->
-                                    <line x1="145" y1="45" x2="145" y2="185" stroke="#1F3C88" stroke-width="3"/>
-                                    <rect x="155" y="105" width="16" height="5" rx="2.5" fill="#F59E0B"/>
-
-                                    <!-- Van Brand Wordmark on Side -->
-                                    <rect x="42" y="108" width="90" height="34" rx="8" fill="#FFFFFF"/>
-                                    <text x="50" y="130" font-family="Lexend, sans-serif" font-weight="800" font-size="14" fill="#13276F">andik<tspan fill="#39C5A8">.</tspan></text>
-                                    <text x="96" y="125" font-family="Poppins, sans-serif" font-weight="700" font-size="7" fill="#1F7FC4">LAUNDRY</text>
-
-                                    <!-- Front Bumper & Headlight -->
-                                    <rect x="280" y="145" width="22" height="30" rx="6" fill="#F59E0B"/>
-                                    <rect x="290" y="165" width="18" height="15" rx="4" fill="#13276F"/>
-
-                                    <!-- Left Wheel -->
-                                    <g transform="translate(65, 185)">
-                                        <circle cx="0" cy="0" r="30" fill="#081050"/>
-                                        <circle cx="0" cy="0" r="16" fill="#E0E8F0"/>
-                                        <circle cx="0" cy="0" r="6" fill="#1F7FC4"/>
+                                    <!-- 4. Power & Start/Pause Button (Right) -->
+                                    <g transform="translate(408, 91)">
+                                        <circle cx="0" cy="0" r="18" fill="#081050" stroke="#39C5A8" stroke-width="2"/>
+                                        <!-- Glowing Start Triangle -->
+                                        <polygon points="-3,-7 7,0 -3,7" fill="#39C5A8" class="animate-pulse-subtle"/>
                                     </g>
 
-                                    <!-- Right Wheel -->
-                                    <g transform="translate(245, 185)">
-                                        <circle cx="0" cy="0" r="30" fill="#081050"/>
-                                        <circle cx="0" cy="0" r="16" fill="#E0E8F0"/>
-                                        <circle cx="0" cy="0" r="6" fill="#1F7FC4"/>
+                                    <!-- MAIN CIRCULAR WASHER DOOR (cx=260, cy=285) -->
+                                    <!-- Outer Chrome Bezel Ring -->
+                                    <circle cx="260" cy="285" r="136" fill="url(#wmDoorOuter)" stroke="#CBD5E1" stroke-width="3"/>
+                                    <!-- Inner Metallic Rim -->
+                                    <circle cx="260" cy="285" r="118" fill="url(#wmDoorInner)" stroke="#94A3B8" stroke-width="2"/>
+                                    <!-- Door Latch Handle (Right) -->
+                                    <path d="M 374 252 Q 394 285 374 318 L 364 312 Q 380 285 364 258 Z" fill="url(#wmDoorOuter)" stroke="#94A3B8" stroke-width="1.5"/>
+
+                                    <!-- DOOR PORTAL & TUMBLING WASHING DRUM (Clipped to Glass Circle) -->
+                                    <g clip-path="url(#wmDrumClip)">
+                                        <!-- Deep Drum Stainless Cavity Backing -->
+                                        <circle cx="260" cy="285" r="102" fill="url(#wmDrumCavity)"/>
+
+                                        <!-- Stainless Drum Radial Hole Grid Background -->
+                                        <g opacity="0.3">
+                                            <circle cx="260" cy="285" r="82" stroke="#64748B" stroke-width="1" stroke-dasharray="3 6"/>
+                                            <circle cx="260" cy="285" r="62" stroke="#64748B" stroke-width="1" stroke-dasharray="3 6"/>
+                                            <circle cx="260" cy="285" r="42" stroke="#64748B" stroke-width="1" stroke-dasharray="3 6"/>
+                                        </g>
+
+                                        <!-- ROTATING WASH DRUM & CLOTHES TUMBLE GROUP -->
+                                        <g transform="translate(260, 285)">
+                                            <g class="animate-wash-tumble">
+                                                <!-- 3 Stainless Drum Lifter Baffles -->
+                                                <g opacity="0.6">
+                                                    <polygon points="-8,-98 8,-98 0,-76" fill="#94A3B8"/>
+                                                    <polygon points="84,48 76,62 62,42" fill="#94A3B8"/>
+                                                    <polygon points="-84,48 -62,42 -76,62" fill="#94A3B8"/>
+                                                </g>
+
+                                                <!-- CLOTHES: Orange Towel (Reference Image Match) -->
+                                                <path
+                                                    d="M -35 25 C -65 5, -55 -45, -15 -52 C 20 -58, 55 -22, 42 18 C 30 52, -10 58, -35 25 Z"
+                                                    fill="url(#wmOrangeTowel)"
+                                                />
+                                                <!-- Orange Towel Folds & Texture -->
+                                                <path d="M -25 12 Q -8 -18 18 8 Q 0 30 -25 12" stroke="#B45309" stroke-width="3" fill="none"/>
+                                                <path d="M -40 -10 Q -20 -30 10 -25" stroke="#D97706" stroke-width="2.5" fill="none"/>
+
+                                                <!-- CLOTHES: Denim Blue Casual Shirt -->
+                                                <path
+                                                    d="M 12 -28 C 42 -45, 72 -18, 58 18 C 46 50, 2 62, -22 45 C 2 22, -4 -18, 12 -28 Z"
+                                                    fill="url(#wmBlueShirt)"
+                                                />
+                                                <!-- Blue Shirt Sleeve & Collar Folds -->
+                                                <path d="M 22 -18 Q 42 8 18 30" stroke="#081050" stroke-width="2.5" fill="none"/>
+                                                <path d="M 5 0 Q 25 15 35 35" stroke="#1565A0" stroke-width="2" fill="none"/>
+
+                                                <!-- CLOTHES: Crisp White Cotton Fabric -->
+                                                <path
+                                                    d="M -50 -12 C -38 -42, 8 -42, 8 -12 C 8 18, -38 30, -50 -12 Z"
+                                                    fill="#FFFFFF"
+                                                    opacity="0.95"
+                                                />
+                                                <path d="M -38 -18 Q -16 -6 -28 12" stroke="#CBD5E1" stroke-width="2.5" fill="none"/>
+
+                                                <!-- CLOTHES: Fresh Teal Accent Fabric -->
+                                                <path
+                                                    d="M -18 28 C -5 52, 34 50, 40 28 C 22 22, 0 18, -18 28 Z"
+                                                    fill="url(#wmTealCloth)"
+                                                />
+                                                <path d="M -8 32 Q 10 42 26 30" stroke="#0F766E" stroke-width="2" fill="none"/>
+                                            </g>
+                                        </g>
+
+                                        <!-- Dynamic Sloshing Water Pool -->
+                                        <g class="animate-water-slosh">
+                                            <path
+                                                d="M 155 290 Q 205 272, 260 290 T 365 290 L 365 390 L 155 390 Z"
+                                                fill="url(#wmWaterGrad)"
+                                            />
+                                            <!-- Water Surface Foam Crest -->
+                                            <path
+                                                d="M 155 290 Q 205 272, 260 290 T 365 290"
+                                                stroke="#FFFFFF"
+                                                stroke-width="3"
+                                                fill="none"
+                                                opacity="0.85"
+                                            />
+                                        </g>
+
+                                        <!-- Rich Soapy Suds & Bubbles Inside Drum Glass -->
+                                        <g>
+                                            <circle cx="205" cy="305" r="10" fill="#FFFFFF" opacity="0.9" class="animate-soap-bubble-1"/>
+                                            <circle cx="225" cy="298" r="15" fill="#FFFFFF" opacity="0.85" class="animate-soap-bubble-2"/>
+                                            <circle cx="255" cy="310" r="12" fill="#FFFFFF" opacity="0.9" class="animate-soap-bubble-3"/>
+                                            <circle cx="285" cy="302" r="16" fill="#FFFFFF" opacity="0.85" class="animate-soap-bubble-1"/>
+                                            <circle cx="310" cy="315" r="11" fill="#FFFFFF" opacity="0.8" class="animate-soap-bubble-2"/>
+                                            <circle cx="235" cy="328" r="13" fill="#FFFFFF" opacity="0.75" class="animate-soap-bubble-3"/>
+                                            <circle cx="270" cy="335" r="14" fill="#FFFFFF" opacity="0.8" class="animate-soap-bubble-1"/>
+                                            <circle cx="300" cy="332" r="9" fill="#FFFFFF" opacity="0.75" class="animate-soap-bubble-2"/>
+                                            <circle cx="185" cy="325" r="8" fill="#FFFFFF" opacity="0.7" class="animate-soap-bubble-3"/>
+                                            <circle cx="330" cy="320" r="8" fill="#FFFFFF" opacity="0.7" class="animate-soap-bubble-1"/>
+                                        </g>
+
+                                        <!-- Curved 3D Convex Glass Door Highlights & Reflections -->
+                                        <path
+                                            d="M 180 220 A 88 88 0 0 1 330 210 A 78 78 0 0 0 196 238 Z"
+                                            fill="#FFFFFF"
+                                            opacity="0.45"
+                                        />
+                                        <path
+                                            d="M 172 248 A 90 90 0 0 1 206 198 A 96 96 0 0 0 172 248 Z"
+                                            fill="#FFFFFF"
+                                            opacity="0.35"
+                                        />
+                                        <!-- Cyan soft glass tint overlay -->
+                                        <circle cx="260" cy="285" r="102" fill="#38BDF8" opacity="0.1" />
                                     </g>
                                 </g>
                             </svg>

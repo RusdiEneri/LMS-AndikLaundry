@@ -221,6 +221,88 @@
 }
 
 /* ============================================================
+   Washing Machine Hero Animations
+   ============================================================ */
+@keyframes washTumbleCycle {
+  0% { transform: rotate(0deg); }
+  20% { transform: rotate(140deg); }
+  25% { transform: rotate(120deg); }
+  50% { transform: rotate(400deg); }
+  55% { transform: rotate(380deg); }
+  75% { transform: rotate(200deg); }
+  90% { transform: rotate(-60deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes washWaterWave {
+  0%, 100% { transform: translateY(0) scaleY(1); }
+  50% { transform: translateY(-7px) scaleY(1.08) rotate(4deg); }
+}
+
+@keyframes soapBubbleFloat {
+  0%, 100% { transform: translateY(0) translateX(0) scale(1); opacity: 0.85; }
+  33% { transform: translateY(-16px) translateX(8px) scale(1.08); opacity: 1; }
+  66% { transform: translateY(-8px) translateX(-6px) scale(0.95); opacity: 0.75; }
+}
+
+@keyframes bubbleDrift {
+  0% { transform: translateY(0) scale(0.85); opacity: 0; }
+  20% { opacity: 0.9; }
+  80% { opacity: 0.7; }
+  100% { transform: translateY(-65px) translateX(25px) scale(1.15); opacity: 0; }
+}
+
+@keyframes machineHum {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(-0.6px, 0.4px); }
+  50% { transform: translate(0.6px, -0.4px); }
+  75% { transform: translate(-0.4px, -0.5px); }
+}
+
+@keyframes ledBlinkLive {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.animate-wash-tumble {
+  animation: washTumbleCycle 9s cubic-bezier(0.42, 0, 0.58, 1) infinite;
+  transform-origin: center;
+}
+
+.animate-water-slosh {
+  animation: washWaterWave 3s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.animate-soap-bubble-1 {
+  animation: soapBubbleFloat 4s ease-in-out infinite;
+}
+
+.animate-soap-bubble-2 {
+  animation: soapBubbleFloat 5s ease-in-out infinite 1.5s;
+}
+
+.animate-soap-bubble-3 {
+  animation: soapBubbleFloat 3.8s ease-in-out infinite 0.8s;
+}
+
+.animate-bubble-drift-1 {
+  animation: bubbleDrift 4.5s ease-out infinite;
+}
+
+.animate-bubble-drift-2 {
+  animation: bubbleDrift 6s ease-out infinite 2s;
+}
+
+.animate-machine-hum {
+  animation: machineHum 0.4s linear infinite;
+}
+
+.animate-led-live {
+  animation: ledBlinkLive 1.4s ease-in-out infinite;
+}
+
+/* ============================================================
    Reduced motion — global (DESIGN.md Section 8 requirement)
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
