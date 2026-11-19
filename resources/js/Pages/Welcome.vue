@@ -711,7 +711,7 @@ onBeforeUnmount(() => {
                 >
                     <div class="landing-reveal min-w-0 lg:col-span-5">
                         <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-600">
-                            01 / Kenapa Andik
+                            01 / Kenapa Andik Laundry
                         </p>
                         <h2
                             class="mt-4 text-balance font-heading text-3xl font-extrabold uppercase leading-tight tracking-tight text-navy-950 sm:text-4xl"
