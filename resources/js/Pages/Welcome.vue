@@ -829,142 +829,122 @@ onBeforeUnmount(() => {
                     <div id="tarif" class="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-12">
                         <div class="landing-reveal min-w-0 lg:col-span-5">
                             <article
-                                class="flex h-full flex-col gap-2 sm:gap-0 sm:rounded-[24px] sm:bg-white sm:p-8 sm:ring-1 sm:ring-accent-500/50"
+                                class="flex h-full flex-col rounded-[24px] bg-white p-6 text-navy-950 shadow-[0_12px_32px_rgba(8,16,80,0.12)] ring-1 ring-accent-500/50 sm:p-8"
                             >
-                                <div
-                                    class="rounded-[20px] bg-accent-500 p-4 text-navy-950 shadow-[0_12px_30px_rgba(8,16,80,0.18)] sm:rounded-none sm:bg-transparent sm:p-0 sm:shadow-none"
-                                >
-                                    <div class="flex items-start justify-between gap-3">
-                                        <p
-                                            class="text-[11px] font-bold uppercase tracking-[0.16em] text-navy-900/70 sm:text-accent-600"
-                                        >
-                                            {{ featuredService.label }}
-                                        </p>
-                                        <span
-                                            class="inline-flex shrink-0 items-center gap-1 rounded-pill bg-navy-950 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.08em] text-white"
-                                        >
-                                            <Flame
-                                                class="h-3.5 w-3.5 text-warning sm:fill-warning/20"
-                                                aria-hidden="true"
-                                            />
-                                            Best seller
-                                        </span>
-                                    </div>
-                                    <h3
-                                        class="mt-2 font-heading text-xl font-extrabold sm:mt-3 sm:text-2xl"
-                                    >
-                                        {{ featuredService.name }}
-                                    </h3>
-                                    <div class="mt-1 flex items-baseline gap-1 sm:mt-2">
-                                        <span class="font-heading text-3xl font-extrabold">
-                                            {{ featuredService.price }}
-                                        </span>
-                                        <span
-                                            class="text-sm font-semibold text-navy-900/60 sm:text-slate-500"
-                                        >
-                                            / {{ featuredService.unit }}
-                                        </span>
-                                    </div>
+                                <div class="flex items-start justify-between gap-3">
                                     <p
-                                        class="mt-0.5 text-xs font-semibold text-navy-900/60 sm:mt-1 sm:text-slate-500"
+                                        class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-600"
                                     >
-                                        {{ featuredService.minWeight }}
+                                        {{ featuredService.label }}
                                     </p>
+                                    <span
+                                        class="inline-flex shrink-0 items-center gap-1 rounded-pill bg-navy-950 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.08em] text-white"
+                                    >
+                                        <Flame
+                                            class="h-3.5 w-3.5 fill-warning text-warning"
+                                            aria-hidden="true"
+                                        />
+                                        Best seller
+                                    </span>
                                 </div>
-                                <div
-                                    class="flex flex-1 flex-col rounded-[20px] bg-white p-4 text-navy-950 shadow-[0_12px_30px_rgba(8,16,80,0.12)] sm:rounded-none sm:bg-transparent sm:p-0 sm:shadow-none"
+                                <h3
+                                    class="mt-2 font-heading text-xl font-extrabold sm:mt-3 sm:text-2xl"
                                 >
-                                    <p
-                                        class="mt-1 text-[13px] leading-relaxed text-slate-700 sm:mt-4 sm:text-sm"
+                                    {{ featuredService.name }}
+                                </h3>
+                                <div class="mt-1 flex items-baseline gap-1 sm:mt-2">
+                                    <span class="font-heading text-3xl font-extrabold">
+                                        {{ featuredService.price }}
+                                    </span>
+                                    <span class="text-sm font-semibold text-slate-500">
+                                        / {{ featuredService.unit }}
+                                    </span>
+                                </div>
+                                <p class="mt-0.5 text-xs font-semibold text-slate-500 sm:mt-1">
+                                    {{ featuredService.minWeight }}
+                                </p>
+                                <p
+                                    class="mt-4 text-[13px] leading-relaxed text-slate-700 sm:text-sm"
+                                >
+                                    {{ featuredService.desc }}
+                                </p>
+                                <ul
+                                    class="mt-4 space-y-2 text-[13px] text-slate-700 sm:mt-5 sm:text-sm"
+                                >
+                                    <li
+                                        v-for="feature in featuredService.features"
+                                        :key="feature"
+                                        class="flex items-start gap-2"
                                     >
-                                        {{ featuredService.desc }}
-                                    </p>
-                                    <ul
-                                        class="mt-3 space-y-1.5 text-[13px] text-slate-700 sm:mt-5 sm:space-y-2 sm:text-sm"
+                                        <Check
+                                            class="mt-0.5 h-4 w-4 shrink-0 text-success"
+                                            aria-hidden="true"
+                                        />
+                                        <span>{{ feature }}</span>
+                                    </li>
+                                </ul>
+                                <div class="mt-auto pt-5 sm:pt-6">
+                                    <a
+                                        :href="getServiceWhatsappUrl(featuredService.name)"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-pill bg-accent-500 px-5 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-600 focus-visible:outline-none sm:min-h-[48px]"
                                     >
-                                        <li
-                                            v-for="feature in featuredService.features"
-                                            :key="feature"
-                                            class="flex items-start gap-2"
-                                        >
-                                            <Check
-                                                class="mt-0.5 h-4 w-4 shrink-0 text-success"
-                                                aria-hidden="true"
-                                            />
-                                            <span>{{ feature }}</span>
-                                        </li>
-                                    </ul>
-                                    <div class="mt-auto pt-4 sm:pt-6">
-                                        <a
-                                            :href="getServiceWhatsappUrl(featuredService.name)"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            class="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-pill bg-accent-500 px-5 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-600 focus-visible:outline-none sm:min-h-[48px]"
-                                        >
-                                            <MessageCircle class="h-4 w-4" aria-hidden="true" />
-                                            Pesan {{ featuredService.name }}
-                                        </a>
-                                    </div>
+                                        <MessageCircle class="h-4 w-4" aria-hidden="true" />
+                                        Pesan {{ featuredService.name }}
+                                    </a>
                                 </div>
                             </article>
                         </div>
 
                         <div class="min-w-0 lg:col-span-7">
-                            <div class="grid gap-3">
+                            <div class="grid gap-3 sm:gap-4">
                                 <article
                                     v-for="(service, index) in otherServices"
                                     :key="service.id"
-                                    class="landing-reveal flex flex-col gap-2 sm:gap-0 sm:rounded-[20px] sm:bg-white sm:p-5 sm:text-navy-950 sm:shadow-[0_10px_30px_rgba(8,16,80,0.12)]"
+                                    class="landing-reveal flex flex-col rounded-[20px] bg-white p-5 text-navy-950 shadow-[0_10px_28px_rgba(8,16,80,0.12)] sm:p-6"
                                     :style="{ transitionDelay: `${index * 70}ms` }"
                                 >
-                                    <div
-                                        class="rounded-[16px] bg-white p-3.5 text-navy-950 shadow-[0_8px_22px_rgba(8,16,80,0.12)] sm:rounded-none sm:bg-transparent sm:p-0 sm:shadow-none"
-                                    >
-                                        <div class="flex items-start justify-between gap-4">
-                                            <div class="min-w-0">
-                                                <h3
-                                                    class="font-heading text-base font-bold sm:text-lg"
-                                                >
-                                                    {{ service.name }}
-                                                </h3>
-                                                <p
-                                                    class="mt-0.5 text-[11px] font-semibold text-slate-500"
-                                                >
-                                                    {{ service.minWeight }}
-                                                </p>
+                                    <div class="flex items-start justify-between gap-4">
+                                        <div class="min-w-0">
+                                            <h3
+                                                class="font-heading text-base font-bold sm:text-lg"
+                                            >
+                                                {{ service.name }}
+                                            </h3>
+                                            <p
+                                                class="mt-0.5 text-[11px] font-semibold text-slate-500"
+                                            >
+                                                {{ service.minWeight }}
+                                            </p>
+                                        </div>
+                                        <div class="shrink-0 text-right">
+                                            <div class="font-heading text-xl font-extrabold">
+                                                {{ service.price }}
                                             </div>
-                                            <div class="shrink-0 text-right">
-                                                <div class="font-heading text-xl font-extrabold">
-                                                    {{ service.price }}
-                                                </div>
-                                                <div
-                                                    class="text-[11px] font-semibold text-slate-500"
-                                                >
-                                                    / {{ service.unit }}
-                                                </div>
+                                            <div
+                                                class="text-[11px] font-semibold text-slate-500"
+                                            >
+                                                / {{ service.unit }}
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div
-                                        class="rounded-[16px] bg-white p-3.5 text-navy-950 shadow-[0_8px_22px_rgba(8,16,80,0.12)] sm:rounded-none sm:bg-transparent sm:p-0 sm:shadow-none"
+                                    <p
+                                        class="mt-3 text-[13px] leading-relaxed text-slate-600 sm:text-sm"
                                     >
-                                        <p
-                                            class="text-[13px] leading-relaxed text-slate-600 sm:text-sm"
-                                        >
-                                            {{ service.desc }}
-                                        </p>
+                                        {{ service.desc }}
+                                    </p>
 
-                                        <a
-                                            :href="getServiceWhatsappUrl(service.name)"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            class="mt-3 inline-flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-pill bg-accent-500 px-5 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-600 focus-visible:outline-none sm:mt-4"
-                                        >
-                                            <MessageCircle class="h-4 w-4" aria-hidden="true" />
-                                            Pesan
-                                        </a>
-                                    </div>
+                                    <a
+                                        :href="getServiceWhatsappUrl(service.name)"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="mt-4 inline-flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-pill bg-accent-500 px-5 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-600 focus-visible:outline-none"
+                                    >
+                                        <MessageCircle class="h-4 w-4" aria-hidden="true" />
+                                        Pesan
+                                    </a>
                                 </article>
                             </div>
 
