@@ -1,3 +1,34 @@
+<script setup lang="ts">
+import { onBeforeUnmount, onMounted, ref } from 'vue';
+
+const wibClock = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Asia/Jakarta',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+});
+
+const wibTime = ref('--:--:--');
+
+let clockTimer: number | undefined;
+
+function tickWibClock(): void {
+    wibTime.value = wibClock.format(new Date());
+}
+
+onMounted(() => {
+    tickWibClock();
+    clockTimer = window.setInterval(tickWibClock, 1000);
+});
+
+onBeforeUnmount(() => {
+    if (clockTimer !== undefined) {
+        window.clearInterval(clockTimer);
+    }
+});
+</script>
+
 <template>
     <svg
         viewBox="0 0 520 520"
@@ -29,9 +60,7 @@
 
         <!-- Control display -->
         <rect x="112" y="84" width="132" height="48" rx="10" class="wm-glass" />
-        <text x="126" y="117" class="wm-display">01:1</text>
-        <text x="198" y="103" class="wm-display-label">MODE</text>
-        <text x="198" y="117" class="wm-display-sub">TIDAK DICAMPUR</text>
+        <text x="178" y="117" text-anchor="middle" class="wm-display">{{ wibTime }}</text>
 
         <!-- Wordmark on the machine -->
         <text x="262" y="106" class="wm-logo">
@@ -195,24 +224,8 @@
 .wm-display {
     fill: var(--color-accent-500);
     font-family: var(--font-mono);
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 700;
-}
-
-.wm-display-label {
-    fill: var(--color-text-on-dark-muted);
-    font-family: var(--font-body);
-    font-size: 8px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-}
-
-.wm-display-sub {
-    fill: var(--color-accent-500);
-    font-family: var(--font-body);
-    font-size: 6.5px;
-    font-weight: 700;
-    letter-spacing: 0.04em;
 }
 
 .wm-logo {
