@@ -567,69 +567,79 @@ onBeforeUnmount(() => {
                 <div
                     class="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-4 sm:px-6 lg:grid-cols-12 lg:gap-10 lg:px-8"
                 >
-                    <div class="min-w-0 lg:col-span-6">
-                        <p
-                            class="landing-enter text-[11px] font-bold uppercase tracking-[0.16em] text-accent-600"
-                            style="--enter-delay: 0ms"
-                        >
-                            Sejak 2009 · Hendrosari, Gresik
-                        </p>
-
-                        <h1
-                            class="landing-enter mt-4 font-heading text-[1.95rem] font-extrabold uppercase leading-[1.02] tracking-tight text-navy-950 sm:text-5xl sm:leading-[0.98] lg:text-[3.6rem]"
+                    <div class="min-w-0 lg:col-span-7">
+                        <div
+                            class="landing-enter relative overflow-hidden rounded-[28px] bg-navy-950 p-6 text-white shadow-[0_20px_50px_rgba(8,16,80,0.24)] ring-1 ring-white/10 sm:p-8 lg:p-10"
                             style="--enter-delay: 80ms"
                         >
-                            Cucian Kotor,<br />
-                            <span class="text-accent-600">Pulang Kinclong.</span>
-                        </h1>
+                            <div
+                                class="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-accent-500/15 blur-3xl"
+                                aria-hidden="true"
+                            ></div>
+                            <div
+                                class="pointer-events-none absolute -bottom-20 -left-20 h-56 w-56 rounded-full bg-primary-600/20 blur-3xl"
+                                aria-hidden="true"
+                            ></div>
 
-                        <p
-                            class="landing-enter mt-6 max-w-xl text-base leading-relaxed text-slate-700 sm:text-lg"
-                            style="--enter-delay: 160ms"
-                        >
-                            Tinggal chat WhatsApp atau mampir ke outlet, tumpukan baju kotor
-                            langsung beres. Di Andik Laundry, hasilnya pasti bersih, wangi, dan
-                            rapi. Timbangan bisa dicek sendiri, nota langsung dikirim ke WhatsApp,
-                            plus gratis antar-jemput maksimal 3 km di sekitar Hendrosari.
-                        </p>
+                            <div class="relative">
+                                <div
+                                    class="inline-flex items-center gap-2 rounded-pill bg-white/10 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-accent-400 backdrop-blur-xs ring-1 ring-white/15"
+                                >
+                                    <span class="h-1.5 w-1.5 rounded-full bg-accent-400"></span>
+                                    Sejak 2009 · Hendrosari, Gresik
+                                </div>
 
-                        <div
-                            class="landing-enter mt-8 flex flex-col gap-3 sm:flex-row"
-                            style="--enter-delay: 240ms"
-                        >
-                            <a
-                                :href="whatsappUrl"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                class="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-pill bg-accent-500 px-6 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-600 focus-visible:outline-none"
-                            >
-                                <MessageCircle class="h-4 w-4" aria-hidden="true" />
-                                Pesan antar jemput
-                            </a>
-                            <a
-                                href="#tarif"
-                                class="inline-flex min-h-[48px] items-center justify-center rounded-pill border border-navy-900/20 px-6 text-sm font-bold text-navy-950 transition-colors hover:bg-white focus-visible:outline-none"
-                            >
-                                Lihat tarif
-                            </a>
-                        </div>
+                                <h1
+                                    class="mt-4 font-heading text-[1.95rem] font-extrabold uppercase leading-[1.04] tracking-tight text-white sm:text-4xl lg:text-[3.2rem]"
+                                >
+                                    Cucian Kotor,<br />
+                                    <span class="text-accent-400">Pulang Kinclong.</span>
+                                </h1>
 
-                        <div
-                            class="landing-enter mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs font-medium text-slate-600"
-                            style="--enter-delay: 320ms"
-                        >
-                            <span class="inline-flex items-center gap-2">
-                                <Clock class="h-4 w-4 text-accent-600" aria-hidden="true" />
-                                Buka setiap hari, 07.00–20.00 WIB
-                            </span>
-                            <span class="inline-flex items-center gap-2">
-                                <Truck class="h-4 w-4 text-accent-600" aria-hidden="true" />
-                                Antar jemput gratis maksimal 3 km
-                            </span>
+                                <p
+                                    class="mt-5 text-sm leading-relaxed text-slate-300 sm:text-base"
+                                >
+                                    Tinggal chat WhatsApp atau mampir ke outlet, tumpukan baju kotor
+                                    langsung beres. Di Andik Laundry, hasilnya pasti bersih, wangi, dan
+                                    rapi. Timbangan bisa dicek sendiri, nota langsung dikirim ke WhatsApp,
+                                    plus gratis antar-jemput maksimal 3 km di sekitar Hendrosari.
+                                </p>
+
+                                <div class="mt-7 flex flex-col gap-3 sm:flex-row">
+                                    <a
+                                        :href="whatsappUrl"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-pill bg-accent-500 px-6 text-sm font-bold text-navy-950 shadow-md shadow-accent-500/20 transition-colors hover:bg-accent-600 focus-visible:outline-none"
+                                    >
+                                        <MessageCircle class="h-4 w-4" aria-hidden="true" />
+                                        Pesan antar jemput
+                                    </a>
+                                    <a
+                                        href="#tarif"
+                                        class="inline-flex min-h-[48px] items-center justify-center rounded-pill border border-white/20 bg-white/5 px-6 text-sm font-bold text-white transition-colors hover:border-white/30 hover:bg-white/10 focus-visible:outline-none"
+                                    >
+                                        Lihat tarif
+                                    </a>
+                                </div>
+
+                                <div
+                                    class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-white/10 pt-5 text-xs font-medium text-slate-300"
+                                >
+                                    <span class="inline-flex items-center gap-2">
+                                        <Clock class="h-4 w-4 text-accent-400" aria-hidden="true" />
+                                        Buka setiap hari, 07.00–20.00 WIB
+                                    </span>
+                                    <span class="inline-flex items-center gap-2">
+                                        <Truck class="h-4 w-4 text-accent-400" aria-hidden="true" />
+                                        Antar jemput gratis maksimal 3 km
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="min-w-0 lg:col-span-6">
+                    <div class="min-w-0 lg:col-span-5">
                         <div class="landing-enter mx-auto max-w-[440px]" style="--enter-delay: 140ms">
                             <WashingMachineIllustration />
                             <div
