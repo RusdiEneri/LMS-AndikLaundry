@@ -101,30 +101,29 @@ onBeforeUnmount(() => {
                 </g>
             </g>
 
-            <!-- Water pools at the bottom, then sloshes with the drum -->
+            <!-- Water fills the lower half, then sloshes with the drum -->
             <g class="drum-water">
                 <path
-                    d="M168 352 Q 214 338 260 352 T 352 352 L 352 392 L 168 392 Z"
+                    d="M160 312 Q 194 298 228 312 T 296 312 T 364 312 L 364 392 L 160 392 Z"
                     class="wm-water"
-                    opacity="0.55"
                 />
-                <path d="M168 352 Q 214 338 260 352 T 352 352" class="wm-water-line" />
+                <path d="M160 312 Q 194 298 228 312 T 296 312 T 364 312" class="wm-water-line" />
             </g>
 
             <!-- Suds drift on the moving surface -->
             <g class="drum-suds">
-                <circle cx="196" cy="368" r="9" class="wm-suds" />
-                <circle cx="218" cy="356" r="12" class="wm-suds" />
-                <circle cx="244" cy="372" r="8" class="wm-suds" />
-                <circle cx="306" cy="360" r="11" class="wm-suds" />
-                <circle cx="330" cy="374" r="7" class="wm-suds" />
+                <circle cx="196" cy="318" r="9" class="wm-suds" />
+                <circle cx="224" cy="306" r="12" class="wm-suds" />
+                <circle cx="252" cy="326" r="8" class="wm-suds" />
+                <circle cx="304" cy="312" r="11" class="wm-suds" />
+                <circle cx="332" cy="328" r="7" class="wm-suds" />
             </g>
 
-            <!-- Bubbles surface and fade -->
+            <!-- Bubbles rise from the water and fade at the surface -->
             <g class="drum-bubbles">
-                <circle cx="228" cy="368" r="2.5" class="wm-bubble" />
-                <circle cx="282" cy="374" r="2" class="wm-bubble" />
-                <circle cx="316" cy="366" r="2.8" class="wm-bubble" />
+                <circle cx="228" cy="372" r="2.5" class="wm-bubble" />
+                <circle cx="282" cy="378" r="2" class="wm-bubble" />
+                <circle cx="316" cy="368" r="2.8" class="wm-bubble" />
             </g>
 
             <!-- Glass reflection -->
@@ -188,7 +187,8 @@ onBeforeUnmount(() => {
 }
 
 .wm-water {
-    fill: var(--color-primary-600);
+    fill: var(--color-primary-500);
+    opacity: 0.65;
 }
 
 .wm-water-line {
@@ -249,16 +249,16 @@ onBeforeUnmount(() => {
 @keyframes water-slosh {
     0%,
     100% {
-        transform: translateY(0) rotate(0deg);
+        transform: translate(0, 0) rotate(0deg);
     }
     25% {
-        transform: translateY(-1.5px) rotate(-2deg);
+        transform: translate(-2px, -1.5px) rotate(-1.5deg);
     }
     50% {
-        transform: translateY(1.5px) rotate(0deg);
+        transform: translate(0, 1.5px) rotate(0deg);
     }
     75% {
-        transform: translateY(-1.5px) rotate(2deg);
+        transform: translate(2px, -1.5px) rotate(1.5deg);
     }
 }
 
@@ -274,17 +274,17 @@ onBeforeUnmount(() => {
 
 @keyframes bubble-rise {
     0% {
-        transform: translateY(4px) scale(0.7);
+        transform: translateY(6px) scale(0.7);
         opacity: 0;
     }
     15% {
         opacity: 0.8;
     }
-    85% {
-        opacity: 0.6;
+    80% {
+        opacity: 0.55;
     }
     100% {
-        transform: translateY(-16px) scale(1.1);
+        transform: translateY(-46px) scale(1.15);
         opacity: 0;
     }
 }

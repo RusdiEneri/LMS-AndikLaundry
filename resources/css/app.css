@@ -220,7 +220,7 @@
    Hero drum: clothes tumble continuously
    ============================================================ */
 .drum-scroll {
-  animation: drum-spin 14s linear infinite;
+  animation: drum-spin 10s linear infinite;
   transform-box: view-box;
   transform-origin: 260px 300px;
   will-change: transform;
