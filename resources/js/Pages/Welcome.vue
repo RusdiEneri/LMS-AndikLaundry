@@ -6,6 +6,7 @@ import {
     ChevronDown,
     Clock,
     ExternalLink,
+    Flame,
     MapPin,
     Menu,
     MessageCircle,
@@ -120,8 +121,8 @@ const services = [
         featured: true,
         desc: 'Paket all-in-one: dicuci higienis, dikeringkan mesin, disetrika uap, lalu dikemas wangi dan terlindung debu.',
         features: [
-            '1 mesin 1 pelanggan, tidak dicampur',
-            'Setrika uap boiler, tidak mudah gosong',
+            'Dicuci, dikeringkan, lalu disetrika uap',
+            'Setrika uap, tidak mudah gosong',
             'Pewangi premium yang tahan lama',
             'Kemasan plastik rapi dan kedap debu',
         ],
@@ -163,9 +164,9 @@ const otherServices = computed(() => services.filter((service) => !service.featu
    ------------------------------------------------------------------ */
 const processSteps = [
     { label: 'Diterima', desc: 'Cucian ditimbang, nota dibuat, dan nomornya dikirim ke WhatsApp.' },
-    { label: 'Dicuci', desc: 'Satu mesin hanya untuk satu nota pelanggan.' },
+    { label: 'Dicuci', desc: 'Deterjen ramah serat dan pembilasan menyeluruh membuat kain bersih.' },
     { label: 'Dikeringkan', desc: 'Mesin pengering dengan suhu terkontrol agar kain tidak kusut.' },
-    { label: 'Disetrika', desc: 'Setrika uap boiler membuat serat kain licin dan rapi.' },
+    { label: 'Disetrika', desc: 'Setrika uap membuat serat kain licin dan rapi.' },
     { label: 'Siap diambil', desc: 'Dikemas, lalu diambil di outlet atau diantar ke rumah.' },
 ];
 
@@ -175,11 +176,11 @@ const processSteps = [
 const faqs = [
     {
         q: 'Berapa minimal berat cucian kiloan?',
-        a: 'Batas minimal layanan kiloan adalah 2 kg. Kalau hasil timbangan kurang dari 2 kg, biaya dihitung setara 2 kg supaya standar satu mesin satu pelanggan tetap terjaga.',
+        a: 'Batas minimal layanan kiloan adalah 2 kg. Kalau hasil timbangan kurang dari 2 kg, biaya dihitung setara 2 kg.',
     },
     {
-        q: 'Apakah pakaian saya dicampur dengan pelanggan lain?',
-        a: 'Tidak. Sejak 2009, satu mesin hanya dipakai untuk satu pelanggan pada setiap proses pencucian. Pakaian Anda tidak tercampur dan tidak berisiko tertukar.',
+        q: 'Apakah pakaian saya aman dan tidak tertukar?',
+        a: 'Setiap nota diberi label dan dicatat secara digital. Pakaian disortir, diproses, lalu dikemas kembali sesuai nota Anda.',
     },
     {
         q: 'Berapa lama waktu pengerjaan?',
@@ -187,7 +188,7 @@ const faqs = [
     },
     {
         q: 'Apakah ada antar jemput?',
-        a: 'Ada. Antar jemput gratis untuk cucian maksimal 3 kg di area Hendrosari dan Menganti. Hubungi admin lewat WhatsApp untuk mengatur penjemputan.',
+        a: 'Ada. Antar jemput gratis untuk jarak maksimal 3 km di area Hendrosari dan Menganti. Hubungi admin lewat WhatsApp untuk mengatur penjemputan.',
     },
     {
         q: 'Bagaimana cara melacak cucian?',
@@ -409,10 +410,10 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <Head title="Andik Laundry | Cucian bersih tanpa dicampur, sejak 2009">
+    <Head title="Andik Laundry | Cucian kotor, pulang kinclong">
         <meta
             name="description"
-            content="Layanan cuci kiloan dan cuci karpet di Hendrosari, Menganti, Gresik. Satu mesin untuk satu pelanggan, nota digital WhatsApp, pelacakan status, dan antar jemput gratis sampai 3 kg."
+            content="Layanan cuci kiloan dan cuci karpet di Hendrosari, Menganti, Gresik. Hasil bersih, wangi, dan rapi, nota digital WhatsApp, pelacakan status, serta antar jemput gratis hingga 3 km."
         />
     </Head>
 
@@ -445,7 +446,7 @@ onBeforeUnmount(() => {
                         andik<span class="text-accent-600">.</span>
                     </span>
                     <span
-                        class="hidden text-[10px] font-bold uppercase tracking-[0.22em] text-primary-700 sm:inline"
+                        class="hidden text-[10px] font-bold uppercase tracking-[0.22em] text-accent-600 sm:inline"
                     >
                         Laundry
                     </span>
@@ -456,44 +457,34 @@ onBeforeUnmount(() => {
                         v-for="link in navLinks"
                         :key="link.href"
                         :href="link.href"
-                        class="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:text-primary-700 focus-visible:outline-none"
+                        class="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:text-accent-600 focus-visible:outline-none"
                     >
                         {{ link.label }}
                     </a>
                 </nav>
 
-                <div class="hidden items-center gap-2 sm:flex">
+                <div class="ml-auto flex items-center gap-2">
                     <Link
                         v-if="canLogin"
                         href="/login"
-                        class="rounded-pill px-3 py-2 text-sm font-semibold text-navy-900 transition-colors hover:bg-primary-100 hover:text-primary-700 focus-visible:outline-none"
+                        class="inline-flex min-h-[44px] items-center justify-center rounded-pill bg-accent-500 px-4 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-600 focus-visible:outline-none sm:px-5"
                     >
                         Masuk
                     </Link>
-                    <a
-                        :href="whatsappUrl"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="inline-flex min-h-[44px] items-center gap-2 rounded-pill bg-accent-500 px-4 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-600 focus-visible:outline-none"
-                    >
-                        <MessageCircle class="h-4 w-4" aria-hidden="true" />
-                        <span class="hidden md:inline">Pesan antar jemput</span>
-                        <span class="md:hidden">Pesan</span>
-                    </a>
-                </div>
 
-                <button
-                    ref="menuButtonRef"
-                    type="button"
-                    class="inline-flex h-11 w-11 items-center justify-center rounded-full text-navy-950 transition-colors hover:bg-primary-100 focus-visible:outline-none lg:hidden"
-                    :aria-expanded="menuOpen"
-                    aria-controls="mobile-menu"
-                    :aria-label="menuOpen ? 'Tutup menu' : 'Buka menu'"
-                    @click="menuOpen = !menuOpen"
-                >
-                    <X v-if="menuOpen" class="h-6 w-6" aria-hidden="true" />
-                    <Menu v-else class="h-6 w-6" aria-hidden="true" />
-                </button>
+                    <button
+                        ref="menuButtonRef"
+                        type="button"
+                        class="inline-flex h-11 w-11 items-center justify-center rounded-full text-navy-950 transition-colors hover:bg-accent-100 focus-visible:outline-none lg:hidden"
+                        :aria-expanded="menuOpen"
+                        aria-controls="mobile-menu"
+                        :aria-label="menuOpen ? 'Tutup menu' : 'Buka menu'"
+                        @click="menuOpen = !menuOpen"
+                    >
+                        <X v-if="menuOpen" class="h-6 w-6" aria-hidden="true" />
+                        <Menu v-else class="h-6 w-6" aria-hidden="true" />
+                    </button>
+                </div>
             </div>
         </header>
 
@@ -538,31 +529,20 @@ onBeforeUnmount(() => {
                             v-for="link in navLinks"
                             :key="link.href"
                             :href="link.href"
-                            class="flex min-h-[48px] items-center rounded-xl px-4 text-base font-semibold transition-colors hover:bg-primary-100 hover:text-primary-700"
+                            class="flex min-h-[48px] items-center rounded-xl px-4 text-base font-semibold transition-colors hover:bg-accent-100 hover:text-accent-600"
                             @click="menuOpen = false"
                         >
                             {{ link.label }}
                         </a>
                     </nav>
 
-                    <div class="mt-2 space-y-2 border-t border-border pt-3">
-                        <a
-                            :href="whatsappUrl"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="flex min-h-[48px] items-center justify-center gap-2 rounded-pill bg-accent-500 px-4 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-600"
-                            @click="menuOpen = false"
-                        >
-                            <MessageCircle class="h-4 w-4" aria-hidden="true" />
-                            Pesan antar jemput
-                        </a>
+                    <div v-if="canLogin" class="mt-2 border-t border-border pt-3">
                         <Link
-                            v-if="canLogin"
                             href="/login"
-                            class="flex min-h-[48px] items-center justify-center rounded-pill border border-border px-4 text-sm font-bold text-navy-900 transition-colors hover:bg-primary-100 hover:text-primary-700"
+                            class="flex min-h-[48px] items-center justify-center rounded-pill bg-accent-500 px-4 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-600"
                             @click="menuOpen = false"
                         >
-                            Masuk dashboard staf
+                            Masuk
                         </Link>
                     </div>
                 </div>
@@ -576,25 +556,11 @@ onBeforeUnmount(() => {
                 class="relative overflow-hidden bg-bg pb-16 pt-28 sm:pb-20 sm:pt-32 lg:pb-24 lg:pt-36"
             >
                 <div class="pointer-events-none absolute inset-0" aria-hidden="true">
-                    <svg
-                        class="absolute inset-x-0 top-24 h-[440px] w-full opacity-70"
-                        viewBox="0 0 1440 440"
-                        fill="none"
-                        preserveAspectRatio="none"
-                    >
-                        <path
-                            d="M-20 320 C 280 232, 520 342, 820 252 S 1260 142, 1460 212"
-                            stroke="#C9D8E6"
-                            stroke-width="1.5"
-                            stroke-dasharray="9 13"
-                            stroke-linecap="round"
-                        />
-                    </svg>
                     <div
                         class="absolute -right-40 top-20 hidden h-[560px] w-[560px] rounded-full border border-border/80 lg:block"
                     ></div>
                     <div
-                        class="absolute -right-24 top-36 hidden h-[400px] w-[400px] rounded-full border border-dashed border-primary-100 lg:block"
+                        class="absolute -right-24 top-36 hidden h-[400px] w-[400px] rounded-full border border-accent-100 lg:block"
                     ></div>
                 </div>
 
@@ -603,27 +569,28 @@ onBeforeUnmount(() => {
                 >
                     <div class="min-w-0 lg:col-span-6">
                         <p
-                            class="landing-enter text-[11px] font-bold uppercase tracking-[0.16em] text-primary-700"
+                            class="landing-enter text-[11px] font-bold uppercase tracking-[0.16em] text-accent-600"
                             style="--enter-delay: 0ms"
                         >
                             Sejak 2009 · Hendrosari, Menganti, Gresik
                         </p>
 
                         <h1
-                            class="landing-enter mt-4 text-balance font-heading text-[2.75rem] font-extrabold uppercase leading-[0.98] tracking-tight text-navy-950 sm:text-6xl lg:text-[4.25rem]"
+                            class="landing-enter mt-4 font-heading text-[1.95rem] font-extrabold uppercase leading-[1.02] tracking-tight text-navy-950 sm:text-5xl sm:leading-[0.98] lg:text-[3.6rem]"
                             style="--enter-delay: 80ms"
                         >
-                            Cucian bersih,<br />
-                            <span class="text-accent-700">tanpa dicampur.</span>
+                            Cucian Kotor,<br />
+                            <span class="text-accent-600">Pulang Kinclong.</span>
                         </h1>
 
                         <p
                             class="landing-enter mt-6 max-w-xl text-base leading-relaxed text-slate-700 sm:text-lg"
                             style="--enter-delay: 160ms"
                         >
-                            Satu mesin hanya untuk satu pelanggan. Timbangan bisa dicek sendiri,
-                            nota dikirim lewat WhatsApp, dan antar jemput gratis untuk cucian
-                            sampai 3 kg di sekitar Hendrosari.
+                            Tinggal chat WhatsApp atau mampir ke outlet, tumpukan baju kotor
+                            langsung beres. Di Andik Laundry, hasilnya pasti bersih, wangi, dan
+                            rapi. Timbangan bisa dicek sendiri, nota langsung dikirim ke WhatsApp,
+                            plus gratis antar-jemput maksimal 3 km di sekitar Hendrosari.
                         </p>
 
                         <div
@@ -652,12 +619,12 @@ onBeforeUnmount(() => {
                             style="--enter-delay: 320ms"
                         >
                             <span class="inline-flex items-center gap-2">
-                                <Clock class="h-4 w-4 text-primary-700" aria-hidden="true" />
+                                <Clock class="h-4 w-4 text-accent-600" aria-hidden="true" />
                                 Buka setiap hari, 07.00–20.00 WIB
                             </span>
                             <span class="inline-flex items-center gap-2">
-                                <Truck class="h-4 w-4 text-primary-700" aria-hidden="true" />
-                                Antar jemput gratis maksimal 3 kg
+                                <Truck class="h-4 w-4 text-accent-600" aria-hidden="true" />
+                                Antar jemput gratis maksimal 3 km
                             </span>
                         </div>
                     </div>
@@ -666,10 +633,10 @@ onBeforeUnmount(() => {
                         <div class="landing-enter mx-auto max-w-[440px]" style="--enter-delay: 140ms">
                             <WashingMachineIllustration />
                             <div
-                                class="mt-4 flex items-center justify-between gap-4 border-t border-dashed border-navy-900/20 pt-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-600"
+                                class="mt-3 flex items-center justify-between gap-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-600"
                             >
                                 <span>Cuci · Kering · Setrika</span>
-                                <span class="text-primary-700">1 mesin / 1 pelanggan</span>
+                                <span class="text-accent-600">Sejak 2009</span>
                             </div>
                         </div>
                     </div>
@@ -700,7 +667,7 @@ onBeforeUnmount(() => {
                             @submit.prevent="submitOrderCheck"
                         >
                             <div class="flex min-w-0 flex-1 items-center gap-3 px-3 py-1.5">
-                                <ReceiptText class="h-5 w-5 shrink-0 text-primary-700" aria-hidden="true" />
+                                <ReceiptText class="h-5 w-5 shrink-0 text-accent-600" aria-hidden="true" />
                                 <label for="order-query" class="sr-only">
                                     Nomor nota atau nomor HP
                                 </label>
@@ -744,21 +711,22 @@ onBeforeUnmount(() => {
                     class="mx-auto grid max-w-7xl grid-cols-1 gap-12 px-4 sm:px-6 lg:grid-cols-12 lg:gap-16 lg:px-8"
                 >
                     <div class="landing-reveal min-w-0 lg:col-span-5">
-                        <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-primary-700">
+                        <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-600">
                             01 / Kenapa Andik
                         </p>
                         <h2
                             class="mt-4 text-balance font-heading text-3xl font-extrabold uppercase leading-tight tracking-tight text-navy-950 sm:text-4xl"
                         >
-                            Satu mesin untuk satu pelanggan.
+                            Bersih, wangi, rapi. Setiap kali.
                         </h2>
                         <p class="mt-5 text-sm leading-relaxed text-slate-700 sm:text-base">
-                            Sejak 2009, kami tidak mencampur cucian pelanggan. Setiap nota mendapat
-                            mesin sendiri, proses sendiri, dan status yang bisa dilacak.
+                            Sejak 2009, setiap cucian melewati urutan yang sama: dicuci dengan
+                            deterjen ramah serat, dikeringkan dengan suhu terkontrol, lalu
+                            disetrika uap. Statusnya bisa dilacak lewat nota digital.
                         </p>
                         <a
                             href="#tarif"
-                            class="mt-6 inline-block border-b-2 border-primary-600 pb-0.5 text-sm font-bold text-primary-700 transition-colors hover:border-primary-500 hover:text-primary-600 focus-visible:outline-none"
+                            class="mt-6 inline-block border-b-2 border-accent-600 pb-0.5 text-sm font-bold text-accent-600 transition-colors hover:border-accent-500 hover:text-accent-600 focus-visible:outline-none"
                         >
                             Lihat layanan dan tarif
                         </a>
@@ -769,16 +737,16 @@ onBeforeUnmount(() => {
                             <article
                                 class="landing-reveal grid gap-3 py-6 sm:grid-cols-[52px_minmax(0,1fr)] sm:gap-6"
                             >
-                                <span class="font-mono text-xs font-medium text-primary-700 sm:pt-1">
+                                <span class="font-mono text-xs font-medium text-accent-600 sm:pt-1">
                                     01
                                 </span>
                                 <div>
                                     <h3 class="font-heading text-lg font-bold text-navy-950">
-                                        Tidak dicampur
+                                        Bersih maksimal
                                     </h3>
                                     <p class="mt-1.5 text-sm leading-relaxed text-slate-700">
-                                        Pakaian Anda tidak pernah masuk mesin yang sama dengan
-                                        pelanggan lain, dari cuci sampai kering.
+                                        Deterjen ramah serat dan pembilasan menyeluruh mengangkat
+                                        kotoran tanpa merusak warna kain.
                                     </p>
                                 </div>
                             </article>
@@ -787,7 +755,7 @@ onBeforeUnmount(() => {
                                 class="landing-reveal grid gap-3 border-t border-navy-900/10 py-6 sm:grid-cols-[52px_minmax(0,1fr)] sm:gap-6"
                                 style="--reveal-delay: 70ms"
                             >
-                                <span class="font-mono text-xs font-medium text-primary-700 sm:pt-1">
+                                <span class="font-mono text-xs font-medium text-accent-600 sm:pt-1">
                                     02
                                 </span>
                                 <div>
@@ -795,8 +763,8 @@ onBeforeUnmount(() => {
                                         Disetrika uap
                                     </h3>
                                     <p class="mt-1.5 text-sm leading-relaxed text-slate-700">
-                                        Setrika uap boiler dengan suhu terkontrol membuat serat kain
-                                        licin, rapi, dan tidak mudah gosong.
+                                        Setrika uap dengan suhu terkontrol membuat serat kain licin,
+                                        rapi, dan tidak mudah gosong.
                                     </p>
                                 </div>
                             </article>
@@ -805,7 +773,7 @@ onBeforeUnmount(() => {
                                 class="landing-reveal grid gap-3 border-t border-navy-900/10 py-6 sm:grid-cols-[52px_minmax(0,1fr)] sm:gap-6"
                                 style="--reveal-delay: 140ms"
                             >
-                                <span class="font-mono text-xs font-medium text-primary-700 sm:pt-1">
+                                <span class="font-mono text-xs font-medium text-accent-600 sm:pt-1">
                                     03
                                 </span>
                                 <div>
@@ -813,7 +781,7 @@ onBeforeUnmount(() => {
                                         Antar jemput gratis
                                     </h3>
                                     <p class="mt-1.5 text-sm leading-relaxed text-slate-700">
-                                        Untuk cucian maksimal 3 kg di area Hendrosari dan Menganti.
+                                        Untuk jarak maksimal 3 km di area Hendrosari dan Menganti.
                                         Cucian diambil dan diantar kembali ke rumah.
                                     </p>
                                 </div>
@@ -838,7 +806,8 @@ onBeforeUnmount(() => {
                             <h2
                                 class="mt-4 text-balance font-heading text-3xl font-extrabold uppercase leading-tight tracking-tight text-white sm:text-4xl"
                             >
-                                Harga jelas, timbangan bisa dicek.
+                                Harganya jelas,
+                                <span class="text-accent-500">pelanggan puas.</span>
                             </h2>
                             <p class="mt-4 text-sm leading-relaxed text-slate-300 sm:text-base">
                                 Minimal 2 kg untuk layanan kiloan. Reguler selesai 2–3 hari, ekspres
@@ -860,95 +829,139 @@ onBeforeUnmount(() => {
                     <div id="tarif" class="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-12">
                         <div class="landing-reveal min-w-0 lg:col-span-5">
                             <article
-                                class="flex h-full flex-col rounded-[24px] bg-white p-6 text-navy-950 ring-1 ring-accent-500/50 sm:p-8"
+                                class="flex h-full flex-col gap-2 sm:gap-0 sm:rounded-[24px] sm:bg-white sm:p-8 sm:ring-1 sm:ring-accent-500/50"
                             >
-                                <p
-                                    class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-700"
+                                <div
+                                    class="rounded-[20px] bg-accent-500 p-4 text-navy-950 shadow-[0_12px_30px_rgba(8,16,80,0.18)] sm:rounded-none sm:bg-transparent sm:p-0 sm:shadow-none"
                                 >
-                                    {{ featuredService.label }}
-                                </p>
-                                <h3 class="mt-3 font-heading text-2xl font-extrabold">
-                                    {{ featuredService.name }}
-                                </h3>
-                                <div class="mt-2 flex items-baseline gap-1">
-                                    <span class="font-heading text-3xl font-extrabold">
-                                        {{ featuredService.price }}
-                                    </span>
-                                    <span class="text-sm font-semibold text-slate-500">
-                                        / {{ featuredService.unit }}
-                                    </span>
+                                    <div class="flex items-start justify-between gap-3">
+                                        <p
+                                            class="text-[11px] font-bold uppercase tracking-[0.16em] text-navy-900/70 sm:text-accent-600"
+                                        >
+                                            {{ featuredService.label }}
+                                        </p>
+                                        <span
+                                            class="inline-flex shrink-0 items-center gap-1 rounded-pill bg-navy-950 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.08em] text-white"
+                                        >
+                                            <Flame
+                                                class="h-3.5 w-3.5 text-warning sm:fill-warning/20"
+                                                aria-hidden="true"
+                                            />
+                                            Best seller
+                                        </span>
+                                    </div>
+                                    <h3
+                                        class="mt-2 font-heading text-xl font-extrabold sm:mt-3 sm:text-2xl"
+                                    >
+                                        {{ featuredService.name }}
+                                    </h3>
+                                    <div class="mt-1 flex items-baseline gap-1 sm:mt-2">
+                                        <span class="font-heading text-3xl font-extrabold">
+                                            {{ featuredService.price }}
+                                        </span>
+                                        <span
+                                            class="text-sm font-semibold text-navy-900/60 sm:text-slate-500"
+                                        >
+                                            / {{ featuredService.unit }}
+                                        </span>
+                                    </div>
+                                    <p
+                                        class="mt-0.5 text-xs font-semibold text-navy-900/60 sm:mt-1 sm:text-slate-500"
+                                    >
+                                        {{ featuredService.minWeight }}
+                                    </p>
                                 </div>
-                                <p class="mt-1 text-xs font-semibold text-slate-500">
-                                    {{ featuredService.minWeight }}
-                                </p>
-                                <p class="mt-4 text-sm leading-relaxed text-slate-700">
-                                    {{ featuredService.desc }}
-                                </p>
-                                <ul class="mt-5 space-y-2 text-sm text-slate-700">
-                                    <li
-                                        v-for="feature in featuredService.features"
-                                        :key="feature"
-                                        class="flex items-start gap-2"
+                                <div
+                                    class="flex flex-1 flex-col rounded-[20px] bg-white p-4 text-navy-950 shadow-[0_12px_30px_rgba(8,16,80,0.12)] sm:rounded-none sm:bg-transparent sm:p-0 sm:shadow-none"
+                                >
+                                    <p
+                                        class="mt-1 text-[13px] leading-relaxed text-slate-700 sm:mt-4 sm:text-sm"
                                     >
-                                        <Check
-                                            class="mt-0.5 h-4 w-4 shrink-0 text-success"
-                                            aria-hidden="true"
-                                        />
-                                        <span>{{ feature }}</span>
-                                    </li>
-                                </ul>
-                                <div class="mt-auto pt-6">
-                                    <a
-                                        :href="getServiceWhatsappUrl(featuredService.name)"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        class="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-pill bg-accent-500 px-5 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-600 focus-visible:outline-none"
+                                        {{ featuredService.desc }}
+                                    </p>
+                                    <ul
+                                        class="mt-3 space-y-1.5 text-[13px] text-slate-700 sm:mt-5 sm:space-y-2 sm:text-sm"
                                     >
-                                        <MessageCircle class="h-4 w-4" aria-hidden="true" />
-                                        Pesan {{ featuredService.name }}
-                                    </a>
+                                        <li
+                                            v-for="feature in featuredService.features"
+                                            :key="feature"
+                                            class="flex items-start gap-2"
+                                        >
+                                            <Check
+                                                class="mt-0.5 h-4 w-4 shrink-0 text-success"
+                                                aria-hidden="true"
+                                            />
+                                            <span>{{ feature }}</span>
+                                        </li>
+                                    </ul>
+                                    <div class="mt-auto pt-4 sm:pt-6">
+                                        <a
+                                            :href="getServiceWhatsappUrl(featuredService.name)"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            class="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-pill bg-accent-500 px-5 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-600 focus-visible:outline-none sm:min-h-[48px]"
+                                        >
+                                            <MessageCircle class="h-4 w-4" aria-hidden="true" />
+                                            Pesan {{ featuredService.name }}
+                                        </a>
+                                    </div>
                                 </div>
                             </article>
                         </div>
 
                         <div class="min-w-0 lg:col-span-7">
-                            <div class="border-y border-white/10">
+                            <div class="grid gap-3">
                                 <article
                                     v-for="(service, index) in otherServices"
                                     :key="service.id"
-                                    class="landing-reveal grid gap-4 py-6 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start"
+                                    class="landing-reveal flex flex-col gap-2 sm:gap-0 sm:rounded-[20px] sm:bg-white sm:p-5 sm:text-navy-950 sm:shadow-[0_10px_30px_rgba(8,16,80,0.12)]"
                                     :style="{ transitionDelay: `${index * 70}ms` }"
                                 >
-                                    <div>
-                                        <h3 class="font-heading text-lg font-bold text-white">
-                                            {{ service.name }}
-                                        </h3>
-                                        <p class="mt-1 text-xs font-medium text-slate-400">
-                                            {{ service.minWeight }}
-                                        </p>
-                                        <p class="mt-2 text-sm leading-relaxed text-slate-300">
-                                            {{ service.desc }}
-                                        </p>
+                                    <div
+                                        class="rounded-[16px] bg-white p-3.5 text-navy-950 shadow-[0_8px_22px_rgba(8,16,80,0.12)] sm:rounded-none sm:bg-transparent sm:p-0 sm:shadow-none"
+                                    >
+                                        <div class="flex items-start justify-between gap-4">
+                                            <div class="min-w-0">
+                                                <h3
+                                                    class="font-heading text-base font-bold sm:text-lg"
+                                                >
+                                                    {{ service.name }}
+                                                </h3>
+                                                <p
+                                                    class="mt-0.5 text-[11px] font-semibold text-slate-500"
+                                                >
+                                                    {{ service.minWeight }}
+                                                </p>
+                                            </div>
+                                            <div class="shrink-0 text-right">
+                                                <div class="font-heading text-xl font-extrabold">
+                                                    {{ service.price }}
+                                                </div>
+                                                <div
+                                                    class="text-[11px] font-semibold text-slate-500"
+                                                >
+                                                    / {{ service.unit }}
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div
-                                        class="flex items-end justify-between gap-4 sm:flex-col sm:items-end"
+                                        class="rounded-[16px] bg-white p-3.5 text-navy-950 shadow-[0_8px_22px_rgba(8,16,80,0.12)] sm:rounded-none sm:bg-transparent sm:p-0 sm:shadow-none"
                                     >
-                                        <div class="text-right">
-                                            <div class="font-heading text-xl font-extrabold text-white">
-                                                {{ service.price }}
-                                            </div>
-                                            <div class="text-xs font-semibold text-slate-400">
-                                                / {{ service.unit }}
-                                            </div>
-                                        </div>
+                                        <p
+                                            class="text-[13px] leading-relaxed text-slate-600 sm:text-sm"
+                                        >
+                                            {{ service.desc }}
+                                        </p>
+
                                         <a
                                             :href="getServiceWhatsappUrl(service.name)"
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            class="inline-flex min-h-[44px] items-center gap-1.5 text-xs font-bold text-accent-500 transition-colors hover:text-white focus-visible:outline-none"
+                                            class="mt-3 inline-flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-pill bg-accent-500 px-5 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-600 focus-visible:outline-none sm:mt-4"
                                         >
-                                            <MessageCircle class="h-3.5 w-3.5" aria-hidden="true" />
+                                            <MessageCircle class="h-4 w-4" aria-hidden="true" />
                                             Pesan
                                         </a>
                                     </div>
@@ -988,12 +1001,12 @@ onBeforeUnmount(() => {
                             <h2
                                 class="mt-4 text-balance font-heading text-3xl font-extrabold uppercase leading-tight tracking-tight text-white sm:text-4xl"
                             >
-                                Sejak 2009, satu kebiasaan: tidak mencampur cucian.
+                                Sejak 2009, satu kebiasaan: menjaga kualitas cucian.
                             </h2>
                             <p class="mt-4 text-sm leading-relaxed text-slate-300 sm:text-base">
                                 Kepercayaan tidak dibangun dari angka. Kami menjaganya dengan
-                                timbangan yang bisa dicek, proses yang tidak dicampur, dan nota
-                                yang bisa dilacak.
+                                timbangan yang bisa dicek, proses yang rapi, dan nota yang bisa
+                                dilacak.
                             </p>
 
                             <div
@@ -1049,7 +1062,7 @@ onBeforeUnmount(() => {
                                 </p>
                                 <p class="flex items-center gap-2">
                                     <Truck class="h-4 w-4 text-accent-500" aria-hidden="true" />
-                                    Antar jemput gratis maksimal 3 kg
+                                    Antar jemput gratis maksimal 3 km
                                 </p>
                             </div>
                         </div>
@@ -1062,10 +1075,10 @@ onBeforeUnmount(() => {
                             class="flex flex-col overflow-hidden rounded-[24px] border border-border bg-white text-navy-950 shadow-lg md:flex-row"
                         >
                             <div
-                                class="flex flex-col justify-center border-b border-border bg-primary-100 p-6 sm:p-8 md:w-[38%] md:border-b-0 md:border-r"
+                                class="flex flex-col justify-center border-b border-border bg-accent-100 p-6 sm:p-8 md:w-[38%] md:border-b-0 md:border-r"
                             >
                                 <div
-                                    class="flex h-12 w-12 items-center justify-center rounded-full border border-border bg-white text-accent-700"
+                                    class="flex h-12 w-12 items-center justify-center rounded-full border border-border bg-white text-accent-600"
                                 >
                                     <Shirt class="h-6 w-6" aria-hidden="true" />
                                 </div>
@@ -1076,9 +1089,10 @@ onBeforeUnmount(() => {
                                     Cuci, kering mesin, setrika uap, lalu dikemas rapi.
                                 </p>
                                 <p
-                                    class="mt-3 text-[11px] font-bold uppercase tracking-[0.12em] text-accent-700"
+                                    class="mt-3 inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-[0.12em] text-accent-600"
                                 >
-                                    1 mesin 1 pelanggan
+                                    <Flame class="h-3.5 w-3.5" aria-hidden="true" />
+                                    Paling sering dipesan
                                 </p>
                             </div>
 
@@ -1086,7 +1100,7 @@ onBeforeUnmount(() => {
                                 <div class="flex flex-wrap items-end justify-between gap-3">
                                     <div>
                                         <p
-                                            class="text-[11px] font-bold uppercase tracking-[0.16em] text-primary-700"
+                                            class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-600"
                                         >
                                             Cuci setrika
                                         </p>
@@ -1112,14 +1126,14 @@ onBeforeUnmount(() => {
                                             class="mt-0.5 h-4 w-4 shrink-0 text-success"
                                             aria-hidden="true"
                                         />
-                                        <span>1 mesin 1 pelanggan</span>
+                                        <span>Dicuci higienis dan dikeringkan mesin</span>
                                     </li>
                                     <li class="flex items-start gap-2">
                                         <Check
                                             class="mt-0.5 h-4 w-4 shrink-0 text-success"
                                             aria-hidden="true"
                                         />
-                                        <span>Setrika uap boiler</span>
+                                        <span>Setrika uap</span>
                                     </li>
                                     <li class="flex items-start gap-2">
                                         <Check
@@ -1133,7 +1147,7 @@ onBeforeUnmount(() => {
                                             class="mt-0.5 h-4 w-4 shrink-0 text-success"
                                             aria-hidden="true"
                                         />
-                                        <span>Antar jemput gratis maks. 3 kg</span>
+                                        <span>Antar jemput gratis maks. 3 km</span>
                                     </li>
                                 </ul>
 
@@ -1141,7 +1155,7 @@ onBeforeUnmount(() => {
                                     :href="getServiceWhatsappUrl('Cuci Setrika Rp 8.000/kg')"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    class="mt-6 inline-flex min-h-[44px] items-center gap-2 rounded-pill bg-navy-900 px-5 text-sm font-bold text-white transition-colors hover:bg-navy-800 focus-visible:outline-none"
+                                    class="mt-6 inline-flex min-h-[44px] items-center gap-2 rounded-pill bg-accent-500 px-5 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-600 focus-visible:outline-none"
                                 >
                                     <MessageCircle class="h-4 w-4" aria-hidden="true" />
                                     Pesan paket ini
@@ -1174,7 +1188,7 @@ onBeforeUnmount(() => {
             <section class="bg-surface py-20 sm:py-24">
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div class="landing-reveal max-w-2xl">
-                        <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-primary-700">
+                        <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-600">
                             04 / Proses
                         </p>
                         <h2
@@ -1196,7 +1210,7 @@ onBeforeUnmount(() => {
                                 :key="step.label"
                                 class="bg-bg p-5 sm:p-6"
                             >
-                                <div class="font-mono text-xs font-medium text-primary-700">
+                                <div class="font-mono text-xs font-medium text-accent-600">
                                     {{ String(index + 1).padStart(2, '0') }}
                                 </div>
                                 <h3 class="mt-3 font-heading text-base font-bold text-navy-950">
@@ -1234,7 +1248,7 @@ onBeforeUnmount(() => {
                     >
                         <div class="min-w-0 lg:col-span-5">
                             <p
-                                class="text-[11px] font-bold uppercase tracking-[0.16em] text-primary-700"
+                                class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-600"
                             >
                                 Outlet resmi
                             </p>
@@ -1245,7 +1259,7 @@ onBeforeUnmount(() => {
                             <div class="mt-5 space-y-4 text-sm">
                                 <div class="flex items-start gap-3">
                                     <MapPin
-                                        class="mt-0.5 h-5 w-5 shrink-0 text-primary-700"
+                                        class="mt-0.5 h-5 w-5 shrink-0 text-accent-600"
                                         aria-hidden="true"
                                     />
                                     <div>
@@ -1258,7 +1272,7 @@ onBeforeUnmount(() => {
 
                                 <div class="flex items-start gap-3">
                                     <Clock
-                                        class="mt-0.5 h-5 w-5 shrink-0 text-primary-700"
+                                        class="mt-0.5 h-5 w-5 shrink-0 text-accent-600"
                                         aria-hidden="true"
                                     />
                                     <div>
@@ -1271,13 +1285,13 @@ onBeforeUnmount(() => {
 
                                 <div class="flex items-start gap-3">
                                     <Truck
-                                        class="mt-0.5 h-5 w-5 shrink-0 text-primary-700"
+                                        class="mt-0.5 h-5 w-5 shrink-0 text-accent-600"
                                         aria-hidden="true"
                                     />
                                     <div>
                                         <div class="font-bold">Antar jemput</div>
                                         <p class="mt-0.5 text-slate-600">
-                                            Gratis untuk cucian maksimal 3 kg di area sekitar.
+                                            Gratis untuk jarak maksimal 3 km di area sekitar.
                                         </p>
                                     </div>
                                 </div>
@@ -1297,7 +1311,7 @@ onBeforeUnmount(() => {
                                     href="https://www.google.com/maps/place/Andik+Laundry/@-7.2392419,112.581764,21z/data=!4m12!1m5!3m4!2zN8KwMTQnMjEuMyJTIDExMsKwMzQnNTQuMyJF!8m2!3d-7.2392469!4d112.5817531!3m5!1s0x2e7800f99a230c6b:0xb287a654290078e9!8m2!3d-7.239213!4d112.5817581!16s%2Fg%2F11gdlxnlmk?hl=id-ID"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    class="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-pill border border-navy-900/20 px-5 text-sm font-bold text-navy-950 transition-colors hover:bg-primary-100 focus-visible:outline-none"
+                                    class="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-pill border border-navy-900/20 px-5 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-100 focus-visible:outline-none"
                                 >
                                     <ExternalLink class="h-4 w-4" aria-hidden="true" />
                                     Buka di Maps
@@ -1329,7 +1343,7 @@ onBeforeUnmount(() => {
                     class="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:gap-16 lg:px-8"
                 >
                     <div class="landing-reveal min-w-0 lg:col-span-4">
-                        <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-primary-700">
+                        <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-600">
                             06 / FAQ
                         </p>
                         <h2
@@ -1344,7 +1358,7 @@ onBeforeUnmount(() => {
                             :href="whatsappUrl"
                             target="_blank"
                             rel="noopener noreferrer"
-                            class="mt-5 inline-flex min-h-[44px] items-center gap-2 rounded-pill bg-navy-900 px-5 text-sm font-bold text-white transition-colors hover:bg-navy-800 focus-visible:outline-none"
+                            class="mt-5 inline-flex min-h-[44px] items-center gap-2 rounded-pill bg-accent-500 px-5 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-600 focus-visible:outline-none"
                         >
                             <MessageCircle class="h-4 w-4" aria-hidden="true" />
                             Chat admin
@@ -1363,14 +1377,14 @@ onBeforeUnmount(() => {
                                     <button
                                         :id="`faq-question-${index}`"
                                         type="button"
-                                        class="flex min-h-[56px] w-full items-center justify-between gap-4 py-5 text-left font-heading text-base font-bold text-navy-950 transition-colors hover:text-primary-700 focus-visible:outline-none sm:text-lg"
+                                        class="flex min-h-[56px] w-full items-center justify-between gap-4 py-5 text-left font-heading text-base font-bold text-navy-950 transition-colors hover:text-accent-600 focus-visible:outline-none sm:text-lg"
                                         :aria-expanded="activeFaqIndex === index"
                                         :aria-controls="`faq-answer-${index}`"
                                         @click="toggleFaq(index)"
                                     >
                                         <span>{{ faq.q }}</span>
                                         <ChevronDown
-                                            class="h-5 w-5 shrink-0 text-primary-700 transition-transform duration-300"
+                                            class="h-5 w-5 shrink-0 text-accent-600 transition-transform duration-300"
                                             :class="{ 'rotate-180': activeFaqIndex === index }"
                                             aria-hidden="true"
                                         />
@@ -1394,17 +1408,15 @@ onBeforeUnmount(() => {
             <!-- CTA -->
             <section class="bg-navy-950 py-16 text-white sm:py-20">
                 <div class="mx-auto max-w-4xl px-4 text-center sm:px-6">
-                    <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-500">
-                        Siap mulai?
-                    </p>
                     <h2
-                        class="mt-3 text-balance font-heading text-3xl font-extrabold uppercase leading-tight tracking-tight text-white sm:text-4xl"
+                        class="text-balance font-heading text-3xl font-extrabold uppercase leading-tight tracking-tight text-white sm:text-4xl"
                     >
-                        Cucian menumpuk? Kirim saja.
+                        Lagi sibuk dan cucian numpuk?
                     </h2>
                     <p class="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-slate-300 sm:text-base">
-                        Pesan lewat WhatsApp, kami atur penjemputan. Atau mampir langsung ke
-                        outlet.
+                        Biar kami yang bantu bereskan. Pesan layanan jemput-antar praktis lewat
+                        WhatsApp tanpa biaya ribet, atau lebih suka antar sendiri? Silakan mampir
+                        langsung ke outlet kami kapan saja.
                     </p>
                     <div class="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
                         <a
@@ -1443,14 +1455,14 @@ onBeforeUnmount(() => {
                                 andik<span class="text-accent-500">.</span>
                             </span>
                             <span
-                                class="text-[10px] font-bold uppercase tracking-[0.22em] text-primary-500"
+                                class="text-[10px] font-bold uppercase tracking-[0.22em] text-accent-500"
                             >
                                 Laundry
                             </span>
                         </Link>
                         <p class="mt-4 max-w-sm text-sm leading-relaxed">
-                            Binatu harian di Hendrosari, Menganti. Satu mesin untuk satu
-                            pelanggan, sejak 2009.
+                            Binatu harian di Hendrosari, Menganti. Bersih, wangi, dan rapi sejak
+                            2009.
                         </p>
                         <p class="mt-4 inline-flex items-center gap-2 text-xs font-semibold text-accent-500">
                             <Clock class="h-4 w-4" aria-hidden="true" />
@@ -1530,7 +1542,7 @@ onBeforeUnmount(() => {
                         © {{ new Date().getFullYear() }} {{ storeName }}. Sejak 2009 di
                         Hendrosari, Menganti, Gresik.
                     </p>
-                    <p>1 mesin 1 pelanggan</p>
+                    <p>Bersih · Wangi · Rapi</p>
                 </div>
             </div>
         </footer>

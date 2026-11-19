@@ -277,7 +277,7 @@ function isKarpetService(item: CartLineItem): boolean {
                     ]"
                 >
                     <span class="block truncate text-xs">Antar Jemput</span>
-                    <span class="block text-[10px] opacity-75 font-normal mt-0.5">Free Ongkir Maks 3 kg</span>
+                    <span class="block text-[10px] opacity-75 font-normal mt-0.5">Free Ongkir Maks 3 km</span>
                 </button>
             </div>
         </div>
