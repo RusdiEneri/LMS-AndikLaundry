@@ -572,7 +572,7 @@ onBeforeUnmount(() => {
                             class="landing-enter text-[11px] font-bold uppercase tracking-[0.16em] text-accent-600"
                             style="--enter-delay: 0ms"
                         >
-                            Sejak 2009 · Hendrosari, Menganti, Gresik
+                            Sejak 2009 · Hendrosari, Gresik
                         </p>
 
                         <h1
@@ -633,10 +633,9 @@ onBeforeUnmount(() => {
                         <div class="landing-enter mx-auto max-w-[440px]" style="--enter-delay: 140ms">
                             <WashingMachineIllustration />
                             <div
-                                class="mt-3 flex items-center justify-between gap-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-600"
+                                class="mt-3 flex items-center justify-center text-center text-[11px] font-bold uppercase tracking-[0.16em] text-accent-600"
                             >
-                                <span>Cuci · Kering · Setrika</span>
-                                <span class="text-accent-600">Sejak 2009</span>
+                                <span>Bersih • Wangi • Rapi</span>
                             </div>
                         </div>
                     </div>
