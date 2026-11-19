@@ -78,7 +78,7 @@ onBeforeUnmount(() => {
         <circle cx="260" cy="300" r="92" class="wm-glass" />
 
         <g clip-path="url(#wm-drum-clip)">
-            <!-- Clothes rotate with page scroll -->
+            <!-- Clothes tumble as the drum turns -->
             <g class="drum-scroll">
                 <g transform="translate(260 300)">
                     <path
@@ -101,18 +101,31 @@ onBeforeUnmount(() => {
                 </g>
             </g>
 
-            <!-- Water line and suds -->
-            <path
-                d="M168 352 Q 214 338 260 352 T 352 352 L 352 392 L 168 392 Z"
-                class="wm-water"
-                opacity="0.55"
-            />
-            <path d="M168 352 Q 214 338 260 352 T 352 352" class="wm-water-line" />
-            <circle cx="196" cy="368" r="9" class="wm-suds" />
-            <circle cx="218" cy="356" r="12" class="wm-suds" />
-            <circle cx="244" cy="372" r="8" class="wm-suds" />
-            <circle cx="306" cy="360" r="11" class="wm-suds" />
-            <circle cx="330" cy="374" r="7" class="wm-suds" />
+            <!-- Water pools at the bottom, then sloshes with the drum -->
+            <g class="drum-water">
+                <path
+                    d="M168 352 Q 214 338 260 352 T 352 352 L 352 392 L 168 392 Z"
+                    class="wm-water"
+                    opacity="0.55"
+                />
+                <path d="M168 352 Q 214 338 260 352 T 352 352" class="wm-water-line" />
+            </g>
+
+            <!-- Suds drift on the moving surface -->
+            <g class="drum-suds">
+                <circle cx="196" cy="368" r="9" class="wm-suds" />
+                <circle cx="218" cy="356" r="12" class="wm-suds" />
+                <circle cx="244" cy="372" r="8" class="wm-suds" />
+                <circle cx="306" cy="360" r="11" class="wm-suds" />
+                <circle cx="330" cy="374" r="7" class="wm-suds" />
+            </g>
+
+            <!-- Bubbles surface and fade -->
+            <g class="drum-bubbles">
+                <circle cx="228" cy="368" r="2.5" class="wm-bubble" />
+                <circle cx="282" cy="374" r="2" class="wm-bubble" />
+                <circle cx="316" cy="366" r="2.8" class="wm-bubble" />
+            </g>
 
             <!-- Glass reflection -->
             <path d="M190 250 A 76 76 0 0 1 316 236 A 70 70 0 0 0 200 266 Z" class="wm-glass-shine" />
@@ -182,6 +195,98 @@ onBeforeUnmount(() => {
     stroke: var(--color-primary-100);
     stroke-width: 3;
     opacity: 0.8;
+}
+
+.drum-water {
+    animation: water-slosh 4.6s ease-in-out infinite;
+    transform-box: view-box;
+    transform-origin: 260px 352px;
+    will-change: transform;
+}
+
+.drum-suds .wm-suds {
+    animation: suds-drift 3.8s ease-in-out infinite;
+}
+
+.drum-suds .wm-suds:nth-child(2) {
+    animation-delay: -0.9s;
+    animation-duration: 4.6s;
+}
+
+.drum-suds .wm-suds:nth-child(3) {
+    animation-delay: -1.8s;
+    animation-duration: 3.2s;
+}
+
+.drum-suds .wm-suds:nth-child(4) {
+    animation-delay: -2.4s;
+    animation-duration: 4.1s;
+}
+
+.drum-suds .wm-suds:nth-child(5) {
+    animation-delay: -0.4s;
+    animation-duration: 3.5s;
+}
+
+.drum-bubbles .wm-bubble {
+    fill: var(--color-surface);
+    opacity: 0;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: bubble-rise 4.8s ease-in infinite;
+}
+
+.drum-bubbles .wm-bubble:nth-child(2) {
+    animation-delay: -1.6s;
+    animation-duration: 5.6s;
+}
+
+.drum-bubbles .wm-bubble:nth-child(3) {
+    animation-delay: -3.1s;
+    animation-duration: 4.2s;
+}
+
+@keyframes water-slosh {
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+    25% {
+        transform: translateY(-1.5px) rotate(-2deg);
+    }
+    50% {
+        transform: translateY(1.5px) rotate(0deg);
+    }
+    75% {
+        transform: translateY(-1.5px) rotate(2deg);
+    }
+}
+
+@keyframes suds-drift {
+    0%,
+    100% {
+        transform: translate(0, 0);
+    }
+    50% {
+        transform: translate(3px, -3px);
+    }
+}
+
+@keyframes bubble-rise {
+    0% {
+        transform: translateY(4px) scale(0.7);
+        opacity: 0;
+    }
+    15% {
+        opacity: 0.8;
+    }
+    85% {
+        opacity: 0.6;
+    }
+    100% {
+        transform: translateY(-16px) scale(1.1);
+        opacity: 0;
+    }
 }
 
 .wm-glass-shine {
