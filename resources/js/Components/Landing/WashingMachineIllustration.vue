@@ -5,7 +5,6 @@ const wibClock = new Intl.DateTimeFormat('en-GB', {
     timeZone: 'Asia/Jakarta',
     hour: '2-digit',
     minute: '2-digit',
-    second: '2-digit',
     hour12: false,
 });
 
@@ -224,7 +223,7 @@ onBeforeUnmount(() => {
 .wm-display {
     fill: var(--color-accent-500);
     font-family: var(--font-mono);
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 700;
 }
 

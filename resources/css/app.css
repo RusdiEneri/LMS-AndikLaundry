@@ -217,11 +217,19 @@
 }
 
 /* ============================================================
-   Hero drum: rotation follows page scroll (set from Welcome.vue)
+   Hero drum: clothes tumble continuously
    ============================================================ */
 .drum-scroll {
-  transform: rotate(var(--drum-angle, 0deg));
+  animation: drum-spin 14s linear infinite;
+  transform-box: view-box;
+  transform-origin: 260px 300px;
   will-change: transform;
+}
+
+@keyframes drum-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ============================================================

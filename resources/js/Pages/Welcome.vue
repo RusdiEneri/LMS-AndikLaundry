@@ -306,7 +306,6 @@ const menuOpen = ref(false);
 const menuButtonRef = ref<HTMLButtonElement | null>(null);
 const menuPanelRef = ref<HTMLElement | null>(null);
 const isScrolled = ref(false);
-const heroSection = ref<HTMLElement | null>(null);
 
 watch(menuOpen, async (open) => {
     if (typeof document === 'undefined') {
@@ -329,7 +328,6 @@ function handleKeydown(event: KeyboardEvent) {
 }
 
 let scrollFrame: number | null = null;
-let reducedMotion = false;
 
 function handleScroll() {
     if (typeof window === 'undefined' || scrollFrame !== null) {
@@ -339,13 +337,7 @@ function handleScroll() {
     scrollFrame = requestAnimationFrame(() => {
         scrollFrame = null;
 
-        const scrollTop = window.scrollY;
-        isScrolled.value = scrollTop > 12;
-
-        if (!reducedMotion && heroSection.value && scrollTop < 1200) {
-            const angle = Math.min(scrollTop * 0.35, 220);
-            heroSection.value.style.setProperty('--drum-angle', `${angle}deg`);
-        }
+        isScrolled.value = window.scrollY > 12;
     });
 }
 
@@ -383,8 +375,6 @@ function setupRevealObserver() {
 }
 
 onMounted(() => {
-    reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('keydown', handleKeydown);
@@ -583,7 +573,6 @@ onBeforeUnmount(() => {
             <!-- Hero -->
             <section
                 id="beranda"
-                ref="heroSection"
                 class="relative overflow-hidden bg-bg pb-16 pt-28 sm:pb-20 sm:pt-32 lg:pb-24 lg:pt-36"
             >
                 <div class="pointer-events-none absolute inset-0" aria-hidden="true">
