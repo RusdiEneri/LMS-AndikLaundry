@@ -471,49 +471,48 @@ onBeforeUnmount(() => {
             Lewati ke konten utama
         </a>
 
-        <!-- Navbar -->
+        <!-- Floating Navbar -->
         <header
-            class="fixed inset-x-0 top-0 z-40 border-b transition-colors duration-300"
-            :class="
-                isScrolled || menuOpen
-                    ? 'border-border bg-white shadow-[0_4px_20px_rgba(8,16,80,0.06)]'
-                    : 'border-transparent bg-transparent'
-            "
+            class="fixed inset-x-3 sm:inset-x-6 top-3 sm:top-4 z-40 mx-auto max-w-5xl transition-all duration-300"
         >
             <div
-                class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:h-[76px] sm:px-6 lg:px-8"
+                class="flex h-14 sm:h-16 items-center justify-between gap-3 rounded-full border px-3.5 sm:px-6 transition-all duration-300"
+                :class="
+                    isScrolled || menuOpen
+                        ? 'border-border/90 bg-white/95 shadow-[0_12px_36px_rgba(8,16,80,0.12)] backdrop-blur-md ring-1 ring-navy-950/5'
+                        : 'border-white/80 bg-white/85 shadow-[0_8px_30px_rgba(8,16,80,0.07)] backdrop-blur-md ring-1 ring-navy-950/5'
+                "
             >
                 <Link
                     href="/"
-                    class="flex shrink-0 items-center gap-2 rounded-lg focus-visible:outline-none"
-                    aria-label="Andik Laundry, kembali ke beranda"
+                    class="flex shrink-0 items-center rounded-full p-0.5 transition-transform hover:scale-105 active:scale-95 focus-visible:outline-none"
+                    aria-label="Kembali ke beranda"
                 >
-                    <span class="font-heading text-[26px] font-extrabold tracking-tight text-navy-950">
-                        andik<span class="text-accent-600">.</span>
-                    </span>
-                    <span
-                        class="hidden text-[10px] font-bold uppercase tracking-[0.22em] text-accent-700 sm:inline"
-                    >
-                        Laundry
-                    </span>
+                    <img
+                        src="/images/logo-a.webp"
+                        alt="Logo"
+                        class="h-8 w-auto sm:h-9 object-contain"
+                        width="38"
+                        height="36"
+                    />
                 </Link>
 
-                <nav class="hidden items-center gap-1 lg:flex" aria-label="Navigasi utama">
+                <nav class="hidden items-center gap-1 md:flex" aria-label="Navigasi utama">
                     <a
                         v-for="link in navLinks"
                         :key="link.href"
                         :href="link.href"
-                        class="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:text-accent-700 focus-visible:outline-none"
+                        class="rounded-full px-3 py-1.5 text-xs lg:text-[13px] font-semibold text-slate-700 transition-colors hover:bg-accent-100/70 hover:text-accent-700 focus-visible:outline-none"
                     >
                         {{ link.label }}
                     </a>
                 </nav>
 
-                <div class="ml-auto flex items-center gap-2">
+                <div class="flex items-center gap-2">
                     <Link
                         v-if="canLogin"
                         href="/login"
-                        class="inline-flex min-h-[44px] items-center justify-center rounded-pill bg-accent-500 px-4 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-600 focus-visible:outline-none sm:px-5"
+                        class="inline-flex min-h-[38px] sm:min-h-[42px] items-center justify-center rounded-full bg-accent-500 px-4 sm:px-5 text-xs sm:text-sm font-bold text-navy-950 shadow-xs transition-colors hover:bg-accent-600 focus-visible:outline-none"
                     >
                         Masuk
                     </Link>
@@ -521,14 +520,14 @@ onBeforeUnmount(() => {
                     <button
                         ref="menuButtonRef"
                         type="button"
-                        class="inline-flex h-11 w-11 items-center justify-center rounded-full text-navy-950 transition-colors hover:bg-accent-100 focus-visible:outline-none lg:hidden"
+                        class="inline-flex h-10 w-10 items-center justify-center rounded-full text-navy-950 transition-colors hover:bg-accent-100 focus-visible:outline-none md:hidden"
                         :aria-expanded="menuOpen"
                         aria-controls="mobile-menu"
                         :aria-label="menuOpen ? 'Tutup menu' : 'Buka menu'"
                         @click="menuOpen = !menuOpen"
                     >
-                        <X v-if="menuOpen" class="h-6 w-6" aria-hidden="true" />
-                        <Menu v-else class="h-6 w-6" aria-hidden="true" />
+                        <X v-if="menuOpen" class="h-5 w-5" aria-hidden="true" />
+                        <Menu v-else class="h-5 w-5" aria-hidden="true" />
                     </button>
                 </div>
             </div>
@@ -546,7 +545,7 @@ onBeforeUnmount(() => {
             >
                 <div
                     v-if="menuOpen"
-                    class="fixed inset-0 z-50 bg-navy-950/50 lg:hidden"
+                    class="fixed inset-0 z-50 bg-navy-950/50 md:hidden"
                     aria-hidden="true"
                     @click="menuOpen = false"
                 ></div>
@@ -568,7 +567,7 @@ onBeforeUnmount(() => {
                     aria-modal="true"
                     aria-label="Menu navigasi"
                     tabindex="-1"
-                    class="fixed inset-x-3 top-[72px] z-50 max-h-[calc(100dvh-88px)] overflow-y-auto rounded-[24px] border border-border bg-white p-3 text-navy-950 shadow-lg focus:outline-none lg:hidden"
+                    class="fixed inset-x-3 sm:inset-x-6 top-[72px] sm:top-[80px] z-50 max-h-[calc(100dvh-92px)] overflow-y-auto rounded-[24px] border border-border/90 bg-white/95 backdrop-blur-md p-3 text-navy-950 shadow-2xl focus:outline-none md:hidden"
                 >
                     <nav class="flex flex-col" aria-label="Navigasi seluler">
                         <a
@@ -585,7 +584,7 @@ onBeforeUnmount(() => {
                     <div v-if="canLogin" class="mt-2 border-t border-border pt-3">
                         <Link
                             href="/login"
-                            class="flex min-h-[48px] items-center justify-center rounded-pill bg-accent-500 px-4 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-600"
+                            class="flex min-h-[48px] items-center justify-center rounded-full bg-accent-500 px-4 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-600"
                             @click="menuOpen = false"
                         >
                             Masuk
@@ -599,7 +598,7 @@ onBeforeUnmount(() => {
             <!-- Hero -->
             <section
                 id="beranda"
-                class="relative overflow-hidden bg-bg pb-12 pt-24 sm:pb-16 sm:pt-30 lg:pb-20 lg:pt-34"
+                class="relative overflow-hidden bg-bg pb-12 pt-28 sm:pb-16 sm:pt-32 lg:pb-20 lg:pt-36"
             >
                 <div class="pointer-events-none absolute inset-0" aria-hidden="true">
                     <div
