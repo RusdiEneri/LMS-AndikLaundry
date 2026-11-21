@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import MorphBubbles from '@/Components/Landing/MorphBubbles.vue';
 import WashingMachineIllustration from '@/Components/Landing/WashingMachineIllustration.vue';
-import WaterWaves from '@/Components/Landing/WaterWaves.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import {
     Check,
@@ -617,10 +615,8 @@ onBeforeUnmount(() => {
             <!-- Hero -->
             <section
                 id="beranda"
-                class="relative overflow-hidden bg-bg pb-12 pt-28 sm:pb-16 sm:pt-32 lg:pb-20 lg:pt-36"
+                class="relative overflow-hidden bg-bg pb-16 pt-28 sm:pb-20 sm:pt-32 lg:pb-24 lg:pt-36"
             >
-                <MorphBubbles :count="5" variant="light" />
-
                 <div class="pointer-events-none absolute inset-0" aria-hidden="true">
                     <div
                         class="absolute -right-40 top-20 hidden h-[560px] w-[560px] rounded-full border border-border/80 lg:block"
@@ -706,18 +702,13 @@ onBeforeUnmount(() => {
                         </div>
                     </div>
                 </div>
-
-                <!-- Animated Water Waves (Aliran Ombak Air Bersih) -->
-                <div class="relative mt-8 sm:mt-12 -mb-2 w-full">
-                    <WaterWaves variant="hero" height-class="h-12 sm:h-20 lg:h-24" />
-                </div>
             </section>
 
             <!-- Cek nota (Floating Utility Card) -->
-            <section id="lacak" class="relative z-10 -mt-6 sm:-mt-10 mb-12 sm:mb-16">
+            <section id="lacak" class="relative mb-14 sm:mb-20">
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div
-                        class="landing-reveal card-morph-timbul rounded-[28px] border border-navy-800 bg-navy-900 p-6 text-white shadow-[0_16px_40px_rgba(8,16,80,0.18)] sm:p-9"
+                        class="landing-reveal rounded-[28px] border border-navy-800 bg-navy-900 p-6 text-white shadow-[0_16px_40px_rgba(8,16,80,0.18)] transition-all duration-200 hover:-translate-y-1 hover:shadow-xl sm:p-9"
                     >
                         <div class="grid grid-cols-1 items-center gap-6 lg:grid-cols-12 lg:gap-10">
                             <div class="lg:col-span-5">
@@ -780,10 +771,8 @@ onBeforeUnmount(() => {
             </section>
 
             <!-- Keunggulan Layanan -->
-            <section id="kenapa" class="relative overflow-hidden bg-bg pt-16 sm:pt-20 pb-0">
-                <MorphBubbles :count="3" variant="light" />
-
-                <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <section id="kenapa" class="py-16 sm:py-20">
+                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div
                         class="landing-reveal grid grid-cols-1 gap-8 md:grid-cols-12 md:items-end lg:gap-12"
                     >
@@ -807,10 +796,10 @@ onBeforeUnmount(() => {
 
                     <div class="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         <article
-                            class="landing-reveal card-morph-timbul flex flex-col rounded-[24px] border border-border/80 bg-white p-7 text-navy-950 shadow-xs"
+                            class="landing-reveal flex flex-col rounded-[24px] border border-border/80 bg-white p-7 text-navy-950 shadow-xs transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
                         >
                             <div
-                                class="badge-morph flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-100 text-accent-700"
+                                class="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-100 text-accent-700"
                             >
                                 <Shirt class="h-6 w-6" aria-hidden="true" />
                             </div>
@@ -824,11 +813,11 @@ onBeforeUnmount(() => {
                         </article>
 
                         <article
-                            class="landing-reveal card-morph-timbul flex flex-col rounded-[24px] border border-border/80 bg-white p-7 text-navy-950 shadow-xs"
+                            class="landing-reveal flex flex-col rounded-[24px] border border-border/80 bg-white p-7 text-navy-950 shadow-xs transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
                             style="--reveal-delay: 80ms"
                         >
                             <div
-                                class="badge-morph flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-100 text-accent-700"
+                                class="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-100 text-accent-700"
                             >
                                 <Sparkles class="h-6 w-6" aria-hidden="true" />
                             </div>
@@ -842,11 +831,11 @@ onBeforeUnmount(() => {
                         </article>
 
                         <article
-                            class="landing-reveal card-morph-timbul flex flex-col rounded-[24px] border border-border/80 bg-white p-7 text-navy-950 shadow-xs sm:col-span-2 lg:col-span-1"
+                            class="landing-reveal flex flex-col rounded-[24px] border border-border/80 bg-white p-7 text-navy-950 shadow-xs transition-all duration-200 hover:-translate-y-1 hover:shadow-md sm:col-span-2 lg:col-span-1"
                             style="--reveal-delay: 160ms"
                         >
                             <div
-                                class="badge-morph flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-100 text-accent-700"
+                                class="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-100 text-accent-700"
                             >
                                 <Truck class="h-6 w-6" aria-hidden="true" />
                             </div>
@@ -862,32 +851,25 @@ onBeforeUnmount(() => {
                 </div>
             </section>
 
-            <!-- Wave divider into dark section -->
-            <div class="-mb-1 w-full overflow-hidden bg-bg">
-                <WaterWaves variant="navy" height-class="h-10 sm:h-16 lg:h-20" />
-            </div>
-
             <!-- Tarif & Layanan -->
-            <section id="layanan" class="relative overflow-hidden bg-navy-950 pb-20 pt-8 sm:pb-24 sm:pt-12 text-white">
-                <MorphBubbles :count="5" variant="dark" />
-
-                <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <section id="layanan" class="py-16 sm:py-20">
+                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div
                         class="landing-reveal flex flex-col justify-between gap-6 md:flex-row md:items-end"
                     >
                         <div class="max-w-2xl">
                             <p
-                                class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-400"
+                                class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-700"
                             >
                                 Pilihan Layanan & Tarif
                             </p>
                             <h2
-                                class="mt-3 text-balance font-heading text-3xl font-extrabold uppercase leading-tight tracking-tight text-white sm:text-4xl"
+                                class="mt-3 text-balance font-heading text-3xl font-extrabold uppercase leading-tight tracking-tight text-navy-950 sm:text-4xl"
                             >
                                 Harganya jelas,
-                                <span class="text-accent-400">pelanggan puas.</span>
+                                <span class="text-accent-700">pelanggan puas.</span>
                             </h2>
-                            <p class="mt-3 text-sm leading-relaxed text-slate-300 sm:text-base">
+                            <p class="mt-3 text-sm leading-relaxed text-slate-700 sm:text-base">
                                 Minimal 2 kg untuk cucian kiloan. Layanan reguler selesai 2–3 hari kerja,
                                 atau pilih paket kilat / ekspres untuk selesai di hari yang sama.
                             </p>
@@ -908,7 +890,7 @@ onBeforeUnmount(() => {
                         <!-- Featured Card: Cuci Setrika -->
                         <div class="landing-reveal min-w-0 lg:col-span-5">
                             <article
-                                class="card-morph-timbul flex h-full flex-col rounded-[24px] bg-white p-6 text-navy-950 shadow-[0_12px_32px_rgba(8,16,80,0.14)] ring-2 ring-accent-500/80 sm:p-8"
+                                class="flex h-full flex-col rounded-[24px] border-2 border-accent-500/80 bg-white p-6 text-navy-950 shadow-md transition-all duration-200 hover:-translate-y-1 hover:shadow-lg sm:p-8"
                             >
                                 <div class="flex items-start justify-between gap-3">
                                     <p
@@ -988,7 +970,7 @@ onBeforeUnmount(() => {
                                 <article
                                     v-for="(service, index) in otherServices"
                                     :key="service.id"
-                                    class="landing-reveal card-morph-timbul flex flex-col rounded-[20px] bg-white p-5 text-navy-950 shadow-[0_10px_28px_rgba(8,16,80,0.12)] sm:p-6"
+                                    class="landing-reveal flex flex-col rounded-[20px] border border-border/80 bg-white p-5 text-navy-950 shadow-xs transition-all duration-200 hover:-translate-y-1 hover:shadow-md sm:p-6"
                                     :style="{ transitionDelay: `${index * 70}ms` }"
                                 >
                                     <div class="flex items-start justify-between gap-4">
@@ -1036,7 +1018,7 @@ onBeforeUnmount(() => {
                                 </article>
                             </div>
 
-                            <p class="mt-5 text-xs leading-relaxed text-slate-400">
+                            <p class="mt-5 text-xs leading-relaxed text-slate-500">
                                 * Layanan ekspres selesai hari yang sama dengan tambahan Rp 2.000 per kg.
                                 Layanan cuci karpet dihitung berdasarkan luas (panjang × lebar).
                             </p>
@@ -1045,16 +1027,9 @@ onBeforeUnmount(() => {
                 </div>
             </section>
 
-            <!-- Wave divider out of dark section into light section -->
-            <div class="-mt-1 w-full overflow-hidden bg-navy-950">
-                <WaterWaves variant="inverted" height-class="h-10 sm:h-16 lg:h-20" />
-            </div>
-
             <!-- Standar Kualitas & Komitmen -->
-            <section id="standar" class="relative overflow-hidden bg-bg pb-16 pt-8 sm:pb-20 sm:pt-12">
-                <MorphBubbles :count="3" variant="light" />
-
-                <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <section id="standar" class="py-16 sm:py-20">
+                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div class="landing-reveal max-w-2xl">
                         <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-700">
                             Standar Kualitas
@@ -1074,11 +1049,11 @@ onBeforeUnmount(() => {
                         <div
                             v-for="(guarantee, idx) in qualityGuarantees"
                             :key="guarantee.title"
-                            class="landing-reveal card-morph-timbul flex flex-col rounded-[24px] border border-border/80 bg-white p-7 text-navy-950 shadow-xs"
+                            class="landing-reveal flex flex-col rounded-[24px] border border-border/80 bg-white p-7 text-navy-950 shadow-xs transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
                             :style="{ transitionDelay: `${idx * 80}ms` }"
                         >
                             <div
-                                class="badge-morph flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-100 text-accent-700"
+                                class="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-100 text-accent-700"
                             >
                                 <component :is="guarantee.icon" class="h-6 w-6" aria-hidden="true" />
                             </div>
@@ -1095,7 +1070,7 @@ onBeforeUnmount(() => {
                     <div
                         v-if="hasStats"
                         ref="statsSection"
-                        class="landing-reveal card-morph-timbul mt-12 rounded-[28px] border border-navy-800 bg-navy-900 p-8 text-white shadow-md sm:p-10"
+                        class="landing-reveal mt-12 rounded-[28px] border border-navy-800 bg-navy-900 p-8 text-white shadow-md transition-all duration-200 hover:-translate-y-1 hover:shadow-lg sm:p-10"
                         style="--reveal-delay: 150ms"
                     >
                         <div class="text-center sm:text-left sm:flex sm:items-center sm:justify-between sm:gap-8 pb-6 border-b border-white/10">
@@ -1143,10 +1118,8 @@ onBeforeUnmount(() => {
             </section>
 
             <!-- Alur Pengerjaan -->
-            <section id="proses" class="relative overflow-hidden bg-bg py-16 sm:py-20">
-                <MorphBubbles :count="3" variant="light" />
-
-                <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <section id="proses" class="py-16 sm:py-20">
+                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div class="landing-reveal max-w-2xl">
                         <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-700">
                             Alur Pengerjaan
@@ -1167,12 +1140,12 @@ onBeforeUnmount(() => {
                         <div
                             v-for="(step, index) in processSteps"
                             :key="step.label"
-                            class="landing-reveal card-morph-timbul flex flex-col rounded-[20px] border border-border/80 bg-white p-5 sm:p-6"
+                            class="landing-reveal flex flex-col rounded-[20px] border border-border/80 bg-white p-5 sm:p-6 transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
                             :style="{ transitionDelay: `${index * 60}ms` }"
                         >
                             <div class="flex items-center justify-between">
                                 <span
-                                    class="badge-morph flex h-8 w-8 items-center justify-center rounded-full bg-accent-500 font-heading text-xs font-extrabold text-navy-950"
+                                    class="flex h-8 w-8 items-center justify-center rounded-full bg-accent-500 font-heading text-xs font-extrabold text-navy-950"
                                 >
                                     {{ step.step }}
                                 </span>
@@ -1189,10 +1162,8 @@ onBeforeUnmount(() => {
             </section>
 
             <!-- Lokasi Outlet -->
-            <section id="lokasi" class="relative overflow-hidden bg-bg py-16 sm:py-20">
-                <MorphBubbles :count="3" variant="light" />
-
-                <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <section id="lokasi" class="py-16 sm:py-20">
+                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div class="landing-reveal max-w-2xl">
                         <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-700">
                             Lokasi Outlet
@@ -1208,7 +1179,7 @@ onBeforeUnmount(() => {
                     </div>
 
                     <div
-                        class="landing-reveal card-morph-timbul mt-10 grid grid-cols-1 items-center gap-8 rounded-[28px] border border-border/80 bg-white p-6 text-navy-950 shadow-[0_16px_40px_rgba(8,16,80,0.06)] sm:p-8 lg:grid-cols-12"
+                        class="landing-reveal mt-10 grid grid-cols-1 items-center gap-8 rounded-[28px] border border-border/80 bg-white p-6 text-navy-950 shadow-[0_16px_40px_rgba(8,16,80,0.06)] transition-all duration-200 hover:-translate-y-1 hover:shadow-lg sm:p-8 lg:grid-cols-12"
                     >
                         <div class="min-w-0 lg:col-span-5">
                             <p
@@ -1229,7 +1200,7 @@ onBeforeUnmount(() => {
                                     <div>
                                         <div class="font-bold">Alamat</div>
                                         <p class="mt-0.5 leading-relaxed text-slate-600">
-                                            {{ storeAddress }}
+                                             {{ storeAddress }}
                                         </p>
                                     </div>
                                 </div>
@@ -1302,11 +1273,9 @@ onBeforeUnmount(() => {
             </section>
 
             <!-- FAQ -->
-            <section id="faq" class="relative overflow-hidden bg-bg py-16 sm:py-20">
-                <MorphBubbles :count="3" variant="light" />
-
+            <section id="faq" class="py-16 sm:py-20">
                 <div
-                    class="relative mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:gap-16 lg:px-8"
+                    class="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:gap-16 lg:px-8"
                 >
                     <div class="landing-reveal min-w-0 lg:col-span-4">
                         <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-700">
@@ -1372,44 +1341,41 @@ onBeforeUnmount(() => {
                 </div>
             </section>
 
-            <!-- Wave divider into Final CTA -->
-            <div class="-mb-1 w-full overflow-hidden bg-bg">
-                <WaterWaves variant="navy" height-class="h-10 sm:h-16 lg:h-20" />
-            </div>
-
             <!-- Final CTA -->
-            <section class="relative overflow-hidden bg-navy-950 pb-16 pt-8 text-white sm:pb-20 sm:pt-12">
-                <MorphBubbles :count="4" variant="dark" />
-
-                <div class="relative mx-auto max-w-4xl px-4 text-center sm:px-6">
-                    <h2
-                        class="text-balance font-heading text-3xl font-extrabold uppercase leading-tight tracking-tight text-white sm:text-4xl"
+            <section class="py-12 sm:py-16">
+                <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+                    <div
+                        class="landing-reveal rounded-[28px] bg-navy-950 px-6 py-12 text-center text-white shadow-xl transition-all duration-200 hover:-translate-y-1 hover:shadow-2xl sm:px-12 sm:py-16"
                     >
-                        Punya Tumpukan Baju Kotor Hari Ini?
-                    </h2>
-                    <p class="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-slate-300 sm:text-base">
-                        Biar kami yang bantu selesaikan. Pesan antar jemput praktis via WhatsApp tanpa repot,
-                        atau antar langsung ke outlet kami kapan saja Anda sempat.
-                    </p>
-                    <div class="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
-                        <a
-                            :href="whatsappUrl"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-pill bg-accent-500 px-6 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-600 focus-visible:outline-none"
+                        <h2
+                            class="text-balance font-heading text-3xl font-extrabold uppercase leading-tight tracking-tight text-white sm:text-4xl"
                         >
-                            <MessageCircle class="h-4 w-4" aria-hidden="true" />
-                            Pesan via WhatsApp
-                        </a>
-                        <a
-                            :href="phoneUrl"
-                            class="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-pill border border-white/25 px-6 text-sm font-bold text-white transition-colors hover:bg-white/10 focus-visible:outline-none"
-                        >
-                            <Phone class="h-4 w-4 text-accent-400" aria-hidden="true" />
-                            {{ storePhoneLabel }}
-                        </a>
+                            Punya Tumpukan Baju Kotor Hari Ini?
+                        </h2>
+                        <p class="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-slate-300 sm:text-base">
+                            Biar kami yang bantu selesaikan. Pesan antar jemput praktis via WhatsApp tanpa repot,
+                            atau antar langsung ke outlet kami kapan saja Anda sempat.
+                        </p>
+                        <div class="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
+                            <a
+                                :href="whatsappUrl"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-pill bg-accent-500 px-6 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-600 focus-visible:outline-none"
+                            >
+                                <MessageCircle class="h-4 w-4" aria-hidden="true" />
+                                Pesan via WhatsApp
+                            </a>
+                            <a
+                                :href="phoneUrl"
+                                class="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-pill border border-white/25 px-6 text-sm font-bold text-white transition-colors hover:bg-white/10 focus-visible:outline-none"
+                            >
+                                <Phone class="h-4 w-4 text-accent-400" aria-hidden="true" />
+                                {{ storePhoneLabel }}
+                            </a>
+                        </div>
+                        <p class="mt-5 text-xs text-slate-400">Buka setiap hari, 07.00–20.00 WIB</p>
                     </div>
-                    <p class="mt-5 text-xs text-slate-400">Buka setiap hari, 07.00–20.00 WIB</p>
                 </div>
             </section>
         </main>
