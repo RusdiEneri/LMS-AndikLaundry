@@ -4,6 +4,7 @@ import { Head, Link, router } from '@inertiajs/vue3';
 import {
     Check,
     ChevronDown,
+    ChevronRight,
     Clock,
     ExternalLink,
     Flame,
@@ -534,10 +535,10 @@ onBeforeUnmount(() => {
                     <button
                         ref="menuButtonRef"
                         type="button"
-                        class="inline-flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full text-navy-950 transition-colors hover:bg-accent-100 focus-visible:outline-none md:hidden"
+                        class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-navy-950 transition-colors hover:bg-accent-100 focus-visible:outline-none active:scale-95 md:hidden"
                         :aria-expanded="menuOpen"
                         aria-controls="mobile-menu"
-                        :aria-label="menuOpen ? 'Tutup menu' : 'Buka menu'"
+                        :aria-label="menuOpen ? 'Tutup menu' : 'Buka menu navigasi'"
                         @click="menuOpen = !menuOpen"
                     >
                         <X v-if="menuOpen" class="h-5 w-5" aria-hidden="true" />
@@ -547,31 +548,33 @@ onBeforeUnmount(() => {
             </div>
         </header>
 
-        <!-- Menu seluler -->
+        <!-- Menu seluler (Side Drawer Kanan) -->
         <Teleport to="body">
+            <!-- Backdrop -->
             <Transition
-                enter-active-class="transition-opacity duration-200 ease-out"
+                enter-active-class="transition-opacity duration-300 ease-out"
                 enter-from-class="opacity-0"
                 enter-to-class="opacity-100"
-                leave-active-class="transition-opacity duration-150 ease-in"
+                leave-active-class="transition-opacity duration-200 ease-in"
                 leave-from-class="opacity-100"
                 leave-to-class="opacity-0"
             >
                 <div
                     v-if="menuOpen"
-                    class="fixed inset-0 z-50 bg-navy-950/50 md:hidden"
+                    class="fixed inset-0 z-50 bg-navy-950/45 backdrop-blur-xs md:hidden"
                     aria-hidden="true"
                     @click="menuOpen = false"
                 ></div>
             </Transition>
 
+            <!-- Drawer Panel dari Sisi Kanan -->
             <Transition
-                enter-active-class="transition duration-200 ease-out"
-                enter-from-class="opacity-0 -translate-y-3"
-                enter-to-class="opacity-100 translate-y-0"
-                leave-active-class="transition duration-150 ease-in"
-                leave-from-class="opacity-100 translate-y-0"
-                leave-to-class="opacity-0 -translate-y-3"
+                enter-active-class="transition-transform duration-300 ease-out"
+                enter-from-class="translate-x-full"
+                enter-to-class="translate-x-0"
+                leave-active-class="transition-transform duration-200 ease-in"
+                leave-from-class="translate-x-0"
+                leave-to-class="translate-x-full"
             >
                 <div
                     v-if="menuOpen"
@@ -579,33 +582,85 @@ onBeforeUnmount(() => {
                     ref="menuPanelRef"
                     role="dialog"
                     aria-modal="true"
-                    aria-label="Menu navigasi"
+                    aria-label="Menu navigasi samping"
                     tabindex="-1"
-                    class="fixed inset-x-3 sm:inset-x-6 top-[72px] sm:top-[80px] z-50 max-h-[calc(100dvh-92px)] overflow-y-auto rounded-[24px] border border-border/90 bg-white/95 backdrop-blur-md p-3 text-navy-950 shadow-2xl focus:outline-none md:hidden"
+                    class="fixed inset-y-0 right-0 z-50 flex h-full w-[290px] sm:w-[320px] max-w-[85vw] flex-col justify-between bg-white p-5 text-navy-950 shadow-2xl focus:outline-none md:hidden"
                 >
-                    <nav class="flex flex-col" aria-label="Navigasi seluler">
-                        <a
-                            v-for="link in navLinks"
-                            :key="link.href"
-                            :href="link.href"
-                            class="flex min-h-[48px] items-center rounded-xl px-4 text-base font-semibold transition-colors hover:bg-accent-100 hover:text-accent-700"
-                            @click="menuOpen = false"
-                        >
-                            {{ link.label }}
-                        </a>
-                    </nav>
+                    <!-- Header Drawer -->
+                    <div>
+                        <div class="flex items-center justify-between pb-4 border-b border-border/70">
+                            <Link
+                                href="/"
+                                class="flex items-center gap-2 focus-visible:outline-none"
+                                @click="menuOpen = false"
+                            >
+                                <img
+                                    src="/images/logo-a.webp"
+                                    alt="Andik Laundry"
+                                    class="h-7 w-auto object-contain"
+                                    width="32"
+                                    height="30"
+                                />
+                                <span class="font-heading text-lg font-extrabold tracking-tight text-navy-950">
+                                    andik<span class="text-accent-500">.</span>
+                                    <span class="ml-1 text-[10px] font-bold uppercase tracking-wider text-accent-700">LAUNDRY</span>
+                                </span>
+                            </Link>
+                            <button
+                                type="button"
+                                class="inline-flex min-h-[40px] min-w-[40px] items-center justify-center rounded-full text-slate-500 hover:bg-slate-100 hover:text-navy-950 transition-colors focus-visible:outline-none active:scale-95"
+                                aria-label="Tutup menu navigasi"
+                                @click="menuOpen = false"
+                            >
+                                <X class="h-5 w-5" aria-hidden="true" />
+                            </button>
+                        </div>
 
-                    <div class="mt-2 border-t border-border pt-3">
+                        <!-- Nav links list -->
+                        <nav class="mt-4 flex flex-col gap-1" aria-label="Navigasi seluler samping">
+                            <a
+                                v-for="link in navLinks"
+                                :key="link.href"
+                                :href="link.href"
+                                class="flex min-h-[46px] items-center justify-between rounded-xl px-3.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-accent-50 hover:text-navy-950 active:bg-accent-100"
+                                @click="menuOpen = false"
+                            >
+                                <span>{{ link.label }}</span>
+                                <ChevronRight class="h-4 w-4 text-slate-400 opacity-60" aria-hidden="true" />
+                            </a>
+                        </nav>
+                    </div>
+
+                    <!-- Footer Drawer -->
+                    <div class="pt-4 border-t border-border/70 space-y-3">
+                        <div class="rounded-xl bg-slate-50 p-3 border border-border/60 text-xs">
+                            <div class="flex items-center gap-2 font-bold text-navy-950">
+                                <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                Buka Setiap Hari (07.00 - 20.00)
+                            </div>
+                            <p class="mt-0.5 text-[11px] text-slate-500">Hendrosari, Menganti, Gresik</p>
+                        </div>
+
                         <a
                             :href="whatsappUrl"
                             target="_blank"
                             rel="noopener noreferrer"
-                            class="flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-accent-500 px-4 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-600"
+                            class="flex min-h-[46px] items-center justify-center gap-2 rounded-full bg-accent-500 px-4 text-sm font-bold text-navy-950 shadow-xs transition-colors hover:bg-accent-600 active:scale-98"
                             @click="menuOpen = false"
                         >
-                            <MessageCircle class="h-5 w-5" aria-hidden="true" />
+                            <MessageCircle class="h-4 w-4" aria-hidden="true" />
                             Chat WhatsApp
                         </a>
+
+                        <div v-if="canLogin" class="text-center pt-1">
+                            <Link
+                                href="/login"
+                                class="text-xs font-semibold text-slate-500 hover:text-accent-700 transition-colors py-1 inline-block"
+                                @click="menuOpen = false"
+                            >
+                                Masuk Dashboard Staf →
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </Transition>
@@ -615,7 +670,7 @@ onBeforeUnmount(() => {
             <!-- Hero -->
             <section
                 id="beranda"
-                class="relative overflow-hidden bg-bg pb-16 pt-28 sm:pb-20 sm:pt-32 lg:pb-24 lg:pt-36"
+                class="relative overflow-hidden bg-bg pb-12 pt-24 sm:pb-20 sm:pt-32 lg:pb-24 lg:pt-36"
             >
                 <div class="pointer-events-none absolute inset-0" aria-hidden="true">
                     <div
@@ -631,62 +686,60 @@ onBeforeUnmount(() => {
                 >
                     <div class="min-w-0 lg:col-span-6">
                         <div
-                            class="landing-enter relative overflow-hidden rounded-[28px] bg-navy-950 p-6 text-white shadow-[0_20px_50px_rgba(8,16,80,0.22)] ring-1 ring-white/10 sm:p-8 lg:overflow-visible lg:rounded-none lg:bg-transparent lg:p-0 lg:text-inherit lg:shadow-none lg:ring-0"
+                            class="landing-enter"
                             style="--enter-delay: 80ms"
                         >
-                            <div class="relative">
-                                <div
-                                    class="inline-flex items-center rounded-pill bg-white/10 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-accent-400 backdrop-blur-xs ring-1 ring-white/15 lg:bg-accent-100 lg:px-3.5 lg:py-1.5 lg:text-accent-700 lg:ring-1 lg:ring-accent-600/20"
-                                >
-                                    Hendrosari, Gresik
-                                </div>
+                            <div
+                                class="inline-flex items-center rounded-pill bg-accent-100 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-accent-700 ring-1 ring-accent-600/20"
+                            >
+                                Hendrosari, Gresik
+                            </div>
 
-                                <h1
-                                    class="mt-4 font-heading text-[2.1rem] font-extrabold uppercase leading-[1.04] tracking-tight text-white sm:text-5xl sm:leading-[0.98] lg:text-[3.75rem] lg:text-navy-950"
-                                >
-                                    Cucian Kotor,<br />
-                                    <span class="text-accent-400 lg:text-accent-600">Pulang Kinclong.</span>
-                                </h1>
+                            <h1
+                                class="mt-4 font-heading text-[2.1rem] font-extrabold uppercase leading-[1.04] tracking-tight text-navy-950 sm:text-5xl sm:leading-[0.98] lg:text-[3.75rem]"
+                            >
+                                Cucian Kotor,<br />
+                                <span class="text-accent-700">Pulang Kinclong.</span>
+                            </h1>
 
-                                <p
-                                    class="mt-5 text-sm leading-relaxed text-slate-300 sm:text-base lg:mt-6 lg:max-w-xl lg:text-lg lg:text-slate-700"
-                                >
-                                    Tinggal chat WhatsApp atau mampir ke outlet, tumpukan baju kotor langsung
-                                    beres. Di Andik Laundry, pakaian dicuci higienis terpisah 1 mesin 1 pelanggan,
-                                    timbangan transparan, nota digital langsung ke WhatsApp, dan gratis jemput-antar
-                                    hingga 3 km.
-                                </p>
+                            <p
+                                class="mt-4 text-sm leading-relaxed text-slate-700 sm:text-base lg:mt-6 lg:max-w-xl lg:text-lg"
+                            >
+                                Tinggal chat WhatsApp atau mampir ke outlet, tumpukan baju kotor langsung
+                                beres. Di Andik Laundry, pakaian dicuci higienis terpisah 1 mesin 1 pelanggan,
+                                timbangan transparan, nota digital langsung ke WhatsApp, dan gratis jemput-antar
+                                hingga 3 km.
+                            </p>
 
-                                <div class="mt-7 flex flex-col gap-3 sm:flex-row lg:mt-8">
-                                    <a
-                                        :href="whatsappUrl"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        class="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-pill bg-accent-500 px-6 text-sm font-bold text-navy-950 shadow-md shadow-accent-500/20 transition-colors hover:bg-accent-600 focus-visible:outline-none lg:shadow-none"
-                                    >
-                                        <MessageCircle class="h-4 w-4" aria-hidden="true" />
-                                        Pesan antar jemput
-                                    </a>
-                                    <a
-                                        href="#tarif"
-                                        class="inline-flex min-h-[48px] items-center justify-center rounded-pill border border-white/20 bg-white/5 px-6 text-sm font-bold text-white transition-colors hover:border-white/30 hover:bg-white/10 focus-visible:outline-none lg:border-navy-900/20 lg:bg-white lg:text-navy-950 lg:hover:bg-slate-50 lg:shadow-xs"
-                                    >
-                                        Lihat tarif
-                                    </a>
-                                </div>
-
-                                <div
-                                    class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-white/10 pt-5 text-xs font-medium text-slate-300 lg:border-t-0 lg:pt-0 lg:text-slate-600"
+                            <div class="mt-6 flex flex-col gap-3 sm:flex-row lg:mt-8">
+                                <a
+                                    :href="whatsappUrl"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-pill bg-accent-500 px-6 text-sm font-bold text-navy-950 shadow-xs transition-colors hover:bg-accent-600 focus-visible:outline-none"
                                 >
-                                    <span class="inline-flex items-center gap-2">
-                                        <Clock class="h-4 w-4 text-accent-400 lg:text-accent-700" aria-hidden="true" />
-                                        Buka setiap hari, 07.00–20.00 WIB
-                                    </span>
-                                    <span class="inline-flex items-center gap-2">
-                                        <Truck class="h-4 w-4 text-accent-400 lg:text-accent-700" aria-hidden="true" />
-                                        Antar jemput gratis maksimal 3 km
-                                    </span>
-                                </div>
+                                    <MessageCircle class="h-4 w-4" aria-hidden="true" />
+                                    Pesan antar jemput
+                                </a>
+                                <a
+                                    href="#tarif"
+                                    class="inline-flex min-h-[48px] items-center justify-center rounded-pill border border-navy-900/15 bg-white px-6 text-sm font-bold text-navy-950 shadow-xs transition-colors hover:bg-slate-50 focus-visible:outline-none"
+                                >
+                                    Lihat tarif
+                                </a>
+                            </div>
+
+                            <div
+                                class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs font-medium text-slate-600"
+                            >
+                                <span class="inline-flex items-center gap-2">
+                                    <Clock class="h-4 w-4 text-accent-700" aria-hidden="true" />
+                                    Buka setiap hari, 07.00–20.00 WIB
+                                </span>
+                                <span class="inline-flex items-center gap-2">
+                                    <Truck class="h-4 w-4 text-accent-700" aria-hidden="true" />
+                                    Antar jemput gratis maksimal 3 km
+                                </span>
                             </div>
                         </div>
                     </div>
