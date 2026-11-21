@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <title inertia>{{ config('app.name', 'Andik Laundry') }}</title>
+        <title inertia>Andik Laundry - Tempat Laundry Modern di Hendrosari, Gresik</title>
 
         <!-- Favicon / Brand Icon -->
         <link rel="icon" type="image/webp" href="{{ asset('images/logo-a.webp') }}?v=1.2">

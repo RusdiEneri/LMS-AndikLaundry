@@ -456,7 +456,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <Head title="Andik Laundry">
+    <Head title="Andik Laundry - Tempat Laundry Modern di Hendrosari, Gresik">
         <meta
             name="description"
             content="Layanan cuci kiloan dan cuci karpet di Hendrosari, Menganti, Gresik. Bersih higienis 1 mesin 1 pelanggan, setrika uap rapi, nota digital WhatsApp, dan antar jemput gratis hingga 3 km."
