@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import MorphBubbles from '@/Components/Landing/MorphBubbles.vue';
 import WashingMachineIllustration from '@/Components/Landing/WashingMachineIllustration.vue';
 import WaterWaves from '@/Components/Landing/WaterWaves.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
@@ -618,6 +619,8 @@ onBeforeUnmount(() => {
                 id="beranda"
                 class="relative overflow-hidden bg-bg pb-12 pt-28 sm:pb-16 sm:pt-32 lg:pb-20 lg:pt-36"
             >
+                <MorphBubbles :count="5" variant="light" />
+
                 <div class="pointer-events-none absolute inset-0" aria-hidden="true">
                     <div
                         class="absolute -right-40 top-20 hidden h-[560px] w-[560px] rounded-full border border-border/80 lg:block"
@@ -714,7 +717,7 @@ onBeforeUnmount(() => {
             <section id="lacak" class="relative z-10 -mt-6 sm:-mt-10 mb-12 sm:mb-16">
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div
-                        class="landing-reveal rounded-[28px] border border-navy-800 bg-navy-900 p-6 text-white shadow-[0_16px_40px_rgba(8,16,80,0.18)] sm:p-9"
+                        class="landing-reveal card-morph-timbul rounded-[28px] border border-navy-800 bg-navy-900 p-6 text-white shadow-[0_16px_40px_rgba(8,16,80,0.18)] sm:p-9"
                     >
                         <div class="grid grid-cols-1 items-center gap-6 lg:grid-cols-12 lg:gap-10">
                             <div class="lg:col-span-5">
@@ -777,8 +780,10 @@ onBeforeUnmount(() => {
             </section>
 
             <!-- Keunggulan Layanan -->
-            <section id="kenapa" class="bg-bg pt-16 sm:pt-20 pb-0">
-                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <section id="kenapa" class="relative overflow-hidden bg-bg pt-16 sm:pt-20 pb-0">
+                <MorphBubbles :count="3" variant="light" />
+
+                <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div
                         class="landing-reveal grid grid-cols-1 gap-8 md:grid-cols-12 md:items-end lg:gap-12"
                     >
@@ -802,10 +807,10 @@ onBeforeUnmount(() => {
 
                     <div class="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         <article
-                            class="landing-reveal flex flex-col rounded-[24px] border border-border/80 bg-white p-7 text-navy-950 shadow-xs transition-shadow duration-200 hover:shadow-md"
+                            class="landing-reveal card-morph-timbul flex flex-col rounded-[24px] border border-border/80 bg-white p-7 text-navy-950 shadow-xs"
                         >
                             <div
-                                class="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-100 text-accent-700"
+                                class="badge-morph flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-100 text-accent-700"
                             >
                                 <Shirt class="h-6 w-6" aria-hidden="true" />
                             </div>
@@ -819,11 +824,11 @@ onBeforeUnmount(() => {
                         </article>
 
                         <article
-                            class="landing-reveal flex flex-col rounded-[24px] border border-border/80 bg-white p-7 text-navy-950 shadow-xs transition-shadow duration-200 hover:shadow-md"
+                            class="landing-reveal card-morph-timbul flex flex-col rounded-[24px] border border-border/80 bg-white p-7 text-navy-950 shadow-xs"
                             style="--reveal-delay: 80ms"
                         >
                             <div
-                                class="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-100 text-accent-700"
+                                class="badge-morph flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-100 text-accent-700"
                             >
                                 <Sparkles class="h-6 w-6" aria-hidden="true" />
                             </div>
@@ -837,11 +842,11 @@ onBeforeUnmount(() => {
                         </article>
 
                         <article
-                            class="landing-reveal flex flex-col rounded-[24px] border border-border/80 bg-white p-7 text-navy-950 shadow-xs transition-shadow duration-200 hover:shadow-md sm:col-span-2 lg:col-span-1"
+                            class="landing-reveal card-morph-timbul flex flex-col rounded-[24px] border border-border/80 bg-white p-7 text-navy-950 shadow-xs sm:col-span-2 lg:col-span-1"
                             style="--reveal-delay: 160ms"
                         >
                             <div
-                                class="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-100 text-accent-700"
+                                class="badge-morph flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-100 text-accent-700"
                             >
                                 <Truck class="h-6 w-6" aria-hidden="true" />
                             </div>
@@ -863,8 +868,10 @@ onBeforeUnmount(() => {
             </div>
 
             <!-- Tarif & Layanan -->
-            <section id="layanan" class="bg-navy-950 pb-20 pt-8 sm:pb-24 sm:pt-12 text-white">
-                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <section id="layanan" class="relative overflow-hidden bg-navy-950 pb-20 pt-8 sm:pb-24 sm:pt-12 text-white">
+                <MorphBubbles :count="5" variant="dark" />
+
+                <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div
                         class="landing-reveal flex flex-col justify-between gap-6 md:flex-row md:items-end"
                     >
@@ -901,7 +908,7 @@ onBeforeUnmount(() => {
                         <!-- Featured Card: Cuci Setrika -->
                         <div class="landing-reveal min-w-0 lg:col-span-5">
                             <article
-                                class="flex h-full flex-col rounded-[24px] bg-white p-6 text-navy-950 shadow-[0_12px_32px_rgba(8,16,80,0.14)] ring-2 ring-accent-500/80 sm:p-8"
+                                class="card-morph-timbul flex h-full flex-col rounded-[24px] bg-white p-6 text-navy-950 shadow-[0_12px_32px_rgba(8,16,80,0.14)] ring-2 ring-accent-500/80 sm:p-8"
                             >
                                 <div class="flex items-start justify-between gap-3">
                                     <p
@@ -981,7 +988,7 @@ onBeforeUnmount(() => {
                                 <article
                                     v-for="(service, index) in otherServices"
                                     :key="service.id"
-                                    class="landing-reveal flex flex-col rounded-[20px] bg-white p-5 text-navy-950 shadow-[0_10px_28px_rgba(8,16,80,0.12)] sm:p-6"
+                                    class="landing-reveal card-morph-timbul flex flex-col rounded-[20px] bg-white p-5 text-navy-950 shadow-[0_10px_28px_rgba(8,16,80,0.12)] sm:p-6"
                                     :style="{ transitionDelay: `${index * 70}ms` }"
                                 >
                                     <div class="flex items-start justify-between gap-4">
@@ -1044,8 +1051,10 @@ onBeforeUnmount(() => {
             </div>
 
             <!-- Standar Kualitas & Komitmen -->
-            <section id="standar" class="bg-bg pb-20 pt-8 sm:pb-24 sm:pt-12">
-                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <section id="standar" class="relative overflow-hidden bg-bg pb-16 pt-8 sm:pb-20 sm:pt-12">
+                <MorphBubbles :count="3" variant="light" />
+
+                <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div class="landing-reveal max-w-2xl">
                         <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-700">
                             Standar Kualitas
@@ -1065,11 +1074,11 @@ onBeforeUnmount(() => {
                         <div
                             v-for="(guarantee, idx) in qualityGuarantees"
                             :key="guarantee.title"
-                            class="landing-reveal flex flex-col rounded-[24px] border border-border/80 bg-white p-7 text-navy-950 shadow-xs"
+                            class="landing-reveal card-morph-timbul flex flex-col rounded-[24px] border border-border/80 bg-white p-7 text-navy-950 shadow-xs"
                             :style="{ transitionDelay: `${idx * 80}ms` }"
                         >
                             <div
-                                class="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-100 text-accent-700"
+                                class="badge-morph flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-100 text-accent-700"
                             >
                                 <component :is="guarantee.icon" class="h-6 w-6" aria-hidden="true" />
                             </div>
@@ -1086,7 +1095,7 @@ onBeforeUnmount(() => {
                     <div
                         v-if="hasStats"
                         ref="statsSection"
-                        class="landing-reveal mt-12 rounded-[28px] border border-navy-800 bg-navy-900 p-8 text-white shadow-md sm:p-10"
+                        class="landing-reveal card-morph-timbul mt-12 rounded-[28px] border border-navy-800 bg-navy-900 p-8 text-white shadow-md sm:p-10"
                         style="--reveal-delay: 150ms"
                     >
                         <div class="text-center sm:text-left sm:flex sm:items-center sm:justify-between sm:gap-8 pb-6 border-b border-white/10">
@@ -1134,8 +1143,10 @@ onBeforeUnmount(() => {
             </section>
 
             <!-- Alur Pengerjaan -->
-            <section id="proses" class="border-t border-border/60 bg-surface py-20 sm:py-24">
-                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <section id="proses" class="relative overflow-hidden bg-bg py-16 sm:py-20">
+                <MorphBubbles :count="3" variant="light" />
+
+                <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div class="landing-reveal max-w-2xl">
                         <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-700">
                             Alur Pengerjaan
@@ -1156,12 +1167,12 @@ onBeforeUnmount(() => {
                         <div
                             v-for="(step, index) in processSteps"
                             :key="step.label"
-                            class="landing-reveal flex flex-col rounded-[20px] border border-border/80 bg-bg p-5 sm:p-6 transition-transform duration-200 hover:-translate-y-1"
+                            class="landing-reveal card-morph-timbul flex flex-col rounded-[20px] border border-border/80 bg-white p-5 sm:p-6"
                             :style="{ transitionDelay: `${index * 60}ms` }"
                         >
                             <div class="flex items-center justify-between">
                                 <span
-                                    class="flex h-8 w-8 items-center justify-center rounded-full bg-accent-500 font-heading text-xs font-extrabold text-navy-950"
+                                    class="badge-morph flex h-8 w-8 items-center justify-center rounded-full bg-accent-500 font-heading text-xs font-extrabold text-navy-950"
                                 >
                                     {{ step.step }}
                                 </span>
@@ -1178,24 +1189,26 @@ onBeforeUnmount(() => {
             </section>
 
             <!-- Lokasi Outlet -->
-            <section id="lokasi" class="bg-navy-950 py-20 text-white sm:py-24">
-                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <section id="lokasi" class="relative overflow-hidden bg-bg py-16 sm:py-20">
+                <MorphBubbles :count="3" variant="light" />
+
+                <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div class="landing-reveal max-w-2xl">
-                        <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-400">
+                        <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-700">
                             Lokasi Outlet
                         </p>
                         <h2
-                            class="mt-2 text-balance font-heading text-3xl font-extrabold uppercase leading-tight tracking-tight text-white sm:text-4xl"
+                            class="mt-2 text-balance font-heading text-3xl font-extrabold uppercase leading-tight tracking-tight text-navy-950 sm:text-4xl"
                         >
                             Kunjungi Outlet Kami
                         </h2>
-                        <p class="mt-3 text-sm leading-relaxed text-slate-300 sm:text-base">
+                        <p class="mt-3 text-sm leading-relaxed text-slate-700 sm:text-base">
                             Bisa mampir langsung untuk drop cucian, atau chat kami untuk penjemputan gratis hingga 3 km.
                         </p>
                     </div>
 
                     <div
-                        class="landing-reveal mt-10 grid grid-cols-1 items-center gap-8 rounded-[28px] bg-white p-6 text-navy-950 shadow-xl sm:p-8 lg:grid-cols-12"
+                        class="landing-reveal card-morph-timbul mt-10 grid grid-cols-1 items-center gap-8 rounded-[28px] border border-border/80 bg-white p-6 text-navy-950 shadow-[0_16px_40px_rgba(8,16,80,0.06)] sm:p-8 lg:grid-cols-12"
                     >
                         <div class="min-w-0 lg:col-span-5">
                             <p
@@ -1289,9 +1302,11 @@ onBeforeUnmount(() => {
             </section>
 
             <!-- FAQ -->
-            <section id="faq" class="bg-bg py-20 sm:py-24">
+            <section id="faq" class="relative overflow-hidden bg-bg py-16 sm:py-20">
+                <MorphBubbles :count="3" variant="light" />
+
                 <div
-                    class="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:gap-16 lg:px-8"
+                    class="relative mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:gap-16 lg:px-8"
                 >
                     <div class="landing-reveal min-w-0 lg:col-span-4">
                         <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-700">
@@ -1318,11 +1333,11 @@ onBeforeUnmount(() => {
                     </div>
 
                     <div class="min-w-0 lg:col-span-8">
-                        <div class="border-y border-navy-900/10">
+                        <div class="border-y border-slate-200/80">
                             <div
                                 v-for="(faq, index) in faqs"
                                 :key="faq.q"
-                                class="landing-reveal border-b border-navy-900/10 last:border-b-0"
+                                class="landing-reveal border-b border-slate-200/80 last:border-b-0"
                                 :style="{ transitionDelay: `${index * 40}ms` }"
                             >
                                 <h3>
@@ -1357,9 +1372,16 @@ onBeforeUnmount(() => {
                 </div>
             </section>
 
+            <!-- Wave divider into Final CTA -->
+            <div class="-mb-1 w-full overflow-hidden bg-bg">
+                <WaterWaves variant="navy" height-class="h-10 sm:h-16 lg:h-20" />
+            </div>
+
             <!-- Final CTA -->
-            <section class="bg-navy-900 py-16 text-white sm:py-20">
-                <div class="mx-auto max-w-4xl px-4 text-center sm:px-6">
+            <section class="relative overflow-hidden bg-navy-950 pb-16 pt-8 text-white sm:pb-20 sm:pt-12">
+                <MorphBubbles :count="4" variant="dark" />
+
+                <div class="relative mx-auto max-w-4xl px-4 text-center sm:px-6">
                     <h2
                         class="text-balance font-heading text-3xl font-extrabold uppercase leading-tight tracking-tight text-white sm:text-4xl"
                     >
