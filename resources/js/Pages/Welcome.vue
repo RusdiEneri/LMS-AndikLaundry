@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import WashingMachineIllustration from '@/Components/Landing/WashingMachineIllustration.vue';
+import WaterWaves from '@/Components/Landing/WaterWaves.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import {
     Check,
@@ -698,10 +699,15 @@ onBeforeUnmount(() => {
                         </div>
                     </div>
                 </div>
+
+                <!-- Animated Water Waves (Aliran Ombak Air Bersih) -->
+                <div class="relative mt-8 sm:mt-12 -mb-2 w-full">
+                    <WaterWaves variant="hero" height-class="h-12 sm:h-20 lg:h-24" />
+                </div>
             </section>
 
             <!-- Cek nota (Floating Utility Card) -->
-            <section id="lacak" class="relative z-10 -mt-2 mb-12 sm:-mt-4 sm:mb-16">
+            <section id="lacak" class="relative z-10 -mt-6 sm:-mt-10 mb-12 sm:mb-16">
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div
                         class="landing-reveal rounded-[28px] border border-navy-800 bg-navy-900 p-6 text-white shadow-[0_16px_40px_rgba(8,16,80,0.18)] sm:p-9"
@@ -767,7 +773,7 @@ onBeforeUnmount(() => {
             </section>
 
             <!-- Keunggulan Layanan -->
-            <section id="kenapa" class="bg-bg py-16 sm:py-20">
+            <section id="kenapa" class="bg-bg pt-16 sm:pt-20 pb-0">
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div
                         class="landing-reveal grid grid-cols-1 gap-8 md:grid-cols-12 md:items-end lg:gap-12"
@@ -847,8 +853,13 @@ onBeforeUnmount(() => {
                 </div>
             </section>
 
+            <!-- Wave divider into dark section -->
+            <div class="-mb-1 w-full overflow-hidden bg-bg">
+                <WaterWaves variant="navy" height-class="h-10 sm:h-16 lg:h-20" />
+            </div>
+
             <!-- Tarif & Layanan -->
-            <section id="layanan" class="bg-navy-950 py-20 text-white sm:py-24">
+            <section id="layanan" class="bg-navy-950 pb-20 pt-8 sm:pb-24 sm:pt-12 text-white">
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div
                         class="landing-reveal flex flex-col justify-between gap-6 md:flex-row md:items-end"
@@ -1023,8 +1034,13 @@ onBeforeUnmount(() => {
                 </div>
             </section>
 
+            <!-- Wave divider out of dark section into light section -->
+            <div class="-mt-1 w-full overflow-hidden bg-navy-950">
+                <WaterWaves variant="inverted" height-class="h-10 sm:h-16 lg:h-20" />
+            </div>
+
             <!-- Standar Kualitas & Komitmen -->
-            <section id="standar" class="bg-bg py-20 sm:py-24">
+            <section id="standar" class="bg-bg pb-20 pt-8 sm:pb-24 sm:pt-12">
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div class="landing-reveal max-w-2xl">
                         <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-700">
