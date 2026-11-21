@@ -346,6 +346,39 @@ function setupStatsObserver() {
 }
 
 /* ------------------------------------------------------------------
+   3D Card Zoom Splash Screen
+   ------------------------------------------------------------------ */
+const showSplash = ref(true);
+const splashStage = ref(0);
+let splashTimer1: number | null = null;
+let splashTimer2: number | null = null;
+let splashTimer3: number | null = null;
+
+function skipSplash() {
+    if (!showSplash.value) {
+        return;
+    }
+
+    if (splashTimer1 !== null) {
+        clearTimeout(splashTimer1);
+        splashTimer1 = null;
+    }
+    if (splashTimer2 !== null) {
+        clearTimeout(splashTimer2);
+        splashTimer2 = null;
+    }
+    if (splashTimer3 !== null) {
+        clearTimeout(splashTimer3);
+        splashTimer3 = null;
+    }
+
+    showSplash.value = false;
+    if (typeof document !== 'undefined' && !menuOpen.value) {
+        document.body.style.overflow = '';
+    }
+}
+
+/* ------------------------------------------------------------------
    Navigasi, scroll, dan reveal
    ------------------------------------------------------------------ */
 const menuOpen = ref(false);
@@ -421,6 +454,29 @@ function setupRevealObserver() {
 }
 
 onMounted(() => {
+    if (typeof window !== 'undefined') {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            showSplash.value = false;
+        } else {
+            document.body.style.overflow = 'hidden';
+
+            splashTimer1 = window.setTimeout(() => {
+                splashStage.value = 1;
+            }, 50);
+
+            splashTimer2 = window.setTimeout(() => {
+                splashStage.value = 2;
+            }, 850);
+
+            splashTimer3 = window.setTimeout(() => {
+                showSplash.value = false;
+                if (!menuOpen.value) {
+                    document.body.style.overflow = '';
+                }
+            }, 1600);
+        }
+    }
+
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('keydown', handleKeydown);
@@ -432,6 +488,19 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
+    if (splashTimer1 !== null) {
+        clearTimeout(splashTimer1);
+        splashTimer1 = null;
+    }
+    if (splashTimer2 !== null) {
+        clearTimeout(splashTimer2);
+        splashTimer2 = null;
+    }
+    if (splashTimer3 !== null) {
+        clearTimeout(splashTimer3);
+        splashTimer3 = null;
+    }
+
     if (counterRafId !== null) {
         cancelAnimationFrame(counterRafId);
         counterRafId = null;
@@ -466,6 +535,75 @@ onBeforeUnmount(() => {
     </Head>
 
     <div class="min-h-screen overflow-x-clip bg-bg font-sans text-navy-950 antialiased">
+        <!-- 3D Card Zoom Splash Screen -->
+        <Teleport to="body">
+            <Transition
+                enter-active-class="transition-opacity duration-200"
+                leave-active-class="transition-opacity duration-500 ease-out"
+                leave-to-class="opacity-0"
+            >
+                <div
+                    v-if="showSplash"
+                    class="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden select-none splash-perspective cursor-pointer transition-colors duration-700 ease-out"
+                    :class="splashStage === 2 ? 'bg-navy-950/0' : 'bg-navy-950'"
+                    aria-hidden="true"
+                    @click="skipSplash"
+                >
+                    <!-- Ambient Radial Glow matching Logo A -->
+                    <div
+                        class="pointer-events-none absolute h-[460px] w-[460px] rounded-full bg-gradient-to-tr from-accent-500/35 via-primary-500/25 to-transparent blur-[80px] transition-all duration-700 ease-out"
+                        :class="splashStage === 2 ? 'scale-[3] opacity-0' : splashStage === 1 ? 'scale-100 opacity-100' : 'scale-75 opacity-0'"
+                    ></div>
+
+                    <!-- 3D Floating Card Container -->
+                    <div
+                        class="splash-card relative flex flex-col items-center justify-center rounded-[32px] sm:rounded-[36px] border border-white/50 bg-white/95 p-8 sm:p-10 shadow-[0_30px_70px_rgba(0,0,0,0.5),0_0_50px_rgba(57,197,168,0.35)] backdrop-blur-2xl"
+                        :class="{
+                            'splash-stage-0': splashStage === 0,
+                            'splash-stage-1': splashStage === 1,
+                            'splash-stage-2': splashStage === 2,
+                        }"
+                    >
+                        <!-- Pill Badge -->
+                        <span
+                            class="inline-flex items-center rounded-full bg-accent-100 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-accent-700 ring-1 ring-accent-600/20"
+                        >
+                            Hendrosari, Gresik
+                        </span>
+
+                        <!-- 3D Logo A Icon -->
+                        <div class="relative my-4 flex items-center justify-center">
+                            <img
+                                src="/images/logo-a.webp"
+                                alt="Andik Laundry"
+                                class="h-28 w-auto sm:h-36 object-contain filter drop-shadow-[0_16px_28px_rgba(31,127,196,0.35)]"
+                                width="144"
+                                height="138"
+                            />
+                        </div>
+
+                        <!-- Brand Title -->
+                        <div class="text-center">
+                            <span class="font-heading text-xl sm:text-2xl font-extrabold tracking-tight text-navy-950">
+                                andik<span class="text-accent-500">.</span>
+                            </span>
+                            <span class="ml-1.5 text-[10px] font-bold uppercase tracking-[0.22em] text-accent-700">
+                                LAUNDRY
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Subtle skip prompt -->
+                    <div
+                        class="pointer-events-none absolute bottom-8 text-[11px] font-medium tracking-wider text-slate-400/80 transition-opacity duration-300"
+                        :class="splashStage === 1 ? 'opacity-100' : 'opacity-0'"
+                    >
+                        Klik di mana saja untuk lewati
+                    </div>
+                </div>
+            </Transition>
+        </Teleport>
+
         <a
             href="#main-content"
             class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-pill focus:bg-accent-500 focus:px-4 focus:py-2 focus:font-bold focus:text-navy-950 focus:shadow-lg focus:outline-none"
@@ -1523,5 +1661,42 @@ onBeforeUnmount(() => {
     .nav-btn:hover .roll > span {
         transform: none !important;
     }
+    .splash-card {
+        transition: none !important;
+        transform: none !important;
+    }
+}
+
+/* ------------------------------------------------------------------
+   3D Card Zoom Splash
+   ------------------------------------------------------------------ */
+.splash-perspective {
+    perspective: 1200px;
+    transform-style: preserve-3d;
+}
+
+.splash-card {
+    will-change: transform, opacity;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+}
+
+.splash-stage-0 {
+    opacity: 0;
+    transform: perspective(1200px) translate3d(0, 40px, -200px) rotateX(15deg) scale(0.85);
+}
+
+.splash-stage-1 {
+    opacity: 1;
+    transform: perspective(1200px) translate3d(0, 0, 0) rotateX(0deg) scale(1);
+}
+
+.splash-stage-2 {
+    opacity: 0;
+    transform: perspective(1200px) translate3d(0, 0, 850px) scale(28);
+    transition:
+        transform 0.75s cubic-bezier(0.65, 0, 0.25, 1),
+        opacity 0.45s cubic-bezier(0.65, 0, 0.25, 1) 0.3s;
 }
 </style>
