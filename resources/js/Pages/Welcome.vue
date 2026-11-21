@@ -346,96 +346,6 @@ function setupStatsObserver() {
 }
 
 /* ------------------------------------------------------------------
-   3D Zoom Splash Screen (Vean Style)
-   ------------------------------------------------------------------ */
-const showSplash = ref(true);
-const splashStage = ref(0);
-let splashTimer1: number | null = null;
-let splashTimer2: number | null = null;
-let splashTimer3: number | null = null;
-
-function cleanupSplashListeners() {
-    if (typeof window !== 'undefined') {
-        window.removeEventListener('wheel', handleSplashWheel);
-        window.removeEventListener('touchmove', handleSplashTouch);
-    }
-}
-
-function triggerZoomOut() {
-    if (!showSplash.value || splashStage.value === 2) {
-        return;
-    }
-
-    if (splashTimer1 !== null) {
-        clearTimeout(splashTimer1);
-        splashTimer1 = null;
-    }
-    if (splashTimer2 !== null) {
-        clearTimeout(splashTimer2);
-        splashTimer2 = null;
-    }
-    if (splashTimer3 !== null) {
-        clearTimeout(splashTimer3);
-        splashTimer3 = null;
-    }
-
-    cleanupSplashListeners();
-    splashStage.value = 2;
-
-    splashTimer3 = window.setTimeout(() => {
-        showSplash.value = false;
-        if (typeof document !== 'undefined' && !menuOpen.value) {
-            document.body.style.overflow = '';
-        }
-    }, 700);
-}
-
-function skipSplash() {
-    if (!showSplash.value) {
-        return;
-    }
-
-    if (splashTimer1 !== null) {
-        clearTimeout(splashTimer1);
-        splashTimer1 = null;
-    }
-    if (splashTimer2 !== null) {
-        clearTimeout(splashTimer2);
-        splashTimer2 = null;
-    }
-    if (splashTimer3 !== null) {
-        clearTimeout(splashTimer3);
-        splashTimer3 = null;
-    }
-
-    cleanupSplashListeners();
-    showSplash.value = false;
-    if (typeof document !== 'undefined' && !menuOpen.value) {
-        document.body.style.overflow = '';
-    }
-}
-
-function handleSplashAction() {
-    if (splashStage.value < 2) {
-        triggerZoomOut();
-    } else {
-        skipSplash();
-    }
-}
-
-function handleSplashWheel(e: WheelEvent) {
-    if (showSplash.value && e.deltaY > 0) {
-        triggerZoomOut();
-    }
-}
-
-function handleSplashTouch() {
-    if (showSplash.value) {
-        triggerZoomOut();
-    }
-}
-
-/* ------------------------------------------------------------------
    Navigasi, scroll, dan reveal
    ------------------------------------------------------------------ */
 const menuOpen = ref(false);
@@ -511,25 +421,6 @@ function setupRevealObserver() {
 }
 
 onMounted(() => {
-    if (typeof window !== 'undefined') {
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            showSplash.value = false;
-        } else {
-            document.body.style.overflow = 'hidden';
-
-            window.addEventListener('wheel', handleSplashWheel, { passive: true });
-            window.addEventListener('touchmove', handleSplashTouch, { passive: true });
-
-            splashTimer1 = window.setTimeout(() => {
-                splashStage.value = 1;
-            }, 60);
-
-            splashTimer2 = window.setTimeout(() => {
-                triggerZoomOut();
-            }, 950);
-        }
-    }
-
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('keydown', handleKeydown);
@@ -541,20 +432,6 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-    cleanupSplashListeners();
-    if (splashTimer1 !== null) {
-        clearTimeout(splashTimer1);
-        splashTimer1 = null;
-    }
-    if (splashTimer2 !== null) {
-        clearTimeout(splashTimer2);
-        splashTimer2 = null;
-    }
-    if (splashTimer3 !== null) {
-        clearTimeout(splashTimer3);
-        splashTimer3 = null;
-    }
-
     if (counterRafId !== null) {
         cancelAnimationFrame(counterRafId);
         counterRafId = null;
@@ -589,57 +466,6 @@ onBeforeUnmount(() => {
     </Head>
 
     <div class="min-h-screen overflow-x-clip bg-bg font-sans text-navy-950 antialiased">
-        <!-- 3D Card Zoom Splash Screen -->
-        <Teleport to="body">
-            <Transition
-                enter-active-class="transition-opacity duration-200"
-                leave-active-class="transition-opacity duration-500 ease-out"
-                leave-to-class="opacity-0"
-            >
-                <div
-                    v-if="showSplash"
-                    class="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-black select-none splash-perspective cursor-pointer transition-colors duration-700 ease-out"
-                    :class="splashStage === 2 ? 'bg-black/0 pointer-events-none' : 'bg-black'"
-                    aria-hidden="true"
-                    @click="handleSplashAction"
-                >
-                    <!-- Deep Ambient Radial Glow matching Logo A -->
-                    <div
-                        class="pointer-events-none absolute h-[320px] w-[320px] sm:h-[460px] sm:w-[460px] rounded-full bg-gradient-to-tr from-[#1f7fc4]/35 via-[#39c5a8]/25 to-transparent blur-[90px] transition-all duration-700 ease-out"
-                        :class="splashStage === 2 ? 'scale-[3.5] opacity-0' : splashStage === 1 ? 'scale-100 opacity-100' : 'scale-75 opacity-0'"
-                    ></div>
-
-                    <!-- 3D Logo A Only (Vean Style) -->
-                    <div
-                        class="splash-logo relative flex items-center justify-center will-change-transform"
-                        :class="{
-                            'splash-logo-stage-0': splashStage === 0,
-                            'splash-logo-stage-1': splashStage === 1,
-                            'splash-logo-stage-2': splashStage === 2,
-                        }"
-                    >
-                        <img
-                            src="/images/logo-a.webp"
-                            alt="Andik Laundry"
-                            class="h-36 w-auto sm:h-48 md:h-56 object-contain filter drop-shadow-[0_20px_50px_rgba(31,127,196,0.6)]"
-                            width="224"
-                            height="215"
-                            loading="eager"
-                            decoding="sync"
-                        />
-                    </div>
-
-                    <!-- Subtle hint -->
-                    <div
-                        class="pointer-events-none absolute bottom-8 text-[11px] font-semibold tracking-widest uppercase text-slate-500/80 transition-opacity duration-300"
-                        :class="splashStage === 1 ? 'opacity-100' : 'opacity-0'"
-                    >
-                        Scroll atau klik untuk lanjut
-                    </div>
-                </div>
-            </Transition>
-        </Teleport>
-
         <a
             href="#main-content"
             class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-pill focus:bg-accent-500 focus:px-4 focus:py-2 focus:font-bold focus:text-navy-950 focus:shadow-lg focus:outline-none"
@@ -1697,43 +1523,5 @@ onBeforeUnmount(() => {
     .nav-btn:hover .roll > span {
         transform: none !important;
     }
-    .splash-logo {
-        transition: none !important;
-        transform: none !important;
-    }
-}
-
-/* ------------------------------------------------------------------
-   3D Zoom Splash (Vean Style)
-   ------------------------------------------------------------------ */
-.splash-perspective {
-    perspective: 1000px;
-    transform-style: preserve-3d;
-}
-
-.splash-logo {
-    transform-origin: center center;
-    transform-style: preserve-3d;
-    backface-visibility: hidden;
-    will-change: transform, opacity;
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
-}
-
-.splash-logo-stage-0 {
-    opacity: 0;
-    transform: perspective(1000px) scale(0.85) translateZ(-80px);
-}
-
-.splash-logo-stage-1 {
-    opacity: 1;
-    transform: perspective(1000px) scale(1) translateZ(0);
-}
-
-.splash-logo-stage-2 {
-    opacity: 0;
-    transform: perspective(1000px) scale(5.2) translateZ(420px);
-    transition:
-        transform 0.75s cubic-bezier(0.4, 0, 0.2, 1),
-        opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.15s;
 }
 </style>
