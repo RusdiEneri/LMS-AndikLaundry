@@ -64,7 +64,6 @@ const storePhoneLabel = computed(() => {
 });
 
 const navLinks = [
-    { href: '#beranda', label: 'Beranda' },
     { href: '#lacak', label: 'Cek Nota' },
     { href: '#layanan', label: 'Layanan & Tarif' },
     { href: '#standar', label: 'Standar Mutu' },
@@ -347,12 +346,6 @@ function setupStatsObserver() {
 }
 
 /* ------------------------------------------------------------------
-   Splash screen intro
-   ------------------------------------------------------------------ */
-const showSplash = ref(true);
-const splashStage = ref(0);
-
-/* ------------------------------------------------------------------
    Navigasi, scroll, dan reveal
    ------------------------------------------------------------------ */
 const menuOpen = ref(false);
@@ -428,29 +421,6 @@ function setupRevealObserver() {
 }
 
 onMounted(() => {
-    if (typeof window !== 'undefined') {
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            showSplash.value = false;
-        } else {
-            document.body.style.overflow = 'hidden';
-
-            window.setTimeout(() => {
-                splashStage.value = 1;
-            }, 60);
-
-            window.setTimeout(() => {
-                splashStage.value = 2;
-            }, 750);
-
-            window.setTimeout(() => {
-                showSplash.value = false;
-                if (!menuOpen.value) {
-                    document.body.style.overflow = '';
-                }
-            }, 1350);
-        }
-    }
-
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('keydown', handleKeydown);
@@ -496,45 +466,6 @@ onBeforeUnmount(() => {
     </Head>
 
     <div class="min-h-screen overflow-x-clip bg-bg font-sans text-navy-950 antialiased">
-        <!-- Splash Screen Intro -->
-        <Teleport to="body">
-            <Transition
-                enter-active-class="transition-opacity duration-200"
-                leave-active-class="transition-opacity duration-500 ease-out"
-                leave-to-class="opacity-0"
-            >
-                <div
-                    v-if="showSplash"
-                    class="fixed inset-0 z-[100] flex items-center justify-center bg-navy-950 overflow-hidden select-none"
-                    aria-hidden="true"
-                >
-                    <!-- Ambient Glow Behind Logo -->
-                    <div
-                        class="absolute h-72 w-72 rounded-full bg-accent-500/20 blur-3xl transition-all duration-700 ease-out"
-                        :class="splashStage >= 2 ? 'scale-150 opacity-0' : splashStage === 1 ? 'scale-100 opacity-100' : 'scale-50 opacity-0'"
-                    ></div>
-
-                    <!-- Logo A Center + Zoom In -->
-                    <div
-                        class="relative flex items-center justify-center transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
-                        :class="{
-                            'opacity-0 scale-75': splashStage === 0,
-                            'opacity-100 scale-100': splashStage === 1,
-                            'opacity-0 scale-[2.7] blur-[1px]': splashStage === 2,
-                        }"
-                    >
-                        <img
-                            src="/images/logo-a.webp"
-                            alt="Andik Laundry"
-                            class="h-28 w-auto sm:h-36 object-contain drop-shadow-[0_16px_32px_rgba(0,0,0,0.5)]"
-                            width="144"
-                            height="138"
-                        />
-                    </div>
-                </div>
-            </Transition>
-        </Teleport>
-
         <a
             href="#main-content"
             class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-pill focus:bg-accent-500 focus:px-4 focus:py-2 focus:font-bold focus:text-navy-950 focus:shadow-lg focus:outline-none"
@@ -542,16 +473,22 @@ onBeforeUnmount(() => {
             Lewati ke konten utama
         </a>
 
-        <!-- Floating Detached Navbar (Icon Terpisah & Navbar Terpisah) -->
+        <!-- Floating Navbar -->
         <header
-            class="fixed inset-x-4 sm:inset-x-8 top-3 sm:top-5 z-40 mx-auto max-w-6xl pointer-events-none transition-all duration-300"
+            class="fixed inset-x-3 sm:inset-x-6 top-3 sm:top-4 z-40 mx-auto max-w-5xl transition-all duration-300"
         >
-            <div class="flex items-center justify-between gap-3">
-                <!-- Island 1: Standalone Logo 'A' -->
+            <div
+                class="flex h-14 sm:h-16 items-center justify-between gap-3 rounded-full border px-3.5 sm:px-6 shadow-[0_8px_30px_rgba(8,16,80,0.08)] backdrop-blur-md transition-all duration-300"
+                :class="
+                    isScrolled
+                        ? 'border-border/90 bg-white/95 shadow-[0_12px_36px_rgba(8,16,80,0.12)]'
+                        : 'border-white/80 bg-white/90'
+                "
+            >
+                <!-- Logo didalam navbar -->
                 <Link
                     href="/"
-                    class="pointer-events-auto flex h-12 w-12 sm:h-14 sm:w-14 shrink-0 items-center justify-center rounded-full border border-white/80 bg-white/90 p-2 shadow-[0_8px_30px_rgba(8,16,80,0.08)] backdrop-blur-md ring-1 ring-navy-950/5 transition-all duration-300 hover:scale-105 active:scale-95 focus-visible:outline-none"
-                    :class="isScrolled ? 'border-border/90 bg-white/95 shadow-[0_12px_36px_rgba(8,16,80,0.12)]' : ''"
+                    class="flex items-center gap-2 rounded-full py-1 focus-visible:outline-none transition-transform hover:scale-105 active:scale-95"
                     aria-label="Andik Laundry, kembali ke beranda"
                 >
                     <img
@@ -563,41 +500,37 @@ onBeforeUnmount(() => {
                     />
                 </Link>
 
-                <!-- Island 2: Standalone Nav Links (Desktop md:+) -->
-                <nav
-                    class="pointer-events-auto hidden md:flex h-12 sm:h-14 items-center gap-1 rounded-full border border-white/80 bg-white/90 px-4 sm:px-6 shadow-[0_8px_30px_rgba(8,16,80,0.08)] backdrop-blur-md ring-1 ring-navy-950/5 transition-all duration-300"
-                    :class="isScrolled ? 'border-border/90 bg-white/95 shadow-[0_12px_36px_rgba(8,16,80,0.12)]' : ''"
-                    aria-label="Navigasi utama"
-                >
+                <!-- Nav Links Desktop (tanpa Beranda) -->
+                <nav class="hidden items-center gap-1 md:flex" aria-label="Navigasi utama">
                     <a
                         v-for="link in navLinks"
                         :key="link.href"
                         :href="link.href"
-                        class="rounded-full px-3.5 py-1.5 text-xs lg:text-[13px] font-semibold text-slate-700 transition-colors hover:bg-accent-100/70 hover:text-accent-700 focus-visible:outline-none"
+                        class="rounded-full px-3 py-1.5 text-xs lg:text-[13px] font-semibold text-slate-700 transition-colors hover:bg-accent-100/70 hover:text-accent-700 focus-visible:outline-none"
                     >
                         {{ link.label }}
                     </a>
                 </nav>
 
-                <!-- Island 3: Actions (WhatsApp Icon Button & Mobile Menu) -->
-                <div class="pointer-events-auto flex items-center gap-2">
-                    <!-- WhatsApp Icon Button (Gantikan Masuk) -->
+                <!-- Action Button didalam navbar (WhatsApp CTA) -->
+                <div class="flex items-center gap-2">
                     <a
                         :href="whatsappUrl"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="flex h-12 w-12 sm:h-14 sm:w-14 shrink-0 items-center justify-center rounded-full bg-accent-500 text-navy-950 shadow-[0_8px_24px_rgba(57,197,168,0.35)] transition-all duration-300 hover:scale-105 hover:bg-accent-600 active:scale-95 focus-visible:outline-none"
+                        class="inline-flex h-9 sm:h-10 items-center justify-center gap-2 rounded-full bg-accent-500 px-3.5 sm:px-4 text-xs sm:text-sm font-bold text-navy-950 shadow-xs transition-all hover:bg-accent-600 hover:scale-105 active:scale-95 focus-visible:outline-none"
                         aria-label="Hubungi WhatsApp Andik Laundry"
                         title="Chat WhatsApp"
                     >
-                        <MessageCircle class="h-6 w-6 stroke-[2.2]" aria-hidden="true" />
+                        <MessageCircle class="h-4 w-4 stroke-[2.2]" aria-hidden="true" />
+                        <span class="hidden sm:inline">WhatsApp</span>
                     </a>
 
                     <!-- Mobile Menu Trigger -->
                     <button
                         ref="menuButtonRef"
                         type="button"
-                        class="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full border border-white/80 bg-white/90 text-navy-950 shadow-[0_8px_30px_rgba(8,16,80,0.08)] backdrop-blur-md ring-1 ring-navy-950/5 transition-all duration-300 hover:bg-accent-100 focus-visible:outline-none md:hidden"
+                        class="inline-flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full text-navy-950 transition-colors hover:bg-accent-100 focus-visible:outline-none md:hidden"
                         :aria-expanded="menuOpen"
                         aria-controls="mobile-menu"
                         :aria-label="menuOpen ? 'Tutup menu' : 'Buka menu'"
