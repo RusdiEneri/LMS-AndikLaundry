@@ -456,11 +456,14 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <Head title="Andik Laundry | Cucian kotor, pulang kinclong">
+    <Head title="Andik Laundry">
         <meta
             name="description"
             content="Layanan cuci kiloan dan cuci karpet di Hendrosari, Menganti, Gresik. Bersih higienis 1 mesin 1 pelanggan, setrika uap rapi, nota digital WhatsApp, dan antar jemput gratis hingga 3 km."
         />
+        <link rel="icon" type="image/webp" href="/images/logo-a.webp?v=1.2" />
+        <link rel="shortcut icon" href="/images/logo-a.webp?v=1.2" />
+        <link rel="apple-touch-icon" href="/images/logo-a.png?v=1.2" />
     </Head>
 
     <div class="min-h-screen overflow-x-clip bg-bg font-sans text-navy-950 antialiased">

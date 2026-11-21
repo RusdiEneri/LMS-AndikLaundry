@@ -16,7 +16,7 @@ const submit = () => {
 </script>
 
 <template>
-    <Head title="Masuk - LMS Andik Laundry" />
+    <Head title="Masuk" />
 
     <div class="min-h-screen flex items-center justify-center p-4 sm:p-6 bg-navy-950 text-white selection:bg-accent-500 selection:text-navy-950 relative overflow-hidden">
         <!-- Subtle background glow -->
