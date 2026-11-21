@@ -507,9 +507,11 @@ onBeforeUnmount(() => {
                         v-for="link in navLinks"
                         :key="link.href"
                         :href="link.href"
-                        class="rounded-full px-3 py-1.5 text-xs lg:text-[13px] font-semibold text-slate-700 transition-colors hover:bg-accent-100/70 hover:text-accent-700 focus-visible:outline-none"
+                        class="nav-link rounded-full px-3 py-1.5 text-xs lg:text-[13px] font-semibold text-slate-700 transition-colors hover:bg-slate-100 hover:text-navy-950 focus-visible:outline-none"
                     >
-                        {{ link.label }}
+                        <span class="roll">
+                            <span :data-t="link.label">{{ link.label }}</span>
+                        </span>
                     </a>
                 </nav>
 
@@ -519,12 +521,14 @@ onBeforeUnmount(() => {
                         :href="whatsappUrl"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="inline-flex h-9 sm:h-10 items-center justify-center gap-2 rounded-full bg-accent-500 px-3.5 sm:px-4 text-xs sm:text-sm font-bold text-navy-950 shadow-xs transition-all hover:bg-accent-600 hover:scale-105 active:scale-95 focus-visible:outline-none"
+                        class="nav-btn inline-flex h-9 sm:h-10 items-center justify-center gap-2 rounded-full bg-accent-500 px-3.5 sm:px-4 text-xs sm:text-sm font-bold text-navy-950 shadow-xs transition-all hover:bg-accent-600 hover:scale-105 active:scale-95 focus-visible:outline-none"
                         aria-label="Hubungi WhatsApp Andik Laundry"
                         title="Chat WhatsApp"
                     >
                         <MessageCircle class="h-4 w-4 stroke-[2.2]" aria-hidden="true" />
-                        <span class="hidden sm:inline">WhatsApp</span>
+                        <span class="roll hidden sm:inline-block">
+                            <span data-t="WhatsApp">WhatsApp</span>
+                        </span>
                     </a>
 
                     <!-- Mobile Menu Trigger -->
@@ -1493,3 +1497,43 @@ onBeforeUnmount(() => {
         </footer>
     </div>
 </template>
+
+<style scoped>
+.roll {
+    position: relative;
+    display: inline-flex;
+    overflow: hidden;
+    vertical-align: middle;
+    line-height: 1.25;
+}
+
+.roll > span {
+    display: block;
+    position: relative;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.1, 1);
+}
+
+.roll > span:after {
+    content: attr(data-t);
+    position: absolute;
+    left: 0;
+    top: 100%;
+    display: block;
+    white-space: nowrap;
+}
+
+.nav-link:hover .roll > span,
+.nav-btn:hover .roll > span {
+    transform: translateY(-100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .roll > span {
+        transition: none !important;
+    }
+    .nav-link:hover .roll > span,
+    .nav-btn:hover .roll > span {
+        transform: none !important;
+    }
+}
+</style>
