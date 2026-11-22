@@ -1,6 +1,10 @@
 <script setup lang="ts">
+import 'lenis/dist/lenis.css';
 import WashingMachineIllustration from '@/Components/Landing/WashingMachineIllustration.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Lenis from 'lenis';
 import {
     Check,
     ChevronDown,
@@ -21,7 +25,12 @@ import {
     Truck,
     X,
 } from 'lucide-vue-next';
+import { animate, inView } from 'motion';
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+
+if (typeof window !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
+}
 
 const props = defineProps<{
     canLogin?: boolean;
@@ -273,8 +282,6 @@ const laundryKgLabel = computed(() =>
     Math.round(animatedLaundryKg.value).toLocaleString('id-ID'),
 );
 
-let counterRafId: number | null = null;
-let statsObserver: IntersectionObserver | null = null;
 let countersStarted = false;
 
 function setFinalCounters() {
@@ -283,12 +290,10 @@ function setFinalCounters() {
     animatedLaundryKg.value = stats.value.laundry_kg;
 }
 
-function animateCounters() {
-    if (countersStarted || typeof window === 'undefined') {
+function setupStatsObserver() {
+    if (!hasStats.value || !statsSection.value || typeof window === 'undefined') {
         return;
     }
-
-    countersStarted = true;
 
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         setFinalCounters();
@@ -296,54 +301,125 @@ function animateCounters() {
         return;
     }
 
-    const targets = stats.value;
-    const duration = 1400;
-    const startTime = performance.now();
-    const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+    inView(
+        statsSection.value,
+        () => {
+            if (countersStarted) {
+                return;
+            }
+            countersStarted = true;
 
-    const step = (now: number) => {
-        const progress = Math.min((now - startTime) / duration, 1);
-        const ease = easeOutCubic(progress);
+            const targets = stats.value;
 
-        animatedCustomers.value = targets.customers * ease;
-        animatedOrders.value = targets.orders * ease;
-        animatedLaundryKg.value = targets.laundry_kg * ease;
+            animate(0, targets.customers, {
+                duration: 1.6,
+                ease: [0.16, 1, 0.3, 1],
+                onUpdate: (latest) => {
+                    animatedCustomers.value = Math.round(latest);
+                },
+            });
 
-        if (progress < 1) {
-            counterRafId = requestAnimationFrame(step);
+            animate(0, targets.orders, {
+                duration: 1.6,
+                ease: [0.16, 1, 0.3, 1],
+                onUpdate: (latest) => {
+                    animatedOrders.value = Math.round(latest);
+                },
+            });
 
-            return;
-        }
-
-        setFinalCounters();
-        counterRafId = null;
-    };
-
-    counterRafId = requestAnimationFrame(step);
+            animate(0, targets.laundry_kg, {
+                duration: 1.8,
+                ease: [0.16, 1, 0.3, 1],
+                onUpdate: (latest) => {
+                    animatedLaundryKg.value = Math.round(latest);
+                },
+            });
+        },
+        { amount: 0.3 },
+    );
 }
 
-function setupStatsObserver() {
-    if (!hasStats.value || !statsSection.value || typeof window === 'undefined') {
+/* ------------------------------------------------------------------
+   Lenis (Smooth Scroll) & GSAP (ScrollTrigger & Motion)
+   ------------------------------------------------------------------ */
+let lenisInstance: Lenis | null = null;
+let tickerHandler: ((time: number) => void) | null = null;
+
+function smoothScrollTo(target: string) {
+    if (menuOpen.value) {
+        menuOpen.value = false;
+    }
+
+    if (lenisInstance) {
+        lenisInstance.scrollTo(target, { offset: -70, duration: 1.1 });
+    } else if (typeof document !== 'undefined') {
+        const el = document.querySelector(target);
+        el?.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+function initSmoothScrollAndAnimations() {
+    if (typeof window === 'undefined') {
         return;
     }
 
-    if (!('IntersectionObserver' in window)) {
-        setFinalCounters();
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-        return;
+    if (!prefersReducedMotion) {
+        lenisInstance = new Lenis({
+            duration: 1.1,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            smoothWheel: true,
+            touchMultiplier: 1.2,
+        });
+
+        lenisInstance.on('scroll', ScrollTrigger.update);
+
+        tickerHandler = (time: number) => {
+            lenisInstance?.raf(time * 1000);
+        };
+        gsap.ticker.add(tickerHandler);
+        gsap.ticker.lagSmoothing(0);
+
+        // GSAP ScrollTrigger batch for smooth entrance
+        ScrollTrigger.batch('.landing-reveal, .landing-reveal-left, .landing-reveal-right', {
+            start: 'top 88%',
+            once: true,
+            onEnter: (batch) => {
+                gsap.to(batch, {
+                    opacity: 1,
+                    y: 0,
+                    x: 0,
+                    stagger: 0.08,
+                    duration: 0.75,
+                    ease: 'power2.out',
+                    overwrite: 'auto',
+                });
+            },
+        });
+
+        // Parallax on hero illustration
+        const heroIllu = document.querySelector('.hero-illustration');
+        if (heroIllu) {
+            gsap.to(heroIllu, {
+                y: 36,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: '#beranda',
+                    start: 'top top',
+                    end: 'bottom top',
+                    scrub: 1,
+                },
+            });
+        }
+    } else {
+        document
+            .querySelectorAll<HTMLElement>('.landing-reveal, .landing-reveal-left, .landing-reveal-right')
+            .forEach((el) => {
+                el.style.opacity = '1';
+                el.style.transform = 'none';
+            });
     }
-
-    statsObserver = new IntersectionObserver(
-        (entries) => {
-            if (entries.some((entry) => entry.isIntersecting)) {
-                animateCounters();
-                statsObserver?.disconnect();
-            }
-        },
-        { threshold: 0.35 },
-    );
-
-    statsObserver.observe(statsSection.value);
 }
 
 /* ------------------------------------------------------------------
@@ -362,8 +438,11 @@ watch(menuOpen, async (open) => {
     document.body.style.overflow = open ? 'hidden' : '';
 
     if (open) {
+        lenisInstance?.stop();
         await nextTick();
         menuPanelRef.value?.focus();
+    } else {
+        lenisInstance?.start();
     }
 });
 
@@ -388,55 +467,27 @@ function handleScroll() {
     });
 }
 
-let revealObserver: IntersectionObserver | null = null;
-
-function setupRevealObserver() {
-    if (typeof window === 'undefined') {
-        return;
-    }
-
-    const elements = document.querySelectorAll<HTMLElement>('.landing-reveal');
-
-    if (!('IntersectionObserver' in window)) {
-        elements.forEach((element) => element.classList.add('is-visible'));
-
-        return;
-    }
-
-    revealObserver = new IntersectionObserver(
-        (entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('is-visible');
-                    revealObserver?.unobserve(entry.target);
-                }
-            });
-        },
-        {
-            rootMargin: '0px 0px -48px 0px',
-            threshold: 0.08,
-        },
-    );
-
-    elements.forEach((element) => revealObserver?.observe(element));
-}
-
 onMounted(() => {
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('keydown', handleKeydown);
 
     nextTick(() => {
-        setupRevealObserver();
+        initSmoothScrollAndAnimations();
         setupStatsObserver();
     });
 });
 
 onBeforeUnmount(() => {
-    if (counterRafId !== null) {
-        cancelAnimationFrame(counterRafId);
-        counterRafId = null;
+    if (lenisInstance) {
+        lenisInstance.destroy();
+        lenisInstance = null;
     }
+    if (tickerHandler) {
+        gsap.ticker.remove(tickerHandler);
+        tickerHandler = null;
+    }
+    ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
 
     if (scrollFrame !== null) {
         cancelAnimationFrame(scrollFrame);
@@ -445,9 +496,6 @@ onBeforeUnmount(() => {
 
     window.removeEventListener('scroll', handleScroll);
     window.removeEventListener('keydown', handleKeydown);
-
-    revealObserver?.disconnect();
-    statsObserver?.disconnect();
 
     if (typeof document !== 'undefined') {
         document.body.style.overflow = '';
@@ -470,6 +518,7 @@ onBeforeUnmount(() => {
         <a
             href="#main-content"
             class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-pill focus:bg-accent-500 focus:px-4 focus:py-2 focus:font-bold focus:text-navy-950 focus:shadow-lg focus:outline-none"
+            @click.prevent="smoothScrollTo('#main-content')"
         >
             Lewati ke konten utama
         </a>
@@ -508,6 +557,7 @@ onBeforeUnmount(() => {
                         :key="link.href"
                         :href="link.href"
                         class="nav-link rounded-full px-3 py-1.5 text-xs lg:text-[13px] font-semibold text-slate-700 transition-colors hover:bg-slate-100 hover:text-navy-950 focus-visible:outline-none"
+                        @click.prevent="smoothScrollTo(link.href)"
                     >
                         <span class="roll">
                             <span :data-t="link.label">{{ link.label }}</span>
@@ -623,7 +673,7 @@ onBeforeUnmount(() => {
                                 :key="link.href"
                                 :href="link.href"
                                 class="flex min-h-[46px] items-center justify-between rounded-xl px-3.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-accent-50 hover:text-navy-950 active:bg-accent-100"
-                                @click="menuOpen = false"
+                                @click.prevent="smoothScrollTo(link.href)"
                             >
                                 <span>{{ link.label }}</span>
                                 <ChevronRight class="h-4 w-4 text-slate-400 opacity-60" aria-hidden="true" />
@@ -724,6 +774,7 @@ onBeforeUnmount(() => {
                                 <a
                                     href="#tarif"
                                     class="inline-flex min-h-[48px] items-center justify-center rounded-pill border border-navy-900/15 bg-white px-6 text-sm font-bold text-navy-950 shadow-xs transition-colors hover:bg-slate-50 focus-visible:outline-none"
+                                    @click.prevent="smoothScrollTo('#tarif')"
                                 >
                                     Lihat tarif
                                 </a>
@@ -745,7 +796,7 @@ onBeforeUnmount(() => {
                     </div>
 
                     <div class="min-w-0 lg:col-span-6">
-                        <div class="landing-enter mx-auto max-w-[440px]" style="--enter-delay: 140ms">
+                        <div class="hero-illustration landing-enter mx-auto max-w-[440px] will-change-transform" style="--enter-delay: 140ms">
                             <WashingMachineIllustration />
                             <div
                                 class="mt-3 flex items-center justify-center text-center text-[11px] font-bold uppercase tracking-[0.16em] text-accent-700"
@@ -1467,22 +1518,38 @@ onBeforeUnmount(() => {
                         </p>
                         <ul class="mt-2 space-y-0 text-sm">
                             <li>
-                                <a href="#tarif" class="flex min-h-[44px] items-center transition-colors hover:text-white">
+                                <a
+                                    href="#tarif"
+                                    class="flex min-h-[44px] items-center transition-colors hover:text-white"
+                                    @click.prevent="smoothScrollTo('#tarif')"
+                                >
                                     Cuci setrika
                                 </a>
                             </li>
                             <li>
-                                <a href="#tarif" class="flex min-h-[44px] items-center transition-colors hover:text-white">
+                                <a
+                                    href="#tarif"
+                                    class="flex min-h-[44px] items-center transition-colors hover:text-white"
+                                    @click.prevent="smoothScrollTo('#tarif')"
+                                >
                                     Cuci kering lipat
                                 </a>
                             </li>
                             <li>
-                                <a href="#tarif" class="flex min-h-[44px] items-center transition-colors hover:text-white">
+                                <a
+                                    href="#tarif"
+                                    class="flex min-h-[44px] items-center transition-colors hover:text-white"
+                                    @click.prevent="smoothScrollTo('#tarif')"
+                                >
                                     Cuci basah
                                 </a>
                             </li>
                             <li>
-                                <a href="#tarif" class="flex min-h-[44px] items-center transition-colors hover:text-white">
+                                <a
+                                    href="#tarif"
+                                    class="flex min-h-[44px] items-center transition-colors hover:text-white"
+                                    @click.prevent="smoothScrollTo('#tarif')"
+                                >
                                     Cuci karpet
                                 </a>
                             </li>
@@ -1495,12 +1562,20 @@ onBeforeUnmount(() => {
                         </p>
                         <ul class="mt-2 space-y-0 text-sm">
                             <li>
-                                <a href="#lacak" class="flex min-h-[44px] items-center transition-colors hover:text-white">
+                                <a
+                                    href="#lacak"
+                                    class="flex min-h-[44px] items-center transition-colors hover:text-white"
+                                    @click.prevent="smoothScrollTo('#lacak')"
+                                >
                                     Cek status nota
                                 </a>
                             </li>
                             <li>
-                                <a href="#lokasi" class="flex min-h-[44px] items-center transition-colors hover:text-white">
+                                <a
+                                    href="#lokasi"
+                                    class="flex min-h-[44px] items-center transition-colors hover:text-white"
+                                    @click.prevent="smoothScrollTo('#lokasi')"
+                                >
                                     Lokasi dan peta
                                 </a>
                             </li>
