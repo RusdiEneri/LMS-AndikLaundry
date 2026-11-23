@@ -1307,10 +1307,12 @@ onBeforeUnmount(() => {
                             <div class="lg:col-span-7 rounded-2xl bg-white p-5 sm:p-6 border border-slate-200/90 shadow-xs">
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div>
-                                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
+                                        <label for="estimator-service" class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
                                             Pilih Layanan
                                         </label>
                                         <select
+                                            id="estimator-service"
+                                            name="estimator_service"
                                             v-model="estimatorServiceId"
                                             class="w-full h-11 rounded-xl border border-slate-300 bg-white px-3 text-sm font-semibold text-navy-950 focus:border-accent-500 focus:outline-none"
                                         >
@@ -1320,11 +1322,14 @@ onBeforeUnmount(() => {
                                         </select>
                                     </div>
                                     <div>
-                                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
+                                        <label for="estimator-weight-range" class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
                                             Perkiraan Berat: <span class="text-accent-700 font-extrabold">{{ estimatorWeight }} kg</span>
                                         </label>
                                         <div class="flex items-center gap-2">
                                             <input
+                                                id="estimator-weight-range"
+                                                name="estimator_weight_range"
+                                                aria-label="Geser untuk memilih perkiraan berat cucian dalam kilogram"
                                                 v-model.number="estimatorWeight"
                                                 type="range"
                                                 min="2"
@@ -1333,6 +1338,9 @@ onBeforeUnmount(() => {
                                                 class="w-full accent-accent-500 cursor-pointer"
                                             />
                                             <input
+                                                id="estimator-weight-number"
+                                                name="estimator_weight_number"
+                                                aria-label="Ketik angka perkiraan berat cucian dalam kilogram"
                                                 v-model.number="estimatorWeight"
                                                 type="number"
                                                 min="2"
