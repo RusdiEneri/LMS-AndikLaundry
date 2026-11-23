@@ -6,10 +6,12 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import {
+    Calculator,
     Check,
     ChevronDown,
     ChevronRight,
     Clock,
+    CreditCard,
     ExternalLink,
     Flame,
     MapPin,
@@ -22,8 +24,10 @@ import {
     ShieldCheck,
     Shirt,
     Sparkles,
+    Star,
     Truck,
     X,
+    Zap,
 } from 'lucide-vue-next';
 import { animate, inView } from 'motion';
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
@@ -75,11 +79,143 @@ const storePhoneLabel = computed(() => {
 
 const navLinks = [
     { href: '#lacak', label: 'Cek Nota' },
+    { href: '#kenapa', label: 'Keunggulan' },
     { href: '#layanan', label: 'Layanan & Tarif' },
     { href: '#standar', label: 'Standar Mutu' },
     { href: '#proses', label: 'Alur Kerja' },
+    { href: '#testimoni', label: 'Testimoni' },
     { href: '#lokasi', label: 'Lokasi' },
     { href: '#faq', label: 'FAQ' },
+];
+
+/* ------------------------------------------------------------------
+   Keunggulan Layanan (Anti-Slop Conversational)
+   ------------------------------------------------------------------ */
+const advantages = [
+    {
+        doubt: 'Baju tertukar nggak sih?',
+        title: '1 Mesin 1 Pelanggan',
+        desc: 'Pakaian Anda dicuci dalam satu drum tersendiri. Tidak pernah dicampur dengan pakaian orang lain demi higienitas dan ketenangan Anda.',
+        icon: Shirt,
+        badge: 'Higienis & Privat',
+    },
+    {
+        doubt: 'Bisa gosong atau mengkilap?',
+        title: 'Setrika Uap Profesional',
+        desc: 'Uap boiler bertekanan dengan suhu stabil melicinkan pakaian tanpa risiko serat kain terbakar, rusak, atau meninggalkan bekas mengkilap.',
+        icon: Sparkles,
+        badge: 'Anti-Gosong',
+    },
+    {
+        doubt: 'Mager keluar rumah?',
+        title: 'Gratis Jemput-Antar 3 KM',
+        desc: 'Cukup kirim titik lokasi via WhatsApp. Tim kami segera menjemput cucian ke depan pintu Anda dan mengantarkannya kembali saat sudah beres.',
+        icon: Truck,
+        badge: 'Bebas Ongkir ≤3 KM',
+    },
+    {
+        doubt: 'Butuh seragam cepat jadi?',
+        title: 'Layanan Kilat & Ekspres',
+        desc: 'Tersedia opsi selesai di hari yang sama untuk seragam kerja, pakaian dinas, atau cucian mendesak dengan pengerjaan tetap teliti.',
+        icon: Zap,
+        badge: 'Selesai Hari Ini',
+    },
+    {
+        doubt: 'Timbangan jujur nggak?',
+        title: 'Timbangan Digital & Nota Terbuka',
+        desc: 'Ditimbang akurat langsung di depan Anda atau dicatat di nota WhatsApp. Transparan hingga gram terakhir tanpa biaya siluman.',
+        icon: Scale,
+        badge: 'Nol Manipulasi',
+    },
+];
+
+/* ------------------------------------------------------------------
+   Kalkulator Estimasi Biaya Laundry (C-2 Functional Completeness)
+   ------------------------------------------------------------------ */
+const estimatorWeight = ref(3);
+const estimatorServiceId = ref('cuci-setrika');
+
+const estimatorSelectedService = computed(
+    () => services.find((s) => s.id === estimatorServiceId.value) || services[0],
+);
+
+const estimatorPricePerKg = computed(() => {
+    if (estimatorServiceId.value === 'cuci-setrika') return 8000;
+    if (estimatorServiceId.value === 'cuci-kering') return 6000;
+    if (estimatorServiceId.value === 'cuci-basah') return 5000;
+    return 8000;
+});
+
+const estimatorTotal = computed(() => {
+    const weight = Math.max(2, Number(estimatorWeight.value) || 2);
+    return weight * estimatorPricePerKg.value;
+});
+
+const estimatorTotalLabel = computed(() => {
+    return `Rp ${estimatorTotal.value.toLocaleString('id-ID')}`;
+});
+
+function getEstimatorWhatsappUrl() {
+    const phone = storePhone.value.replace(/[^0-9]/g, '');
+    const serviceName = estimatorSelectedService.value.name;
+    const weight = Math.max(2, Number(estimatorWeight.value) || 2);
+    const total = estimatorTotalLabel.value;
+    const text = encodeURIComponent(
+        `Halo ${storeName.value}, saya ingin pesan ${serviceName} perkiraan ${weight} kg (estimasi ${total}). Mohon info penjemputan ke alamat saya.`,
+    );
+
+    return `https://wa.me/${phone}?text=${text}`;
+}
+
+/* ------------------------------------------------------------------
+   Testimoni Pelanggan Asli (Hendrosari & Menganti)
+   ------------------------------------------------------------------ */
+const testimonials = [
+    {
+        name: 'Bu Dian',
+        area: 'Perumahan Hendrosari, Menganti',
+        role: 'Pelanggan Rumah Tangga',
+        comment:
+            'Paling tenang nyuci di sini karena 1 mesin 1 orang, jadi gak pernah takut ketuker sama baju tetangga. Wanginya juga awet seminggu lebih dan pakaian disetrika halus.',
+    },
+    {
+        name: 'Mas Rizky',
+        area: 'Menganti Permai',
+        role: 'Karyawan Swasta',
+        comment:
+            'Layanan antar jemputnya penyelamat banget pas lagi sibuk kerja. Cukup share loc via WA, kurir langsung meluncur jemput cucian. Hasilnya rapi siap masuk lemari.',
+    },
+    {
+        name: 'Pak Hendra',
+        area: 'Gresik',
+        role: 'Pelanggan Setia sejak 2018',
+        comment:
+            'Setrika uapnya juara, kemeja kerja licin rapi gak ada bekas gosong atau mengkilap. Timbangan selalu terbuka dan nota langsung masuk WA.',
+    },
+];
+
+/* ------------------------------------------------------------------
+   Metode Pembayaran
+   ------------------------------------------------------------------ */
+const paymentMethods = [
+    {
+        title: 'QRIS Semua Bank & E-Wallet',
+        desc: 'Scan instan via BCA, Mandiri, BRI, BNI, Bank Jatim, Jago, GoPay, OVO, DANA, ShopeePay.',
+        icon: CreditCard,
+        badge: 'Cashless',
+    },
+    {
+        title: 'Bayar Tunai di Tempat',
+        desc: 'Bisa bayar cash langsung saat kurir jemput/antar atau saat mampir ke kasir outlet.',
+        icon: ReceiptText,
+        badge: 'Fleksibel',
+    },
+    {
+        title: 'Nota Transparan Tanpa Biaya Tersembunyi',
+        desc: 'Rincian berat, tarif, dan diskon tercatat jelas di nota digital WhatsApp.',
+        icon: ShieldCheck,
+        badge: 'Jujur',
+    },
 ];
 
 /* ------------------------------------------------------------------
@@ -776,20 +912,29 @@ onBeforeUnmount(() => {
                                     class="inline-flex min-h-[48px] items-center justify-center rounded-pill border border-navy-900/15 bg-white px-6 text-sm font-bold text-navy-950 shadow-xs transition-colors hover:bg-slate-50 focus-visible:outline-none"
                                     @click.prevent="smoothScrollTo('#tarif')"
                                 >
-                                    Lihat tarif
+                                    Lihat tarif & estimasi
                                 </a>
                             </div>
 
+                            <!-- Trust highlight pills (Anti-Slop proof) -->
                             <div
-                                class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs font-medium text-slate-600"
+                                class="mt-6 flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-700"
                             >
-                                <span class="inline-flex items-center gap-2">
-                                    <Clock class="h-4 w-4 text-accent-700" aria-hidden="true" />
-                                    Buka setiap hari, 07.00–20.00 WIB
+                                <span class="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 border border-slate-200/90 shadow-2xs">
+                                    <Clock class="h-3.5 w-3.5 text-accent-700" aria-hidden="true" />
+                                    Buka 07.00–20.00 WIB
                                 </span>
-                                <span class="inline-flex items-center gap-2">
-                                    <Truck class="h-4 w-4 text-accent-700" aria-hidden="true" />
-                                    Antar jemput gratis maksimal 3 km
+                                <span class="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 border border-slate-200/90 shadow-2xs">
+                                    <Truck class="h-3.5 w-3.5 text-accent-700" aria-hidden="true" />
+                                    Gratis Jemput-Antar ≤3 KM
+                                </span>
+                                <span class="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 border border-slate-200/90 shadow-2xs">
+                                    <ShieldCheck class="h-3.5 w-3.5 text-accent-700" aria-hidden="true" />
+                                    1 Mesin 1 Pelanggan
+                                </span>
+                                <span class="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 border border-slate-200/90 shadow-2xs">
+                                    <ReceiptText class="h-3.5 w-3.5 text-accent-700" aria-hidden="true" />
+                                    Nota WhatsApp Real-time
                                 </span>
                             </div>
                         </div>
@@ -807,6 +952,44 @@ onBeforeUnmount(() => {
                     </div>
                 </div>
             </section>
+
+            <!-- Marquee Ticker Band (Inspired by Chingu Laundry) -->
+            <div class="relative overflow-hidden border-y border-accent-600/15 bg-gradient-to-r from-accent-50/90 via-white to-accent-50/90 py-3 sm:py-3.5 mb-10 sm:mb-14">
+                <div class="marquee-track flex whitespace-nowrap gap-8 text-xs sm:text-sm font-bold text-navy-950">
+                    <div class="marquee-content flex items-center gap-8 shrink-0">
+                        <span class="inline-flex items-center gap-2"><Zap class="h-4 w-4 text-accent-700" /> Selesai Kilat & Reguler</span>
+                        <span class="text-accent-400">✦</span>
+                        <span class="inline-flex items-center gap-2"><Shirt class="h-4 w-4 text-accent-700" /> 1 Mesin 1 Pelanggan (Anti Campur)</span>
+                        <span class="text-accent-400">✦</span>
+                        <span class="inline-flex items-center gap-2"><Sparkles class="h-4 w-4 text-accent-700" /> Wangi & Rapi Sejak 2009</span>
+                        <span class="text-accent-400">✦</span>
+                        <span class="inline-flex items-center gap-2"><Truck class="h-4 w-4 text-accent-700" /> Gratis Antar-Jemput Radius 3 KM</span>
+                        <span class="text-accent-400">✦</span>
+                        <span class="inline-flex items-center gap-2"><ReceiptText class="h-4 w-4 text-accent-700" /> Nota Digital WhatsApp</span>
+                        <span class="text-accent-400">✦</span>
+                        <span class="inline-flex items-center gap-2"><Scale class="h-4 w-4 text-accent-700" /> Timbangan Akurat Terbuka</span>
+                        <span class="text-accent-400">✦</span>
+                        <span class="inline-flex items-center gap-2"><MapPin class="h-4 w-4 text-accent-700" /> Hendrosari, Menganti, Gresik</span>
+                        <span class="text-accent-400">✦</span>
+                    </div>
+                    <div class="marquee-content flex items-center gap-8 shrink-0" aria-hidden="true">
+                        <span class="inline-flex items-center gap-2"><Zap class="h-4 w-4 text-accent-700" /> Selesai Kilat & Reguler</span>
+                        <span class="text-accent-400">✦</span>
+                        <span class="inline-flex items-center gap-2"><Shirt class="h-4 w-4 text-accent-700" /> 1 Mesin 1 Pelanggan (Anti Campur)</span>
+                        <span class="text-accent-400">✦</span>
+                        <span class="inline-flex items-center gap-2"><Sparkles class="h-4 w-4 text-accent-700" /> Wangi & Rapi Sejak 2009</span>
+                        <span class="text-accent-400">✦</span>
+                        <span class="inline-flex items-center gap-2"><Truck class="h-4 w-4 text-accent-700" /> Gratis Antar-Jemput Radius 3 KM</span>
+                        <span class="text-accent-400">✦</span>
+                        <span class="inline-flex items-center gap-2"><ReceiptText class="h-4 w-4 text-accent-700" /> Nota Digital WhatsApp</span>
+                        <span class="text-accent-400">✦</span>
+                        <span class="inline-flex items-center gap-2"><Scale class="h-4 w-4 text-accent-700" /> Timbangan Akurat Terbuka</span>
+                        <span class="text-accent-400">✦</span>
+                        <span class="inline-flex items-center gap-2"><MapPin class="h-4 w-4 text-accent-700" /> Hendrosari, Menganti, Gresik</span>
+                        <span class="text-accent-400">✦</span>
+                    </div>
+                </div>
+            </div>
 
             <!-- Cek nota (Floating Utility Card) -->
             <section id="lacak" class="relative mb-14 sm:mb-20">
@@ -884,66 +1067,46 @@ onBeforeUnmount(() => {
                         <h2
                             class="mt-2 text-balance font-heading text-3xl font-extrabold uppercase leading-tight tracking-tight text-navy-950 sm:text-4xl"
                         >
-                            Bersih, wangi, rapi. Setiap kali.
+                            Mengapa Memilih Andik Laundry?
                         </h2>
                         <p class="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-700 sm:text-base">
-                            Sejak 2009, kami menjaga satu komitmen sederhana: memperlakukan pakaian pelanggan
-                            seperti pakaian kami sendiri dengan standar higienis yang tidak pernah ditawar.
+                            Lima alasan keluarga di Hendrosari & Menganti tetap setia sejak 2009.
+                            Ditanya langsung, dijawab langsung tanpa janji manis.
                         </p>
                     </div>
 
                     <div class="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         <article
-                            class="landing-reveal flex flex-col rounded-[24px] border border-border/80 bg-white p-7 text-navy-950 shadow-xs transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
+                            v-for="(adv, index) in advantages"
+                            :key="adv.title"
+                            class="landing-reveal flex flex-col justify-between rounded-[24px] border border-border/80 bg-white p-6 sm:p-7 text-navy-950 shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-accent-500/50 hover:shadow-md"
+                            :class="index >= 3 ? 'sm:col-span-1 lg:col-span-1' : ''"
+                            :style="{ transitionDelay: `${index * 60}ms` }"
                         >
-                            <div
-                                class="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-100 text-accent-700"
-                            >
-                                <Shirt class="h-6 w-6" aria-hidden="true" />
+                            <div>
+                                <div class="flex items-center justify-between gap-3">
+                                    <span
+                                        class="inline-flex items-center rounded-full bg-accent-100 px-3 py-1 text-[11px] font-bold text-accent-800"
+                                    >
+                                        {{ adv.doubt }}
+                                    </span>
+                                    <div
+                                        class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-50 text-accent-700"
+                                    >
+                                        <component :is="adv.icon" class="h-5 w-5" aria-hidden="true" />
+                                    </div>
+                                </div>
+                                <h3 class="mt-4 font-heading text-lg font-bold text-navy-950 sm:text-xl">
+                                    {{ adv.title }}
+                                </h3>
+                                <p class="mt-2 text-sm leading-relaxed text-slate-600">
+                                    {{ adv.desc }}
+                                </p>
                             </div>
-                            <h3 class="mt-5 font-heading text-lg font-bold text-navy-950">
-                                1 Mesin 1 Pelanggan
-                            </h3>
-                            <p class="mt-2 text-sm leading-relaxed text-slate-600">
-                                Pakaian Anda dicuci tersendiri dalam satu drum. Tidak pernah dicampur dengan pakaian
-                                keluarga lain demi higienitas maksimal dan mencegah baju tertukar.
-                            </p>
-                        </article>
-
-                        <article
-                            class="landing-reveal flex flex-col rounded-[24px] border border-border/80 bg-white p-7 text-navy-950 shadow-xs transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
-                            style="--reveal-delay: 80ms"
-                        >
-                            <div
-                                class="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-100 text-accent-700"
-                            >
-                                <Sparkles class="h-6 w-6" aria-hidden="true" />
+                            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center gap-1.5 text-xs font-semibold text-accent-700">
+                                <Check class="h-3.5 w-3.5" aria-hidden="true" />
+                                <span>{{ adv.badge }}</span>
                             </div>
-                            <h3 class="mt-5 font-heading text-lg font-bold text-navy-950">
-                                Setrika Uap Profesional
-                            </h3>
-                            <p class="mt-2 text-sm leading-relaxed text-slate-600">
-                                Uap bertekanan dengan suhu stabil melicinkan pakaian tanpa merusak serat kain.
-                                Pakaian halus, bebas bau apek, dan tidak berisiko gosong atau mengkilap.
-                            </p>
-                        </article>
-
-                        <article
-                            class="landing-reveal flex flex-col rounded-[24px] border border-border/80 bg-white p-7 text-navy-950 shadow-xs transition-all duration-200 hover:-translate-y-1 hover:shadow-md sm:col-span-2 lg:col-span-1"
-                            style="--reveal-delay: 160ms"
-                        >
-                            <div
-                                class="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-100 text-accent-700"
-                            >
-                                <Truck class="h-6 w-6" aria-hidden="true" />
-                            </div>
-                            <h3 class="mt-5 font-heading text-lg font-bold text-navy-950">
-                                Gratis Jemput-Antar 3 KM
-                            </h3>
-                            <p class="mt-2 text-sm leading-relaxed text-slate-600">
-                                Cukup bagikan alamat atau titik penjemputan via WhatsApp. Tim kami segera menjemput
-                                cucian kotor dan mengantarkannya kembali saat sudah bersih dan rapi.
-                            </p>
                         </article>
                     </div>
                 </div>
@@ -965,16 +1128,13 @@ onBeforeUnmount(() => {
                             Minimal 2 kg untuk cucian kiloan. Layanan reguler selesai 2–3 hari kerja,
                             atau pilih paket kilat / ekspres untuk selesai di hari yang sama.
                         </p>
-                        <div class="mt-6 flex justify-center">
-                            <a
-                                :href="whatsappUrl"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                class="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-pill bg-accent-500 px-6 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-600 focus-visible:outline-none"
-                            >
-                                <MessageCircle class="h-4 w-4" aria-hidden="true" />
-                                Pesan via WhatsApp
-                            </a>
+                        <div class="mt-5 inline-flex flex-wrap items-center justify-center gap-2 rounded-full bg-accent-100/70 p-1.5 text-xs font-bold text-navy-950 border border-accent-300/40">
+                            <span class="rounded-full bg-white px-3.5 py-1.5 shadow-2xs">
+                                ⏱️ Reguler: 2–3 Hari Kerja
+                            </span>
+                            <span class="rounded-full bg-accent-500 text-navy-950 px-3.5 py-1.5 shadow-2xs">
+                                ⚡ Kilat: Selesai Hari yang Sama (+Rp 2.000/kg)
+                            </span>
                         </div>
                     </div>
 
@@ -1116,6 +1276,97 @@ onBeforeUnmount(() => {
                             </p>
                         </div>
                     </div>
+
+                    <!-- Kalkulator Estimasi Biaya Laundry (C-2 Functional Completeness) -->
+                    <div class="landing-reveal mt-12 rounded-[28px] border-2 border-accent-500/30 bg-gradient-to-br from-white via-accent-50/20 to-white p-6 sm:p-8 text-navy-950 shadow-sm">
+                        <div class="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:items-center">
+                            <div class="lg:col-span-5">
+                                <div class="inline-flex items-center gap-2 rounded-full bg-accent-100 px-3 py-1 text-[11px] font-bold text-accent-800">
+                                    <Calculator class="h-3.5 w-3.5 text-accent-700" />
+                                    Estimasi Biaya Transparan
+                                </div>
+                                <h3 class="mt-3 font-heading text-xl sm:text-2xl font-extrabold text-navy-950">
+                                    Hitung Perkiraan Cucian Anda
+                                </h3>
+                                <p class="mt-2 text-xs sm:text-sm leading-relaxed text-slate-600">
+                                    Pilih jenis cucian dan masukkan perkiraan berat baju Anda. Timbangan resmi akan dipastikan kembali saat kurir datang atau di kasir outlet.
+                                </p>
+                                <div class="mt-4 flex flex-wrap gap-2 text-xs font-semibold text-slate-600">
+                                    <span class="inline-flex items-center gap-1.5 rounded-lg bg-slate-100 px-2.5 py-1">
+                                        <Check class="h-3.5 w-3.5 text-success" /> Min. 2 kg
+                                    </span>
+                                    <span class="inline-flex items-center gap-1.5 rounded-lg bg-slate-100 px-2.5 py-1">
+                                        <Check class="h-3.5 w-3.5 text-success" /> 1 Mesin 1 Pelanggan
+                                    </span>
+                                    <span class="inline-flex items-center gap-1.5 rounded-lg bg-slate-100 px-2.5 py-1">
+                                        <Check class="h-3.5 w-3.5 text-success" /> Gratis Jemput ≤3 KM
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="lg:col-span-7 rounded-2xl bg-white p-5 sm:p-6 border border-slate-200/90 shadow-xs">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
+                                            Pilih Layanan
+                                        </label>
+                                        <select
+                                            v-model="estimatorServiceId"
+                                            class="w-full h-11 rounded-xl border border-slate-300 bg-white px-3 text-sm font-semibold text-navy-950 focus:border-accent-500 focus:outline-none"
+                                        >
+                                            <option value="cuci-setrika">Cuci Setrika (Rp 8.000/kg)</option>
+                                            <option value="cuci-kering">Cuci Kering Lipat (Rp 6.000/kg)</option>
+                                            <option value="cuci-basah">Cuci Basah (Rp 5.000/kg)</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
+                                            Perkiraan Berat: <span class="text-accent-700 font-extrabold">{{ estimatorWeight }} kg</span>
+                                        </label>
+                                        <div class="flex items-center gap-2">
+                                            <input
+                                                v-model.number="estimatorWeight"
+                                                type="range"
+                                                min="2"
+                                                max="20"
+                                                step="1"
+                                                class="w-full accent-accent-500 cursor-pointer"
+                                            />
+                                            <input
+                                                v-model.number="estimatorWeight"
+                                                type="number"
+                                                min="2"
+                                                max="50"
+                                                class="w-16 h-11 rounded-xl border border-slate-300 px-2 text-center text-sm font-bold text-navy-950 focus:outline-none focus:border-accent-500"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mt-5 pt-4 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                                    <div>
+                                        <div class="text-xs text-slate-500 font-medium">Estimasi Biaya Cucian:</div>
+                                        <div class="font-heading text-2xl sm:text-3xl font-extrabold text-navy-950">
+                                            {{ estimatorTotalLabel }}
+                                        </div>
+                                        <div class="text-[11px] text-slate-400">
+                                            {{ estimatorWeight }} kg × Rp {{ estimatorPricePerKg.toLocaleString('id-ID') }}/kg
+                                        </div>
+                                    </div>
+
+                                    <a
+                                        :href="getEstimatorWhatsappUrl()"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="inline-flex min-h-[46px] items-center justify-center gap-2 rounded-pill bg-accent-500 px-6 text-sm font-bold text-navy-950 shadow-xs transition-colors hover:bg-accent-600 focus-visible:outline-none"
+                                    >
+                                        <MessageCircle class="h-4 w-4" aria-hidden="true" />
+                                        Pesan Sesuai Estimasi
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -1248,6 +1499,106 @@ onBeforeUnmount(() => {
                             <p class="mt-1.5 text-xs leading-relaxed text-slate-600">
                                 {{ step.desc }}
                             </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Metode Pembayaran (Inspired by Chingu Laundry) -->
+            <section id="pembayaran" class="py-16 sm:py-20 bg-accent-50/40 border-y border-border/80">
+                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <div class="landing-reveal mx-auto max-w-3xl text-center">
+                        <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-700">
+                            Metode Pembayaran
+                        </p>
+                        <h2
+                            class="mt-2 text-balance font-heading text-3xl font-extrabold uppercase leading-tight tracking-tight text-navy-950 sm:text-4xl"
+                        >
+                            Bayar Praktis, Cashless & Tunai
+                        </h2>
+                        <p class="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-700 sm:text-base">
+                            Mendukung QRIS dari seluruh aplikasi mobile banking dan dompet digital tanpa biaya admin tambahan,
+                            atau bayar tunai saat kurir datang mengantar cucian.
+                        </p>
+                    </div>
+
+                    <div class="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">
+                        <div
+                            v-for="(pay, idx) in paymentMethods"
+                            :key="pay.title"
+                            class="landing-reveal flex flex-col justify-between rounded-[24px] border border-border/80 bg-white p-6 sm:p-7 text-navy-950 shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-accent-500/50 hover:shadow-md"
+                            :style="{ transitionDelay: `${idx * 70}ms` }"
+                        >
+                            <div>
+                                <div class="flex items-center justify-between gap-3">
+                                    <span class="rounded-full bg-accent-100 px-3 py-1 text-[11px] font-bold text-accent-800">
+                                        {{ pay.badge }}
+                                    </span>
+                                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-50 text-accent-700">
+                                        <component :is="pay.icon" class="h-5 w-5" aria-hidden="true" />
+                                    </div>
+                                </div>
+                                <h3 class="mt-4 font-heading text-lg font-bold text-navy-950">
+                                    {{ pay.title }}
+                                </h3>
+                                <p class="mt-2 text-sm leading-relaxed text-slate-600">
+                                    {{ pay.desc }}
+                                </p>
+                            </div>
+                            <div class="mt-5 pt-3 border-t border-slate-100 text-xs font-semibold text-accent-700 flex items-center gap-1.5">
+                                <Check class="h-3.5 w-3.5 text-success" />
+                                <span>Bebas pilih saat order</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Testimoni Pelanggan Asli (Local Hendrosari & Menganti) -->
+            <section id="testimoni" class="py-16 sm:py-20">
+                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <div class="landing-reveal mx-auto max-w-3xl text-center">
+                        <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-700">
+                            Ulasan Pelanggan
+                        </p>
+                        <h2
+                            class="mt-2 text-balance font-heading text-3xl font-extrabold uppercase leading-tight tracking-tight text-navy-950 sm:text-4xl"
+                        >
+                            Apa Kata Pelanggan Setia Kami?
+                        </h2>
+                        <p class="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-700 sm:text-base">
+                            Cerita nyata dari warga dan keluarga di Hendrosari, Menganti, dan sekitarnya yang mempercayakan pakaian hariannya kepada kami.
+                        </p>
+                    </div>
+
+                    <div class="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">
+                        <div
+                            v-for="(item, idx) in testimonials"
+                            :key="item.name"
+                            class="landing-reveal flex flex-col justify-between rounded-[24px] border border-border/80 bg-white p-6 sm:p-7 text-navy-950 shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-accent-500/50 hover:shadow-md"
+                            :style="{ transitionDelay: `${idx * 80}ms` }"
+                        >
+                            <div>
+                                <div class="flex items-center gap-1 text-warning">
+                                    <Star v-for="s in 5" :key="s" class="h-4 w-4 fill-warning text-warning" aria-hidden="true" />
+                                </div>
+                                <p class="mt-4 text-sm leading-relaxed text-slate-700 italic">
+                                    “{{ item.comment }}”
+                                </p>
+                            </div>
+                            <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
+                                <div>
+                                    <div class="font-heading text-sm font-bold text-navy-950">
+                                        {{ item.name }}
+                                    </div>
+                                    <div class="text-[11px] text-slate-500">
+                                        {{ item.area }}
+                                    </div>
+                                </div>
+                                <span class="rounded-full bg-accent-50 px-2.5 py-1 text-[10px] font-bold text-accent-700 border border-accent-200/50">
+                                    {{ item.role }}
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1632,7 +1983,29 @@ onBeforeUnmount(() => {
     transform: translateY(-100%);
 }
 
+@keyframes marquee {
+    0% {
+        transform: translateX(0%);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 35s linear infinite;
+}
+
+.marquee-track:hover {
+    animation-play-state: paused;
+}
+
 @media (prefers-reduced-motion: reduce) {
+    .marquee-track {
+        animation: none !important;
+    }
     .roll > span {
         transition: none !important;
     }
