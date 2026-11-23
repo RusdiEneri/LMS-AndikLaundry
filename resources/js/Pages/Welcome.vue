@@ -877,25 +877,19 @@ onBeforeUnmount(() => {
             <!-- Keunggulan Layanan -->
             <section id="kenapa" class="py-16 sm:py-20">
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <div
-                        class="landing-reveal grid grid-cols-1 gap-8 md:grid-cols-12 md:items-end lg:gap-12"
-                    >
-                        <div class="md:col-span-7">
-                            <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-700">
-                                Keunggulan Layanan
-                            </p>
-                            <h2
-                                class="mt-2 text-balance font-heading text-3xl font-extrabold uppercase leading-tight tracking-tight text-navy-950 sm:text-4xl"
-                            >
-                                Bersih, wangi, rapi. Setiap kali.
-                            </h2>
-                        </div>
-                        <div class="md:col-span-5">
-                            <p class="text-sm leading-relaxed text-slate-700 sm:text-base">
-                                Sejak 2009, kami menjaga satu komitmen sederhana: memperlakukan pakaian pelanggan
-                                seperti pakaian kami sendiri dengan standar higienis yang tidak pernah ditawar.
-                            </p>
-                        </div>
+                    <div class="landing-reveal mx-auto max-w-3xl text-center">
+                        <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-700">
+                            Keunggulan Layanan
+                        </p>
+                        <h2
+                            class="mt-2 text-balance font-heading text-3xl font-extrabold uppercase leading-tight tracking-tight text-navy-950 sm:text-4xl"
+                        >
+                            Bersih, wangi, rapi. Setiap kali.
+                        </h2>
+                        <p class="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-700 sm:text-base">
+                            Sejak 2009, kami menjaga satu komitmen sederhana: memperlakukan pakaian pelanggan
+                            seperti pakaian kami sendiri dengan standar higienis yang tidak pernah ditawar.
+                        </p>
                     </div>
 
                     <div class="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -958,36 +952,30 @@ onBeforeUnmount(() => {
             <!-- Tarif & Layanan -->
             <section id="layanan" class="py-16 sm:py-20">
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <div
-                        class="landing-reveal flex flex-col justify-between gap-6 md:flex-row md:items-end"
-                    >
-                        <div class="max-w-2xl">
-                            <p
-                                class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-700"
-                            >
-                                Pilihan Layanan & Tarif
-                            </p>
-                            <h2
-                                class="mt-3 text-balance font-heading text-3xl font-extrabold uppercase leading-tight tracking-tight text-navy-950 sm:text-4xl"
-                            >
-                                Harganya jelas,
-                                <span class="text-accent-700">pelanggan puas.</span>
-                            </h2>
-                            <p class="mt-3 text-sm leading-relaxed text-slate-700 sm:text-base">
-                                Minimal 2 kg untuk cucian kiloan. Layanan reguler selesai 2–3 hari kerja,
-                                atau pilih paket kilat / ekspres untuk selesai di hari yang sama.
-                            </p>
-                        </div>
-
-                        <a
-                            :href="whatsappUrl"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="inline-flex min-h-[48px] shrink-0 items-center justify-center gap-2 rounded-pill bg-accent-500 px-5 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-600 focus-visible:outline-none"
+                    <div class="landing-reveal mx-auto max-w-3xl text-center">
+                        <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-700">
+                            Pilihan Layanan & Tarif
+                        </p>
+                        <h2
+                            class="mt-2 text-balance font-heading text-3xl font-extrabold uppercase leading-tight tracking-tight text-navy-950 sm:text-4xl"
                         >
-                            <MessageCircle class="h-4 w-4" aria-hidden="true" />
-                            Pesan via WhatsApp
-                        </a>
+                            Harganya jelas, <span class="text-accent-700">pelanggan puas.</span>
+                        </h2>
+                        <p class="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-700 sm:text-base">
+                            Minimal 2 kg untuk cucian kiloan. Layanan reguler selesai 2–3 hari kerja,
+                            atau pilih paket kilat / ekspres untuk selesai di hari yang sama.
+                        </p>
+                        <div class="mt-6 flex justify-center">
+                            <a
+                                :href="whatsappUrl"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-pill bg-accent-500 px-6 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-600 focus-visible:outline-none"
+                            >
+                                <MessageCircle class="h-4 w-4" aria-hidden="true" />
+                                Pesan via WhatsApp
+                            </a>
+                        </div>
                     </div>
 
                     <div id="tarif" class="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-12">
@@ -1134,7 +1122,7 @@ onBeforeUnmount(() => {
             <!-- Standar Kualitas & Komitmen -->
             <section id="standar" class="py-16 sm:py-20">
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <div class="landing-reveal max-w-2xl">
+                    <div class="landing-reveal mx-auto max-w-3xl text-center">
                         <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-700">
                             Standar Kualitas
                         </p>
@@ -1143,7 +1131,7 @@ onBeforeUnmount(() => {
                         >
                             3 Jaminan Mutu Andik Laundry
                         </h2>
-                        <p class="mt-3 text-sm leading-relaxed text-slate-700 sm:text-base">
+                        <p class="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-700 sm:text-base">
                             Kepercayaan pelanggan di Hendrosari dan sekitarnya dibangun dari konsistensi mutu.
                             Berikut prinsip kerja yang kami pegang teguh pada setiap pesanan.
                         </p>
@@ -1224,7 +1212,7 @@ onBeforeUnmount(() => {
             <!-- Alur Pengerjaan -->
             <section id="proses" class="py-16 sm:py-20">
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <div class="landing-reveal max-w-2xl">
+                    <div class="landing-reveal mx-auto max-w-3xl text-center">
                         <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-700">
                             Alur Pengerjaan
                         </p>
@@ -1233,7 +1221,7 @@ onBeforeUnmount(() => {
                         >
                             5 Langkah Mudah Cucian Beres
                         </h2>
-                        <p class="mt-3 text-sm leading-relaxed text-slate-700 sm:text-base">
+                        <p class="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-700 sm:text-base">
                             Setiap tahap memiliki status yang dapat Anda pantau langsung melalui nota digital WhatsApp.
                         </p>
                     </div>
@@ -1268,7 +1256,7 @@ onBeforeUnmount(() => {
             <!-- Lokasi Outlet -->
             <section id="lokasi" class="py-16 sm:py-20">
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <div class="landing-reveal max-w-2xl">
+                    <div class="landing-reveal mx-auto max-w-3xl text-center">
                         <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-700">
                             Lokasi Outlet
                         </p>
@@ -1277,7 +1265,7 @@ onBeforeUnmount(() => {
                         >
                             Kunjungi Outlet Kami
                         </h2>
-                        <p class="mt-3 text-sm leading-relaxed text-slate-700 sm:text-base">
+                        <p class="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-700 sm:text-base">
                             Bisa mampir langsung untuk drop cucian, atau chat kami untuk penjemputan gratis hingga 3 km.
                         </p>
                     </div>
@@ -1378,10 +1366,8 @@ onBeforeUnmount(() => {
 
             <!-- FAQ -->
             <section id="faq" class="py-16 sm:py-20">
-                <div
-                    class="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:gap-16 lg:px-8"
-                >
-                    <div class="landing-reveal min-w-0 lg:col-span-4">
+                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <div class="landing-reveal mx-auto max-w-3xl text-center">
                         <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-700">
                             Tanya Jawab
                         </p>
@@ -1390,22 +1376,13 @@ onBeforeUnmount(() => {
                         >
                             Pertanyaan Umum
                         </h2>
-                        <p class="mt-4 text-sm leading-relaxed text-slate-700">
+                        <p class="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-700 sm:text-base">
                             Masih ada hal yang ingin ditanyakan seputar pengerjaan atau jadwal penjemputan?
                             Silakan chat admin kami langsung.
                         </p>
-                        <a
-                            :href="whatsappUrl"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="mt-6 inline-flex min-h-[44px] items-center gap-2 rounded-pill bg-accent-500 px-5 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-600 focus-visible:outline-none"
-                        >
-                            <MessageCircle class="h-4 w-4" aria-hidden="true" />
-                            Chat Admin Sekarang
-                        </a>
                     </div>
 
-                    <div class="min-w-0 lg:col-span-8">
+                    <div class="mx-auto mt-10 max-w-3xl">
                         <div class="border-y border-slate-200/80">
                             <div
                                 v-for="(faq, index) in faqs"
@@ -1440,6 +1417,18 @@ onBeforeUnmount(() => {
                                     {{ faq.a }}
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="mt-8 text-center">
+                            <a
+                                :href="whatsappUrl"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="inline-flex min-h-[46px] items-center gap-2 rounded-pill bg-accent-500 px-6 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-600 focus-visible:outline-none"
+                            >
+                                <MessageCircle class="h-4 w-4" aria-hidden="true" />
+                                Chat Admin Sekarang
+                            </a>
                         </div>
                     </div>
                 </div>
