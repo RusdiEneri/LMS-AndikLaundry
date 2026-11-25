@@ -16,9 +16,7 @@ import {
     MapPin,
     Menu,
     MessageCircle,
-    Pause,
     Phone,
-    Play,
     ReceiptText,
     RotateCcw,
     Scale,
@@ -557,20 +555,10 @@ function initSmoothScrollAndAnimations() {
 
         if (heroVideoRef.value) {
             heroVideoRef.value.muted = true;
-            heroVideoRef.value
-                .play()
-                .then(() => {
-                    isHeroVideoPlaying.value = true;
-                })
-                .catch(() => {
-                    isHeroVideoPlaying.value = false;
-                });
+            void heroVideoRef.value.play().catch(() => {});
         }
     } else {
-        if (heroVideoRef.value) {
-            heroVideoRef.value.pause();
-            isHeroVideoPlaying.value = false;
-        }
+        heroVideoRef.value?.pause();
         document
             .querySelectorAll<HTMLElement>('.landing-reveal, .landing-reveal-left, .landing-reveal-right')
             .forEach((el) => {
@@ -580,33 +568,7 @@ function initSmoothScrollAndAnimations() {
     }
 }
 
-/* ------------------------------------------------------------------
-   Hero video playback toggle (WCAG 2.2.2 Pause, Stop, Hide)
-   ------------------------------------------------------------------ */
 const heroVideoRef = ref<HTMLVideoElement | null>(null);
-const isHeroVideoPlaying = ref(true);
-
-function toggleHeroVideo() {
-    const video = heroVideoRef.value;
-    if (!video) {
-        return;
-    }
-
-    if (video.paused) {
-        video.muted = true;
-        void video
-            .play()
-            .then(() => {
-                isHeroVideoPlaying.value = true;
-            })
-            .catch(() => {
-                isHeroVideoPlaying.value = false;
-            });
-    } else {
-        video.pause();
-        isHeroVideoPlaying.value = false;
-    }
-}
 
 /* ------------------------------------------------------------------
    Navigasi, scroll, dan reveal
@@ -933,18 +895,6 @@ onBeforeUnmount(() => {
                         class="absolute inset-x-0 bottom-0 hidden h-28 bg-gradient-to-t from-bg via-bg/75 to-transparent lg:block"
                     ></div>
                 </div>
-
-                <!-- Playback Control (WCAG 2.2.2) -->
-                <button
-                    type="button"
-                    class="absolute right-3 top-[176px] z-20 inline-flex h-11 w-11 items-center justify-center rounded-full border border-navy-950/15 bg-white/90 text-navy-950 shadow-sm backdrop-blur-sm transition-colors hover:bg-white focus-visible:outline-none sm:right-6 sm:top-[212px] md:top-[242px] lg:bottom-6 lg:right-8 lg:top-auto"
-                    :aria-label="isHeroVideoPlaying ? 'Jeda video latar' : 'Putar video latar'"
-                    :title="isHeroVideoPlaying ? 'Jeda video latar' : 'Putar video latar'"
-                    @click="toggleHeroVideo"
-                >
-                    <Pause v-if="isHeroVideoPlaying" class="h-4 w-4" aria-hidden="true" />
-                    <Play v-else class="h-4 w-4 translate-x-0.5" aria-hidden="true" />
-                </button>
 
                 <div
                     class="relative z-10 mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:gap-10 lg:px-8"
