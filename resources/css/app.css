@@ -82,7 +82,6 @@
    ============================================================ */
 @layer base {
   html {
-    scroll-padding-top: 96px;
     scroll-behavior: smooth;
   }
 

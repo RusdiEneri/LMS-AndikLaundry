@@ -428,6 +428,15 @@ function setupStatsObserver() {
    ------------------------------------------------------------------ */
 let lenisInstance: Lenis | null = null;
 let tickerHandler: ((time: number) => void) | null = null;
+let revealObserver: IntersectionObserver | null = null;
+
+function revealVisibleElements(root: Document | Element = document) {
+    root.querySelectorAll<HTMLElement>(
+        '.landing-reveal, .landing-reveal-left, .landing-reveal-right',
+    ).forEach((el) => {
+        el.classList.add('is-visible');
+    });
+}
 
 async function smoothScrollTo(target: string) {
     if (menuOpen.value) {
@@ -439,12 +448,20 @@ async function smoothScrollTo(target: string) {
         await nextTick();
     }
 
+    if (typeof document !== 'undefined') {
+        const el = document.querySelector<HTMLElement>(target);
+        if (el) {
+            revealVisibleElements(el);
+        }
+    }
+
     if (lenisInstance) {
-        lenisInstance.scrollTo(target, { offset: -84, duration: 1.0, force: true });
+        lenisInstance.scrollTo(target, { offset: 0, duration: 1.0, force: true });
     } else if (typeof document !== 'undefined') {
         const el = document.querySelector<HTMLElement>(target);
         if (el) {
-            const top = el.getBoundingClientRect().top + window.scrollY - 84;
+            const scrollOffset = target === '#tarif' ? -92 : -44;
+            const top = el.getBoundingClientRect().top + window.scrollY + scrollOffset;
             window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
         }
     }
@@ -456,8 +473,35 @@ function initSmoothScrollAndAnimations() {
     }
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const revealTargets = document.querySelectorAll<HTMLElement>(
+        '.landing-reveal, .landing-reveal-left, .landing-reveal-right',
+    );
 
     if (!prefersReducedMotion) {
+        if ('IntersectionObserver' in window) {
+            revealObserver = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-visible');
+                            revealObserver?.unobserve(entry.target);
+                        }
+                    });
+                },
+                { rootMargin: '0px 0px -4% 0px', threshold: 0.02 },
+            );
+
+            revealTargets.forEach((el) => {
+                if (el.getBoundingClientRect().top < window.innerHeight * 0.96) {
+                    el.classList.add('is-visible');
+                } else {
+                    revealObserver?.observe(el);
+                }
+            });
+        } else {
+            revealVisibleElements();
+        }
+
         lenisInstance = new Lenis({
             duration: 1.1,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -473,26 +517,9 @@ function initSmoothScrollAndAnimations() {
         gsap.ticker.add(tickerHandler);
         gsap.ticker.lagSmoothing(0);
 
-        // GSAP ScrollTrigger batch for smooth entrance
-        ScrollTrigger.batch('.landing-reveal, .landing-reveal-left, .landing-reveal-right', {
-            start: 'top 88%',
-            once: true,
-            onEnter: (batch) => {
-                gsap.to(batch, {
-                    opacity: 1,
-                    y: 0,
-                    x: 0,
-                    stagger: 0.08,
-                    duration: 0.75,
-                    ease: 'power2.out',
-                    overwrite: 'auto',
-                });
-            },
-        });
-
         // Desktop-only subtle parallax on hero background video inside clipped layer
         const heroVideoEl = document.querySelector('.hero-bg-video');
-        if (heroVideoEl && window.matchMedia('(min-width: 1024px)').matches) {
+        if (heroVideoEl && window.matchMedia('(min-width: 768px)').matches) {
             gsap.fromTo(
                 heroVideoEl,
                 { yPercent: -2, scale: 1.06 },
@@ -516,12 +543,7 @@ function initSmoothScrollAndAnimations() {
         }
     } else {
         heroVideoRef.value?.pause();
-        document
-            .querySelectorAll<HTMLElement>('.landing-reveal, .landing-reveal-left, .landing-reveal-right')
-            .forEach((el) => {
-                el.style.opacity = '1';
-                el.style.transform = 'none';
-            });
+        revealVisibleElements();
     }
 }
 
@@ -584,6 +606,10 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
+    if (revealObserver) {
+        revealObserver.disconnect();
+        revealObserver = null;
+    }
     if (lenisInstance) {
         lenisInstance.destroy();
         lenisInstance = null;
@@ -825,16 +851,16 @@ onBeforeUnmount(() => {
             <!-- Hero -->
             <section
                 id="beranda"
-                class="relative overflow-hidden bg-bg pb-12 pt-[232px] sm:pb-16 sm:pt-[268px] md:pt-[300px] lg:pb-16 lg:pt-32 xl:pb-16 xl:pt-36"
+                class="relative overflow-hidden bg-bg pb-10 pt-[220px] sm:pb-12 sm:pt-[250px] md:pt-24 md:pb-8 lg:pt-24 lg:pb-10"
             >
                 <!-- Background Video & Contrast Scrims -->
                 <div
-                    class="hero-video-shell pointer-events-none absolute inset-x-0 top-0 h-[360px] overflow-hidden sm:h-[410px] md:h-[450px] lg:inset-x-0 lg:top-0 lg:bottom-3 lg:h-auto"
+                    class="hero-video-shell pointer-events-none absolute inset-x-0 top-0 h-[330px] overflow-hidden sm:h-[370px] md:inset-0 md:bottom-3 md:h-auto"
                     aria-hidden="true"
                 >
                     <video
                         ref="heroVideoRef"
-                        class="hero-bg-video h-full w-full object-cover object-[72%_42%] sm:object-[68%_42%] lg:object-center will-change-transform"
+                        class="hero-bg-video h-full w-full object-cover object-[72%_42%] sm:object-[68%_42%] md:object-center will-change-transform"
                         autoplay
                         muted
                         loop
@@ -846,24 +872,24 @@ onBeforeUnmount(() => {
                         <source src="/videos/bg-hero.mp4" type="video/mp4" />
                     </video>
 
-                    <div class="hero-scrim-mobile absolute inset-0 lg:hidden"></div>
-                    <div class="hero-scrim-desktop absolute inset-0 hidden lg:block"></div>
+                    <div class="hero-scrim-mobile absolute inset-0 md:hidden"></div>
+                    <div class="hero-scrim-desktop absolute inset-0 hidden md:block"></div>
                 </div>
 
                 <!-- Seamless Bottom Cover Overlay -->
                 <div
-                    class="pointer-events-none absolute inset-x-0 bottom-0 z-[5] hidden h-24 bg-gradient-to-t from-bg via-bg/85 to-transparent lg:block"
+                    class="pointer-events-none absolute inset-x-0 bottom-0 z-[5] hidden h-24 bg-gradient-to-t from-bg via-bg/85 to-transparent md:block"
                     aria-hidden="true"
                 ></div>
                 <div
-                    class="pointer-events-none absolute inset-x-0 bottom-0 z-[5] hidden h-4 bg-bg lg:block"
+                    class="pointer-events-none absolute inset-x-0 bottom-0 z-[5] hidden h-4 bg-bg md:block"
                     aria-hidden="true"
                 ></div>
 
                 <div
-                    class="relative z-10 mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:gap-10 lg:px-8"
+                    class="relative z-10 mx-auto grid max-w-7xl grid-cols-1 items-center gap-6 px-4 sm:px-6 md:grid-cols-12 md:gap-8 lg:gap-10 lg:px-8"
                 >
-                    <div class="min-w-0 lg:col-span-6">
+                    <div class="min-w-0 md:col-span-7 lg:col-span-6">
                         <div
                             class="landing-enter"
                             style="--enter-delay: 80ms"
@@ -876,14 +902,14 @@ onBeforeUnmount(() => {
                             </p>
 
                             <h1
-                                class="mt-3 font-heading text-[2.1rem] font-extrabold uppercase leading-[1.04] tracking-tight text-navy-950 sm:text-5xl sm:leading-[0.98] lg:text-[3.75rem]"
+                                class="mt-2.5 font-heading text-[2rem] font-extrabold uppercase leading-[1.02] tracking-tight text-navy-950 sm:text-5xl sm:leading-[0.98] md:text-[2.4rem] lg:text-[3.25rem] xl:text-[3.65rem]"
                             >
                                 Cucian Kotor,<br />
                                 <span class="text-accent-700">Pulang Kinclong.</span>
                             </h1>
 
                             <p
-                                class="mt-4 text-sm leading-relaxed text-navy-950/90 sm:text-base lg:mt-6 lg:max-w-xl lg:text-lg"
+                                class="mt-3 text-sm leading-relaxed text-navy-950/90 sm:text-base md:max-w-lg lg:mt-4 lg:max-w-xl lg:text-[17px]"
                             >
                                 Tinggal chat WhatsApp atau mampir ke outlet, tumpukan baju kotor langsung
                                 beres. Di Andik Laundry, pakaian dicuci higienis terpisah 1 mesin 1 pelanggan,
@@ -891,19 +917,19 @@ onBeforeUnmount(() => {
                                 hingga 3 km.
                             </p>
 
-                            <div class="mt-6 flex flex-col gap-3 sm:flex-row lg:mt-8">
+                            <div class="mt-5 flex flex-col gap-2.5 sm:flex-row lg:mt-6">
                                 <a
                                     :href="whatsappUrl"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    class="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-pill bg-accent-500 px-6 text-sm font-bold text-navy-950 shadow-xs transition-colors hover:bg-accent-600 focus-visible:outline-none"
+                                    class="inline-flex min-h-[46px] items-center justify-center gap-2 rounded-pill bg-accent-500 px-6 text-sm font-bold text-navy-950 shadow-xs transition-colors hover:bg-accent-600 focus-visible:outline-none"
                                 >
                                     <MessageCircle class="h-4 w-4" aria-hidden="true" />
                                     Pesan antar jemput
                                 </a>
                                 <a
                                     href="#tarif"
-                                    class="inline-flex min-h-[48px] items-center justify-center rounded-pill border border-navy-900/15 bg-white px-6 text-sm font-bold text-navy-950 shadow-xs transition-colors hover:bg-slate-50 focus-visible:outline-none"
+                                    class="inline-flex min-h-[46px] items-center justify-center rounded-pill border border-navy-900/15 bg-white px-6 text-sm font-bold text-navy-950 shadow-xs transition-colors hover:bg-slate-50 focus-visible:outline-none"
                                     @click.prevent="smoothScrollTo('#tarif')"
                                 >
                                     Lihat tarif & estimasi
@@ -911,7 +937,7 @@ onBeforeUnmount(() => {
                             </div>
 
                             <dl
-                                class="mt-7 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-navy-950/10 pt-5 text-xs font-semibold text-navy-950"
+                                class="mt-5 flex flex-wrap items-center gap-x-5 gap-y-1.5 border-t border-navy-950/10 pt-4 text-xs font-semibold text-navy-950 lg:mt-6"
                             >
                                 <div class="flex items-center gap-1.5">
                                     <Clock class="h-3.5 w-3.5 text-accent-700" aria-hidden="true" />
@@ -933,31 +959,31 @@ onBeforeUnmount(() => {
                         </div>
                     </div>
 
-                    <div class="hidden min-w-0 lg:block lg:col-span-6 lg:min-h-[440px]" aria-hidden="true"></div>
+                    <div class="hidden min-w-0 md:block md:col-span-5 md:min-h-[380px] lg:col-span-6 lg:min-h-[420px]" aria-hidden="true"></div>
                 </div>
             </section>
 
             <!-- Cek nota -->
-            <section id="lacak" class="relative mt-2 mb-14 sm:mt-4 sm:mb-20">
+            <section id="lacak" class="relative scroll-mt-11 py-10 md:py-12">
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div
-                        class="rounded-[28px] border border-navy-800 bg-navy-900 p-6 text-white shadow-[0_16px_40px_rgba(8,16,80,0.14)] sm:p-9"
+                        class="rounded-[24px] border border-navy-800 bg-navy-900 p-5 text-white shadow-[0_16px_40px_rgba(8,16,80,0.14)] md:p-7"
                     >
-                        <div class="grid grid-cols-1 items-center gap-6 lg:grid-cols-12 lg:gap-10">
-                            <div class="lg:col-span-5">
+                        <div class="grid grid-cols-1 items-center gap-5 md:grid-cols-12 md:gap-8">
+                            <div class="md:col-span-5">
                                 <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-400">
                                     Lacak Pesanan
                                 </p>
-                                <h2 class="mt-1.5 font-heading text-2xl font-bold text-white sm:text-3xl">
+                                <h2 class="mt-1 font-heading text-xl font-bold text-white md:text-2xl">
                                     Sudah punya nota cucian?
                                 </h2>
-                                <p class="mt-2 text-sm leading-relaxed text-slate-300">
+                                <p class="mt-1.5 text-sm leading-relaxed text-slate-300">
                                     Masukkan nomor nota atau nomor HP Anda. Status pencucian terbuka
                                     secara transparan tanpa perlu login.
                                 </p>
                             </div>
 
-                            <div class="min-w-0 lg:col-span-7">
+                            <div class="min-w-0 md:col-span-7">
                                 <form
                                     class="flex flex-col gap-2 rounded-[20px] bg-white p-2 sm:flex-row sm:items-center sm:rounded-pill"
                                     @submit.prevent="submitOrderCheck"
@@ -1004,32 +1030,32 @@ onBeforeUnmount(() => {
             </section>
 
             <!-- Keunggulan Layanan -->
-            <section id="kenapa" class="py-16 sm:py-20">
+            <section id="kenapa" class="scroll-mt-11 py-10 md:py-12">
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div class="landing-reveal mx-auto max-w-3xl text-center">
                         <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-700">
                             Keunggulan Layanan
                         </p>
                         <h2
-                            class="mt-2 text-balance font-heading text-3xl font-extrabold uppercase leading-tight tracking-tight text-navy-950 sm:text-4xl"
+                            class="mt-1.5 text-balance font-heading text-2xl font-extrabold uppercase leading-tight tracking-tight text-navy-950 sm:text-3xl md:text-[2rem]"
                         >
                             Mengapa Memilih Andik Laundry?
                         </h2>
-                        <p class="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-700 sm:text-base">
+                        <p class="mx-auto mt-2.5 max-w-2xl text-sm leading-relaxed text-slate-700">
                             Sejak 2009 melayani keluarga di Hendrosari & Menganti dengan standar higienis yang konsisten untuk setiap cucian.
                         </p>
                     </div>
 
-                    <div class="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2">
+                    <div class="mt-7 grid grid-cols-1 gap-4 md:grid-cols-2">
                         <article
                             v-for="(adv, index) in advantages"
                             :key="adv.title"
-                            class="landing-reveal rounded-[20px] border border-border/80 bg-white p-6 text-navy-950 sm:p-7"
+                            class="landing-reveal rounded-[20px] border border-border/80 bg-white p-5 text-navy-950"
                             :style="{ transitionDelay: `${index * 60}ms` }"
                         >
                             <div class="flex items-start gap-4">
                                 <div
-                                    class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent-100/70 text-accent-700"
+                                    class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-100/70 text-accent-700"
                                 >
                                     <component :is="adv.icon" class="h-5 w-5" aria-hidden="true" />
                                 </div>
@@ -1037,10 +1063,10 @@ onBeforeUnmount(() => {
                                     <p class="text-xs font-semibold text-accent-700">
                                         {{ adv.prompt }}
                                     </p>
-                                    <h3 class="mt-1 font-heading text-lg font-bold text-navy-950 sm:text-xl">
+                                    <h3 class="mt-0.5 font-heading text-lg font-bold text-navy-950">
                                         {{ adv.title }}
                                     </h3>
-                                    <p class="mt-2 text-sm leading-relaxed text-slate-600">
+                                    <p class="mt-1.5 text-sm leading-relaxed text-slate-600">
                                         {{ adv.desc }}
                                     </p>
                                 </div>
@@ -1051,27 +1077,27 @@ onBeforeUnmount(() => {
             </section>
 
             <!-- Tarif & Layanan -->
-            <section id="layanan" class="py-16 sm:py-20">
+            <section id="layanan" class="scroll-mt-11 py-10 md:py-12">
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div class="landing-reveal mx-auto max-w-3xl text-center">
                         <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-700">
                             Pilihan Layanan & Tarif
                         </p>
                         <h2
-                            class="mt-2 text-balance font-heading text-3xl font-extrabold uppercase leading-tight tracking-tight text-navy-950 sm:text-4xl"
+                            class="mt-1.5 text-balance font-heading text-2xl font-extrabold uppercase leading-tight tracking-tight text-navy-950 sm:text-3xl md:text-[2rem]"
                         >
                             Harganya jelas, <span class="text-accent-700">pelanggan puas.</span>
                         </h2>
-                        <p class="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-700 sm:text-base">
-                            Minimal 2 kg untuk cucian kiloan. Reguler selesai 2–3 hari kerja, atau pilih paket kilat selesai hari yang sama (+Rp 2.000/kg).
+                        <p class="mx-auto mt-2 max-w-2xl text-sm leading-relaxed text-slate-700">
+                            Minimal 2 kg untuk cucian kiloan. Reguler 2–3 hari kerja, atau kilat hari yang sama (+Rp 2.000/kg).
                         </p>
                     </div>
 
-                    <div id="tarif" class="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-12">
+                    <div id="tarif" class="mt-5 grid scroll-mt-[92px] grid-cols-1 gap-4 md:grid-cols-12">
                         <!-- Featured Card: Cuci Setrika -->
-                        <div class="landing-reveal min-w-0 lg:col-span-5">
+                        <div class="landing-reveal min-w-0 md:col-span-5">
                             <article
-                                class="flex h-full flex-col rounded-[24px] border-2 border-accent-500/80 bg-white p-6 text-navy-950 shadow-sm sm:p-8"
+                                class="flex h-full flex-col rounded-[22px] border-2 border-accent-500/80 bg-white p-5 text-navy-950 shadow-sm"
                             >
                                 <div class="flex items-center justify-between gap-3">
                                     <p
@@ -1085,13 +1111,13 @@ onBeforeUnmount(() => {
                                 </div>
 
                                 <h3
-                                    class="mt-3 font-heading text-2xl font-extrabold sm:text-3xl"
+                                    class="mt-1.5 font-heading text-2xl font-extrabold"
                                 >
                                     {{ featuredService.name }}
                                 </h3>
 
-                                <div class="mt-2 flex items-baseline gap-1">
-                                    <span class="font-heading text-3xl font-extrabold sm:text-4xl">
+                                <div class="mt-1 flex items-baseline gap-1">
+                                    <span class="font-heading text-3xl font-extrabold">
                                         {{ featuredService.price }}
                                     </span>
                                     <span class="text-sm font-semibold text-slate-600">
@@ -1099,23 +1125,23 @@ onBeforeUnmount(() => {
                                     </span>
                                 </div>
 
-                                <p class="mt-1 text-xs font-semibold text-slate-600">
+                                <p class="mt-0.5 text-xs font-semibold text-slate-600">
                                     {{ featuredService.minWeight }}
                                 </p>
 
                                 <p
-                                    class="mt-4 text-sm leading-relaxed text-slate-700"
+                                    class="mt-2.5 text-sm leading-snug text-slate-700"
                                 >
                                     {{ featuredService.desc }}
                                 </p>
 
                                 <ul
-                                    class="mt-5 space-y-2.5 text-sm text-slate-700"
+                                    class="mt-3 space-y-1.5 text-sm text-slate-700"
                                 >
                                     <li
                                         v-for="feature in featuredService.features"
                                         :key="feature"
-                                        class="flex items-start gap-2.5"
+                                        class="flex items-start gap-2"
                                     >
                                         <Check
                                             class="mt-0.5 h-4 w-4 shrink-0 text-success"
@@ -1125,12 +1151,12 @@ onBeforeUnmount(() => {
                                     </li>
                                 </ul>
 
-                                <div class="mt-auto pt-6 sm:pt-8">
+                                <div class="mt-auto pt-4">
                                     <a
                                         :href="getServiceWhatsappUrl(featuredService.name)"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        class="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-pill bg-accent-500 px-5 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-600 focus-visible:outline-none"
+                                        class="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-pill bg-accent-500 px-5 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-600 focus-visible:outline-none"
                                     >
                                         <MessageCircle class="h-4 w-4" aria-hidden="true" />
                                         Pesan {{ featuredService.name }}
@@ -1140,18 +1166,18 @@ onBeforeUnmount(() => {
                         </div>
 
                         <!-- Other Services -->
-                        <div class="min-w-0 lg:col-span-7">
-                            <div class="grid gap-4">
+                        <div class="min-w-0 md:col-span-7">
+                            <div class="grid gap-2.5">
                                 <article
                                     v-for="(service, index) in otherServices"
                                     :key="service.id"
-                                    class="landing-reveal flex flex-col rounded-[20px] border border-border/80 bg-white p-5 text-navy-950 sm:p-6"
+                                    class="landing-reveal flex flex-col rounded-[18px] border border-border/80 bg-white px-4 py-3.5 text-navy-950"
                                     :style="{ transitionDelay: `${index * 70}ms` }"
                                 >
                                     <div class="flex items-start justify-between gap-4">
                                         <div class="min-w-0">
                                             <h3
-                                                class="font-heading text-lg font-bold sm:text-xl"
+                                                class="font-heading text-base font-bold leading-tight md:text-lg"
                                             >
                                                 {{ service.name }}
                                             </h3>
@@ -1161,8 +1187,8 @@ onBeforeUnmount(() => {
                                                 {{ service.minWeight }}
                                             </p>
                                         </div>
-                                        <div class="shrink-0 text-right">
-                                            <div class="font-heading text-2xl font-extrabold">
+                                        <div class="shrink-0 text-right leading-tight">
+                                            <div class="font-heading text-xl font-extrabold md:text-2xl">
                                                 {{ service.price }}
                                             </div>
                                             <div
@@ -1173,59 +1199,63 @@ onBeforeUnmount(() => {
                                         </div>
                                     </div>
 
-                                    <p
-                                        class="mt-3 text-sm leading-relaxed text-slate-600"
-                                    >
-                                        {{ service.desc }}
-                                    </p>
+                                    <div class="mt-2 flex flex-col gap-2.5 sm:flex-row sm:items-end sm:justify-between">
+                                        <p
+                                            class="text-[13px] leading-snug text-slate-600"
+                                        >
+                                            {{ service.desc }}
+                                        </p>
 
-                                    <div class="mt-4 pt-2">
                                         <a
                                             :href="getServiceWhatsappUrl(service.name)"
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            class="inline-flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-pill bg-accent-500 px-5 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-600 focus-visible:outline-none"
+                                            class="inline-flex min-h-[44px] w-full shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-pill bg-accent-500 px-4 text-xs font-bold text-navy-950 transition-colors hover:bg-accent-600 focus-visible:outline-none sm:w-auto"
                                         >
-                                            <MessageCircle class="h-4 w-4" aria-hidden="true" />
+                                            <MessageCircle class="h-3.5 w-3.5" aria-hidden="true" />
                                             Pesan {{ service.name }}
                                         </a>
                                     </div>
                                 </article>
                             </div>
 
-                            <p class="mt-5 text-xs leading-relaxed text-slate-600">
+                            <p class="mt-2.5 text-xs leading-snug text-slate-600">
                                 * Layanan kilat selesai hari yang sama dengan tambahan Rp 2.000 per kg.
                                 Layanan cuci karpet dihitung berdasarkan luas (panjang × lebar).
                             </p>
                         </div>
                     </div>
+                </div>
+            </section>
 
-                    <!-- Kalkulator Estimasi Biaya Laundry -->
-                    <div class="landing-reveal mt-12 rounded-[24px] border border-border/80 bg-white p-6 text-navy-950 sm:p-8">
-                        <div class="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:items-center">
-                            <div class="lg:col-span-5">
+            <!-- Kalkulator Estimasi Biaya Laundry -->
+            <section id="estimasi" class="scroll-mt-11 py-10 md:py-12">
+                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <div class="landing-reveal rounded-[24px] border border-border/80 bg-white p-6 text-navy-950 md:p-7">
+                        <div class="grid grid-cols-1 gap-6 md:grid-cols-12 md:items-center">
+                            <div class="md:col-span-5">
                                 <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-700">
                                     Kalkulator Biaya
                                 </p>
-                                <h3 class="mt-2 font-heading text-xl sm:text-2xl font-extrabold text-navy-950">
+                                <h2 class="mt-1.5 font-heading text-2xl font-extrabold text-navy-950 md:text-[1.75rem]">
                                     Hitung Perkiraan Cucian Anda
-                                </h3>
-                                <p class="mt-2 text-xs sm:text-sm leading-relaxed text-slate-600">
+                                </h2>
+                                <p class="mt-2 text-sm leading-relaxed text-slate-600">
                                     Pilih jenis layanan dan masukkan perkiraan berat pakaian. Berat pasti ditimbang terbuka saat kurir menjemput atau di kasir outlet.
                                 </p>
                             </div>
 
-                            <div class="lg:col-span-7 rounded-2xl bg-slate-50/70 p-5 sm:p-6 border border-border/80">
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="md:col-span-7 rounded-2xl bg-slate-50/70 p-5 border border-border/80">
+                                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                                     <div>
-                                        <label for="estimator-service" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+                                        <label for="estimator-service" class="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-600">
                                             Pilih Layanan
                                         </label>
                                         <select
                                             id="estimator-service"
                                             name="estimator_service"
                                             v-model="estimatorServiceId"
-                                            class="w-full h-11 rounded-xl border border-slate-300 bg-white px-3 text-sm font-semibold text-navy-950 focus:border-accent-500 focus:outline-none"
+                                            class="h-11 w-full rounded-xl border border-slate-300 bg-white px-3 text-sm font-semibold text-navy-950 focus:border-accent-500 focus:outline-none"
                                         >
                                             <option value="cuci-setrika">Cuci Setrika (Rp 8.000/kg)</option>
                                             <option value="cuci-kering">Cuci Kering Lipat (Rp 6.000/kg)</option>
@@ -1233,8 +1263,8 @@ onBeforeUnmount(() => {
                                         </select>
                                     </div>
                                     <div>
-                                        <label for="estimator-weight-range" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
-                                            Perkiraan Berat: <span class="text-accent-700 font-extrabold">{{ estimatorWeight }} kg</span>
+                                        <label for="estimator-weight-range" class="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-600">
+                                            Perkiraan Berat: <span class="font-extrabold text-accent-700">{{ estimatorWeight }} kg</span>
                                         </label>
                                         <div class="flex items-center gap-2">
                                             <input
@@ -1246,7 +1276,7 @@ onBeforeUnmount(() => {
                                                 min="2"
                                                 max="20"
                                                 step="1"
-                                                class="w-full accent-accent-500 cursor-pointer"
+                                                class="w-full cursor-pointer accent-accent-500"
                                             />
                                             <input
                                                 id="estimator-weight-number"
@@ -1256,19 +1286,19 @@ onBeforeUnmount(() => {
                                                 type="number"
                                                 min="2"
                                                 max="50"
-                                                class="w-16 h-11 rounded-xl border border-slate-300 bg-white px-2 text-center text-sm font-bold text-navy-950 focus:outline-none focus:border-accent-500"
+                                                class="h-11 w-16 rounded-xl border border-slate-300 bg-white px-2 text-center text-sm font-bold text-navy-950 focus:border-accent-500 focus:outline-none"
                                             />
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="mt-5 pt-4 border-t border-slate-200/80 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                                <div class="mt-4 flex flex-col gap-4 border-t border-slate-200/80 pt-4 sm:flex-row sm:items-center sm:justify-between">
                                     <div>
-                                        <div class="text-xs text-slate-600 font-medium">Estimasi Biaya Cucian:</div>
-                                        <div class="font-heading text-2xl sm:text-3xl font-extrabold text-navy-950 tabular-nums">
+                                        <div class="text-xs font-medium text-slate-600">Estimasi Biaya Cucian:</div>
+                                        <div class="font-heading text-2xl font-extrabold tabular-nums text-navy-950 sm:text-3xl">
                                             {{ estimatorTotalLabel }}
                                         </div>
-                                        <div class="text-xs font-medium text-slate-600 tabular-nums">
+                                        <div class="text-xs font-medium tabular-nums text-slate-600">
                                             {{ estimatorWeight }} kg × Rp {{ estimatorPricePerKg.toLocaleString('id-ID') }}/kg
                                         </div>
                                     </div>
@@ -1277,7 +1307,7 @@ onBeforeUnmount(() => {
                                         :href="getEstimatorWhatsappUrl()"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        class="inline-flex min-h-[46px] items-center justify-center gap-2 rounded-pill bg-accent-500 px-6 text-sm font-bold text-navy-950 shadow-xs transition-colors hover:bg-accent-600 focus-visible:outline-none"
+                                        class="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-pill bg-accent-500 px-6 text-sm font-bold text-navy-950 shadow-xs transition-colors hover:bg-accent-600 focus-visible:outline-none"
                                     >
                                         <MessageCircle class="h-4 w-4" aria-hidden="true" />
                                         Pesan Sesuai Estimasi
@@ -1290,28 +1320,28 @@ onBeforeUnmount(() => {
             </section>
 
             <!-- Standar Kualitas & Komitmen -->
-            <section id="standar" class="py-16 sm:py-20">
+            <section id="standar" class="scroll-mt-11 py-10 md:py-12">
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div class="landing-reveal mx-auto max-w-3xl text-center">
                         <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-700">
                             Standar Kualitas
                         </p>
                         <h2
-                            class="mt-2 text-balance font-heading text-3xl font-extrabold uppercase leading-tight tracking-tight text-navy-950 sm:text-4xl"
+                            class="mt-1.5 text-balance font-heading text-2xl font-extrabold uppercase leading-tight tracking-tight text-navy-950 sm:text-3xl md:text-[2rem]"
                         >
                             3 Jaminan Mutu Andik Laundry
                         </h2>
-                        <p class="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-700 sm:text-base">
+                        <p class="mx-auto mt-2.5 max-w-2xl text-sm leading-relaxed text-slate-700">
                             Kepercayaan pelanggan di Hendrosari dan sekitarnya dibangun dari konsistensi mutu.
                             Berikut prinsip kerja yang kami pegang teguh pada setiap pesanan.
                         </p>
                     </div>
 
-                    <div class="landing-reveal mt-10 grid grid-cols-1 divide-y divide-border/80 rounded-[24px] border border-border/80 bg-white md:grid-cols-3 md:divide-x md:divide-y-0">
+                    <div class="landing-reveal mt-6 grid grid-cols-1 divide-y divide-border/80 rounded-[22px] border border-border/80 bg-white md:grid-cols-3 md:divide-x md:divide-y-0">
                         <div
                             v-for="(guarantee, idx) in qualityGuarantees"
                             :key="guarantee.title"
-                            class="flex flex-col p-6 text-navy-950 sm:p-8"
+                            class="flex flex-col p-5 text-navy-950 md:p-6"
                         >
                             <div class="flex items-center justify-between gap-3">
                                 <span class="font-mono text-xs font-bold tracking-wider text-accent-700">
@@ -1319,10 +1349,10 @@ onBeforeUnmount(() => {
                                 </span>
                                 <component :is="guarantee.icon" class="h-5 w-5 text-accent-700" aria-hidden="true" />
                             </div>
-                            <h3 class="mt-4 font-heading text-lg font-bold">
+                            <h3 class="mt-3 font-heading text-lg font-bold">
                                 {{ guarantee.title }}
                             </h3>
-                            <p class="mt-2 text-sm leading-relaxed text-slate-600">
+                            <p class="mt-1.5 text-sm leading-relaxed text-slate-600">
                                 {{ guarantee.desc }}
                             </p>
                         </div>
@@ -1332,26 +1362,26 @@ onBeforeUnmount(() => {
                     <div
                         v-if="hasStats"
                         ref="statsSection"
-                        class="landing-reveal mt-10 rounded-[28px] border border-navy-800 bg-navy-900 p-8 text-white sm:p-10"
+                        class="landing-reveal mt-5 rounded-[24px] border border-navy-800 bg-navy-900 p-5 text-white md:p-6"
                         style="--reveal-delay: 150ms"
                     >
-                        <div class="text-center sm:text-left sm:flex sm:items-center sm:justify-between sm:gap-8 pb-6 border-b border-white/10">
+                        <div class="border-b border-white/10 pb-4 text-center md:flex md:items-center md:justify-between md:gap-8 md:text-left">
                             <div>
                                 <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-400">
                                     Catatan Kinerja Nyata
                                 </p>
-                                <h3 class="mt-1 font-heading text-2xl font-bold">
+                                <h3 class="mt-1 font-heading text-xl font-bold md:text-2xl">
                                     Dipercaya Masyarakat Sejak 2009
                                 </h3>
                             </div>
-                            <p class="mt-2 sm:mt-0 text-xs text-slate-300 max-w-xs">
+                            <p class="mt-1.5 max-w-xs text-xs text-slate-300 md:mt-0">
                                 Data terakumulasi otomatis dari sistem manajemen operasional kami.
                             </p>
                         </div>
 
-                        <div class="mt-8 grid grid-cols-1 gap-6 text-center sm:grid-cols-3 sm:gap-8">
+                        <div class="mt-5 grid grid-cols-1 gap-4 text-center md:grid-cols-3 md:gap-6">
                             <div>
-                                <div class="font-heading text-3xl font-extrabold tabular-nums sm:text-4xl text-accent-400">
+                                <div class="font-heading text-3xl font-extrabold tabular-nums text-accent-400">
                                     {{ customersLabel }}
                                 </div>
                                 <div class="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-slate-300">
@@ -1359,7 +1389,7 @@ onBeforeUnmount(() => {
                                 </div>
                             </div>
                             <div>
-                                <div class="font-heading text-3xl font-extrabold tabular-nums sm:text-4xl text-accent-400">
+                                <div class="font-heading text-3xl font-extrabold tabular-nums text-accent-400">
                                     {{ ordersLabel }}
                                 </div>
                                 <div class="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-slate-300">
@@ -1367,7 +1397,7 @@ onBeforeUnmount(() => {
                                 </div>
                             </div>
                             <div>
-                                <div class="font-heading text-3xl font-extrabold tabular-nums sm:text-4xl text-accent-400">
+                                <div class="font-heading text-3xl font-extrabold tabular-nums text-accent-400">
                                     {{ laundryKgLabel }}
                                 </div>
                                 <div class="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-slate-300">
@@ -1380,29 +1410,29 @@ onBeforeUnmount(() => {
             </section>
 
             <!-- Alur Pengerjaan -->
-            <section id="proses" class="py-16 sm:py-20">
+            <section id="proses" class="scroll-mt-11 py-10 md:py-12">
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div class="landing-reveal mx-auto max-w-3xl text-center">
                         <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-700">
                             Alur Pengerjaan
                         </p>
                         <h2
-                            class="mt-2 text-balance font-heading text-3xl font-extrabold uppercase leading-tight tracking-tight text-navy-950 sm:text-4xl"
+                            class="mt-1.5 text-balance font-heading text-2xl font-extrabold uppercase leading-tight tracking-tight text-navy-950 sm:text-3xl md:text-[2rem]"
                         >
                             5 Langkah Mudah Cucian Beres
                         </h2>
-                        <p class="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-700 sm:text-base">
+                        <p class="mx-auto mt-2.5 max-w-2xl text-sm leading-relaxed text-slate-700">
                             Setiap tahap memiliki status yang dapat Anda pantau langsung melalui nota digital WhatsApp.
                         </p>
                     </div>
 
                     <div
-                        class="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5"
+                        class="mt-7 grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-5 md:gap-4"
                     >
                         <div
                             v-for="(step, index) in processSteps"
                             :key="step.label"
-                            class="landing-reveal flex flex-col border-t-2 border-accent-600/30 pt-4"
+                            class="landing-reveal flex flex-col border-t-2 border-accent-600/30 pt-3.5"
                             :style="{ transitionDelay: `${index * 60}ms` }"
                         >
                             <span
@@ -1410,10 +1440,10 @@ onBeforeUnmount(() => {
                             >
                                 LANGKAH 0{{ step.step }}
                             </span>
-                            <h3 class="mt-2 font-heading text-base font-bold text-navy-950">
+                            <h3 class="mt-1.5 font-heading text-base font-bold text-navy-950">
                                 {{ step.label }}
                             </h3>
-                            <p class="mt-1.5 text-sm leading-relaxed text-slate-600">
+                            <p class="mt-1 text-sm leading-relaxed text-slate-600">
                                 {{ step.desc }}
                             </p>
                         </div>
@@ -1422,30 +1452,30 @@ onBeforeUnmount(() => {
             </section>
 
             <!-- Metode Pembayaran -->
-            <section id="pembayaran" class="py-16 sm:py-20">
+            <section id="pembayaran" class="scroll-mt-11 py-10 md:py-12">
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div class="landing-reveal mx-auto max-w-3xl text-center">
                         <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-700">
                             Metode Pembayaran
                         </p>
                         <h2
-                            class="mt-2 text-balance font-heading text-3xl font-extrabold uppercase leading-tight tracking-tight text-navy-950 sm:text-4xl"
+                            class="mt-1.5 text-balance font-heading text-2xl font-extrabold uppercase leading-tight tracking-tight text-navy-950 sm:text-3xl md:text-[2rem]"
                         >
                             Bayar Praktis, Cashless & Tunai
                         </h2>
-                        <p class="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-700 sm:text-base">
+                        <p class="mx-auto mt-2.5 max-w-2xl text-sm leading-relaxed text-slate-700">
                             Pilih pembayaran nontunai via QRIS tanpa biaya tambahan atau bayar tunai saat cucian diantar.
                         </p>
                     </div>
 
-                    <div class="mt-10 mx-auto max-w-4xl grid grid-cols-1 gap-5 md:grid-cols-2">
+                    <div class="mx-auto mt-7 grid max-w-4xl grid-cols-1 gap-4 md:grid-cols-2">
                         <div
                             v-for="(pay, idx) in paymentMethods"
                             :key="pay.title"
-                            class="landing-reveal flex items-start gap-4 rounded-[20px] border border-border/80 bg-white p-6 text-navy-950 sm:p-7"
+                            class="landing-reveal flex items-start gap-4 rounded-[20px] border border-border/80 bg-white p-5 text-navy-950 md:p-6"
                             :style="{ transitionDelay: `${idx * 70}ms` }"
                         >
-                            <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent-100/70 text-accent-700">
+                            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-100/70 text-accent-700">
                                 <component :is="pay.icon" class="h-5 w-5" aria-hidden="true" />
                             </div>
                             <div class="min-w-0">
@@ -1462,36 +1492,36 @@ onBeforeUnmount(() => {
             </section>
 
             <!-- Lokasi Outlet -->
-            <section id="lokasi" class="py-16 sm:py-20">
+            <section id="lokasi" class="scroll-mt-11 py-10 md:py-12">
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div class="landing-reveal mx-auto max-w-3xl text-center">
                         <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-700">
                             Lokasi Outlet
                         </p>
                         <h2
-                            class="mt-2 text-balance font-heading text-3xl font-extrabold uppercase leading-tight tracking-tight text-navy-950 sm:text-4xl"
+                            class="mt-1.5 text-balance font-heading text-2xl font-extrabold uppercase leading-tight tracking-tight text-navy-950 sm:text-3xl md:text-[2rem]"
                         >
                             Kunjungi Outlet Kami
                         </h2>
-                        <p class="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-700 sm:text-base">
+                        <p class="mx-auto mt-2.5 max-w-2xl text-sm leading-relaxed text-slate-700">
                             Bisa mampir langsung untuk drop cucian, atau chat kami untuk penjemputan gratis hingga 3 km.
                         </p>
                     </div>
 
                     <div
-                        class="landing-reveal mt-10 grid grid-cols-1 items-center gap-8 rounded-[28px] border border-border/80 bg-white p-6 text-navy-950 shadow-[0_12px_32px_rgba(8,16,80,0.05)] sm:p-8 lg:grid-cols-12"
+                        class="landing-reveal mt-6 grid grid-cols-1 items-center gap-6 rounded-[24px] border border-border/80 bg-white p-5 text-navy-950 shadow-[0_12px_32px_rgba(8,16,80,0.05)] md:grid-cols-12 md:p-6"
                     >
-                        <div class="min-w-0 lg:col-span-5">
+                        <div class="min-w-0 md:col-span-5">
                             <p
                                 class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-700"
                             >
                                 Outlet Resmi
                             </p>
-                            <h3 class="mt-1 font-heading text-2xl font-extrabold sm:text-3xl">
+                            <h3 class="mt-1 font-heading text-2xl font-extrabold">
                                 {{ storeName }}
                             </h3>
 
-                            <div class="mt-5 space-y-4 text-sm">
+                            <div class="mt-4 space-y-3 text-sm">
                                 <div class="flex items-start gap-3">
                                     <MapPin
                                         class="mt-0.5 h-5 w-5 shrink-0 text-accent-700"
@@ -1499,7 +1529,7 @@ onBeforeUnmount(() => {
                                     />
                                     <div>
                                         <div class="font-bold">Alamat</div>
-                                        <p class="mt-0.5 leading-relaxed text-slate-600">
+                                        <p class="mt-0.5 leading-snug text-slate-600">
                                              {{ storeAddress }}
                                         </p>
                                     </div>
@@ -1532,12 +1562,12 @@ onBeforeUnmount(() => {
                                 </div>
                             </div>
 
-                            <div class="mt-6 flex flex-col gap-2.5 sm:flex-row">
+                            <div class="mt-5 flex flex-wrap gap-2">
                                 <a
                                     :href="whatsappUrl"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    class="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-pill bg-accent-500 px-5 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-600 focus-visible:outline-none"
+                                    class="inline-flex min-h-[44px] items-center justify-center gap-2 whitespace-nowrap rounded-pill bg-accent-500 px-4 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-600 focus-visible:outline-none"
                                 >
                                     <MessageCircle class="h-4 w-4" aria-hidden="true" />
                                     Hubungi WhatsApp
@@ -1546,7 +1576,7 @@ onBeforeUnmount(() => {
                                     href="https://www.google.com/maps/place/Andik+Laundry/@-7.2392419,112.581764,21z/data=!4m12!1m5!3m4!2zN8KwMTQnMjEuMyJTIDExMsKwMzQnNTQuMyJF!8m2!3d-7.2392469!4d112.5817531!3m5!1s0x2e7800f99a230c6b:0xb287a654290078e9!8m2!3d-7.239213!4d112.5817581!16s%2Fg%2F11gdlxnlmk?hl=id-ID"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    class="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-pill border border-navy-900/20 px-5 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-100 focus-visible:outline-none"
+                                    class="inline-flex min-h-[44px] items-center justify-center gap-2 whitespace-nowrap rounded-pill border border-navy-900/20 px-4 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-100 focus-visible:outline-none"
                                 >
                                     <ExternalLink class="h-4 w-4" aria-hidden="true" />
                                     Buka di Google Maps
@@ -1554,9 +1584,9 @@ onBeforeUnmount(() => {
                             </div>
                         </div>
 
-                        <div class="min-w-0 lg:col-span-7">
+                        <div class="min-w-0 md:col-span-7">
                             <div
-                                class="h-[280px] overflow-hidden rounded-[20px] border border-border sm:h-[360px]"
+                                class="h-[240px] overflow-hidden rounded-[18px] border border-border md:h-[290px]"
                             >
                                 <iframe
                                     title="Peta lokasi Andik Laundry di Hendrosari, Menganti, Gresik"
@@ -1573,24 +1603,23 @@ onBeforeUnmount(() => {
             </section>
 
             <!-- FAQ -->
-            <section id="faq" class="py-16 sm:py-20">
+            <section id="faq" class="scroll-mt-11 py-10 md:py-12">
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div class="landing-reveal mx-auto max-w-3xl text-center">
                         <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-700">
                             Tanya Jawab
                         </p>
                         <h2
-                            class="mt-2 text-balance font-heading text-3xl font-extrabold uppercase leading-tight tracking-tight text-navy-950 sm:text-4xl"
+                            class="mt-1.5 text-balance font-heading text-2xl font-extrabold uppercase leading-tight tracking-tight text-navy-950 sm:text-3xl md:text-[2rem]"
                         >
                             Pertanyaan Umum
                         </h2>
-                        <p class="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-700 sm:text-base">
-                            Masih ada hal yang ingin ditanyakan seputar pengerjaan atau jadwal penjemputan?
-                            Silakan chat admin kami langsung.
+                        <p class="mx-auto mt-2.5 max-w-2xl text-sm leading-relaxed text-slate-700">
+                            Jawaban ringkas seputar pengerjaan, timbangan transparan, dan jadwal antar jemput.
                         </p>
                     </div>
 
-                    <div class="mx-auto mt-10 max-w-3xl">
+                    <div class="mx-auto mt-6 max-w-3xl">
                         <div class="border-y border-slate-200/80">
                             <div
                                 v-for="(faq, index) in faqs"
@@ -1602,14 +1631,14 @@ onBeforeUnmount(() => {
                                     <button
                                         :id="`faq-question-${index}`"
                                         type="button"
-                                        class="flex min-h-[56px] w-full items-center justify-between gap-4 py-5 text-left font-heading text-base font-bold text-navy-950 transition-colors hover:text-accent-700 focus-visible:outline-none sm:text-lg"
+                                        class="flex min-h-[44px] w-full items-center justify-between gap-4 py-3 text-left font-heading text-sm font-bold text-navy-950 transition-colors hover:text-accent-700 focus-visible:outline-none sm:text-base"
                                         :aria-expanded="activeFaqIndex === index"
                                         :aria-controls="`faq-answer-${index}`"
                                         @click="toggleFaq(index)"
                                     >
                                         <span>{{ faq.q }}</span>
                                         <ChevronDown
-                                            class="h-5 w-5 shrink-0 text-accent-700 transition-transform duration-300"
+                                            class="h-4 w-4 shrink-0 text-accent-700 transition-transform duration-300"
                                             :class="{ 'rotate-180': activeFaqIndex === index }"
                                             aria-hidden="true"
                                         />
@@ -1620,62 +1649,50 @@ onBeforeUnmount(() => {
                                     :id="`faq-answer-${index}`"
                                     role="region"
                                     :aria-labelledby="`faq-question-${index}`"
-                                    class="pb-5 pr-6 text-sm leading-relaxed text-slate-700 sm:pr-10"
+                                    class="pb-3.5 pr-6 text-sm leading-relaxed text-slate-700 sm:pr-10"
                                 >
                                     {{ faq.a }}
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="mt-8 text-center">
-                            <a
-                                :href="whatsappUrl"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                class="inline-flex min-h-[46px] items-center gap-2 rounded-pill bg-accent-500 px-6 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-600 focus-visible:outline-none"
-                            >
-                                <MessageCircle class="h-4 w-4" aria-hidden="true" />
-                                Chat Admin Sekarang
-                            </a>
                         </div>
                     </div>
                 </div>
             </section>
 
             <!-- Final CTA -->
-            <section class="py-12 sm:py-16">
+            <section class="py-10 md:py-12">
                 <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
                     <div
-                        class="landing-reveal rounded-[28px] bg-navy-950 px-6 py-12 text-center text-white shadow-lg sm:px-12 sm:py-16"
+                        class="landing-reveal rounded-[24px] bg-navy-950 px-6 py-10 text-center text-white shadow-lg md:px-10 md:py-12"
                     >
                         <h2
-                            class="text-balance font-heading text-3xl font-extrabold uppercase leading-tight tracking-tight text-white sm:text-4xl"
+                            class="text-balance font-heading text-2xl font-extrabold uppercase leading-tight tracking-tight text-white sm:text-3xl md:text-[2rem]"
                         >
                             Punya Tumpukan Baju Kotor Hari Ini?
                         </h2>
-                        <p class="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-slate-300 sm:text-base">
+                        <p class="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-slate-300">
                             Biar kami yang bantu selesaikan. Pesan antar jemput praktis via WhatsApp tanpa repot,
                             atau antar langsung ke outlet kami kapan saja Anda sempat.
                         </p>
-                        <div class="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
+                        <div class="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
                             <a
                                 :href="whatsappUrl"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                class="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-pill bg-accent-500 px-6 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-600 focus-visible:outline-none"
+                                class="inline-flex min-h-[46px] items-center justify-center gap-2 rounded-pill bg-accent-500 px-6 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-600 focus-visible:outline-none"
                             >
                                 <MessageCircle class="h-4 w-4" aria-hidden="true" />
                                 Pesan via WhatsApp
                             </a>
                             <a
                                 :href="phoneUrl"
-                                class="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-pill border border-white/25 px-6 text-sm font-bold text-white transition-colors hover:bg-white/10 focus-visible:outline-none"
+                                class="inline-flex min-h-[46px] items-center justify-center gap-2 rounded-pill border border-white/25 px-6 text-sm font-bold text-white transition-colors hover:bg-white/10 focus-visible:outline-none"
                             >
                                 <Phone class="h-4 w-4 text-accent-400" aria-hidden="true" />
                                 {{ storePhoneLabel }}
                             </a>
                         </div>
-                        <p class="mt-5 text-xs text-slate-400">Buka setiap hari, 07.00–20.00 WIB</p>
+                        <p class="mt-4 text-xs text-slate-400">Buka setiap hari, 07.00–20.00 WIB</p>
                     </div>
                 </div>
             </section>
@@ -1845,7 +1862,7 @@ onBeforeUnmount(() => {
     mask-image: linear-gradient(180deg, #000 0%, #000 58%, transparent 92%);
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
     .hero-video-shell {
         -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 78%, transparent 94%);
         mask-image: linear-gradient(180deg, #000 0%, #000 78%, transparent 94%);
@@ -1867,12 +1884,26 @@ onBeforeUnmount(() => {
     background: linear-gradient(
         90deg,
         var(--color-bg) 0%,
-        rgba(244, 248, 251, 0.96) 36%,
-        rgba(244, 248, 251, 0.90) 45%,
-        rgba(244, 248, 251, 0.30) 53%,
-        rgba(244, 248, 251, 0.04) 60%,
-        rgba(244, 248, 251, 0) 68%
+        rgba(244, 248, 251, 0.96) 46%,
+        rgba(244, 248, 251, 0.90) 54%,
+        rgba(244, 248, 251, 0.32) 62%,
+        rgba(244, 248, 251, 0.04) 69%,
+        rgba(244, 248, 251, 0) 76%
     );
+}
+
+@media (min-width: 1024px) {
+    .hero-scrim-desktop {
+        background: linear-gradient(
+            90deg,
+            var(--color-bg) 0%,
+            rgba(244, 248, 251, 0.96) 36%,
+            rgba(244, 248, 251, 0.90) 45%,
+            rgba(244, 248, 251, 0.30) 53%,
+            rgba(244, 248, 251, 0.04) 60%,
+            rgba(244, 248, 251, 0) 68%
+        );
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
