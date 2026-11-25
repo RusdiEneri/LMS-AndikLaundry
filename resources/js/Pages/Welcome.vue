@@ -99,11 +99,11 @@ const advantages = [
         badge: 'Higienis & Privat',
     },
     {
-        doubt: 'Bisa gosong atau mengkilap?',
+        doubt: 'Bahan halus & sablon aman?',
         title: 'Setrika Uap Profesional',
-        desc: 'Uap boiler bertekanan dengan suhu stabil melicinkan pakaian tanpa risiko serat kain terbakar, rusak, atau meninggalkan bekas mengkilap.',
+        desc: 'Uap boiler bertekanan dengan suhu terkontrol melicinkan pakaian hingga serat terdalam. Warna terjaga, sablon kaos dan kain sensitif tetap rapi tanpa bekas mengkilap.',
         icon: Sparkles,
-        badge: 'Anti-Gosong',
+        badge: 'Ramah Serat Kain',
     },
     {
         doubt: 'Mager keluar rumah?',
@@ -189,7 +189,7 @@ const testimonials = [
         area: 'Gresik',
         role: 'Pelanggan Setia sejak 2018',
         comment:
-            'Setrika uapnya juara, kemeja kerja licin rapi gak ada bekas gosong atau mengkilap. Timbangan selalu terbuka dan nota langsung masuk WA.',
+            'Setrika uapnya juara, kemeja kerja licin rapi dan serat kainnya tetap terjaga tanpa bekas mengkilap. Timbangan selalu terbuka dan nota langsung masuk WA.',
     },
 ];
 
@@ -271,7 +271,7 @@ const services = [
         desc: 'Paket all-in-one: dicuci higienis, dikeringkan mesin, disetrika uap, lalu dikemas wangi dan terlindung debu.',
         features: [
             'Dicuci higienis (1 mesin 1 pelanggan)',
-            'Setrika uap profesional, anti-gosong',
+            'Setrika uap suhu stabil, aman untuk segala kain',
             'Pewangi premium tahan lama',
             'Kemasan plastik rapi kedap debu',
         ],
@@ -351,7 +351,7 @@ const processSteps = [
     {
         step: '4',
         label: 'Kering & Setrika',
-        desc: 'Pengering suhu terkontrol dilanjut setrika uap licin tanpa risiko gosong.',
+        desc: 'Pengeringan suhu terkontrol dilanjut setrika uap agar pakaian licin, lembut, dan siap pakai.',
     },
     {
         step: '5',
@@ -480,16 +480,24 @@ function setupStatsObserver() {
 let lenisInstance: Lenis | null = null;
 let tickerHandler: ((time: number) => void) | null = null;
 
-function smoothScrollTo(target: string) {
+async function smoothScrollTo(target: string) {
     if (menuOpen.value) {
         menuOpen.value = false;
+        if (typeof document !== 'undefined') {
+            document.body.style.overflow = '';
+        }
+        lenisInstance?.start();
+        await nextTick();
     }
 
     if (lenisInstance) {
-        lenisInstance.scrollTo(target, { offset: -70, duration: 1.1 });
+        lenisInstance.scrollTo(target, { offset: -84, duration: 1.0, force: true });
     } else if (typeof document !== 'undefined') {
-        const el = document.querySelector(target);
-        el?.scrollIntoView({ behavior: 'smooth' });
+        const el = document.querySelector<HTMLElement>(target);
+        if (el) {
+            const top = el.getBoundingClientRect().top + window.scrollY - 84;
+            window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+        }
     }
 }
 
@@ -782,7 +790,7 @@ onBeforeUnmount(() => {
                     aria-modal="true"
                     aria-label="Menu navigasi samping"
                     tabindex="-1"
-                    class="fixed inset-y-0 right-0 z-50 flex h-full w-[290px] sm:w-[320px] max-w-[85vw] flex-col justify-between bg-white p-5 text-navy-950 shadow-2xl focus:outline-none lg:hidden"
+                    class="fixed inset-y-0 right-0 z-50 flex h-full w-[290px] sm:w-[320px] max-w-[85vw] flex-col justify-between overflow-y-auto overscroll-contain bg-white p-5 text-navy-950 shadow-2xl focus:outline-none lg:hidden"
                 >
                     <!-- Header Drawer -->
                     <div>
