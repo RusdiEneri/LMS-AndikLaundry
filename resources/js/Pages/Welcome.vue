@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import 'lenis/dist/lenis.css';
-import WashingMachineIllustration from '@/Components/Landing/WashingMachineIllustration.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -17,7 +16,9 @@ import {
     MapPin,
     Menu,
     MessageCircle,
+    Pause,
     Phone,
+    Play,
     ReceiptText,
     RotateCcw,
     Scale,
@@ -534,27 +535,76 @@ function initSmoothScrollAndAnimations() {
             },
         });
 
-        // Parallax on hero illustration
-        const heroIllu = document.querySelector('.hero-illustration');
-        if (heroIllu) {
-            gsap.to(heroIllu, {
-                y: 36,
-                ease: 'none',
-                scrollTrigger: {
-                    trigger: '#beranda',
-                    start: 'top top',
-                    end: 'bottom top',
-                    scrub: 1,
+        // Desktop-only subtle parallax on hero background video inside clipped layer
+        const heroVideoEl = document.querySelector('.hero-bg-video');
+        if (heroVideoEl && window.matchMedia('(min-width: 1024px)').matches) {
+            gsap.fromTo(
+                heroVideoEl,
+                { yPercent: -2, scale: 1.06 },
+                {
+                    yPercent: 2,
+                    scale: 1.06,
+                    ease: 'none',
+                    scrollTrigger: {
+                        trigger: '#beranda',
+                        start: 'top top',
+                        end: 'bottom top',
+                        scrub: 1,
+                    },
                 },
-            });
+            );
+        }
+
+        if (heroVideoRef.value) {
+            heroVideoRef.value.muted = true;
+            heroVideoRef.value
+                .play()
+                .then(() => {
+                    isHeroVideoPlaying.value = true;
+                })
+                .catch(() => {
+                    isHeroVideoPlaying.value = false;
+                });
         }
     } else {
+        if (heroVideoRef.value) {
+            heroVideoRef.value.pause();
+            isHeroVideoPlaying.value = false;
+        }
         document
             .querySelectorAll<HTMLElement>('.landing-reveal, .landing-reveal-left, .landing-reveal-right')
             .forEach((el) => {
                 el.style.opacity = '1';
                 el.style.transform = 'none';
             });
+    }
+}
+
+/* ------------------------------------------------------------------
+   Hero video playback toggle (WCAG 2.2.2 Pause, Stop, Hide)
+   ------------------------------------------------------------------ */
+const heroVideoRef = ref<HTMLVideoElement | null>(null);
+const isHeroVideoPlaying = ref(true);
+
+function toggleHeroVideo() {
+    const video = heroVideoRef.value;
+    if (!video) {
+        return;
+    }
+
+    if (video.paused) {
+        video.muted = true;
+        void video
+            .play()
+            .then(() => {
+                isHeroVideoPlaying.value = true;
+            })
+            .catch(() => {
+                isHeroVideoPlaying.value = false;
+            });
+    } else {
+        video.pause();
+        isHeroVideoPlaying.value = false;
     }
 }
 
@@ -661,10 +711,10 @@ onBeforeUnmount(() => {
 
         <!-- Floating Navbar -->
         <header
-            class="fixed inset-x-3 sm:inset-x-6 top-3 sm:top-4 z-40 mx-auto max-w-5xl transition-all duration-300"
+            class="fixed inset-x-3 sm:inset-x-6 top-3 sm:top-4 z-40 mx-auto max-w-6xl transition-all duration-300"
         >
             <div
-                class="flex h-14 sm:h-16 items-center justify-between gap-3 rounded-full border px-3.5 sm:px-6 shadow-[0_8px_30px_rgba(8,16,80,0.08)] backdrop-blur-md transition-all duration-300"
+                class="flex h-14 sm:h-16 items-center justify-between gap-2 lg:gap-3 rounded-full border px-3.5 sm:px-5 lg:px-6 shadow-[0_8px_30px_rgba(8,16,80,0.08)] backdrop-blur-md transition-all duration-300"
                 :class="
                     isScrolled
                         ? 'border-border/90 bg-white/95 shadow-[0_12px_36px_rgba(8,16,80,0.12)]'
@@ -674,7 +724,7 @@ onBeforeUnmount(() => {
                 <!-- Logo didalam navbar -->
                 <Link
                     href="/"
-                    class="flex items-center gap-2 rounded-full py-1 focus-visible:outline-none transition-transform hover:scale-105 active:scale-95"
+                    class="flex shrink-0 items-center gap-2 rounded-full py-1 focus-visible:outline-none transition-transform hover:scale-105 active:scale-95"
                     aria-label="Andik Laundry, kembali ke beranda"
                 >
                     <img
@@ -686,13 +736,13 @@ onBeforeUnmount(() => {
                     />
                 </Link>
 
-                <!-- Nav Links Desktop (tanpa Beranda) -->
-                <nav class="hidden items-center gap-1 md:flex" aria-label="Navigasi utama">
+                <!-- Nav Links Desktop (single line, no wrapping) -->
+                <nav class="hidden items-center gap-0.5 xl:gap-1 lg:flex" aria-label="Navigasi utama">
                     <a
                         v-for="link in navLinks"
                         :key="link.href"
                         :href="link.href"
-                        class="nav-link rounded-full px-3 py-1.5 text-xs lg:text-[13px] font-semibold text-slate-700 transition-colors hover:bg-slate-100 hover:text-navy-950 focus-visible:outline-none"
+                        class="nav-link whitespace-nowrap rounded-full px-2 xl:px-3 py-1.5 text-xs xl:text-[13px] font-semibold text-slate-700 transition-colors hover:bg-slate-100 hover:text-navy-950 focus-visible:outline-none"
                         @click.prevent="smoothScrollTo(link.href)"
                     >
                         <span class="roll">
@@ -702,12 +752,12 @@ onBeforeUnmount(() => {
                 </nav>
 
                 <!-- Action Button didalam navbar (WhatsApp CTA) -->
-                <div class="flex items-center gap-2">
+                <div class="flex shrink-0 items-center gap-2">
                     <a
                         :href="whatsappUrl"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="nav-btn inline-flex h-9 sm:h-10 items-center justify-center gap-2 rounded-full bg-accent-500 px-3.5 sm:px-4 text-xs sm:text-sm font-bold text-navy-950 shadow-xs transition-all hover:bg-accent-600 hover:scale-105 active:scale-95 focus-visible:outline-none"
+                        class="nav-btn inline-flex h-9 sm:h-10 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-full bg-accent-500 px-3.5 sm:px-4 text-xs sm:text-sm font-bold text-navy-950 shadow-xs transition-all hover:bg-accent-600 hover:scale-105 active:scale-95 focus-visible:outline-none"
                         aria-label="Hubungi WhatsApp Andik Laundry"
                         title="Chat WhatsApp"
                     >
@@ -717,11 +767,11 @@ onBeforeUnmount(() => {
                         </span>
                     </a>
 
-                    <!-- Mobile Menu Trigger -->
+                    <!-- Mobile & Tablet Menu Trigger -->
                     <button
                         ref="menuButtonRef"
                         type="button"
-                        class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-navy-950 transition-colors hover:bg-accent-100 focus-visible:outline-none active:scale-95 md:hidden"
+                        class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-navy-950 transition-colors hover:bg-accent-100 focus-visible:outline-none active:scale-95 lg:hidden"
                         :aria-expanded="menuOpen"
                         aria-controls="mobile-menu"
                         :aria-label="menuOpen ? 'Tutup menu' : 'Buka menu navigasi'"
@@ -747,7 +797,7 @@ onBeforeUnmount(() => {
             >
                 <div
                     v-if="menuOpen"
-                    class="fixed inset-0 z-50 bg-navy-950/45 backdrop-blur-xs md:hidden"
+                    class="fixed inset-0 z-50 bg-navy-950/45 backdrop-blur-xs lg:hidden"
                     aria-hidden="true"
                     @click="menuOpen = false"
                 ></div>
@@ -770,7 +820,7 @@ onBeforeUnmount(() => {
                     aria-modal="true"
                     aria-label="Menu navigasi samping"
                     tabindex="-1"
-                    class="fixed inset-y-0 right-0 z-50 flex h-full w-[290px] sm:w-[320px] max-w-[85vw] flex-col justify-between bg-white p-5 text-navy-950 shadow-2xl focus:outline-none md:hidden"
+                    class="fixed inset-y-0 right-0 z-50 flex h-full w-[290px] sm:w-[320px] max-w-[85vw] flex-col justify-between bg-white p-5 text-navy-950 shadow-2xl focus:outline-none lg:hidden"
                 >
                     <!-- Header Drawer -->
                     <div>
@@ -856,19 +906,48 @@ onBeforeUnmount(() => {
             <!-- Hero -->
             <section
                 id="beranda"
-                class="relative overflow-hidden bg-bg pb-12 pt-24 sm:pb-20 sm:pt-32 lg:pb-24 lg:pt-36"
+                class="relative overflow-hidden bg-bg pb-12 pt-[232px] sm:pb-16 sm:pt-[268px] md:pt-[300px] lg:pb-16 lg:pt-32 xl:pb-20 xl:pt-36"
             >
-                <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+                <!-- Background Video & Contrast Scrims -->
+                <div
+                    class="hero-video-shell pointer-events-none absolute inset-x-0 top-0 h-[360px] overflow-hidden sm:h-[410px] md:h-[450px] lg:inset-0 lg:h-full"
+                    aria-hidden="true"
+                >
+                    <video
+                        ref="heroVideoRef"
+                        class="hero-bg-video h-full w-full object-cover object-[72%_42%] sm:object-[68%_42%] lg:object-center will-change-transform"
+                        autoplay
+                        muted
+                        loop
+                        playsinline
+                        preload="auto"
+                        disablepictureinpicture
+                        poster="/images/bg-hero-poster.webp"
+                    >
+                        <source src="/videos/bg-hero.mp4" type="video/mp4" />
+                    </video>
+
+                    <div class="hero-scrim-mobile absolute inset-0 lg:hidden"></div>
+                    <div class="hero-scrim-desktop absolute inset-0 hidden lg:block"></div>
                     <div
-                        class="absolute -right-40 top-20 hidden h-[560px] w-[560px] rounded-full border border-border/80 lg:block"
-                    ></div>
-                    <div
-                        class="absolute -right-24 top-36 hidden h-[400px] w-[400px] rounded-full border border-accent-100 lg:block"
+                        class="absolute inset-x-0 bottom-0 hidden h-28 bg-gradient-to-t from-bg via-bg/75 to-transparent lg:block"
                     ></div>
                 </div>
 
+                <!-- Playback Control (WCAG 2.2.2) -->
+                <button
+                    type="button"
+                    class="absolute right-3 top-[176px] z-20 inline-flex h-11 w-11 items-center justify-center rounded-full border border-navy-950/15 bg-white/90 text-navy-950 shadow-sm backdrop-blur-sm transition-colors hover:bg-white focus-visible:outline-none sm:right-6 sm:top-[212px] md:top-[242px] lg:bottom-6 lg:right-8 lg:top-auto"
+                    :aria-label="isHeroVideoPlaying ? 'Jeda video latar' : 'Putar video latar'"
+                    :title="isHeroVideoPlaying ? 'Jeda video latar' : 'Putar video latar'"
+                    @click="toggleHeroVideo"
+                >
+                    <Pause v-if="isHeroVideoPlaying" class="h-4 w-4" aria-hidden="true" />
+                    <Play v-else class="h-4 w-4 translate-x-0.5" aria-hidden="true" />
+                </button>
+
                 <div
-                    class="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:gap-10 lg:px-8"
+                    class="relative z-10 mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:gap-10 lg:px-8"
                 >
                     <div class="min-w-0 lg:col-span-6">
                         <div
@@ -876,9 +955,10 @@ onBeforeUnmount(() => {
                             style="--enter-delay: 80ms"
                         >
                             <div
-                                class="inline-flex items-center rounded-pill bg-accent-100 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-accent-700 ring-1 ring-accent-600/20"
+                                class="inline-flex items-center gap-1.5 rounded-pill bg-accent-100 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-navy-950 ring-1 ring-accent-600/20"
                             >
-                                Hendrosari, Gresik
+                                <MapPin class="h-3.5 w-3.5 text-accent-700" aria-hidden="true" />
+                                <span>Hendrosari, Gresik</span>
                             </div>
 
                             <h1
@@ -889,7 +969,7 @@ onBeforeUnmount(() => {
                             </h1>
 
                             <p
-                                class="mt-4 text-sm leading-relaxed text-slate-700 sm:text-base lg:mt-6 lg:max-w-xl lg:text-lg"
+                                class="mt-4 text-sm leading-relaxed text-navy-950/90 sm:text-base lg:mt-6 lg:max-w-xl lg:text-lg"
                             >
                                 Tinggal chat WhatsApp atau mampir ke outlet, tumpukan baju kotor langsung
                                 beres. Di Andik Laundry, pakaian dicuci higienis terpisah 1 mesin 1 pelanggan,
@@ -918,7 +998,7 @@ onBeforeUnmount(() => {
 
                             <!-- Trust highlight pills (Anti-Slop proof) -->
                             <div
-                                class="mt-6 flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-700"
+                                class="mt-6 flex flex-wrap items-center gap-2 text-xs font-semibold text-navy-950"
                             >
                                 <span class="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 border border-slate-200/90 shadow-2xs">
                                     <Clock class="h-3.5 w-3.5 text-accent-700" aria-hidden="true" />
@@ -940,16 +1020,7 @@ onBeforeUnmount(() => {
                         </div>
                     </div>
 
-                    <div class="min-w-0 lg:col-span-6">
-                        <div class="hero-illustration landing-enter mx-auto max-w-[440px] will-change-transform" style="--enter-delay: 140ms">
-                            <WashingMachineIllustration />
-                            <div
-                                class="mt-3 flex items-center justify-center text-center text-[11px] font-bold uppercase tracking-[0.16em] text-accent-700"
-                            >
-                                <span>Bersih • Wangi • Rapi</span>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="hidden min-w-0 lg:block lg:col-span-6 lg:min-h-[440px]" aria-hidden="true"></div>
                 </div>
             </section>
 
@@ -1989,6 +2060,41 @@ onBeforeUnmount(() => {
 .nav-link:hover .roll > span,
 .nav-btn:hover .roll > span {
     transform: translateY(-100%);
+}
+
+.hero-video-shell {
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 58%, transparent 92%);
+    mask-image: linear-gradient(180deg, #000 0%, #000 58%, transparent 92%);
+}
+
+@media (min-width: 1024px) {
+    .hero-video-shell {
+        -webkit-mask-image: none;
+        mask-image: none;
+    }
+}
+
+.hero-scrim-mobile {
+    background: linear-gradient(
+        180deg,
+        rgba(244, 248, 251, 0.12) 0%,
+        rgba(244, 248, 251, 0) 20%,
+        rgba(244, 248, 251, 0) 48%,
+        rgba(244, 248, 251, 0.88) 68%,
+        var(--color-bg) 88%
+    );
+}
+
+.hero-scrim-desktop {
+    background: linear-gradient(
+        90deg,
+        var(--color-bg) 0%,
+        rgba(244, 248, 251, 0.96) 36%,
+        rgba(244, 248, 251, 0.90) 45%,
+        rgba(244, 248, 251, 0.30) 53%,
+        rgba(244, 248, 251, 0.04) 60%,
+        rgba(244, 248, 251, 0) 68%
+    );
 }
 
 @keyframes marquee {
