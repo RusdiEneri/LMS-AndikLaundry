@@ -1,301 +1,311 @@
 # LMS Andik Laundry
 
-> **Sistem Manajemen Laundry Modern, Kasir POS Cepat, Desain Neubrutalism & Akuntansi Standar SAK EMKM**  
-> Dirancang khusus untuk operasional mandiri dan pencatatan keuangan UMKM Laundry di Indonesia (Kiloan, Satuan, Dry Clean, dan Meteran/Karpet).
-
----
+Aplikasi manajemen operasional laundry berbasis web (kasir POS, pelacakan produksi, notifikasi WhatsApp, nota digital publik, dan rekap keuangan UMKM). Awalnya dibangun untuk **Andik Laundry** (Hendrosari, Menganti, Gresik), dan dapat langsung dijalankan maupun disesuaikan untuk usaha laundry lain maupun keperluan pengembangan tim.
 
 ## Daftar Isi
-1. [Gambaran Umum & Konteks Proyek](#1-gambaran-umum--konteks-proyek)
-2. [Desain Antarmuka: Neubrutalism Modern](#2-desain-antarmuka-neubrutalism-modern)
-3. [Alur Peran & Akses: Single Role Owner & Customer Tanpa Login](#3-alur-peran--akses)
-4. [Panduan Instalasi Langkah Demi Langkah](#4-panduan-instalasi-langkah-demi-langkah)
-5. [Akun Default & Kredensial](#5-akun-default--kredensial)
-6. [Panduan Operasional WhatsApp Gateway & QRIS](#6-panduan-operasional-whatsapp-gateway--qris)
-7. [Panduan Backup & Pemulihan Database](#7-panduan-backup--pemulihan-database)
-8. [Perintah Pengujian & Verifikasi (Testing Suite)](#8-perintah-pengujian--verifikasi)
-9. [Tanya Jawab (FAQ) & Solusi Masalah](#9-tanya-jawab-faq--solusi-masalah)
+
+1. [Untuk Siapa Dokumentasi Ini](#1-untuk-siapa-dokumentasi-ini)
+2. [Fitur Utama & Teknologi](#2-fitur-utama--teknologi)
+3. [Instalasi & Menjalankan di Lokal](#3-instalasi--menjalankan-di-lokal)
+4. [Panduan Pengguna Umum (Di Luar Tim / Toko Lain)](#4-panduan-pengguna-umum-di-luar-tim--toko-lain)
+5. [Panduan Anggota Kelompok (Kolaborasi Git & Verifikasi)](#5-panduan-anggota-kelompok-kolaborasi-git--verifikasi)
+6. [WhatsApp Gateway & Fallback Manual](#6-whatsapp-gateway--fallback-manual)
+7. [Backup & Restore Database](#7-backup--restore-database)
+8. [Troubleshooting Error Umum](#8-troubleshooting-error-umum)
 
 ---
 
-## 1. Gambaran Umum & Konteks Proyek
+## 1. Untuk Siapa Dokumentasi Ini
 
-**LMS Andik Laundry** adalah sistem manajemen bisnis laundry berbasis web yang lengkap, tangguh, dan ringkas untuk UMKM laundry rumahan mandiri di Indonesia.
-
-Sistem ini memecahkan berbagai masalah nyata dalam operasional laundry:
-- **Navigasi Cepat Tanpa Ribet Ganti Akun**: Menggunakan model **Role Tunggal Internal (Owner)** sehingga pemilik usaha tidak perlu bolak-balik logout/login antara akun kasir, staf cuci, dan owner.
-- **Kasir POS Cepat & Akurat**: Menangani laundry kiloan (dengan proteksi *minimum weight threshold*), laundry satuan & dry clean (bed cover, jas, gaun/kebaya, sepatu), serta laundry meteran/luas area (karpet dan gorden).
-- **Akses Pelanggan Mandiri Tanpa Perlu Login**: Pelanggan tidak dibebani kewajiban membuat akun. Seluruh nota digital, rincian biaya, kode QRIS, dan pelacakan progres cucian dapat diakses secara instan melalui tautan unik yang dikirimkan ke WhatsApp.
-- **Transparansi Keuangan SAK EMKM**: Dual-basis accounting membedakan antara uang kas fisik nyata di laci (*cash in drawer*) dengan laba bersih operasional yang diakui secara akrual saat cucian selesai.
-
-### Fitur Utama Proyek:
-- ⚡ **Kasir POS Terpadu**:
-  - **Layanan Kiloan (Ambang Batas Berat Minimal)**: Jika pelanggan mencuci 1.2 kg sementara batas minimal toko adalah 3.0 kg, sistem otomatis menagih tarif 3.0 kg agar operasional mesin tidak merugi. Berat asli dan berat tagih keduanya terekam (`actual_quantity` & `billed_quantity`).
-  - **Layanan Satuan & Dry Clean + Inspeksi Cacat**: Input potong/item dengan formulir kondisi pakaian (noda kerah, kancing hilang, luntur) dan catatan instruksi khusus. Catatan kondisi awal tercetak di nota sebagai proteksi klaim kerusakan.
-  - **Layanan Meteran / Luas Area (Karpet)**: Input panjang dan lebar (meter), sistem langsung menghitung luas ($m^2$) dan menyimpan dimensi serta hasil hitung area ke database.
-  - **Tier Kecepatan Pengerjaan (Turnaround)**: Pilihan Reguler (48 jam), Kilat (24 jam), dan Ekspres (8 jam) dengan faktor pengali tarif yang dibekukan (*snapshot*) saat transaksi dibuat.
-  - **Metode Pembayaran Kasir**: Wajib lunas (tanpa utang-piutang/kasbon). Mendukung Tunai (Cash) dengan hitung kembalian instan dan QRIS Manual dengan pemindaian barcode toko serta verifikasi mutasi wajib oleh kasir sebelum struk dicetak.
-  - **Opsi Pengiriman**: Setiap nota mencatat opsi ambil sendiri (*pickup*) atau diantar (*delivery*).
-- 🏭 **Pelacakan Progres Produksi 3 Tahap**:
-  - **Diproses**: Sedang dicuci, dikeringkan, atau disetrika.
-  - **Selesai**: Cucian siap diambil / diantar, lengkap dengan koordinat lokasi rak penyimpanan (*staging rack*, wajib diisi).
-  - **Sudah Diambil**: Cucian telah diterima oleh pelanggan.
-  - Di balik layar tersedia juga alur granular 11 tahap (diterima → sortir → cuci → kering → setrika → QC → packing → siap ambil) dengan **loop cuci ulang (rewash)** maksimal 2 siklus beserta alasan yang tercatat di jejak audit.
-- 📱 **Notifikasi WhatsApp & Manual Fallback**:
-  - Konfirmasi pakaian masuk (*intake message*) dan notifikasi cucian selesai (*ready for pickup*), lengkap dengan template pesan yang dapat dikustomisasi per toko.
-  - Koneksi gateway mendukung dua metode: **scan QR Code** dan **kode OTP pairing** (tautkan dengan nomor telepon saja).
-  - Jika WhatsApp Gateway offline, sistem kasir menyediakan tombol fallback resmi **wa.me** yang langsung mengisi nomor tujuan dan format teks nota secara otomatis.
-- 📊 **Akuntansi SAK EMKM & Rekap Kas Harian**:
-  - **Accrual Basis**: Pendapatan diakui sah saat nota selesai diproduksi.
-  - **Cash Basis**: Mengaudit uang fisik laci kasir per metode pembayaran.
-  - **Pengeluaran Toko**: Pencatatan belanja operasional harian per kategori (deterjen & pewangi, gas LPG, plastik & hanger, listrik/air/Wi-Fi, perawatan mesin, lain-lain).
-  - **Buku Piutang Pelanggan**: Meski kasir mewajibkan lunas, halaman piutang tetap tersedia untuk memantau nota bermasalah dengan *aging bracket* (0-7 hari / 8-14 hari / >14 hari) dan tombol kirim pengingat WhatsApp satu klik.
-  - **Ekspor CSV**: Laporan keuangan bulanan dapat diekspor ke CSV untuk arsip dan pelaporan.
-- 🔒 **Jejak Audit (Audit Log)**: Setiap perubahan pengaturan bisnis dan transisi status produksi terekam immutable lengkap dengan nilai lama/nilai baru dan ID pengguna.
-
-### Arsitektur & Teknologi:
-- **Backend Framework**: [Laravel 13.x](https://laravel.com) pada **PHP 8.4**
-- **Frontend Engine**: [Inertia.js v3](https://inertiajs.com) dengan [Vue 3](https://vuejs.org) (Composition API, `<script setup lang="ts">`, TypeScript strict mode)
-- **Styling**: [Tailwind CSS v4](https://tailwindcss.com) + komponen berbasis [Radix Vue](https://radix-vue.com) + design system tokens Neubrutalism
-- **Database Engine**: **MySQL 8.4** (SQLite untuk testing), seluruh kolom moneter `DECIMAL(12,2)` dan berat `DECIMAL(8,2)` — tanpa floating point
-- **Automated Test Suite**: [Pest PHP v4](https://pestphp.com) (334 feature dan unit tests dalam 32 file)
-- **Asset Bundler**: [Vite 8](https://vitejs.dev)
-- **WhatsApp Gateway Service**: Microservice mandiri berbasis **Go** dan pustaka `whatsmeow` (tersedia di folder `gateway/`)
+- **Anggota Kelompok / Developer**: Panduan setup cepat di Windows, macOS, atau Linux, alur branch Git tim, perintah tes/lint, serta solusi error yang paling sering muncul saat sinkronisasi kode.
+- **Pengguna Umum / Pemilik Laundry Lain**: Cara memakai aplikasi ini untuk outlet sendiri (ganti nama usaha, tarif layanan, QRIS, akun login, dan jalankan tanpa pelanggan harus login).
 
 ---
 
-## 2. Desain Antarmuka: Neubrutalism Modern
+## 2. Fitur Utama & Teknologi
 
-Antarmuka LMS Andik Laundry dibangun mengikuti panduan estetika **Neubrutalism** (`DESIGN.md`):
-- **Border Hitam Tegas**: Garis luar `2.5px` hingga `3.5px solid #000` di setiap kartu, tombol, dan formulir.
-- **Bayangan Hard Offset 45°**: Bayangan pekat tanpa blur (`box-shadow: 3px 3px 0 #000` hingga `6px 6px 0 #000`).
-- **Palet Warna Karakteristik**:
-  - Kuning Primer: `#FFEB3B`
-  - Merah Sekunder: `#FF5252`
-  - Biru Tersier: `#2196F3`
-  - Hijau Sukses: `#22C55E`
-  - Canvas Hangat: `#FFFDF5` / `#FFF9D2`
-- **Tipografi Bold & Tactile**: Gaya visual berani, tombol bertekstur saat ditekan (*active tactile press*), dan ramah sentuhan di layar sentuh ponsel (target minimal 44x44px).
-- **Anti-AI Slop**: Layout didesain spesifik untuk kebutuhan laundry nyata, bebas dari template generik dan teks placeholder dummy.
+### Alur Operasional
+- **Kasir POS (`/pos`)**: Mendukung layanan **Kiloan** (dengan batas minimal berat default `2.00` kg, mencatat berat asli dan berat tagih), **Satuan** (bedcover, selimut, sprei, boneka/bantal beserta catatan kondisi item), dan **Karpet Meteran** (hitung otomatis panjang x lebar). Tersedia tier kecepatan (**Reguler** dan **Ekspres**), pilihan ambil sendiri atau antar, serta pembayaran **Tunai (Cash)** dan **QRIS**.
+- **Stasiun Produksi (`/production/station`)**: Memperbarui status pengerjaan cucian dari diterima, proses cuci/kering/setrika, penempatan rak penyimpanan, siap ambil, hingga selesai diambil pelanggan (mendukung penandaan cuci ulang / rewash dengan batas siklus yang dapat diatur).
+- **Nota Digital Publik Tanpa Login (`/nota/{invoice_number}` atau `/receipt/{orderNumber}`)**: Pelanggan cukup membuka tautan dari WhatsApp atau mencari nomor nota (`INV-YYYYMMDD-XXXX`) maupun nomor HP di halaman utama (`/`), dilindungi rate limit.
+- **Keuangan & Laporan Owner (`/dashboard`, `/owner/expenses`, `/owner/daily-recap`, `/owner/receivables`)**: Pencatatan pengeluaran operasional, rekap kas harian per metode bayar, pemantauan piutang, ekspor laporan bulanan ke CSV, serta jejak audit perubahan data penting.
+- **Peran & Hak Akses**: Tersedia 3 peran (`owner`, `cashier`, `operator`) dengan 23 izin terkelola (`RoleAndPermissionSeeder`). Usaha skala kecil bisa memakai 1 akun `owner` saja, atau menambah akun kasir dan operator di menu `/owner/users`.
 
----
-
-## 3. Alur Peran & Akses
-
-Untuk menjamin kecepatan operasional dan kemudahan navigasi, arsitektur hak akses disederhanakan:
-
-1. **Role Tunggal Internal — Owner (Pemilik sekaligus Kasir)**:
-   - Tidak ada pemisahan peran kasir vs operator staf. Seluruh fitur berada dalam satu dashboard terpadu:
-     - Transaksi kasir POS cepat
-     - Pendataan pelanggan & penetapan harga layanan
-     - Pembaruan progres cucian di stasiun produksi
-     - Pengelolaan biaya belanja operasional toko
-     - Laporan laba rugi bulanan SAK EMKM & ekspor CSV
-     - Rekap kas harian & buku piutang pelanggan
-     - Manajemen pengguna & konfigurasi WhatsApp Gateway
-     - Pencadangan database
-   - > **Catatan teknis**: Infrastruktur RBAC (role `cashier`/`operator` + 23 permission kanonik) sudah disiapkan di dalam kode untuk pertumbuhan usaha ke depan, namun pada praktik operasional saat ini hanya satu akun **Owner** yang dipakai dan semua hak akses berada di tangannya (bypass super-admin via `Gate::before`).
-2. **Akses Eksternal — Customer (Tanpa Login)**:
-   - Pelanggan tidak perlu mendaftar atau mengingat kata sandi.
-   - Setiap transaksi menghasilkan tautan nota digital publik (`/nota/{invoice_number}`) yang dilindungi rate limiter (60 permintaan/menit per IP).
-   - Pelanggan dapat mengecek progres pengerjaan pakaian secara langsung melalui tautan yang dikirimkan ke WhatsApp atau mencari nota menggunakan nomor telepon di halaman utama.
-   - Format nomor nota: `INV-YYYYMMDD-XXXX` (contoh: `INV-20261116-0001`).
+### Stack & Desain
+- **Backend**: Laravel `^13.17` pada PHP `^8.3` (dikembangkan dan diuji pada PHP `8.4`).
+- **Frontend**: Inertia.js v3 (`@inertiajs/vue3`), Vue 3 (`<script setup lang="ts">`), Tailwind CSS v4, Radix Vue, Vite 8.
+- **Desain UI**: Sistem token **DataHarbor** (`DESIGN.md` & `resources/css/app.css`), menggunakan palet Navy (`#081050`, `#1F3C88`), Primary Blue (`#1F7FC4`), Teal Accent (`#39C5A8`), Canvas `#F4F8FB`, dan font `Lexend`, `Poppins`, serta `JetBrains Mono`.
+- **Database**: SQLite (default di `.env.example` untuk coba cepat) atau MySQL 8.4 (untuk produksi / lingkungan lokal yang memakai MySQL).
+- **WhatsApp Gateway (Opsional)**: Service Go mandiri (`gateway/`) berbasis `whatsmeow`. Jika tidak dijalankan, sistem tetap bisa mengirim struk lewat tautan `wa.me`.
+- **Automated Tests**: Pest PHP (`364` tes dalam `32` file di `tests/`).
 
 ---
 
-## 4. Panduan Instalasi Langkah Demi Langkah
+## 3. Instalasi & Menjalankan di Lokal
 
-### 4.1 Persyaratan Sistem
-1. **PHP**: Versi **8.4** atau lebih baru (`pdo_mysql`, `pdo_sqlite`, `zlib`, `intl`, `bcmath`, `curl`, `mbstring`, `openssl`).
-2. **Composer**: Versi **2.7** atau lebih baru.
-3. **Node.js & npm**: Node.js **20.x** ke atas dan npm **10.x** ke atas.
-4. **MySQL Database**: Versi **8.4** (atau MySQL 8.0+ / MariaDB 10.4+).
-5. **Git**: Untuk mengunduh source code repositori.
+### Persyaratan Sistem
+1. **PHP >= 8.3** (disarankan **PHP 8.4**) dengan ekstensi: `pdo_sqlite` (untuk SQLite) atau `pdo_mysql` (untuk MySQL), `mbstring`, `openssl`, `intl`, `bcmath`, `curl`, `zlib`.
+2. **Composer >= 2.7**
+3. **Node.js >= 20** & **npm >= 10**
+4. **Database**: SQLite (sudah bawaan PHP) atau **MySQL 8.0+ / 8.4**
+5. **Go >= 1.21** (opsional, hanya dibutuhkan jika menjalankan/build ulang WhatsApp Gateway di macOS, Linux, atau ingin memodifikasi kode di `gateway/`)
 
----
+### Langkah Setup Awal
 
-### 4.2 Langkah Instalasi
-
-#### Langkah 1: Kloning Repositori
+#### 1. Clone Repositori & Install Paket
 ```bash
-git clone -b dev-ilham https://github.com/RusdiEneri/LMS-AndikLaundry.git
+git clone https://github.com/RusdiEneri/LMS-AndikLaundry.git
 cd LMS-AndikLaundry
-```
-
-#### Langkah 2: Salin File Environment (`.env`)
-- Linux / macOS / PowerShell:
-  ```bash
-  cp .env.example .env
-  ```
-- Windows Command Prompt:
-  ```cmd
-  copy .env.example .env
-  ```
-
-Sesuaikan konfigurasi database di file `.env`:
-```env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=lms_andiklaundry
-DB_USERNAME=root
-DB_PASSWORD=
-```
-
-#### Langkah 3: Install Dependensi PHP & Node.js
-```bash
+git checkout staging
 composer install
 npm install
 ```
+*(Anggota tim bisa langsung checkout ke branch masing-masing setelahnya; pengguna umum dapat memakai `staging` atau `main` sesuai rilis yang tersedia.)*
 
-#### Langkah 4: Generate Application Key
+#### 2. Salin `.env` & Buat Application Key
+- **Linux / macOS / PowerShell**:
+  ```bash
+  cp .env.example .env
+  php artisan key:generate
+  ```
+- **Windows Command Prompt (CMD)**:
+  ```cmd
+  copy .env.example .env
+  php artisan key:generate
+  ```
+
+#### 3. Pilih & Siapkan Database
+
+**Opsi A: Mode Cepat dengan SQLite (Default `.env.example`, tanpa install MySQL)**
+Pastikan file database SQLite tersedia, lalu jalankan migrasi:
+- **PowerShell (Windows)**:
+  ```powershell
+  if (!(Test-Path database\database.sqlite)) { New-Item database\database.sqlite -ItemType File }
+  php artisan migrate --seed
+  ```
+- **Linux / macOS / Git Bash**:
+  ```bash
+  touch database/database.sqlite
+  php artisan migrate --seed
+  ```
+
+**Opsi B: Mode MySQL 8.4 (Cocok untuk data permanen / setara server produksi)**
+1. Buat database kosong bernama `lms_andiklaundry` di MySQL (`CREATE DATABASE lms_andiklaundry CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`).
+2. Ubah bagian database di `.env`:
+   ```env
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=lms_andiklaundry
+   DB_USERNAME=root
+   DB_PASSWORD=
+   ```
+3. Jalankan migrasi dan data awal:
+   ```bash
+   php artisan migrate --seed
+   ```
+
+#### 4. Jalankan Server Pengembangan
+
+Cara paling praktis (menjalankan server Laravel dan Vite bersamaan lewat script `dev`):
 ```bash
-php artisan key:generate
+composer run dev
 ```
 
-#### Langkah 5: Migrasi Database & Seeding Awal
+Atau jalankan secara terpisah di 2 terminal (berguna jika ingin melihat log masing-masing secara terpisah):
 ```bash
-php artisan migrate --seed
-```
-Seeder akan otomatis membuat: akun Owner, 3 role + 23 permission, katalog layanan (4 kategori, 11 layanan + tier), data pelanggan contoh, dan pengaturan bisnis awal.
-
-> **Failsafe katalog**: Jika katalog layanan kosong saat POS dibuka, sistem otomatis menjalankan seeder katalog sehingga kasir tidak pernah menemui error "layanan tidak valid".
-
----
-
-### 4.3 Menjalankan Aplikasi di Komputer Lokal
-
-Buka **3 Terminal Terpisah** di folder proyek:
-
-#### Terminal 1: Backend Laravel Server
-```powershell
+# Terminal 1 (Backend Laravel -> http://127.0.0.1:8000)
 php artisan serve
-```
-*Aplikasi web aktif di: `http://localhost:8000`.*
 
-#### Terminal 2: Frontend Asset Bundler (Vite)
-```powershell
+# Terminal 2 (Frontend Vite)
 npm run dev
 ```
 
-#### Terminal 3: WhatsApp Gateway Daemon (Opsional)
-```powershell
-cd gateway
-.\whatsapp-gateway.exe
-```
-*Gateway akan standby di: `http://localhost:8080`.*
+Buka browser dan akses `http://127.0.0.1:8000` (atau `http://localhost:8000`).
 
-> **Alternatif satu perintah**: `composer run dev` menjalankan server Laravel, queue, Vite, dan log watcher secara bersamaan.
+### Akun Login Awal (Hasil Seeder)
+- Halaman login: `/login`
+- **Email**: `owner@andiklaundry.test`
+- **Password**: `Password123!`
+- **Role**: `owner` (akses penuh)
 
----
-
-## 5. Akun Default & Kredensial
-
-Database telah dilengkapi dengan akun bawaan resmi untuk pemilik usaha:
-
-| Peran (Role) | Nama Akun | Email Login | Nomor WhatsApp | Kata Sandi (Password) | Hak Akses |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Owner** | Andik (Owner) | `owner@andiklaundry.test` | `6281234567001` | `Password123!` | Akses penuh seluruh sistem: Kasir POS, Manajemen Pelanggan, Stasiun Produksi, Pengeluaran Toko, Piutang, Dashboard SAK EMKM, dan Pengaturan. |
-
-> **Catatan Login Cepat**: Di halaman `/login`, tersedia tombol instan **"Isi Kredensial Demo: Akun Owner (Andik)"** untuk mempermudah pengujian.
+Di halaman `/login` juga terdapat tombol **"Isi Kredensial Demo: Akun Owner (Andik)"** untuk mempercepat pengujian di lokal.
 
 ---
 
-## 6. Panduan Operasional WhatsApp Gateway & QRIS
+## 4. Panduan Pengguna Umum (Di Luar Tim / Toko Lain)
 
-### 6.1 WhatsApp Gateway (Go Microservice)
-1. Jalankan daemon gateway di Terminal 3 (`cd gateway && .\whatsapp-gateway.exe`).
-2. Masuk sebagai Owner -> menu **Pengaturan Toko** -> tab **WhatsApp Gateway**.
-3. Hubungkan sesi dengan salah satu dari dua cara:
-   - **Scan QR Code**: Klik **Tampilkan QR Code**, lalu pindai melalui WhatsApp di smartphone Anda (**Perangkat Tertaut**).
-   - **Kode OTP Pairing**: Masukkan nomor WhatsApp toko, lalu ketik 8 digit kode yang muncul di menu **Perangkat Tertaut -> Tautkan dengan nomor telepon saja**.
-4. Klik **Uji Koneksi Gateway** untuk memastikan nomor terhubung, dan **Kirim Pesan Uji** untuk verifikasi end-to-end.
+Jika Anda bukan bagian dari tim pengembang maupun pemilik Andik Laundry dan ingin memakai sistem ini untuk outlet laundry Anda sendiri, ikuti checklist berikut agar data usaha dan keamanan akun sesuai milik Anda:
 
-### 6.2 Mode Cadangan Darurat (Manual Fallback via `wa.me`)
-Jika komputer gateway mati atau jaringan bermasalah:
-- Operasional kasir **tidak akan terganggu**.
-- Di sebelah nota atau keranjang kasir, klik tombol **Kirim via WhatsApp (wa.me)**.
-- Aplikasi langsung membuka tautan resmi `https://wa.me/` dengan isi nota dan nomor pelanggan yang sudah otomatis terisi.
-
-### 6.3 Kebijakan Pembayaran & Panduan QRIS Manual
-- **Kebijakan Wajib Lunas (No Receivables di Kasir)**: Andik Laundry memberlakukan aturan pembayaran wajib lunas saat transaksi di kasir POS. Sistem tidak mengizinkan pembayaran tertunda, kasbon, atau piutang di layar checkout — tunai kurang dari total tagihan akan ditolak dengan pesan peringatan.
-- **Metode Pembayaran Kasir**:
-  1. **Tunai (Cash)**: Kasir memasukkan uang tunai yang diterima (menggunakan numpad/preset), sistem menghitung uang kembalian secara real-time. Transaksi tidak dapat diselesaikan jika uang tunai kurang dari total tagihan.
-  2. **QRIS Manual**: Layar kasir menampilkan kode QRIS resmi toko (`public/images/qris-andiklaundry.svg` beserta poster QRIS) dengan nominal pas yang wajib ditransfer pelanggan. Pelanggan dapat memindai melalui seluruh m-Banking (BCA, Mandiri, BRI, BNI) dan E-Wallet (GoPay, OVO, Dana, ShopeePay). Kasir wajib memverifikasi mutasi/bukti transfer melalui centang konfirmasi sebelum transaksi diproses.
-
----
-
-## 7. Panduan Backup & Pemulihan Database
-
-### 7.1 Backup Manual
-```powershell
-# Backup standar dengan kompresi gzip (retensi default 30 hari)
-php artisan db:backup
-
-# Backup dengan batas simpan 14 hari
-php artisan db:backup --retention=14
-```
-File cadangan disimpan secara aman di folder `storage/app/backups/` dengan proteksi `.gitignore` agar tidak bocor ke publik.
-
-### 7.2 Jadwal Backup Otomatis
-Sistem diprogram mencadangkan database secara otomatis setiap pukul **02:00** (retensi 30 hari):
-```powershell
-php artisan schedule:list
+### 4.1 Inisialisasi Database Bersih (Tanpa Data Sampel Pelanggan/Pengeluaran)
+Perintah `php artisan migrate --seed` mengisi **5 pelanggan contoh** (`CustomerSeeder`) dan **4 pengeluaran contoh** (`ExpenseSeeder`) untuk keperluan demo. Jika ingin database bersih untuk toko asli tanpa data contoh tersebut, jalankan migrasi lalu panggil hanya seeder inti:
+```bash
+php artisan migrate
+php artisan db:seed --class=RoleAndPermissionSeeder
+php artisan db:seed --class=UserSeeder
+php artisan db:seed --class=BusinessSettingSeeder
+php artisan db:seed --class=ServiceCatalogSeeder
 ```
 
-### 7.3 Pemulihan Database (Restore)
-Ekstrak arsip `.sql.gz` lalu impor ke MySQL:
-```powershell
-7z x storage\app\backups\backup-2026-11-16_020000.sql.gz -ostorage\app\backups\
-mysql -u root -p lms_andiklaundry < storage\app\backups\backup-2026-11-16_020000.sql
-```
+### 4.2 Ganti Kredensial Default Sebelum Online (Wajib)
+1. Masuk ke `/login` menggunakan akun bawaan (`owner@andiklaundry.test` / `Password123!`).
+2. Buka menu **Manajemen Pengguna** (`/owner/users`).
+3. Tambahkan akun `owner` baru dengan email, nomor HP, dan password kuat milik Anda sendiri, lalu login ulang dengan akun baru tersebut.
+4. Nonaktifkan atau hapus akun demo `owner@andiklaundry.test`, dan jika Anda tidak membutuhkan tombol isi demo di halaman login produksi, hapus tombol *"Isi Kredensial Demo"* di `resources/js/Pages/Auth/Login.vue` lalu jalankan `npm run build`.
+5. Dari `/owner/users`, Anda juga dapat membuat akun staf dengan peran **`cashier`** (kasir & pelanggan) atau **`operator`** (hanya akses `/production/station`).
 
----
+### 4.3 Ubah Profil Usaha & Katalog Tarif Lewat Menu Pengaturan
+Sebagian besar pengaturan outlet tidak perlu mengubah kode. Login sebagai Owner, lalu buka **`/owner/settings`**:
+- **Tab Layanan & Tarif**: Ubah harga default, minimal kilogram, atau tambah/nonaktifkan jenis layanan (`Kiloan`, `Satuan`, `Karpet`).
+- **Tab Identitas Outlet**: Ganti nama outlet, nomor WhatsApp utama toko, alamat nota, dan catatan kaki (*receipt footer*). Perubahan `store.name`, `store.phone`, dan `store.address` otomatis tampil di halaman utama (`/`), struk digital, dan pesan WhatsApp.
+- **Tab Operasional & Finansial**: Sesuaikan batas minimal berat (`2.00` kg), plafon piutang, maksimal siklus cuci ulang (`2`), tarif PPN (`0.00%`), serta ukuran kertas printer thermal (`58mm` atau `80mm`).
+- **Tab WhatsApp Gateway**: Pilih mode **Manual (`wa.me`)** jika tidak ingin menjalankan server WhatsApp Go, atau mode otomatis jika menjalankan gateway.
 
-## 8. Perintah Pengujian & Verifikasi
+### 4.4 Rebranding Aset Visual & Halaman Depan (Opsional)
+Bagian yang bersifat visual statis di kode sumber dapat diganti langsung sebelum `npm run build`:
+- **Gambar QRIS Toko**: Ganti `public/images/qris-andiklaundry.svg` dan `public/images/qris-andiklaundry-poster.jpg` dengan kode QRIS milik outlet Anda.
+- **Logo & Hero Landing Page**: Ganti `public/images/logo-a.webp` / `public/images/logo-a.png`, serta `public/videos/bg-hero.mp4` dan `public/images/bg-hero-poster.webp`.
+- **Teks Lokasi, Peta Google Maps & FAQ Landing Page**: Sesuaikan di `resources/js/Pages/Welcome.vue` (tautan Google Maps `iframe`, jam buka, dan jawaban FAQ).
 
-### 8.1 Automated Test Suite (Pest PHP)
-Aplikasi memiliki **334 test otomatis dalam 32 file** yang mencakup skenario end-to-end POS, mesin status produksi, snapshot harga, pembayaran multi-metode, piutang, rekap kas harian, notifikasi WhatsApp, otorisasi role, dan backup database:
-```powershell
-# Jalankan seluruh tes
-php artisan test --compact
-
-# Menjalankan pengujian spesifik
-php artisan test tests/Feature/PosE2EScenarioTest.php
-php artisan test tests/Feature/CustomerReceivablesFeatureTest.php
-php artisan test tests/Feature/DatabaseBackupTest.php
-```
-
-### 8.2 Verifikasi Tipe & Build Aset Frontend
-```powershell
-npm run typecheck
+Setelah mengubah file di `resources/`, jalankan:
+```bash
 npm run build
 ```
 
 ---
 
-## 9. Tanya Jawab (FAQ) & Solusi Masalah
+## 5. Panduan Anggota Kelompok (Kolaborasi Git & Verifikasi)
 
-### Q1: Mengapa tampilan web tidak berwarna atau berantakan?
-> **Solusi**: Kompilasi aset frontend Anda menggunakan perintah `npm run build` atau jalankan `npm run dev` di terminal pendamping.
+### 5.1 Struktur Branch Repositori
+Branch yang tercatat di repositori:
+- `main`: rilis stabil
+- `staging`: integrasi gabungan antar anggota tim sebelum ke `main`
+- Branch masing-masing anggota: `dev-ikbar`, `dev-ilham`, `dev-nazar`, `dev-ricky`
 
-### Q2: Bagaimana cara melacak status cucian bagi pelanggan?
-> **Solusi**: Pelanggan cukup membuka tautan nota digital yang dikirim via WhatsApp atau memasukkan nomor nota (misal `INV-20261116-0001`) atau nomor HP pada kolom pencarian di halaman utama (`http://localhost:8000`).
+### 5.2 Kebiasaan Wajib Saat Mengerjakan Fitur / Perbaikan
+1. **Sinkronkan kode terbaru sebelum mulai**:
+   ```bash
+   git fetch origin
+   git checkout dev-<nama>
+   git pull origin staging
+   ```
+2. **Setelah `git pull` dari rekan tim**, selalu cek apakah ada paket baru, migrasi baru, atau perubahan tampilan:
+   ```bash
+   composer install
+   npm install
+   php artisan migrate
+   npm run build
+   ```
+3. **Verifikasi sebelum commit & push** agar tidak mengirim error ke branch tim:
+   ```bash
+   # Cek tipe TypeScript (Vue)
+   npm run typecheck
 
-### Q3: Bagaimana cara menghitung cucian karpet?
-> **Solusi**: Di layar kasir POS, pilih layanan **Sepatu & Karpet -> Cuci Karpet**, masukkan dimensi Panjang dan Lebar (meter). Sistem akan menghitung luas $m^2$, menyimpannya ke database, dan mengalikannya dengan tarif per meter secara instan.
+   # Cek build produksi Vite berhasil
+   npm run build
 
-### Q4: Mengapa kas di laci berbeda dengan angka laba bersih di dashboard?
-> **Solusi**: Ini adalah prinsip standar akuntansi **SAK EMKM**:
-> - **Laba Bersih (Akrual)**: Baru diakui saat pakaian selesai dicuci (`completed`), karena jasa laundry telah selesai diberikan.
-> - **Kas Nyata di Tangan (Cash Basis)**: Mengaudit uang fisik yang benar-benar ada di laci kasir saat itu juga.
-> - Perbedaan timbul karena adanya uang muka (cucian baru masuk tapi sudah dibayar) atau piutang pelanggan (cucian sudah selesai tapi belum dibayar).
+   # Cek formatting PHP sesuai Laravel Pint (untuk file yang berubah)
+   vendor/bin/pint --dirty
 
-### Q5: Mengapa kasir menolak pembayaran tunai yang kurang dari total tagihan?
-> **Solusi**: Sesuai kebijakan wajib lunas Andik Laundry, layar checkout tidak menyediakan opsi utang/piutang. Gunakan pembayaran gabungan (sebagian tunai, sisanya QRIS) atau minta pelanggan menyelesaikan nominal penuh.
+   # Jalankan test suite otomatis (Pest menggunakan SQLite :memory:, aman bagi DB lokal)
+   php artisan test --compact
+   ```
+4. **Catatan file lokal di VPS/server bersama**: Gunakan `git pull --ff-only` dan hindari perintah destruktif seperti `git reset --hard` pada mesin server agar tidak menimpa konfigurasi/lockfile lingkungan yang belum di-commit.
 
 ---
 
-## Lisensi & Hak Cipta
+## 6. WhatsApp Gateway & Fallback Manual
 
-LMS Andik Laundry adalah perangkat lunak manajemen operasional laundry untuk UMKM Indonesia. Seluruh hak cipta dilindungi undang-undang.
+Aplikasi tetap dapat dipakai penuh tanpa WhatsApp Gateway karena memiliki tombol kirim manual `wa.me` yang mengisi nomor tujuan dan isi nota secara otomatis. Namun jika ingin pengiriman pesan otomatis di latar belakang:
+
+1. **Jalankan Gateway**:
+   - **Windows**:
+     ```powershell
+     cd gateway
+     .\whatsapp-gateway.exe
+     ```
+   - **macOS / Linux** (atau jika ingin compile ulang dari source Go):
+     ```bash
+     cd gateway
+     go run .
+     ```
+   Gateway berjalan secara default di `http://127.0.0.1:8080` (dapat diubah lewat env `HOST` dan `PORT`) dan menyimpan sesi WhatsApp di `gateway/wuzapi.db`.
+2. **Tautkan Nomor WhatsApp**:
+   - Login Owner -> `/owner/settings` -> tab **WhatsApp Gateway**.
+   - Pastikan URL gateway mengarah ke `http://localhost:8080` (atau URL server gateway Anda).
+   - Hubungkan lewat **Scan QR Code** atau **Pairing Code OTP** dari menu *Perangkat Tertaut* di aplikasi WhatsApp HP.
+   - Uji dengan tombol **Uji Koneksi** / **Kirim Pesan Uji**.
+
+---
+
+## 7. Backup & Restore Database
+
+Perintah `php artisan db:backup` mendukung driver **SQLite**, **MySQL**, dan **MariaDB** (memakai `mysqldump` bila tersedia, atau fallback dump lewat PHP PDO bila `mysqldump` tidak ada di `PATH`). File hasil backup dikompres `.sql.gz` ke `storage/app/backups/` (otomatis terabaikan Git).
+
+```bash
+# Backup manual (retensi default 30 hari)
+php artisan db:backup
+
+# Backup dengan batas simpan 14 hari atau nama file khusus
+php artisan db:backup --retention=14
+php artisan db:backup --filename=sebelum-update.sql.gz
+```
+
+Jadwal backup otomatis harian pukul `02:00` terdaftar di `routes/console.php` (aktif di server jika cron Laravel scheduler `php artisan schedule:run` dijalankan setiap menit).
+
+---
+
+## 8. Troubleshooting Error Umum
+
+### 1. Error: `Vite manifest not found at: public/build/manifest.json` atau tampilan polos/CSS tidak muncul
+- **Penyebab**: Aset frontend belum dibuild atau server Vite tidak sedang menyala.
+- **Solusi**: Jalankan `npm run build` (untuk file statis sekali jadi) atau jalankan `npm run dev` / `composer run dev` saat mengembangkan frontend.
+
+### 2. Error: `No application encryption key has been specified` (HTTP 500 saat buka awal)
+- **Penyebab**: File `.env` baru disalin dari `.env.example` dan `APP_KEY` masih kosong.
+- **Solusi**:
+  ```bash
+  php artisan key:generate
+  php artisan optimize:clear
+  ```
+
+### 3. Error Database: `Unknown database 'lms_andiklaundry'` atau `Database file at path [...database.sqlite] does not exist`
+- **Penyebab**: DB MySQL belum dibuat, atau `DB_CONNECTION=sqlite` aktif tapi file `database/database.sqlite` belum ada.
+- **Solusi**:
+  - Jika memakai SQLite: buat file `database/database.sqlite` lalu `php artisan migrate --seed`.
+  - Jika memakai MySQL: pastikan service MySQL menyala, buat database `lms_andiklaundry`, sesuaikan `DB_*` di `.env`, lalu `php artisan migrate --seed`.
+
+### 4. Error `could not find driver` saat migrate atau tes
+- **Penyebab**: Ekstensi PHP `pdo_sqlite` (dipakai oleh SQLite dan Pest test suite `:memory:`) atau `pdo_mysql` belum aktif di `php.ini`.
+- **Solusi**: Jalankan `php -m` untuk memeriksa ekstensi yang aktif. Buka `php.ini` (cek lokasinya lewat `php --ini`), aktifkan baris `extension=pdo_sqlite` dan `extension=pdo_mysql` (serta `sqlite3`), lalu restart terminal/server.
+
+### 5. Error kolom/tabel tidak ditemukan setelah `git pull` dari anggota tim
+- **Penyebab**: Rekan tim menambahkan migrasi atau seeder baru yang belum dijalankan di komputer Anda.
+- **Solusi**:
+  ```bash
+  php artisan migrate
+  # Jika masih bermasalah di lokal dan aman mereset data demo lokal:
+  php artisan migrate:fresh --seed
+  ```
+
+### 6. Perubahan di `.env` atau route tidak berefek / error 404 padahal route ada
+- **Penyebab**: Cache konfigurasi atau route Laravel masih menyimpan versi lama.
+- **Solusi**:
+  ```bash
+  php artisan optimize:clear
+  ```
+
+### 7. Port `8000`, `5173`, atau `8080` bentrok (`Address already in use`)
+- **Penyebab**: Masih ada proses Laravel, Vite, atau Go gateway sebelumnya yang berjalan di latar belakang.
+- **Solusi**: Tutup terminal/proses lama yang memakai port tersebut, atau jalankan Laravel di port lain sementara (`php artisan serve --port=8001`).
+
+### 8. `.\whatsapp-gateway.exe` tidak bisa dijalankan di macOS / Linux atau koneksi WhatsApp gagal
+- **Penyebab**: File `.exe` hanya untuk Windows. Di sistem lain harus dijalankan lewat Go runtime, atau jika HP ter-logout, sesi `wuzapi.db` perlu ditautkan ulang.
+- **Solusi**: Di macOS/Linux gunakan `cd gateway && go run .`. Jika gateway tidak bisa dipakai atau mati, operasional POS tetap jalan normal menggunakan tombol **Kirim via WhatsApp (`wa.me`)** pada nota atau daftar transaksi.
+
+### 9. Error saat menjalankan `php artisan test`
+- **Penyebab**: Biasanya `pdo_sqlite` belum aktif (karena `phpunit.xml` memaksa `:memory:` SQLite), atau cache konfigurasi dari sesi lama nyangkut.
+- **Solusi**: Bersihkan cache konfigurasi (`php artisan config:clear`) lalu jalankan `php artisan test --compact`. Untuk menguji satu file saja:
+  ```bash
+  php artisan test tests/Feature/LandingPageTest.php --compact
+  ```
