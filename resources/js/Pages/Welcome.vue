@@ -772,19 +772,20 @@ onBeforeUnmount(() => {
                         <div class="flex items-center justify-between pb-4 border-b border-border/70">
                             <Link
                                 href="/"
-                                class="flex items-center gap-2 focus-visible:outline-none"
+                                class="inline-flex min-h-[44px] items-center gap-2.5 rounded-lg focus-visible:outline-none"
+                                aria-label="Andik Laundry, kembali ke beranda"
                                 @click="menuOpen = false"
                             >
                                 <img
                                     src="/images/logo-a.webp"
-                                    alt="Andik Laundry"
-                                    class="h-7 w-auto object-contain"
-                                    width="32"
-                                    height="30"
+                                    alt=""
+                                    class="h-8 w-auto shrink-0 object-contain"
+                                    width="33"
+                                    height="32"
+                                    aria-hidden="true"
                                 />
-                                <span class="font-heading text-lg font-extrabold tracking-tight text-navy-950">
-                                    andik<span class="text-accent-500">.</span>
-                                    <span class="ml-1 text-[10px] font-bold uppercase tracking-wider text-accent-700">LAUNDRY</span>
+                                <span class="font-heading text-base font-extrabold tracking-tight text-navy-950">
+                                    {{ storeName }}
                                 </span>
                             </Link>
                             <button
@@ -1705,16 +1706,19 @@ onBeforeUnmount(() => {
                     <div class="md:col-span-5">
                         <Link
                             href="/"
-                            class="inline-flex items-center gap-2 rounded-lg focus-visible:outline-none"
+                            class="inline-flex min-h-[44px] items-center gap-3 rounded-lg focus-visible:outline-none"
                             aria-label="Andik Laundry, kembali ke beranda"
                         >
-                            <span class="font-heading text-2xl font-extrabold tracking-tight text-white">
-                                andik<span class="text-accent-400">.</span>
-                            </span>
-                            <span
-                                class="text-[10px] font-bold uppercase tracking-[0.22em] text-accent-400"
-                            >
-                                Laundry
+                            <img
+                                src="/images/logo-a.webp"
+                                alt=""
+                                class="h-9 w-auto shrink-0 object-contain"
+                                width="38"
+                                height="36"
+                                aria-hidden="true"
+                            />
+                            <span class="font-heading text-xl font-extrabold tracking-tight text-white">
+                                {{ storeName }}
                             </span>
                         </Link>
                         <p class="mt-4 max-w-sm text-sm leading-relaxed text-slate-300">
