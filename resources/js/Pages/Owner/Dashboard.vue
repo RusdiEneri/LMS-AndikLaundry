@@ -2,11 +2,19 @@
 import { computed, nextTick, ref, watch } from 'vue';
 import { Link, router, usePage } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/Components/ui/card';
-import { Button } from '@/Components/ui/button';
-import { Download, Printer, Scale, Wallet, Receipt, Info, ArrowRight } from 'lucide-vue-next';
+import type { PageProps } from '@/types';
+import {
+    Download,
+    Printer,
+    Receipt,
+    Shirt,
+    Info,
+    ChevronRight,
+    Scale,
+    Wallet,
+} from 'lucide-vue-next';
 
-// The controller still sends the legacy kpi props; keep them off the layout's root element.
+// Legacy kpi props stay accepted cleanly without attaching to AppLayout root.
 defineOptions({ inheritAttrs: false });
 
 interface TrendPoint {
@@ -36,8 +44,36 @@ interface FinancialReport {
     };
 }
 
+interface OperationsSummary {
+    processing_count: number;
+    ready_count: number;
+}
+
+interface RecentTransactionRow {
+    id: number;
+    invoice_number: string;
+    customer_name: string;
+    status: string;
+    status_label: string;
+    total_amount: number;
+    outstanding_balance: number;
+    date_label: string;
+}
+
+interface RecentExpenseRow {
+    id: number;
+    expense_number: string;
+    category_label: string;
+    description: string;
+    amount: number;
+    date_label: string;
+}
+
 interface Props {
     financialReport: FinancialReport;
+    operations_summary?: OperationsSummary;
+    recent_transactions?: RecentTransactionRow[];
+    recent_expenses?: RecentExpenseRow[];
     store_info?: { name?: string; address?: string; phone?: string };
 }
 
@@ -89,7 +125,8 @@ watch(period, (p) => {
     if (activePreset.value !== 'custom') activePreset.value = detectPreset();
 });
 
-const page = usePage();
+const page = usePage<PageProps>();
+const currentUser = computed(() => page.props.auth?.user ?? null);
 const errors = computed(() => (page.props.errors ?? {}) as Record<string, string>);
 
 function loadRange(startDate: string, endDate: string) {
@@ -128,10 +165,8 @@ const csvUrl = computed(
 
 const printedAt = ref('');
 
-// Print rules are gated on this body class so they never leak into other pages' print jobs.
 async function printSummary() {
     printedAt.value = new Intl.DateTimeFormat('id-ID', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date());
-    // window.print() blocks; let the timestamp render into the slip first.
     await nextTick();
     document.body.classList.add('printing-finance-slip');
     const cleanup = () => {
@@ -168,6 +203,14 @@ const gap = computed(() => props.financialReport.health.cash_to_accrual_gap);
 const showGapNote = computed(() => cash.value.net_cash_flow < accrual.value.net_operating_profit && gap.value > 0);
 const digitalIn = computed(() => cash.value.cash_in.transfer + cash.value.cash_in.qris + cash.value.cash_in.ewallet);
 
+const operations = computed<OperationsSummary>(() => ({
+    processing_count: props.operations_summary?.processing_count ?? 0,
+    ready_count: props.operations_summary?.ready_count ?? 0,
+}));
+
+const recentTransactions = computed(() => props.recent_transactions ?? []);
+const recentExpenses = computed(() => props.recent_expenses ?? []);
+
 const trend = computed(() => props.financialReport.details.trend);
 const trendMax = computed(() => Math.max(1, ...trend.value.points.flatMap((p) => [p.revenue, p.expenses])));
 const trendEmpty = computed(() => trend.value.points.every((p) => p.revenue === 0 && p.expenses === 0));
@@ -175,34 +218,40 @@ const trendUnit = computed(() => (trend.value.granularity === 'monthly' ? 'bulan
 
 function barHeight(value: number): string {
     if (value <= 0) return '0%';
-    return `${Math.max(2, (value / trendMax.value) * 100)}%`;
+    return `${Math.max(3, (value / trendMax.value) * 100)}%`;
 }
 </script>
 
 <template>
-    <AppLayout title="Owner Dashboard">
-        <div class="space-y-6 print:hidden" :aria-busy="loading">
-            <!-- Header: title, period, actions -->
-            <div class="flex flex-col gap-4 rounded-lg border border-border bg-surface p-5 lg:flex-row lg:items-end lg:justify-between shadow-sm">
+    <AppLayout title="Dashboard">
+        <div class="space-y-5 print:hidden" :aria-busy="loading">
+            <!-- Band 1: Header + Actions -->
+            <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
                 <div>
-                    <h1 class="font-heading text-2xl sm:text-3xl font-bold tracking-tight text-text">Keuangan Toko</h1>
-                    <p class="mt-1 font-body text-sm font-medium text-text-muted">
-                        Periode <span class="font-bold text-text">{{ periodLabel }}</span>
-                        <span class="text-text-muted/70 font-normal">({{ period.days }} hari)</span>
+                    <p class="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-700">
+                        Keuangan & Operasional
+                    </p>
+                    <h1 class="mt-1 font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-navy-950">
+                        {{ store_info?.name ?? 'Andik Laundry' }}
+                    </h1>
+                    <p class="mt-1 text-sm text-text-muted">
+                        Ringkasan akrual SAK EMKM dan arus kas nyata · Periode
+                        <span class="font-semibold text-navy-950">{{ periodLabel }}</span>
+                        <span>({{ period.days }} hari)</span>
                     </p>
                 </div>
 
-                <div class="flex flex-wrap sm:flex-nowrap gap-2.5">
+                <div class="flex flex-wrap sm:flex-nowrap items-center gap-2.5">
                     <a
                         :href="csvUrl"
-                        class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-pill border border-border bg-surface hover:bg-bg text-text font-bold text-xs shadow-sm transition-all cursor-pointer min-h-[42px]"
+                        class="inline-flex min-h-[42px] items-center justify-center gap-2 rounded-md border border-slate-400/70 bg-surface px-4 text-xs font-semibold text-navy-950 shadow-xs transition-colors hover:border-primary-600 hover:bg-primary-100/50 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
                     >
-                        <Download class="h-4 w-4" aria-hidden="true" />
+                        <Download class="h-4 w-4 text-primary-700" aria-hidden="true" />
                         <span>Unduh CSV</span>
                     </a>
                     <button
                         type="button"
-                        class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-pill bg-accent-500 hover:bg-accent-600 text-navy-950 font-bold text-xs shadow-sm transition-all cursor-pointer min-h-[42px]"
+                        class="inline-flex min-h-[42px] cursor-pointer items-center justify-center gap-2 rounded-md bg-navy-800 px-4 text-xs font-bold text-white shadow-xs transition-colors hover:bg-navy-700 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
                         @click="printSummary"
                     >
                         <Printer class="h-4 w-4" aria-hidden="true" />
@@ -211,49 +260,55 @@ function barHeight(value: number): string {
                 </div>
             </div>
 
-            <!-- Period filter -->
-            <div class="space-y-3 rounded-lg border border-border bg-surface p-5 shadow-sm">
-                <div role="group" aria-label="Pilih periode laporan" class="flex flex-wrap gap-2">
-                    <button
-                        v-for="p in presets"
-                        :key="p.key"
-                        type="button"
-                        :aria-pressed="activePreset === p.key"
-                        :disabled="loading"
-                        class="min-h-[40px] rounded-pill px-4 text-xs font-semibold transition-all disabled:opacity-60 cursor-pointer"
-                        :class="
-                            activePreset === p.key
-                                ? 'bg-primary-700 text-white shadow-sm'
-                                : 'border border-border bg-bg text-text hover:bg-primary-100 hover:text-navy-950'
-                        "
-                        @click="selectPreset(p.key)"
-                    >
-                        {{ p.label }}
-                    </button>
-                    <button
-                        type="button"
-                        :aria-pressed="activePreset === 'custom'"
-                        :aria-expanded="activePreset === 'custom'"
-                        aria-controls="custom-range"
-                        class="min-h-[40px] rounded-pill px-4 text-xs font-semibold transition-all cursor-pointer"
-                        :class="
-                            activePreset === 'custom'
-                                ? 'bg-primary-700 text-white shadow-sm'
-                                : 'border border-border bg-bg text-text hover:bg-primary-100 hover:text-navy-950'
-                        "
-                        @click="selectPreset('custom')"
-                    >
-                        Rentang Kustom
-                    </button>
+            <!-- Period Filter Strip -->
+            <div class="rounded-lg border border-border bg-surface px-4 py-3 shadow-xs">
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                    <div role="group" aria-label="Pilih periode laporan" class="flex flex-wrap gap-2">
+                        <button
+                            v-for="p in presets"
+                            :key="p.key"
+                            type="button"
+                            :aria-pressed="activePreset === p.key"
+                            :disabled="loading"
+                            class="min-h-[38px] rounded-md px-3.5 text-xs font-semibold transition-colors disabled:opacity-60 cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
+                            :class="
+                                activePreset === p.key
+                                    ? 'bg-navy-800 text-white shadow-xs'
+                                    : 'border border-border bg-bg text-text hover:bg-primary-100 hover:text-navy-950'
+                            "
+                            @click="selectPreset(p.key)"
+                        >
+                            {{ p.label }}
+                        </button>
+                        <button
+                            type="button"
+                            :aria-pressed="activePreset === 'custom'"
+                            :aria-expanded="activePreset === 'custom'"
+                            aria-controls="custom-range"
+                            class="min-h-[38px] rounded-md px-3.5 text-xs font-semibold transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
+                            :class="
+                                activePreset === 'custom'
+                                    ? 'bg-navy-800 text-white shadow-xs'
+                                    : 'border border-border bg-bg text-text hover:bg-primary-100 hover:text-navy-950'
+                            "
+                            @click="selectPreset('custom')"
+                        >
+                            Rentang Kustom
+                        </button>
+                    </div>
+
+                    <p v-if="loading" class="text-xs font-medium text-primary-700" aria-live="polite">
+                        Memuat periode...
+                    </p>
                 </div>
 
                 <form
                     v-if="activePreset === 'custom'"
                     id="custom-range"
-                    class="flex flex-col gap-3 sm:flex-row sm:items-end pt-2"
+                    class="mt-3 flex flex-col gap-3 border-t border-border pt-3 sm:flex-row sm:items-end"
                     @submit.prevent="applyCustom"
                 >
-                    <label class="flex flex-col gap-1 text-xs font-bold uppercase tracking-wider text-text">
+                    <label class="flex flex-col gap-1 text-xs font-semibold text-navy-950">
                         Tanggal Awal
                         <input
                             v-model="customStart"
@@ -261,10 +316,10 @@ function barHeight(value: number): string {
                             name="start_date"
                             required
                             :max="customEnd || undefined"
-                            class="min-h-[44px] rounded-md border border-border bg-surface px-3.5 py-2 text-sm font-medium text-text shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-600"
+                            class="min-h-[42px] rounded-md border border-slate-400/80 bg-surface px-3 text-sm font-medium text-text focus:border-primary-600 focus:outline-none focus:ring-3 focus:ring-primary-100"
                         />
                     </label>
-                    <label class="flex flex-col gap-1 text-xs font-bold uppercase tracking-wider text-text">
+                    <label class="flex flex-col gap-1 text-xs font-semibold text-navy-950">
                         Tanggal Akhir
                         <input
                             v-model="customEnd"
@@ -272,176 +327,328 @@ function barHeight(value: number): string {
                             name="end_date"
                             required
                             :min="customStart || undefined"
-                            class="min-h-[44px] rounded-md border border-border bg-surface px-3.5 py-2 text-sm font-medium text-text shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-600"
+                            class="min-h-[42px] rounded-md border border-slate-400/80 bg-surface px-3 text-sm font-medium text-text focus:border-primary-600 focus:outline-none focus:ring-3 focus:ring-primary-100"
                         />
                     </label>
-                    <Button type="submit" variant="default" :disabled="customInvalid || loading" class="font-bold uppercase tracking-wider text-xs min-h-[44px]">Terapkan</Button>
+                    <button
+                        type="submit"
+                        :disabled="customInvalid || loading"
+                        class="min-h-[42px] cursor-pointer rounded-md bg-navy-800 px-5 text-xs font-bold text-white transition-colors hover:bg-navy-700 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                        Terapkan
+                    </button>
                 </form>
 
-                <p v-if="errors.start_date || errors.end_date" role="alert" class="text-xs font-bold text-danger">
+                <p v-if="errors.start_date || errors.end_date" role="alert" class="mt-2 text-xs font-semibold text-danger">
                     {{ errors.start_date || errors.end_date }}
                 </p>
-                <p v-if="loading" class="text-xs font-medium text-text-muted" aria-live="polite">Memuat laporan periode baru…</p>
             </div>
 
-            <!-- Accrual profit vs cash on hand, side by side -->
-            <div class="grid grid-cols-1 gap-5 md:grid-cols-2" :class="{ 'opacity-60': loading }">
-                <Card class="rounded-lg border border-border bg-surface shadow-sm">
-                    <CardHeader class="flex flex-row items-start justify-between space-y-0 pb-4">
+            <!-- Band 2: Top Asymmetric 2-Column Overview (Laba + Embedded Chart | Kas Nyata + Split Channels) -->
+            <div class="grid grid-cols-1 gap-5 lg:grid-cols-12" :class="{ 'opacity-60': loading }">
+                <!-- Left Primary Card -->
+                <section class="lg:col-span-6 flex flex-col rounded-lg border border-border bg-surface p-5 shadow-xs">
+                    <div class="flex items-start justify-between gap-3">
                         <div>
-                            <CardTitle class="font-heading text-lg font-bold text-text">Laba Bersih Usaha</CardTitle>
-                            <CardDescription class="font-body text-xs font-medium text-text-muted mt-0.5">Akrual SAK EMKM: dihitung dari nota yang sudah selesai</CardDescription>
-                        </div>
-                        <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-primary-100 text-primary-700">
-                            <Scale class="h-5 w-5" aria-hidden="true" />
-                        </div>
-                    </CardHeader>
-                    <CardContent>
-                        <dl class="space-y-2.5 text-sm">
-                            <div class="flex justify-between gap-3">
-                                <dt class="text-text-muted font-medium">Omzet selesai diakui</dt>
-                                <dd class="font-mono font-bold text-text tabular-nums">{{ formatRupiah(accrual.recognized_revenue) }}</dd>
+                            <p class="text-[11px] font-bold uppercase tracking-[0.12em] text-text-muted">
+                                Laba Bersih Usaha (Akrual)
+                            </p>
+                            <div
+                                class="mt-1.5 font-heading text-3xl sm:text-[2.1rem] font-extrabold font-mono tracking-tight tabular-nums"
+                                :class="accrual.net_operating_profit < 0 ? 'text-danger' : 'text-navy-950'"
+                            >
+                                {{ formatRupiah(accrual.net_operating_profit) }}
                             </div>
-                            <div class="flex justify-between gap-3">
-                                <dt class="text-text-muted font-medium">Total biaya toko</dt>
-                                <dd class="font-mono font-bold text-danger tabular-nums">− {{ formatRupiah(accrual.operating_expenses) }}</dd>
-                            </div>
-                            <div class="flex items-baseline justify-between gap-3 border-t border-border pt-3.5">
-                                <dt class="font-bold text-text uppercase tracking-wider text-xs">Laba bersih</dt>
-                                <dd
-                                    class="text-2xl sm:text-3xl font-mono font-bold tracking-tight tabular-nums"
-                                    :class="accrual.net_operating_profit < 0 ? 'text-danger' : 'text-success'"
-                                >
-                                    {{ formatRupiah(accrual.net_operating_profit) }}
-                                </dd>
-                            </div>
-                            <div class="flex justify-between gap-3 text-xs font-medium text-text-muted pt-0.5">
-                                <dt>Margin laba</dt>
-                                <dd class="font-bold text-text tabular-nums">{{ accrual.profit_margin_percent }}%</dd>
-                            </div>
-                        </dl>
-                    </CardContent>
-                </Card>
-
-                <Card class="rounded-lg border border-border bg-surface shadow-sm">
-                    <CardHeader class="flex flex-row items-start justify-between space-y-0 pb-4">
-                        <div>
-                            <CardTitle class="font-heading text-lg font-bold text-text">Uang Kas Nyata di Tangan</CardTitle>
-                            <CardDescription class="font-body text-xs font-medium text-text-muted mt-0.5">Uang yang benar-benar masuk dan keluar di periode ini</CardDescription>
-                        </div>
-                        <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-accent-100 text-accent-700">
-                            <Wallet class="h-5 w-5" aria-hidden="true" />
-                        </div>
-                    </CardHeader>
-                    <CardContent>
-                        <dl class="space-y-2.5 text-sm">
-                            <div class="flex justify-between gap-3">
-                                <dt class="text-text-muted font-medium">Uang diterima kasir</dt>
-                                <dd class="font-mono font-bold text-text tabular-nums">{{ formatRupiah(cash.cash_in.total) }}</dd>
-                            </div>
-                            <div class="flex justify-between gap-3 pl-3 text-xs text-text-muted font-medium">
-                                <dt>Tunai</dt>
-                                <dd class="font-mono text-text tabular-nums">{{ formatRupiah(cash.cash_in.tunai) }}</dd>
-                            </div>
-                            <div class="flex justify-between gap-3 pl-3 text-xs text-text-muted font-medium">
-                                <dt>Transfer / QRIS / e-wallet</dt>
-                                <dd class="font-mono text-text tabular-nums">{{ formatRupiah(digitalIn) }}</dd>
-                            </div>
-                            <div class="flex justify-between gap-3">
-                                <dt class="text-text-muted font-medium">Kas keluar</dt>
-                                <dd class="font-mono font-bold text-danger tabular-nums">− {{ formatRupiah(cash.cash_out) }}</dd>
-                            </div>
-                            <div class="flex items-baseline justify-between gap-3 border-t border-border pt-3.5">
-                                <dt class="font-bold text-text uppercase tracking-wider text-xs">Saldo kas bersih</dt>
-                                <dd
-                                    class="text-2xl sm:text-3xl font-mono font-bold tracking-tight tabular-nums"
-                                    :class="cash.net_cash_flow < 0 ? 'text-danger' : 'text-success'"
-                                >
-                                    {{ formatRupiah(cash.net_cash_flow) }}
-                                </dd>
-                            </div>
-                        </dl>
-                    </CardContent>
-                </Card>
-            </div>
-
-            <div
-                v-if="showGapNote"
-                class="flex items-start gap-3 rounded-lg border border-warning/30 bg-warning/10 p-4 text-sm text-text shadow-sm"
-                role="note"
-            >
-                <Info class="mt-0.5 h-5 w-5 shrink-0 text-warning" aria-hidden="true" />
-                <p class="font-medium">
-                    Ada <strong class="tabular-nums font-bold font-mono text-warning">{{ formatRupiah(gap) }}</strong> uang laba yang masih tertahan di piutang pelanggan.
-                    <span class="text-text-muted font-normal"> Laba sudah tercatat karena nota selesai, tapi uangnya belum masuk kas.</span>
-                </p>
-            </div>
-
-            <!-- Outstanding receivables -->
-            <Card class="rounded-lg border border-border bg-surface shadow-sm" :class="{ 'opacity-60': loading }">
-                <CardContent class="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
-                    <div class="flex items-start gap-3.5">
-                        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-danger/10 text-danger border border-danger/20">
-                            <Receipt class="h-6 w-6" aria-hidden="true" />
-                        </div>
-                        <div>
-                            <h2 class="font-heading text-base font-bold text-text">Piutang Pelanggan Berjalan</h2>
-                            <p class="text-2xl sm:text-3xl font-mono font-bold tracking-tight tabular-nums text-text">{{ formatRupiah(receivables.total_outstanding) }}</p>
-                            <p class="text-xs font-medium text-text-muted mt-0.5">
-                                {{ receivables.orders_count }} nota belum lunas dari {{ receivables.customers_count }} pelanggan · semua periode
+                            <p class="mt-1 text-xs text-text-muted tabular-nums">
+                                Omzet selesai <span class="font-semibold text-text">{{ formatRupiah(accrual.recognized_revenue) }}</span>
+                                · Biaya <span class="font-semibold text-danger">{{ formatRupiah(accrual.operating_expenses) }}</span>
+                                · Margin <span class="font-semibold text-navy-950">{{ accrual.profit_margin_percent }}%</span>
                             </p>
                         </div>
+                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-primary-100 text-primary-700">
+                            <Scale class="h-5 w-5" aria-hidden="true" />
+                        </div>
                     </div>
-                    <Button as-child variant="outline" class="gap-2 font-bold uppercase tracking-wider text-xs min-h-[44px]">
-                        <Link href="/owner/receivables">
-                            <span>Lihat & tagih piutang</span>
-                            <ArrowRight class="h-4 w-4" aria-hidden="true" />
-                        </Link>
-                    </Button>
-                </CardContent>
-            </Card>
 
-            <!-- Trend chart -->
-            <Card class="rounded-lg border border-border bg-surface shadow-sm">
-                <CardHeader>
-                    <CardTitle class="font-heading text-base font-bold text-text">Omzet selesai vs biaya toko per {{ trendUnit }}</CardTitle>
-                    <div class="flex flex-wrap gap-4 pt-1 text-xs font-semibold text-text-muted" aria-hidden="true">
-                        <span class="flex items-center gap-1.5"><span class="h-3.5 w-3.5 rounded-sm bg-primary-600"></span>Omzet selesai</span>
-                        <span class="flex items-center gap-1.5"><span class="h-3.5 w-3.5 rounded-sm bg-accent-500"></span>Biaya toko</span>
-                    </div>
-                </CardHeader>
-                <CardContent>
-                    <p v-if="trendEmpty" class="rounded-lg border border-dashed border-border p-8 text-center text-sm font-medium text-text-muted bg-bg">
-                        Belum ada nota selesai atau biaya toko di periode ini. Grafik terisi setelah nota ditandai selesai di Antrean Cuci
-                        atau pengeluaran dicatat di menu Pengeluaran.
-                    </p>
-                    <div v-else class="-mx-2 overflow-x-auto px-2 pb-1">
-                        <ul
-                            class="flex h-56 items-end gap-1.5 border-b border-border"
-                            :style="{ minWidth: `${trend.points.length * 2.25}rem` }"
-                            :aria-label="`Grafik omzet dan biaya per ${trendUnit}`"
-                        >
-                            <li
-                                v-for="point in trend.points"
-                                :key="point.key"
-                                class="relative flex h-full flex-1 items-end justify-center gap-0.5"
-                                :title="`${point.label}: omzet ${formatRupiah(point.revenue)}, biaya ${formatRupiah(point.expenses)}`"
-                            >
-                                <span class="sr-only">
-                                    {{ point.label }}: omzet {{ formatRupiah(point.revenue) }}, biaya {{ formatRupiah(point.expenses) }}
+                    <!-- Embedded Trend Chart Box -->
+                    <div class="mt-5 flex-1 rounded-md border border-dashed border-border bg-bg p-4 flex flex-col justify-between">
+                        <div class="flex items-center justify-between gap-2 pb-2">
+                            <span class="text-[11px] font-semibold text-text-muted">
+                                Tren omzet vs biaya per {{ trendUnit }}
+                            </span>
+                            <div class="flex items-center gap-3 text-[11px] font-semibold text-text-muted" aria-hidden="true">
+                                <span class="inline-flex items-center gap-1.5">
+                                    <span class="h-2.5 w-2.5 rounded-xs bg-primary-600"></span>Omzet
                                 </span>
-                                <span class="w-full max-w-[18px] rounded-t-sm bg-primary-600" :style="{ height: barHeight(point.revenue) }" aria-hidden="true"></span>
-                                <span class="w-full max-w-[18px] rounded-t-sm bg-accent-500" :style="{ height: barHeight(point.expenses) }" aria-hidden="true"></span>
-                            </li>
-                        </ul>
-                        <div class="flex gap-1.5 pt-2" :style="{ minWidth: `${trend.points.length * 2.25}rem` }" aria-hidden="true">
-                            <span v-for="point in trend.points" :key="point.key" class="flex-1 text-center text-[11px] font-mono font-medium leading-tight text-text-muted">
-                                {{ point.label }}
+                                <span class="inline-flex items-center gap-1.5">
+                                    <span class="h-2.5 w-2.5 rounded-xs bg-accent-500"></span>Biaya
+                                </span>
+                            </div>
+                        </div>
+
+                        <div v-if="trendEmpty" class="flex min-h-[112px] items-center justify-center text-center text-xs font-medium text-text-muted px-4">
+                            Belum ada omzet selesai atau biaya pada periode ini.
+                        </div>
+                        <div v-else class="-mx-1 overflow-x-auto px-1 pt-2">
+                            <ul
+                                class="flex h-28 items-end gap-1.5 border-b border-border"
+                                :style="{ minWidth: `${trend.points.length * 2}rem` }"
+                                :aria-label="`Grafik omzet dan biaya per ${trendUnit}`"
+                            >
+                                <li
+                                    v-for="point in trend.points"
+                                    :key="point.key"
+                                    class="relative flex h-full flex-1 items-end justify-center gap-0.5"
+                                    :title="`${point.label}: omzet ${formatRupiah(point.revenue)}, biaya ${formatRupiah(point.expenses)}`"
+                                >
+                                    <span class="sr-only">
+                                        {{ point.label }}: omzet {{ formatRupiah(point.revenue) }}, biaya {{ formatRupiah(point.expenses) }}
+                                    </span>
+                                    <span class="w-full max-w-[14px] rounded-t-xs bg-primary-600" :style="{ height: barHeight(point.revenue) }" aria-hidden="true"></span>
+                                    <span class="w-full max-w-[14px] rounded-t-xs bg-accent-500" :style="{ height: barHeight(point.expenses) }" aria-hidden="true"></span>
+                                </li>
+                            </ul>
+                            <div class="flex gap-1.5 pt-1.5" :style="{ minWidth: `${trend.points.length * 2}rem` }" aria-hidden="true">
+                                <span v-for="point in trend.points" :key="point.key" class="flex-1 text-center text-[10px] font-mono text-text-muted">
+                                    {{ point.label }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Right Cash Flow Card -->
+                <section class="lg:col-span-6 flex flex-col justify-between rounded-lg border border-border bg-surface p-5 shadow-xs">
+                    <div>
+                        <div class="flex items-start justify-between gap-3">
+                            <div>
+                                <p class="text-[11px] font-bold uppercase tracking-[0.12em] text-text-muted">
+                                    Saldo Kas Nyata (Cash Flow)
+                                </p>
+                                <div
+                                    class="mt-1.5 font-heading text-3xl sm:text-[2.1rem] font-extrabold font-mono tracking-tight tabular-nums"
+                                    :class="cash.net_cash_flow < 0 ? 'text-danger' : 'text-navy-950'"
+                                >
+                                    {{ formatRupiah(cash.net_cash_flow) }}
+                                </div>
+                                <p class="mt-1 text-xs text-text-muted tabular-nums">
+                                    Diterima <span class="font-semibold text-text">{{ formatRupiah(cash.cash_in.total) }}</span>
+                                    · Keluar <span class="font-semibold text-danger">{{ formatRupiah(cash.cash_out) }}</span>
+                                </p>
+                            </div>
+                            <Link
+                                href="/owner/daily-recap"
+                                class="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold text-primary-700 hover:bg-primary-100/70 transition-colors focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
+                            >
+                                <span>Rekap Harian</span>
+                                <ChevronRight class="h-3.5 w-3.5" aria-hidden="true" />
+                            </Link>
+                        </div>
+
+                        <div
+                            v-if="showGapNote"
+                            class="mt-4 flex items-start gap-2.5 rounded-md border border-warning/35 bg-warning/10 p-3 text-xs text-text"
+                            role="note"
+                        >
+                            <Info class="mt-0.5 h-4 w-4 shrink-0 text-warning" aria-hidden="true" />
+                            <span>
+                                Selisih <strong class="font-mono tabular-nums text-navy-950">{{ formatRupiah(gap) }}</strong> masih tertahan di piutang nota selesai yang belum lunas.
                             </span>
                         </div>
                     </div>
-                </CardContent>
-            </Card>
+
+                    <!-- 2-Column Bottom Split -->
+                    <div class="mt-6 grid grid-cols-2 divide-x divide-border border-t border-border pt-4">
+                        <div class="pr-4">
+                            <p class="text-xs font-medium text-text-muted flex items-center gap-1.5">
+                                <Wallet class="h-3.5 w-3.5 text-primary-700" aria-hidden="true" />
+                                <span>Kas Tunai Masuk</span>
+                            </p>
+                            <p class="mt-1 font-mono text-lg font-bold text-navy-950 tabular-nums">
+                                {{ formatRupiah(cash.cash_in.tunai) }}
+                            </p>
+                        </div>
+                        <div class="pl-4">
+                            <p class="text-xs font-medium text-text-muted">
+                                QRIS / Transfer / Digital
+                            </p>
+                            <p class="mt-1 font-mono text-lg font-bold text-navy-950 tabular-nums">
+                                {{ formatRupiah(digitalIn) }}
+                            </p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Band 3: 3-Column Horizontal Divided Strip (Piutang | Cucian Diproses | Siap Diambil) -->
+            <div
+                class="grid grid-cols-1 divide-y divide-border rounded-lg border border-border bg-surface shadow-xs md:grid-cols-3 md:divide-x md:divide-y-0"
+                :class="{ 'opacity-60': loading }"
+            >
+                <div class="flex items-center justify-between gap-3 p-4 sm:px-5">
+                    <div class="min-w-0">
+                        <p class="text-[11px] font-bold uppercase tracking-[0.12em] text-text-muted">
+                            Piutang Pelanggan
+                        </p>
+                        <p class="mt-1 font-mono text-base font-bold text-navy-950 tabular-nums">
+                            {{ formatRupiah(receivables.total_outstanding) }}
+                        </p>
+                        <p class="mt-0.5 text-xs text-text-muted">
+                            {{ receivables.orders_count }} nota · {{ receivables.customers_count }} pelanggan
+                        </p>
+                    </div>
+                    <Link
+                        href="/owner/receivables"
+                        class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-border bg-bg text-primary-700 hover:bg-primary-100 transition-colors focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
+                        aria-label="Lihat daftar piutang"
+                        title="Lihat daftar piutang"
+                    >
+                        <Receipt class="h-4 w-4" aria-hidden="true" />
+                    </Link>
+                </div>
+
+                <div class="flex items-center justify-between gap-3 p-4 sm:px-5">
+                    <div class="min-w-0">
+                        <p class="text-[11px] font-bold uppercase tracking-[0.12em] text-text-muted">
+                            Cucian Diproses
+                        </p>
+                        <p class="mt-1 font-mono text-base font-bold text-navy-950 tabular-nums">
+                            {{ operations.processing_count }} Nota
+                        </p>
+                        <p class="mt-0.5 text-xs text-text-muted">
+                            Sedang dicuci, dikeringkan, atau disetrika
+                        </p>
+                    </div>
+                    <Link
+                        href="/production/station"
+                        class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-border bg-bg text-primary-700 hover:bg-primary-100 transition-colors focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
+                        aria-label="Buka stasiun produksi"
+                        title="Buka stasiun produksi"
+                    >
+                        <Shirt class="h-4 w-4" aria-hidden="true" />
+                    </Link>
+                </div>
+
+                <div class="flex items-center justify-between gap-3 p-4 sm:px-5">
+                    <div class="min-w-0">
+                        <p class="text-[11px] font-bold uppercase tracking-[0.12em] text-text-muted">
+                            Siap Diambil
+                        </p>
+                        <p class="mt-1 font-mono text-base font-bold text-navy-950 tabular-nums">
+                            {{ operations.ready_count }} Nota
+                        </p>
+                        <p class="mt-0.5 text-xs text-text-muted">
+                            Selesai di rak, menunggu pelanggan
+                        </p>
+                    </div>
+                    <span
+                        class="h-2.5 w-2.5 shrink-0 rounded-full"
+                        :class="operations.ready_count > 0 ? 'bg-accent-500' : 'bg-slate-400'"
+                        aria-hidden="true"
+                    ></span>
+                </div>
+            </div>
+
+            <!-- Band 4: Bottom 2-Column Detail Cards (Transaksi Terbaru | Pengeluaran Terbaru) -->
+            <div class="grid grid-cols-1 gap-5 lg:grid-cols-2">
+                <!-- Left: Recent Transactions -->
+                <section class="flex flex-col rounded-lg border border-border bg-surface shadow-xs">
+                    <div class="flex items-center justify-between border-b border-border px-5 py-3.5">
+                        <h2 class="font-heading text-sm font-bold text-navy-950">Transaksi Terbaru</h2>
+                        <Link
+                            href="/pos"
+                            class="text-xs font-semibold text-primary-700 hover:underline focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500 rounded-sm"
+                        >
+                            Buka Kasir
+                        </Link>
+                    </div>
+
+                    <div v-if="recentTransactions.length === 0" class="flex flex-1 flex-col items-center justify-center gap-3 p-8 text-center">
+                        <p class="text-sm text-text-muted">Belum ada transaksi tercatat.</p>
+                        <Link
+                            href="/pos"
+                            class="inline-flex min-h-[40px] items-center justify-center rounded-md bg-navy-800 px-4 text-xs font-bold text-white shadow-xs transition-colors hover:bg-navy-700 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
+                        >
+                            Buat Transaksi
+                        </Link>
+                    </div>
+
+                    <ul v-else class="divide-y divide-border">
+                        <li
+                            v-for="txn in recentTransactions"
+                            :key="txn.id"
+                            class="flex items-center justify-between gap-3 px-5 py-3 hover:bg-bg/60 transition-colors"
+                        >
+                            <div class="min-w-0">
+                                <div class="flex items-center gap-2">
+                                    <Link
+                                        :href="`/nota/${txn.invoice_number}`"
+                                        class="font-mono text-xs font-bold text-primary-700 hover:underline"
+                                    >
+                                        {{ txn.invoice_number }}
+                                    </Link>
+                                    <span class="rounded-pill bg-primary-100 px-2 py-0.5 text-[10px] font-semibold text-navy-800">
+                                        {{ txn.status_label }}
+                                    </span>
+                                </div>
+                                <p class="mt-0.5 truncate text-xs text-text-muted">
+                                    {{ txn.customer_name }} · {{ txn.date_label }}
+                                </p>
+                            </div>
+                            <div class="shrink-0 text-right">
+                                <span class="font-mono text-sm font-bold text-navy-950 tabular-nums">
+                                    {{ formatRupiah(txn.total_amount) }}
+                                </span>
+                            </div>
+                        </li>
+                    </ul>
+                </section>
+
+                <!-- Right: Recent Expenses -->
+                <section class="flex flex-col rounded-lg border border-border bg-surface shadow-xs">
+                    <div class="flex items-center justify-between border-b border-border px-5 py-3.5">
+                        <h2 class="font-heading text-sm font-bold text-navy-950">Pengeluaran Terbaru</h2>
+                        <Link
+                            href="/owner/expenses"
+                            class="text-xs font-semibold text-primary-700 hover:underline focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500 rounded-sm"
+                        >
+                            Lihat semua
+                        </Link>
+                    </div>
+
+                    <div v-if="recentExpenses.length === 0" class="flex flex-1 flex-col items-center justify-center gap-3 p-8 text-center">
+                        <p class="text-sm text-text-muted">Belum ada pengeluaran toko tercatat.</p>
+                        <Link
+                            href="/owner/expenses"
+                            class="inline-flex min-h-[40px] items-center justify-center rounded-md border border-slate-400/70 bg-surface px-4 text-xs font-semibold text-navy-950 transition-colors hover:bg-primary-100/50 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
+                        >
+                            Catat Pengeluaran
+                        </Link>
+                    </div>
+
+                    <ul v-else class="divide-y divide-border">
+                        <li
+                            v-for="expense in recentExpenses"
+                            :key="expense.id"
+                            class="flex items-center justify-between gap-3 px-5 py-3 hover:bg-bg/60 transition-colors"
+                        >
+                            <div class="min-w-0">
+                                <p class="truncate text-xs font-semibold text-navy-950">
+                                    {{ expense.description }}
+                                </p>
+                                <p class="mt-0.5 truncate text-xs text-text-muted">
+                                    {{ expense.category_label }} · {{ expense.date_label }}
+                                </p>
+                            </div>
+                            <div class="shrink-0 text-right">
+                                <span class="font-mono text-sm font-bold text-danger tabular-nums">
+                                    − {{ formatRupiah(expense.amount) }}
+                                </span>
+                            </div>
+                        </li>
+                    </ul>
+                </section>
+            </div>
         </div>
 
         <!-- Full Page Executive Financial Summary (A4 format for printSummary) -->
@@ -450,16 +657,21 @@ function barHeight(value: number): string {
             <div class="flex items-start justify-between border-b-[3px] border-black pb-4 mb-4">
                 <div class="space-y-1">
                     <div class="flex items-center gap-2">
-                        <div class="h-8 w-8 rounded-[6px] bg-navy-950 text-accent-500 border-2 border-navy-950 flex items-center justify-center font-black text-xs print:text-black print:bg-white print:border-black">
-                            AL
-                        </div>
-                        <h1 class="font-display text-xl font-black tracking-tight text-black">{{ store_info?.name ?? 'Andik Laundry' }}</h1>
+                        <img
+                            src="/images/logo-a.webp"
+                            alt=""
+                            class="h-8 w-auto object-contain"
+                            width="33"
+                            height="32"
+                            aria-hidden="true"
+                        />
+                        <h1 class="font-heading text-xl font-black tracking-tight text-black">{{ store_info?.name ?? 'Andik Laundry' }}</h1>
                     </div>
                     <p class="text-xs text-gray-700 max-w-md font-medium" v-if="store_info?.address">{{ store_info.address }}</p>
                     <p class="text-xs text-gray-700 font-mono font-medium" v-if="store_info?.phone">WhatsApp: {{ store_info.phone }}</p>
                 </div>
                 <div class="text-right">
-                    <div class="inline-block border-2 border-black bg-white px-3 py-1 text-xs font-black uppercase tracking-wider shadow-[2px_2px_0px_rgba(0,0,0,1)] print:shadow-none mb-1">
+                    <div class="inline-block border-2 border-black bg-white px-3 py-1 text-xs font-black uppercase tracking-wider mb-1">
                         Ringkasan Keuangan SAK EMKM
                     </div>
                     <div class="text-xs font-bold text-gray-900">
@@ -498,7 +710,6 @@ function barHeight(value: number): string {
 
             <!-- 2-Column Side-by-Side Detailed Breakdown -->
             <div class="grid grid-cols-2 gap-4 mb-4">
-                <!-- Column 1: Akrual SAK EMKM -->
                 <div class="border-2 border-black rounded-[8px] p-3.5 bg-white flex flex-col justify-between">
                     <div>
                         <div class="border-b-2 border-black pb-1.5 mb-2.5">
@@ -525,7 +736,6 @@ function barHeight(value: number): string {
                     </div>
                 </div>
 
-                <!-- Column 2: Cash Flow (Kas Nyata) -->
                 <div class="border-2 border-black rounded-[8px] p-3.5 bg-white flex flex-col justify-between">
                     <div>
                         <div class="border-b-2 border-black pb-1.5 mb-2.5">
@@ -569,7 +779,6 @@ function barHeight(value: number): string {
                 </div>
             </div>
 
-            <!-- Reconciliation Note (if gap exists) -->
             <div v-if="showGapNote" class="border-2 border-black rounded-[8px] p-3 mb-4 bg-gray-50 text-xs">
                 <div class="font-bold text-black flex items-center gap-1.5 mb-0.5">
                     <span class="font-black uppercase tracking-wider text-[10px] bg-black text-white px-1.5 py-0.5 rounded-[3px]">Catatan Rekonsiliasi</span>
@@ -580,13 +789,12 @@ function barHeight(value: number): string {
                 </p>
             </div>
 
-            <!-- Signatures Section -->
             <div class="grid grid-cols-2 gap-12 pt-4 pb-2 text-center text-xs">
                 <div>
                     <p class="font-bold text-gray-800">Dibuat & Disiapkan Oleh:</p>
                     <div class="h-16 flex items-end justify-center">
                         <div class="border-b-2 border-black w-48 text-center pb-1">
-                            <span class="font-bold text-xs">{{ user?.name ?? 'Petugas Kasir' }}</span>
+                            <span class="font-bold text-xs">{{ currentUser?.name ?? 'Petugas Kasir' }}</span>
                         </div>
                     </div>
                     <p class="text-[10px] text-gray-600 mt-1">Petugas Kasir / Operasional</p>
@@ -602,10 +810,9 @@ function barHeight(value: number): string {
                 </div>
             </div>
 
-            <!-- Document Footer -->
             <div class="border-t border-black pt-2 mt-4 text-[10px] text-gray-500 flex items-center justify-between">
-                <span>LMS Andik Laundry • Sistem Manajemen Operasional & Keuangan SAK EMKM</span>
-                <span>Dokumen Sah Internal • Dicetak otomatis pada {{ printedAt }}</span>
+                <span>LMS Andik Laundry · Sistem Manajemen Operasional & Keuangan SAK EMKM</span>
+                <span>Dokumen Sah Internal · Dicetak otomatis pada {{ printedAt }}</span>
             </div>
         </div>
     </AppLayout>
