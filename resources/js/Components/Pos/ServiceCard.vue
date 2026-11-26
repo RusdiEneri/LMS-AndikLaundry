@@ -48,12 +48,12 @@ const isMeterService = computed(() => {
 const categoryBadgeClass = computed(() => {
     const cat = props.service.category.toLowerCase();
     if (cat.includes('kiloan')) {
-        return 'bg-primary-100 text-primary-700';
+        return 'bg-primary-100 text-navy-900';
     }
     if (cat.includes('meteran') || cat.includes('karpet')) {
-        return 'bg-warning/15 text-warning border border-warning/20';
+        return 'bg-warning/20 text-navy-950';
     }
-    return 'bg-accent-100 text-accent-700';
+    return 'bg-accent-100 text-navy-950';
 });
 
 function handleClick() {
@@ -65,51 +65,47 @@ function handleClick() {
     <button
         type="button"
         @click="handleClick"
-        class="min-h-[44px] flex flex-col justify-between text-left p-4 rounded-lg border border-border bg-surface shadow-sm hover:shadow-md hover:border-primary-500 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-[200ms] ease-standard group relative cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
+        class="min-h-[44px] flex flex-col justify-between text-left p-4 rounded-lg border border-border bg-surface shadow-xs hover:border-navy-800/40 hover:shadow-sm transition-colors duration-[150ms] ease-standard group cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
     >
-        <div>
-            <div class="flex items-center justify-between mb-2 flex-wrap gap-1">
+        <div class="w-full">
+            <div class="flex items-center justify-between gap-2 mb-2.5">
                 <span
                     :class="[
-                        'overline-label px-2.5 py-0.5 rounded-pill flex items-center space-x-1',
+                        'inline-flex items-center gap-1 rounded-sm px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider',
                         categoryBadgeClass,
                     ]"
                 >
-                    <Scale v-if="isKiloan" class="h-3 w-3 inline" />
-                    <MapPin v-else-if="isMeterService" class="h-3 w-3 inline" />
-                    <Shirt v-else class="h-3 w-3 inline" />
+                    <Scale v-if="isKiloan" class="h-3 w-3 shrink-0" aria-hidden="true" />
+                    <MapPin v-else-if="isMeterService" class="h-3 w-3 shrink-0" aria-hidden="true" />
+                    <Shirt v-else class="h-3 w-3 shrink-0" aria-hidden="true" />
                     <span>{{ service.category }}</span>
                 </span>
 
                 <span
                     v-if="service.min_weight && isKiloan"
-                    class="text-[10px] text-primary-700 bg-primary-100 px-2 py-0.5 rounded-pill font-mono font-semibold"
+                    class="text-[11px] font-mono font-medium text-text-muted tabular-nums shrink-0"
                 >
                     Min {{ service.min_weight }} kg
                 </span>
             </div>
 
-            <h4 class="font-heading font-bold text-sm text-text group-hover:text-primary-700 transition-colors line-clamp-2 mt-1">
+            <h4 class="font-heading font-bold text-sm text-navy-950 group-hover:text-navy-800 transition-colors line-clamp-2 leading-snug">
                 {{ service.name }}
             </h4>
 
-            <p class="text-[11px] text-text-muted font-medium mt-1">
-                Estimasi: {{ service.estimated_hours }} Jam
-            </p>
-
-            <p v-if="isMeterService" class="text-[10px] text-warning font-bold mt-1">
-                Input P × L (m²)
+            <p class="text-xs text-text-muted mt-1">
+                Estimasi {{ service.estimated_hours }} jam
+                <span v-if="isMeterService" class="font-semibold text-navy-950"> · Input P × L (m²)</span>
             </p>
         </div>
 
         <div class="mt-4 pt-3 border-t border-border flex items-center justify-between w-full">
-            <span class="font-mono font-bold text-text text-sm tabular-nums">
-                {{ formatRupiah(service.price) }}
-                <span class="text-xs text-text-muted font-normal">/{{ service.unit }}</span>
+            <span class="font-mono font-bold text-navy-950 text-sm tabular-nums">
+                {{ formatRupiah(service.price) }}<span class="text-xs text-text-muted font-normal">/{{ service.unit }}</span>
             </span>
 
-            <span class="h-8 w-8 rounded-md bg-primary-100 text-primary-700 group-hover:bg-primary-600 group-hover:text-white transition-colors flex items-center justify-center font-bold">
-                <Plus class="h-4 w-4" />
+            <span class="h-8 w-8 rounded-md border border-border bg-bg text-navy-800 group-hover:bg-navy-800 group-hover:text-white group-hover:border-navy-800 transition-colors flex items-center justify-center shrink-0">
+                <Plus class="h-4 w-4" aria-hidden="true" />
             </span>
         </div>
     </button>

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue';
 import { Plus, Minus, Trash2, Scale, AlertTriangle, Clock, Truck, MapPin } from 'lucide-vue-next';
 import { formatRupiah } from '@/Support/whatsapp';
 import type { ServiceItem } from './ServiceCard.vue';
@@ -49,26 +48,6 @@ const emits = defineEmits<{
     (e: 'remove-item', index: number): void;
     (e: 'clear-cart'): void;
 }>();
-
-const currentTier = computed(() => {
-    return props.turnaroundTiers.find(t => t.code === props.selectedTierCode) ?? props.turnaroundTiers[0];
-});
-
-const tierSurcharge = computed(() => currentTier.value?.surcharge ?? 0);
-
-const subtotal = computed(() => {
-    return props.items.reduce((acc, item) => {
-        const itemDiscount = item.discount_amount ?? 0;
-        const qty = item.calculated_area ? item.calculated_area : item.billed_qty;
-        return acc + Math.max(0, (qty * item.service.price) - itemDiscount);
-    }, 0);
-});
-
-const discountTotal = computed(() => Math.min(subtotal.value, Number(props.orderDiscount || 0)));
-
-const grandTotal = computed(() => {
-    return Math.max(0, (subtotal.value - discountTotal.value) + tierSurcharge.value);
-});
 
 function handleQtyStep(index: number, delta: number) {
     const item = props.items[index];
@@ -120,19 +99,19 @@ function isKarpetService(item: CartLineItem): boolean {
         <div class="space-y-2.5">
             <div
                 v-if="items.length === 0"
-                class="py-6 px-4 flex flex-col items-center justify-center text-text-muted text-xs text-center border-2 border-dashed border-border rounded-lg bg-bg"
+                class="py-5 px-4 flex flex-col items-center justify-center text-text-muted text-xs text-center border border-dashed border-border rounded-md bg-bg"
             >
-                <div class="h-10 w-10 rounded-full bg-primary-100 text-primary-700 flex items-center justify-center mb-2">
-                    <Scale class="h-5 w-5" />
+                <div class="h-9 w-9 rounded-md bg-primary-100 text-navy-800 flex items-center justify-center mb-2">
+                    <Scale class="h-4 w-4" aria-hidden="true" />
                 </div>
-                <span class="font-bold text-text text-xs">Keranjang cucian masih kosong</span>
-                <span class="text-[11px] text-text-muted mt-0.5">Pilih layanan di sebelah kiri untuk mulai menimbang / mencatat</span>
+                <span class="font-semibold text-navy-950 text-xs">Keranjang cucian masih kosong</span>
+                <span class="text-[11px] text-text-muted mt-0.5">Pilih layanan di kiri untuk mulai mencatat</span>
             </div>
 
             <div
                 v-for="(item, idx) in items"
                 :key="`${item.service.id}-${idx}`"
-                class="p-3.5 bg-surface rounded-lg border border-border shadow-sm space-y-2.5"
+                class="p-3 bg-bg rounded-md border border-border space-y-2.5"
             >
                 <div class="flex items-start justify-between gap-2">
                     <div class="space-y-1">
@@ -160,14 +139,14 @@ function isKarpetService(item: CartLineItem): boolean {
                     </button>
                 </div>
 
-                <div v-if="isKarpetService(item)" class="p-3 bg-warning/15 rounded-md border border-warning/30 space-y-2">
+                <div v-if="isKarpetService(item)" class="p-3 bg-warning/15 rounded-md border border-warning/35 space-y-2">
                     <div class="flex items-center space-x-1.5">
-                        <MapPin class="h-3.5 w-3.5 text-warning" />
-                        <span class="text-xs font-bold text-warning">Ukuran Karpet</span>
+                        <MapPin class="h-3.5 w-3.5 text-navy-950" aria-hidden="true" />
+                        <span class="text-xs font-bold text-navy-950">Ukuran Karpet</span>
                     </div>
                     <div class="flex gap-2">
                         <div class="flex-1">
-                            <label class="overline-label text-warning block mb-0.5">Panjang (m)</label>
+                            <label class="overline-label text-navy-950 block mb-0.5">Panjang (m)</label>
                             <input
                                 type="number"
                                 step="0.1"
@@ -179,7 +158,7 @@ function isKarpetService(item: CartLineItem): boolean {
                             />
                         </div>
                         <div class="flex-1">
-                            <label class="overline-label text-warning block mb-0.5">Lebar (m)</label>
+                            <label class="overline-label text-navy-950 block mb-0.5">Lebar (m)</label>
                             <input
                                 type="number"
                                 step="0.1"
@@ -191,7 +170,7 @@ function isKarpetService(item: CartLineItem): boolean {
                             />
                         </div>
                     </div>
-                    <div class="flex justify-between items-center pt-1 text-xs font-bold text-warning">
+                    <div class="flex justify-between items-center pt-1 text-xs font-bold text-navy-950">
                         <span>Luas: {{ item.calculated_area || 0 }} m²</span>
                         <span v-if="(item.calculated_area ?? 0) > 0" class="font-mono tabular-nums">
                             {{ formatRupiah((item.calculated_area || 0) * item.service.price) }}
@@ -247,9 +226,9 @@ function isKarpetService(item: CartLineItem): boolean {
             </div>
         </div>
 
-        <div class="p-3.5 bg-surface rounded-lg border border-border shadow-sm space-y-2">
+        <div class="pt-3 border-t border-border space-y-2">
             <span class="overline-label text-text-muted flex items-center space-x-1.5">
-                <Truck class="h-3.5 w-3.5 text-text-muted" />
+                <Truck class="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
                 <span>Pilihan Pengantaran</span>
             </span>
             <div class="grid grid-cols-2 gap-2">
@@ -257,34 +236,34 @@ function isKarpetService(item: CartLineItem): boolean {
                     type="button"
                     @click="emits('update:deliveryOption', 'pickup')"
                     :class="[
-                        'min-h-[42px] p-2.5 text-left rounded-md border text-xs transition-all duration-[120ms] ease-standard cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500',
+                        'min-h-[44px] p-2.5 text-left rounded-md border text-xs transition-colors duration-[120ms] ease-standard cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500',
                         deliveryOption === 'pickup'
-                            ? 'bg-primary-100 text-navy-800 border-primary-600 font-semibold'
-                            : 'bg-bg text-text-muted border-border hover:bg-primary-100/50 font-medium',
+                            ? 'bg-primary-100/75 text-navy-950 border-navy-800 font-semibold'
+                            : 'bg-bg text-navy-950 border-border hover:bg-primary-100/40 font-medium',
                     ]"
                 >
                     <span class="block truncate text-xs">Ambil Sendiri</span>
-                    <span class="block text-[10px] opacity-75 font-normal mt-0.5">Datang ke lokasi</span>
+                    <span class="block text-[11px] text-text-muted font-normal mt-0.5">Datang ke lokasi</span>
                 </button>
                 <button
                     type="button"
                     @click="emits('update:deliveryOption', 'delivery')"
                     :class="[
-                        'min-h-[42px] p-2.5 text-left rounded-md border text-xs transition-all duration-[120ms] ease-standard cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500',
+                        'min-h-[44px] p-2.5 text-left rounded-md border text-xs transition-colors duration-[120ms] ease-standard cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500',
                         deliveryOption === 'delivery'
-                            ? 'bg-primary-100 text-navy-800 border-primary-600 font-semibold'
-                            : 'bg-bg text-text-muted border-border hover:bg-primary-100/50 font-medium',
+                            ? 'bg-primary-100/75 text-navy-950 border-navy-800 font-semibold'
+                            : 'bg-bg text-navy-950 border-border hover:bg-primary-100/40 font-medium',
                     ]"
                 >
                     <span class="block truncate text-xs">Antar Jemput</span>
-                    <span class="block text-[10px] opacity-75 font-normal mt-0.5">Free Ongkir Maks 3 km</span>
+                    <span class="block text-[11px] text-text-muted font-normal mt-0.5">Free Ongkir Maks 3 km</span>
                 </button>
             </div>
         </div>
 
-        <div class="p-3.5 bg-surface rounded-lg border border-border shadow-sm space-y-2">
+        <div class="pt-3 border-t border-border space-y-2">
             <span class="overline-label text-text-muted flex items-center space-x-1.5">
-                <Clock class="h-3.5 w-3.5 text-text-muted" />
+                <Clock class="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
                 <span>Kecepatan Pengerjaan</span>
             </span>
             <div class="grid grid-cols-2 gap-2">
@@ -294,39 +273,17 @@ function isKarpetService(item: CartLineItem): boolean {
                     type="button"
                     @click="emits('update:selectedTierCode', tier.code)"
                     :class="[
-                        'min-h-[42px] p-2.5 text-left rounded-md border text-xs transition-all duration-[120ms] ease-standard cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500',
+                        'min-h-[44px] p-2.5 text-left rounded-md border text-xs transition-colors duration-[120ms] ease-standard cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500',
                         selectedTierCode === tier.code
-                            ? 'bg-primary-100 text-navy-800 border-primary-600 font-semibold'
-                            : 'bg-bg text-text-muted border-border hover:bg-primary-100/50 font-medium',
+                            ? 'bg-primary-100/75 text-navy-950 border-navy-800 font-semibold'
+                            : 'bg-bg text-navy-950 border-border hover:bg-primary-100/40 font-medium',
                     ]"
                 >
-                    <span class="block truncate text-xs">{{ tier.label }}</span>
-                    <span class="block text-[10px] opacity-75 font-mono mt-0.5">
+                    <span class="block text-xs leading-snug">{{ tier.label }}</span>
+                    <span class="block text-[11px] text-text-muted font-mono mt-0.5 tabular-nums">
                         {{ tier.surcharge > 0 ? `+${formatRupiah(tier.surcharge)}` : 'Tarif Standar' }}
                     </span>
                 </button>
-            </div>
-        </div>
-
-        <div class="p-4 bg-gradient-to-br from-navy-900 to-navy-950 text-white rounded-lg shadow-md space-y-2 select-none">
-            <div class="flex justify-between text-xs text-text-on-dark-muted">
-                <span>Subtotal Cucian</span>
-                <span class="font-mono font-semibold text-white tabular-nums">{{ formatRupiah(subtotal) }}</span>
-            </div>
-
-            <div v-if="tierSurcharge > 0" class="flex justify-between text-xs text-primary-500">
-                <span>Biaya Kecepatan ({{ currentTier.label.split(' ')[0] }})</span>
-                <span class="font-mono font-semibold tabular-nums">+{{ formatRupiah(tierSurcharge) }}</span>
-            </div>
-
-            <div v-if="discountTotal > 0" class="flex justify-between text-xs text-accent-100">
-                <span>Potongan Diskon</span>
-                <span class="font-mono font-semibold tabular-nums">-{{ formatRupiah(discountTotal) }}</span>
-            </div>
-
-            <div class="pt-2.5 border-t border-white/15 flex justify-between items-baseline">
-                <span class="font-bold text-xs uppercase tracking-wider text-text-on-dark-muted">Total Tagihan</span>
-                <span class="font-heading font-extrabold text-2xl text-accent-500 tabular-nums">{{ formatRupiah(grandTotal) }}</span>
             </div>
         </div>
     </div>

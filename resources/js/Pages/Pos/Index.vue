@@ -126,12 +126,16 @@ const tierSurcharge = computed(() => currentTier.value?.surcharge ?? 0);
 
 const subtotal = computed(() => {
     return cartItems.value.reduce((acc, item) => {
-        return acc + (item.billed_qty * item.service.price);
+        const itemDiscount = item.discount_amount ?? 0;
+        const qty = item.calculated_area ? item.calculated_area : item.billed_qty;
+        return acc + Math.max(0, (qty * item.service.price) - itemDiscount);
     }, 0);
 });
 
+const discountTotal = computed(() => Math.min(subtotal.value, Number(orderDiscount.value || 0)));
+
 const grandTotal = computed(() => {
-    return Math.max(0, (subtotal.value - orderDiscount.value) + tierSurcharge.value);
+    return Math.max(0, (subtotal.value - discountTotal.value) + tierSurcharge.value);
 });
 
 // Service selection handler
@@ -213,7 +217,7 @@ function onSelectCustomer(cust: CustomerData) {
 
 // Checkout Trigger
 function openCheckoutModal() {
-    if (cartItems.value.length === 0) return;
+    if (cartItems.value.length === 0 || isCheckoutModalOpen.value || isReceiptModalOpen.value) return;
     isCheckoutModalOpen.value = true;
 }
 
@@ -272,30 +276,35 @@ onUnmounted(() => {
         <!-- LEFT PANEL: Catalog & Service Selection -->
         <template #catalog>
             <div class="space-y-4">
-                <!-- Search Bar & Category Filter Tabs -->
-                <div class="bg-surface p-4 rounded-lg border border-border shadow-sm space-y-3">
+                <!-- Search Bar & Category Filter Tabs (Consistent with Dashboard Band 1 Filter Card) -->
+                <div class="bg-surface p-4 rounded-lg border border-border shadow-xs space-y-3">
                     <div class="relative">
-                        <Search class="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-text-muted" />
+                        <Search class="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" aria-hidden="true" />
+                        <label for="pos-service-search" class="sr-only">Cari layanan cucian</label>
                         <input
+                            id="pos-service-search"
+                            name="service_search"
                             ref="searchInputRef"
                             v-model="searchQuery"
                             type="text"
-                            placeholder="Cari layanan cucian atau SKU barcode... [F1]"
-                            class="flex min-h-[42px] w-full rounded-md border border-border bg-surface pl-11 pr-4 py-2 text-sm font-medium text-text placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-600 transition-all"
+                            placeholder="Cari layanan atau SKU... [F1]"
+                            class="flex min-h-[42px] w-full rounded-md border border-border bg-bg pl-10 pr-4 py-2 text-sm font-medium text-text placeholder:text-slate-500 focus:bg-surface focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-600 transition-colors"
                         />
                     </div>
 
-                    <!-- Category Pills Horizontal Scroll -->
-                    <div class="flex items-center space-x-2 overflow-x-auto pb-1 scrollbar-none">
+                    <!-- Category Tabs Wrapping Cleanly -->
+                    <div class="flex flex-wrap items-center gap-1.5" role="tablist" aria-label="Kategori layanan">
                         <button
                             v-for="cat in categories"
                             :key="cat"
                             type="button"
+                            role="tab"
+                            :aria-selected="selectedCategory === cat"
                             @click="selectedCategory = cat"
                             :class="[
-                                'min-h-[38px] px-4 py-1.5 rounded-pill text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-all cursor-pointer',
+                                'min-h-[38px] px-3.5 py-1.5 rounded-md text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500',
                                 selectedCategory === cat
-                                    ? 'bg-primary-700 text-white shadow-sm'
+                                    ? 'bg-navy-800 text-white shadow-xs'
                                     : 'border border-border bg-bg text-text hover:bg-primary-100 hover:text-navy-950',
                             ]"
                         >
@@ -305,7 +314,7 @@ onUnmounted(() => {
                 </div>
 
                 <!-- Catalog Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3 gap-3.5">
                     <ServiceCard
                         v-for="service in filteredServices"
                         :key="service.id"
@@ -319,24 +328,24 @@ onUnmounted(() => {
         <!-- RIGHT PANEL / BOTTOM SHEET: Customer Bar, Cart Drawer & Checkout Action -->
         <template #cart>
             <div class="flex flex-col h-full min-h-0">
-                <!-- CUSTOMER SELECTOR CARD (Fixed at Top, shrink-0) -->
-                <div class="shrink-0 mb-3 p-3.5 bg-bg rounded-lg border border-border flex items-center justify-between">
-                    <div class="flex items-center space-x-3">
-                        <div class="h-9 w-9 rounded-md bg-primary-100 text-primary-700 flex items-center justify-center font-bold text-xs shrink-0">
-                            <UserIcon class="h-4 w-4" />
+                <!-- CUSTOMER SELECTOR HEADER (Fixed at Top, shrink-0) -->
+                <div class="shrink-0 pb-3.5 mb-3 border-b border-border flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <div class="h-9 w-9 rounded-md bg-primary-100 text-navy-800 flex items-center justify-center font-bold text-xs shrink-0">
+                            <UserIcon class="h-4 w-4" aria-hidden="true" />
                         </div>
-                        <div>
-                            <div class="flex items-center space-x-1.5">
-                                <span class="font-heading font-bold text-xs text-text">{{ currentCustomer.name }}</span>
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-1.5">
+                                <span class="font-heading font-bold text-xs text-navy-950 truncate">{{ currentCustomer.name }}</span>
                                 <span
                                     v-if="Number(currentCustomer.outstanding_receivables ?? 0) > 0"
-                                    class="inline-flex items-center space-x-0.5 px-2 py-0.5 rounded-pill text-[10px] font-bold bg-danger/10 text-danger border border-danger/20"
+                                    class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-sm text-[10px] font-bold bg-danger/10 text-danger border border-danger/20 shrink-0"
                                 >
-                                    <AlertCircle class="h-3 w-3" />
-                                    <span>Ada Piutang</span>
+                                    <AlertCircle class="h-3 w-3" aria-hidden="true" />
+                                    <span>Piutang</span>
                                 </span>
                             </div>
-                            <span class="text-[11px] font-mono text-text-muted block mt-0.5">
+                            <span class="text-[11px] font-mono text-text-muted block mt-0.5 truncate">
                                 {{ currentCustomer.phone || 'Pelanggan Walk-In' }}
                             </span>
                         </div>
@@ -345,14 +354,14 @@ onUnmounted(() => {
                     <button
                         type="button"
                         @click="isCustomerModalOpen = true"
-                        class="min-h-[36px] px-3.5 py-1.5 rounded-pill border border-border bg-surface hover:bg-bg text-text text-xs font-bold transition-all cursor-pointer shadow-sm"
+                        class="min-h-[38px] px-3 py-1.5 rounded-md border border-border bg-bg hover:bg-primary-100/70 text-navy-950 text-xs font-semibold transition-colors cursor-pointer shrink-0 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
                     >
                         Cari / Ubah
                     </button>
                 </div>
 
                 <!-- SCROLLABLE CART DRAWER (flex-1 min-h-0 overflow-y-auto) -->
-                <div class="flex-1 min-h-0 overflow-y-auto pr-1">
+                <div class="flex-1 min-h-0 overflow-y-auto pr-0.5">
                     <CartDrawer
                         :items="cartItems"
                         :turnaround-tiers="turnaround_tiers"
@@ -369,16 +378,35 @@ onUnmounted(() => {
                     />
                 </div>
 
-                <!-- CHECKOUT BUTTON (Fixed at Bottom, shrink-0) -->
-                <div class="shrink-0 pt-3">
+                <!-- PINNED TOTAL & CHECKOUT FOOTER (Always visible, never clipped) -->
+                <div class="shrink-0 pt-3 mt-2 border-t border-border space-y-2.5">
+                    <div class="p-3 bg-navy-900 text-white rounded-md space-y-1 select-none">
+                        <div class="flex justify-between text-xs text-text-on-dark-muted">
+                            <span>Subtotal Cucian</span>
+                            <span class="font-mono font-semibold text-white tabular-nums">{{ formatRupiah(subtotal) }}</span>
+                        </div>
+                        <div v-if="tierSurcharge > 0" class="flex justify-between text-xs text-accent-100">
+                            <span>Kecepatan ({{ currentTier?.label.split(' ')[0] }})</span>
+                            <span class="font-mono font-semibold tabular-nums">+{{ formatRupiah(tierSurcharge) }}</span>
+                        </div>
+                        <div v-if="discountTotal > 0" class="flex justify-between text-xs text-accent-100">
+                            <span>Potongan Diskon</span>
+                            <span class="font-mono font-semibold tabular-nums">-{{ formatRupiah(discountTotal) }}</span>
+                        </div>
+                        <div class="pt-1.5 border-t border-white/15 flex justify-between items-baseline">
+                            <span class="font-bold text-[11px] uppercase tracking-wider text-text-on-dark-muted">Total Tagihan</span>
+                            <span class="font-heading font-extrabold text-xl text-accent-500 tabular-nums">{{ formatRupiah(grandTotal) }}</span>
+                        </div>
+                    </div>
+
                     <button
                         type="button"
                         :disabled="cartItems.length === 0"
                         @click="openCheckoutModal"
-                        class="w-full min-h-[48px] rounded-pill bg-accent-500 hover:bg-accent-600 text-navy-950 font-heading font-bold text-sm uppercase tracking-wider shadow-sm active:scale-[0.99] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center space-x-2 transition-all cursor-pointer"
+                        class="w-full min-h-[46px] rounded-md bg-navy-800 hover:bg-navy-700 text-white font-heading font-bold text-sm tracking-wide shadow-xs active:scale-[0.99] disabled:bg-slate-200 disabled:text-slate-600 disabled:shadow-none disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
                     >
-                        <CreditCard class="h-5 w-5" />
-                        <span>BAYAR SEKARANG [F8] ({{ formatRupiah(grandTotal) }})</span>
+                        <CreditCard class="h-4 w-4 shrink-0" aria-hidden="true" />
+                        <span class="tabular-nums">BAYAR SEKARANG [F8] · {{ formatRupiah(grandTotal) }}</span>
                     </button>
                 </div>
             </div>

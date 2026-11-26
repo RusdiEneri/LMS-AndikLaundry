@@ -32,6 +32,7 @@ import {
 
 interface Props {
     title?: string;
+    mainClass?: string;
 }
 
 const props = defineProps<Props>();
@@ -216,14 +217,14 @@ const roleLabel = computed(() => {
 
 const userInitials = computed(() => {
     const name = user.value?.name?.trim() ?? '';
-    if (!name) {
-        return 'AL';
+    const words = name.replace(/[^a-zA-Z0-9\s]/g, ' ').trim().split(/\s+/).filter(Boolean);
+    if (words.length >= 2) {
+        return (words[0][0] + words[1][0]).toUpperCase();
     }
-    const parts = name.split(/\s+/);
-    if (parts.length >= 2) {
-        return (parts[0][0] + parts[1][0]).toUpperCase();
+    if (words.length === 1) {
+        return words[0].slice(0, 2).toUpperCase();
     }
-    return name.slice(0, 2).toUpperCase();
+    return 'AL';
 });
 </script>
 
@@ -377,8 +378,10 @@ const userInitials = computed(() => {
                     </div>
                 </div>
 
-                <!-- Right Controls: Quick Nota Lookup + WA Notice + Logout -->
+                <!-- Right Controls: Optional Status Slot + Quick Nota Lookup + WA Notice + Logout -->
                 <div class="flex items-center gap-2 sm:gap-2.5 shrink-0">
+                    <slot name="topbar-status" />
+
                     <form class="hidden sm:flex items-center relative" @submit.prevent="submitQuickReceiptLookup">
                         <Search class="pointer-events-none absolute left-2.5 h-3.5 w-3.5 text-slate-500" aria-hidden="true" />
                         <label for="topbar-receipt-search" class="sr-only">Cari nomor nota</label>
@@ -468,7 +471,7 @@ const userInitials = computed(() => {
                     </div>
                 </div>
 
-                <main class="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full">
+                <main :class="props.mainClass ?? 'p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full'">
                     <slot />
                 </main>
             </div>
