@@ -13,7 +13,6 @@ import {
     ExternalLink,
     MapPin,
     Menu,
-    MessageCircle,
     Phone,
     ReceiptText,
     RotateCcw,
@@ -26,6 +25,7 @@ import {
 } from 'lucide-vue-next';
 import { animate, inView } from 'motion';
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import WhatsAppIcon from '@/Components/WhatsAppIcon.vue';
 
 if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger);
@@ -706,7 +706,7 @@ onBeforeUnmount(() => {
                         aria-label="Hubungi WhatsApp Andik Laundry"
                         title="Chat WhatsApp"
                     >
-                        <MessageCircle class="h-4 w-4 stroke-[2.2]" aria-hidden="true" />
+                        <WhatsAppIcon class="h-4 w-4" />
                         <span class="roll hidden sm:inline-block">
                             <span data-t="WhatsApp">WhatsApp</span>
                         </span>
@@ -830,7 +830,7 @@ onBeforeUnmount(() => {
                             class="flex min-h-[46px] items-center justify-center gap-2 rounded-full bg-accent-500 px-4 text-sm font-bold text-navy-950 shadow-xs transition-colors hover:bg-accent-600 active:scale-98"
                             @click="menuOpen = false"
                         >
-                            <MessageCircle class="h-4 w-4" aria-hidden="true" />
+                            <WhatsAppIcon class="h-4 w-4" />
                             Chat WhatsApp
                         </a>
 
@@ -925,7 +925,7 @@ onBeforeUnmount(() => {
                                     rel="noopener noreferrer"
                                     class="inline-flex min-h-[46px] items-center justify-center gap-2 rounded-pill bg-accent-500 px-6 text-sm font-bold text-navy-950 shadow-xs transition-colors hover:bg-accent-600 focus-visible:outline-none"
                                 >
-                                    <MessageCircle class="h-4 w-4" aria-hidden="true" />
+                                    <WhatsAppIcon class="h-4 w-4" />
                                     Pesan antar jemput
                                 </a>
                                 <a
@@ -1159,7 +1159,7 @@ onBeforeUnmount(() => {
                                         rel="noopener noreferrer"
                                         class="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-pill bg-accent-500 px-5 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-600 focus-visible:outline-none"
                                     >
-                                        <MessageCircle class="h-4 w-4" aria-hidden="true" />
+                                        <WhatsAppIcon class="h-4 w-4" />
                                         Pesan {{ featuredService.name }}
                                     </a>
                                 </div>
@@ -1213,7 +1213,7 @@ onBeforeUnmount(() => {
                                             rel="noopener noreferrer"
                                             class="inline-flex min-h-[44px] w-full shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-pill bg-accent-500 px-4 text-xs font-bold text-navy-950 transition-colors hover:bg-accent-600 focus-visible:outline-none sm:w-auto"
                                         >
-                                            <MessageCircle class="h-3.5 w-3.5" aria-hidden="true" />
+                                            <WhatsAppIcon class="h-3.5 w-3.5" />
                                             Pesan {{ service.name }}
                                         </a>
                                     </div>
@@ -1310,7 +1310,7 @@ onBeforeUnmount(() => {
                                         rel="noopener noreferrer"
                                         class="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-pill bg-accent-500 px-6 text-sm font-bold text-navy-950 shadow-xs transition-colors hover:bg-accent-600 focus-visible:outline-none"
                                     >
-                                        <MessageCircle class="h-4 w-4" aria-hidden="true" />
+                                        <WhatsAppIcon class="h-4 w-4" />
                                         Pesan Sesuai Estimasi
                                     </a>
                                 </div>
@@ -1570,7 +1570,7 @@ onBeforeUnmount(() => {
                                     rel="noopener noreferrer"
                                     class="inline-flex min-h-[44px] items-center justify-center gap-2 whitespace-nowrap rounded-pill bg-accent-500 px-4 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-600 focus-visible:outline-none"
                                 >
-                                    <MessageCircle class="h-4 w-4" aria-hidden="true" />
+                                    <WhatsAppIcon class="h-4 w-4" />
                                     Hubungi WhatsApp
                                 </a>
                                 <a
@@ -1682,7 +1682,7 @@ onBeforeUnmount(() => {
                                 rel="noopener noreferrer"
                                 class="inline-flex min-h-[46px] items-center justify-center gap-2 rounded-pill bg-accent-500 px-6 text-sm font-bold text-navy-950 transition-colors hover:bg-accent-600 focus-visible:outline-none"
                             >
-                                <MessageCircle class="h-4 w-4" aria-hidden="true" />
+                                <WhatsAppIcon class="h-4 w-4" />
                                 Pesan via WhatsApp
                             </a>
                             <a

@@ -17,7 +17,7 @@ uses(RefreshDatabase::class);
 describe('Milestone 3: Payment Controller API', function () {
 
     it('T3-API-PAY-01: Cashier can record cash payment with change via POST /pos/orders/{id}/payments', function () {
-        $cashier = User::factory()->create(['role' => 'cashier']);
+        $cashier = User::factory()->create(['role' => 'owner']);
         $transaction = Transaction::factory()->create([
             'total_amount' => 50000.00,
             'paid_amount' => 0.00,
@@ -47,7 +47,7 @@ describe('Milestone 3: Payment Controller API', function () {
     });
 
     it('T3-API-PAY-02: Also accessible via /api/pos/orders/{id}/payments and invoice number', function () {
-        $cashier = User::factory()->create(['role' => 'cashier']);
+        $cashier = User::factory()->create(['role' => 'owner']);
         $transaction = Transaction::factory()->create([
             'invoice_number' => 'INV-20261114-8888',
             'total_amount' => 35000.00,
@@ -67,7 +67,7 @@ describe('Milestone 3: Payment Controller API', function () {
     });
 
     it('T3-API-PAY-03: Validates required payment fields and rejects invalid method', function () {
-        $cashier = User::factory()->create(['role' => 'cashier']);
+        $cashier = User::factory()->create(['role' => 'owner']);
         $transaction = Transaction::factory()->create();
 
         $response = $this->actingAs($cashier)->postJson("/pos/orders/{$transaction->id}/payments", [
@@ -83,7 +83,7 @@ describe('Milestone 3: Payment Controller API', function () {
 describe('Milestone 3: Production Status Controller API', function () {
 
     it('T3-API-FSM-01: Operator can transition production status via PATCH /production/orders/{id}/status', function () {
-        $operator = User::factory()->create(['role' => 'operator']);
+        $operator = User::factory()->create(['role' => 'owner']);
         $transaction = Transaction::factory()->create([
             'production_status' => ProductionStatus::RECEIVED,
         ]);
@@ -104,7 +104,7 @@ describe('Milestone 3: Production Status Controller API', function () {
     });
 
     it('T3-API-FSM-02: Returns 422 with meaningful error message on invalid transition attempt', function () {
-        $operator = User::factory()->create(['role' => 'operator']);
+        $operator = User::factory()->create(['role' => 'owner']);
         $transaction = Transaction::factory()->create([
             'production_status' => ProductionStatus::RECEIVED,
         ]);
@@ -118,7 +118,7 @@ describe('Milestone 3: Production Status Controller API', function () {
     });
 
     it('T3-API-FSM-03: Rejects whitespace-only staging rack and rewash notes with 422 Unprocessable Entity', function () {
-        $operator = User::factory()->create(['role' => 'operator']);
+        $operator = User::factory()->create(['role' => 'owner']);
 
         // 1. Whitespace staging rack when marking ready_for_pickup
         $txQc = Transaction::factory()->create([

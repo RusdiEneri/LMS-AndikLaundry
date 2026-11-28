@@ -36,7 +36,7 @@ describe('Feature F3: RBAC_BARRIERS (Tier 1 - Equivalence Class Happy Paths)', f
         $resSettings->assertOk();
     });
 
-    it('T1-RBAC-02: allows Cashier to access POS interface and shifts', function () {
+    it('T1-RBAC-02: blocks Cashier from POS and Owner endpoints with HTTP 403 Forbidden (owner-only)', function () {
         $cashier = User::factory()->create([
             'email' => 'cashier@andiklaundry.test',
             'role' => 'cashier',
@@ -45,11 +45,12 @@ describe('Feature F3: RBAC_BARRIERS (Tier 1 - Equivalence Class Happy Paths)', f
 
         $this->actingAs($cashier);
 
-        $response = $this->get('/pos');
-        $response->assertOk();
+        $this->get('/pos')->assertForbidden();
+        $this->postJson('/pos/orders', [])->assertForbidden();
+        $this->getJson('/api/pos/customers/search?q=test')->assertForbidden();
     });
 
-    it('T1-RBAC-03: allows Operator to access Production Station', function () {
+    it('T1-RBAC-03: blocks Operator from Production Station and API with HTTP 403 Forbidden (owner-only)', function () {
         $operator = User::factory()->create([
             'email' => 'operator@andiklaundry.test',
             'role' => 'operator',
@@ -58,8 +59,8 @@ describe('Feature F3: RBAC_BARRIERS (Tier 1 - Equivalence Class Happy Paths)', f
 
         $this->actingAs($operator);
 
-        $response = $this->get('/production/station');
-        $response->assertOk();
+        $this->get('/production/station')->assertForbidden();
+        $this->patchJson('/production/orders/1/status', ['to_status' => 'selesai'])->assertForbidden();
     });
 
     it('T1-RBAC-04: blocks Cashier from accessing Owner User Management with HTTP 403 Forbidden', function () {
@@ -192,7 +193,7 @@ describe('Feature F3: RBAC_BARRIERS (Tier 2 - Boundaries & Corner Cases)', funct
 
     it('T2-RBAC-07: EnsureUserIsActive middleware intercepts deactivated user mid-session, flushes session, and returns 403 / redirect to login', function () {
         $user = User::factory()->create([
-            'role' => 'cashier',
+            'role' => 'owner',
             'is_active' => true,
         ]);
 

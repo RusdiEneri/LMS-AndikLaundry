@@ -30,13 +30,11 @@ TrimStrings::except([
 
 Route::get('/', function () {
     if (Auth::check()) {
-        $role = Auth::user()?->role;
+        if (Auth::user()?->role === 'owner') {
+            return redirect('/pos');
+        }
 
-        return match ($role) {
-            'owner', 'cashier' => redirect('/pos'),
-            'operator' => redirect('/production/station'),
-            default => redirect('/pos'),
-        };
+        return redirect('/nota');
     }
 
     $customerCount = 0;
@@ -99,46 +97,44 @@ Route::get('/receipt/{orderNumber?}', [ReceiptController::class, 'show'])
     ->middleware('throttle:receipts')
     ->name('receipt.show');
 
-Route::middleware(['auth'])->group(function () {
-    Route::middleware(['role:owner'])->group(function () {
-        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-        Route::get('/owner/reports/export-csv', [DashboardController::class, 'exportCsv'])->name('owner.reports.export-csv');
+Route::middleware(['auth', 'role:owner'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/owner/reports/export-csv', [DashboardController::class, 'exportCsv'])->name('owner.reports.export-csv');
 
-        Route::get('/owner/users', [UserController::class, 'index'])->name('owner.users.index');
-        Route::post('/owner/users', [UserController::class, 'store'])->name('owner.users.store');
-        Route::get('/owner/users/{user}', fn () => abort(404));
-        Route::put('/owner/users/{user}', [UserController::class, 'update'])->name('owner.users.update');
-        Route::delete('/owner/users/{user}', [UserController::class, 'destroy'])->name('owner.users.destroy');
-        Route::patch('/owner/users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('owner.users.toggle-status');
+    Route::get('/owner/users', [UserController::class, 'index'])->name('owner.users.index');
+    Route::post('/owner/users', [UserController::class, 'store'])->name('owner.users.store');
+    Route::get('/owner/users/{user}', fn () => abort(404));
+    Route::put('/owner/users/{user}', [UserController::class, 'update'])->name('owner.users.update');
+    Route::delete('/owner/users/{user}', [UserController::class, 'destroy'])->name('owner.users.destroy');
+    Route::patch('/owner/users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('owner.users.toggle-status');
 
-        Route::get('/owner/settings', [SettingController::class, 'index'])->name('owner.settings.index');
-        Route::put('/owner/settings', [SettingController::class, 'update'])->name('owner.settings.update');
-        Route::post('/owner/settings/whatsapp/test-connection', [SettingController::class, 'testWhatsAppConnection'])->name('owner.settings.whatsapp.test-connection');
-        Route::post('/owner/settings/whatsapp/test-message', [SettingController::class, 'sendWhatsAppTestMessage'])->name('owner.settings.whatsapp.test-message');
-        Route::post('/owner/settings/whatsapp/connect-session', [SettingController::class, 'connectWhatsAppSession'])->name('owner.settings.whatsapp.connect-session');
-        Route::post('/owner/settings/whatsapp/disconnect-session', [SettingController::class, 'disconnectWhatsAppSession'])->name('owner.settings.whatsapp.disconnect-session');
+    Route::get('/owner/settings', [SettingController::class, 'index'])->name('owner.settings.index');
+    Route::put('/owner/settings', [SettingController::class, 'update'])->name('owner.settings.update');
+    Route::post('/owner/settings/whatsapp/test-connection', [SettingController::class, 'testWhatsAppConnection'])->name('owner.settings.whatsapp.test-connection');
+    Route::post('/owner/settings/whatsapp/test-message', [SettingController::class, 'sendWhatsAppTestMessage'])->name('owner.settings.whatsapp.test-message');
+    Route::post('/owner/settings/whatsapp/connect-session', [SettingController::class, 'connectWhatsAppSession'])->name('owner.settings.whatsapp.connect-session');
+    Route::post('/owner/settings/whatsapp/disconnect-session', [SettingController::class, 'disconnectWhatsAppSession'])->name('owner.settings.whatsapp.disconnect-session');
 
-        Route::post('/owner/services', [ServiceController::class, 'store'])->name('owner.services.store');
-        Route::put('/owner/services/{service}', [ServiceController::class, 'update'])->name('owner.services.update');
-        Route::patch('/owner/services/{service}/toggle-status', [ServiceController::class, 'toggleStatus'])->name('owner.services.toggle-status');
-        Route::delete('/owner/services/{service}', [ServiceController::class, 'destroy'])->name('owner.services.destroy');
+    Route::post('/owner/services', [ServiceController::class, 'store'])->name('owner.services.store');
+    Route::put('/owner/services/{service}', [ServiceController::class, 'update'])->name('owner.services.update');
+    Route::patch('/owner/services/{service}/toggle-status', [ServiceController::class, 'toggleStatus'])->name('owner.services.toggle-status');
+    Route::delete('/owner/services/{service}', [ServiceController::class, 'destroy'])->name('owner.services.destroy');
 
-        Route::get('/owner/expenses', [ExpenseController::class, 'index'])->name('owner.expenses.index');
-        Route::get('/expenses', [ExpenseController::class, 'index'])->name('expenses.index');
-        Route::post('/owner/expenses', [ExpenseController::class, 'store'])->name('owner.expenses.store');
-        Route::post('/expenses', [ExpenseController::class, 'store']);
-        Route::delete('/owner/expenses/{expense}', [ExpenseController::class, 'destroy'])->name('owner.expenses.destroy');
+    Route::get('/owner/expenses', [ExpenseController::class, 'index'])->name('owner.expenses.index');
+    Route::get('/expenses', [ExpenseController::class, 'index'])->name('expenses.index');
+    Route::post('/owner/expenses', [ExpenseController::class, 'store'])->name('owner.expenses.store');
+    Route::post('/expenses', [ExpenseController::class, 'store']);
+    Route::delete('/owner/expenses/{expense}', [ExpenseController::class, 'destroy'])->name('owner.expenses.destroy');
 
-        Route::get('/owner/daily-recap', [DailyRecapController::class, 'index'])->name('owner.daily-recap.index');
-        Route::get('/daily-recap', [DailyRecapController::class, 'index'])->name('daily-recap.index');
-        Route::get('/api/daily-recap/print', [DailyRecapController::class, 'printData'])->name('api.daily-recap.print');
+    Route::get('/owner/daily-recap', [DailyRecapController::class, 'index'])->name('owner.daily-recap.index');
+    Route::get('/daily-recap', [DailyRecapController::class, 'index'])->name('daily-recap.index');
+    Route::get('/api/daily-recap/print', [DailyRecapController::class, 'printData'])->name('api.daily-recap.print');
 
-        Route::get('/owner/receivables', [ReceivableController::class, 'index'])->name('owner.receivables.index');
-        Route::get('/receivables', [ReceivableController::class, 'index'])->name('receivables.index');
-        Route::get('/api/receivables/{id}/reminder-url', [ReceivableController::class, 'getReminderUrl'])->name('api.receivables.reminder');
-    });
+    Route::get('/owner/receivables', [ReceivableController::class, 'index'])->name('owner.receivables.index');
+    Route::get('/receivables', [ReceivableController::class, 'index'])->name('receivables.index');
+    Route::get('/api/receivables/{id}/reminder-url', [ReceivableController::class, 'getReminderUrl'])->name('api.receivables.reminder');
 
-    Route::get('/pos', [PosController::class, 'index'])->middleware('role:owner,cashier')->name('pos.index');
+    Route::get('/pos', [PosController::class, 'index'])->name('pos.index');
 
     Route::get('/api/pos/customers/search', [CustomerController::class, 'search'])->name('pos.customers.search');
     Route::get('/pos/customers/search', [CustomerController::class, 'search']);
@@ -156,7 +152,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/api/pos/orders/{id}/payments', [PaymentController::class, 'store']);
     Route::post('/api/pos/transactions/{id}/payments', [PaymentController::class, 'store']);
 
-    Route::get('/production/station', [StationController::class, 'index'])->middleware('role:owner,operator')->name('production.station');
+    Route::get('/production/station', [StationController::class, 'index'])->name('production.station');
 
     Route::patch('/production/orders/{id}/status', [ProductionStatusController::class, 'updateStatus'])->name('production.orders.status');
     Route::patch('/api/production/orders/{id}/status', [ProductionStatusController::class, 'updateStatus']);

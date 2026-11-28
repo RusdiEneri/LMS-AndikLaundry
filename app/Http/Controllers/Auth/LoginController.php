@@ -104,10 +104,6 @@ class LoginController extends Controller
      */
     public function roleHome(User $user): string
     {
-        return match ($user->role) {
-            'owner', 'cashier' => '/pos',
-            'operator' => '/production/station',
-            default => '/pos',
-        };
+        return $user->role === 'owner' ? '/pos' : '/nota';
     }
 }

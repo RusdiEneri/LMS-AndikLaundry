@@ -34,12 +34,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->redirectTo(
             guests: '/login',
-            users: fn (Request $request) => match ($request->user()?->role) {
-                'owner' => '/dashboard',
-                'cashier' => '/pos',
-                'operator' => '/production/station',
-                default => '/dashboard',
-            },
+            users: fn (Request $request) => $request->user()?->role === 'owner' ? '/pos' : '/nota',
         );
     })
     ->withExceptions(function (Exceptions $exceptions): void {

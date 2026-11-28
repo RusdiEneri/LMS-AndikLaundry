@@ -1,5 +1,8 @@
 <?php
 
+use App\Enums\PaymentStatus;
+use App\Enums\ProductionStatus;
+use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
@@ -30,9 +33,9 @@ describe('Milestone 5: Layout & Controller Inertia Props Verification', function
     });
 
     it('POS Cashier interface receives active shift, store info, categories, services, quick tenders, and turnaround tiers', function () {
-        $cashier = User::factory()->create(['role' => 'cashier', 'is_active' => true]);
+        $owner = User::factory()->create(['role' => 'owner', 'is_active' => true]);
 
-        $response = $this->actingAs($cashier)->get('/pos');
+        $response = $this->actingAs($owner)->get('/pos');
 
         $response->assertOk();
         $response->assertInertia(fn (Assert $page) => $page
@@ -48,22 +51,46 @@ describe('Milestone 5: Layout & Controller Inertia Props Verification', function
         );
     });
 
-    it('Production Station receives workstation queues, machines, and filters', function () {
-        $operator = User::factory()->create(['role' => 'operator', 'is_active' => true]);
+    it('Production Station renders empty real queue without hardcoded dummy data and supports simplified transitions', function () {
+        $owner = User::factory()->create(['role' => 'owner', 'is_active' => true]);
 
-        $response = $this->actingAs($operator)->get('/production/station');
+        $emptyResponse = $this->actingAs($owner)->get('/production/station');
 
-        $response->assertOk();
-        $response->assertInertia(fn (Assert $page) => $page
+        $emptyResponse->assertOk();
+        $emptyResponse->assertInertia(fn (Assert $page) => $page
             ->component('Production/Station')
-            ->has('workstation_queues')
-            ->has('workstation_queues.washing_queue')
-            ->has('workstation_queues.drying_queue')
-            ->has('workstation_queues.ironing_packing_queue')
-            ->has('machines')
-            ->has('machines.washers')
-            ->has('machines.dryers')
-            ->has('filters')
+            ->has('orders', 0)
+            ->where('summary.processing_count', 0)
+            ->where('summary.ready_count', 0)
+            ->where('summary.picked_up_today_count', 0)
         );
+
+        $order = Transaction::factory()->create([
+            'production_status' => ProductionStatus::RECEIVED,
+            'payment_status' => PaymentStatus::PAID,
+            'total_amount' => 16000.00,
+            'paid_amount' => 16000.00,
+            'outstanding_balance' => 0.00,
+        ]);
+
+        $this->actingAs($owner)->get('/production/station')
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('Production/Station')
+                ->has('orders', 1)
+                ->where('orders.0.invoice_number', $order->invoice_number)
+                ->where('orders.0.stage', 'diproses')
+                ->where('summary.processing_count', 1)
+            );
+
+        $this->actingAs($owner)
+            ->patchJson("/production/orders/{$order->id}/status", ['to_status' => 'selesai'])
+            ->assertOk()
+            ->assertJsonPath('data.transaction.production_status', 'selesai');
+
+        $this->actingAs($owner)
+            ->patchJson("/production/orders/{$order->id}/status", ['to_status' => 'sudah_diambil'])
+            ->assertOk()
+            ->assertJsonPath('data.transaction.production_status', 'sudah_diambil');
     });
 });

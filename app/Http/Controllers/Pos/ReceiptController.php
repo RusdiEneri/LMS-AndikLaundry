@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Pos;
 use App\Http\Controllers\Controller;
 use App\Models\BusinessSetting;
 use App\Models\Transaction;
+use App\Support\PhoneFormatter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -12,6 +13,23 @@ use Inertia\Response;
 
 class ReceiptController extends Controller
 {
+    /**
+     * Mask phone number for unauthenticated public receipt lookups.
+     */
+    private function maskPhone(?string $phone): string
+    {
+        $digits = preg_replace('/[^0-9]/', '', (string) $phone);
+        $len = strlen($digits);
+        if ($len === 0) {
+            return '';
+        }
+        if ($len <= 6) {
+            return substr($digits, 0, 2).str_repeat('*', max(2, $len - 2));
+        }
+
+        return substr($digits, 0, 4).str_repeat('*', $len - 7).substr($digits, -3);
+    }
+
     /**
      * Display public digital receipt and live status tracking page.
      * GET /receipts/{invoice_number} or GET /receipt/{orderNumber}
@@ -41,13 +59,20 @@ class ReceiptController extends Controller
             ]);
         }
 
-        // Search by invoice number or phone number
-        $transaction = Transaction::where('invoice_number', $targetInvoice)
-            ->orWhereHas('customer', function ($query) use ($targetInvoice) {
-                $normalizedPhone = preg_replace('/[^0-9]/', '', $targetInvoice);
-                if (strlen($normalizedPhone) >= 8) {
-                    $query->where('phone_normalized', 'like', '%'.$normalizedPhone)
-                        ->orWhere('phone', 'like', '%'.$targetInvoice);
+        // Exact invoice number or full normalized phone (>= 10 digits)
+        $normalizedDigits = preg_replace('/[^0-9]/', '', $targetInvoice);
+        $e164Phone = strlen($normalizedDigits) >= 10
+            ? PhoneFormatter::normalizeToE164($targetInvoice)
+            : null;
+
+        $transaction = Transaction::query()
+            ->where(function ($q) use ($targetInvoice, $e164Phone) {
+                $q->where('invoice_number', $targetInvoice);
+                if ($e164Phone) {
+                    $q->orWhereHas('customer', function ($customerQuery) use ($targetInvoice, $e164Phone) {
+                        $customerQuery->where('phone_normalized', $e164Phone)
+                            ->orWhere('phone', $targetInvoice);
+                    });
                 }
             })
             ->with([
@@ -58,6 +83,7 @@ class ReceiptController extends Controller
                 'payments',
                 'statusHistories.user',
             ])
+            ->orderByDesc('intake_at')
             ->first();
 
         if (! $transaction) {
@@ -68,6 +94,8 @@ class ReceiptController extends Controller
         }
 
         $minWeight = (float) BusinessSetting::get('operational.default_min_weight', 2.0);
+
+        $isStaffViewer = $request->user()?->role === 'owner';
 
         $orderData = [
             'id' => $transaction->id,
@@ -100,15 +128,17 @@ class ReceiptController extends Controller
             'notes' => $transaction->notes,
             'delivery_option' => $transaction->delivery_option,
             'customer' => [
-                'id' => $transaction->customer?->id,
+                'id' => $isStaffViewer ? $transaction->customer?->id : null,
                 'name' => $transaction->customer?->name ?? 'Pelanggan Umum',
-                'phone' => $transaction->customer?->phone ?? '',
-                'phone_normalized' => $transaction->customer?->phone_normalized ?? '',
-                'address' => $transaction->customer?->address ?? '',
+                'phone' => $isStaffViewer
+                    ? ($transaction->customer?->phone ?? '')
+                    : $this->maskPhone($transaction->customer?->phone),
+                'phone_normalized' => $isStaffViewer ? ($transaction->customer?->phone_normalized ?? '') : '',
+                'address' => $isStaffViewer ? ($transaction->customer?->address ?? '') : '',
             ],
             'cashier' => [
-                'id' => $transaction->cashier?->id,
-                'name' => $transaction->cashier?->name ?? 'Kasir',
+                'id' => $isStaffViewer ? $transaction->cashier?->id : null,
+                'name' => $isStaffViewer ? ($transaction->cashier?->name ?? 'Kasir') : 'Kasir',
             ],
             'items' => $transaction->items->map(fn ($item) => [
                 'id' => $item->id,
@@ -141,7 +171,7 @@ class ReceiptController extends Controller
                 'to_status' => is_string($history->to_status) ? $history->to_status : ($history->to_status?->value ?? $history->to_status),
                 'transition_notes' => $history->transition_notes,
                 'created_at' => $history->created_at?->toISOString(),
-                'user_name' => $history->user?->name ?? 'Sistem',
+                'user_name' => $isStaffViewer ? ($history->user?->name ?? 'Sistem') : 'Petugas',
             ])->values()->all(),
         ];
 

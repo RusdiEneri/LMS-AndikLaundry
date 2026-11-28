@@ -13,7 +13,7 @@ class StoreTransactionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user() !== null && in_array($this->user()->role, ['owner', 'cashier'], true);
+        return $this->user() !== null && $this->user()->role === 'owner';
     }
 
     /**

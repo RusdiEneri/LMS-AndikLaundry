@@ -15,9 +15,7 @@ class DatabaseSeeder extends Seeder
             RoleAndPermissionSeeder::class,
             UserSeeder::class,
             BusinessSettingSeeder::class,
-            CustomerSeeder::class,
             ServiceCatalogSeeder::class,
-            ExpenseSeeder::class,
         ]);
     }
 }

@@ -391,14 +391,15 @@ describe('Tier 3: Pairwise Cross-Feature Interactions', function () {
         // 1. Verify invoice number matches regex /^INV-\d{8}-\d{4}$/
         expect($transaction->invoice_number)->toMatch('/^INV-\d{8}-\d{4}$/');
 
-        // 2. Access GET /receipts/{invoice_number} without auth: returns 200 with order and store info props
+        // 2. Access GET /receipts/{invoice_number} without auth: returns 200 with masked PII props
         $response = $this->get("/receipts/{$transaction->invoice_number}");
         $response->assertStatus(200)
             ->assertInertia(fn (Assert $page) => $page
                 ->component('Receipt/Show')
                 ->where('order.invoice_number', $transaction->invoice_number)
                 ->where('order.customer.name', 'Dewi Lestari')
-                ->where('order.customer.phone_normalized', '6281233445566')
+                ->where('order.customer.phone_normalized', '')
+                ->where('order.customer.address', '')
                 ->has('store_info.paper_width')
                 ->has('store_info.name')
                 ->has('store_info.address')
@@ -819,7 +820,8 @@ describe('Tier 4: Real-World Application Scenarios', function () {
         expect($transaction->fresh()->production_status)->toBe(ProductionStatus::READY_FOR_PICKUP);
 
         // Release attempted via HTTP Controller API -> returns 422 with domain error message
-        $response = $this->actingAs($operator)->patchJson("/production/orders/{$transaction->id}/status", [
+        $owner = User::factory()->owner()->create();
+        $response = $this->actingAs($owner)->patchJson("/production/orders/{$transaction->id}/status", [
             'status' => 'completed',
         ]);
 

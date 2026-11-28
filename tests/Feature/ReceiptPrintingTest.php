@@ -73,12 +73,12 @@ describe('Milestone 4: Public Digital Receipt Route & View', function () {
             'item_condition_notes' => 'Kancing kedua copot',
         ]);
 
-        // Unauthenticated request should return 200 OK
+        // Unauthenticated public receipt returns 200 OK with customer PII masked
         $response = $this->get('/receipts/INV-20261114-1001');
 
         $response->assertStatus(200);
 
-        // Verify Inertia component and prop payload
+        // Verify Inertia component and masked PII payload
         $response->assertInertia(fn (Assert $page) => $page
             ->component('Receipt/Show')
             ->has('order', fn (Assert $order) => $order
@@ -90,6 +90,9 @@ describe('Milestone 4: Public Digital Receipt Route & View', function () {
                 ->where('outstanding_balance', 0)
                 ->where('staging_rack', 'RAK-A1')
                 ->where('customer.name', 'Budi Santoso')
+                ->where('customer.phone', '0812*****890')
+                ->where('customer.phone_normalized', '')
+                ->where('customer.address', '')
                 ->has('items', 1, fn (Assert $item) => $item
                     ->where('item_name', 'Cuci Komplit Reguler')
                     ->where('pricing_unit', 'kg')
@@ -158,7 +161,7 @@ describe('Milestone 4: Public Digital Receipt Route & View', function () {
 describe('Milestone 4: POS Controller Data Feed & Cashier Operations', function () {
 
     it('T4-POS-01: PosController provides real catalog, tiers, perfumes, and default customer', function () {
-        $cashier = User::factory()->create(['role' => 'cashier']);
+        $cashier = User::factory()->create(['role' => 'owner']);
 
         $category = ServiceCategory::factory()->create(['name' => 'Kiloan', 'is_active' => true]);
         Service::factory()->for($category, 'category')->create([
@@ -189,7 +192,7 @@ describe('Milestone 4: POS Controller Data Feed & Cashier Operations', function 
     });
 
     it('T4-POS-02: Fast customer creation and lookup via /pos/customers', function () {
-        $cashier = User::factory()->create(['role' => 'cashier']);
+        $cashier = User::factory()->create(['role' => 'owner']);
 
         // Create new customer via POS
         $createRes = $this->actingAs($cashier)->postJson('/pos/customers', [
@@ -212,7 +215,7 @@ describe('Milestone 4: POS Controller Data Feed & Cashier Operations', function 
     });
 
     it('T4-POS-03: POS order intake creates transaction with price snapshots and records payment', function () {
-        $cashier = User::factory()->create(['role' => 'cashier']);
+        $cashier = User::factory()->create(['role' => 'owner']);
         $customer = Customer::factory()->create([
             'name' => 'Hendra Setiawan',
             'phone' => '081234567890',
@@ -277,7 +280,7 @@ describe('Milestone 4: POS Controller Data Feed & Cashier Operations', function 
     });
 
     it('T4-REM-01: POS order with turnaround tier and explicit surcharge_amount avoids double surcharge', function () {
-        $cashier = User::factory()->cashier()->create();
+        $cashier = User::factory()->owner()->create();
         $customer = Customer::factory()->create([
             'name' => 'Budi Santoso',
             'phone' => '081234567891',
@@ -331,7 +334,7 @@ describe('Milestone 4: POS Controller Data Feed & Cashier Operations', function 
     });
 
     it('T4-REM-02: POS order with default walk-in customer (Pelanggan Umum) completes checkout smoothly', function () {
-        $cashier = User::factory()->cashier()->create();
+        $cashier = User::factory()->owner()->create();
         $walkInCustomer = Customer::firstOrCreate(
             ['name' => 'Pelanggan Umum'],
             [
@@ -396,7 +399,7 @@ describe('Milestone 4: POS Controller Data Feed & Cashier Operations', function 
     });
 
     it('T4-REM-03: Multi-item POS order with turnaround tier avoids flat surcharge accumulation defect', function () {
-        $cashier = User::factory()->cashier()->create();
+        $cashier = User::factory()->owner()->create();
         $customer = Customer::factory()->create([
             'name' => 'Ahmad Dahlan',
             'phone' => '081234567899',

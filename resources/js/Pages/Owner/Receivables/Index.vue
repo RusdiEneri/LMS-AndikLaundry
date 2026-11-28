@@ -5,10 +5,10 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/Components/ui/card';
 import { Badge } from '@/Components/ui/badge';
 import { Button } from '@/Components/ui/button';
+import WhatsAppIcon from '@/Components/WhatsAppIcon.vue';
 import {
     AlertCircle,
     Phone,
-    MessageSquare,
     Search,
     Clock,
     DollarSign,
@@ -240,7 +240,7 @@ function openWhatsAppReminder(debtor: DebtorItem) {
                                                 class="min-h-[44px] gap-1.5 text-xs text-accent-700 border-accent-500/40 hover:bg-accent-100"
                                                 title="Kirim Pengingat Tagihan via WhatsApp"
                                             >
-                                                <MessageSquare class="h-4 w-4 text-accent-700" />
+                                                <WhatsAppIcon class="h-4 w-4 text-accent-700" />
                                                 <span>Ingatkan WA</span>
                                             </Button>
 

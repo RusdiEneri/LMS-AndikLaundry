@@ -47,13 +47,12 @@ describe('Feature F7: Route & Layout Accessibility - Tier 1 Happy Paths', functi
         $this->actingAs($owner)->get('/login')->assertRedirect('/pos');
         $this->actingAs($owner)->get('/')->assertRedirect('/pos');
 
-        // Cashier visiting /login or root -> /pos
-        $this->actingAs($cashier)->get('/login')->assertRedirect('/pos');
-        $this->actingAs($cashier)->get('/')->assertRedirect('/pos');
+        // Non-owner roles (cashier / operator) visiting /login or root -> /nota only
+        $this->actingAs($cashier)->get('/login')->assertRedirect('/nota');
+        $this->actingAs($cashier)->get('/')->assertRedirect('/nota');
 
-        // Operator visiting /login or root -> /production/station
-        $this->actingAs($operator)->get('/login')->assertRedirect('/production/station');
-        $this->actingAs($operator)->get('/')->assertRedirect('/production/station');
+        $this->actingAs($operator)->get('/login')->assertRedirect('/nota');
+        $this->actingAs($operator)->get('/')->assertRedirect('/nota');
     });
 
     it('T1-ROUTE-04: 403 Forbidden renders custom Inertia error page with Indonesian notice', function () {
@@ -70,21 +69,21 @@ describe('Feature F7: Route & Layout Accessibility - Tier 1 Happy Paths', functi
     });
 
     it('T1-ROUTE-05: Authenticated responses provide Inertia shared auth user data', function () {
-        $cashier = User::factory()->create([
-            'name' => 'Siti Kasir',
-            'email' => 'siti@andiklaundry.test',
-            'role' => 'cashier',
+        $owner = User::factory()->create([
+            'name' => 'Pak Andik',
+            'email' => 'pakandik@andiklaundry.test',
+            'role' => 'owner',
             'is_active' => true,
         ]);
 
-        $response = $this->actingAs($cashier)->get('/pos');
+        $response = $this->actingAs($owner)->get('/pos');
 
         $response->assertOk();
         $response->assertInertia(fn (Assert $page) => $page
             ->has('auth.user')
-            ->where('auth.user.name', 'Siti Kasir')
-            ->where('auth.user.email', 'siti@andiklaundry.test')
-            ->where('auth.user.role', 'cashier')
+            ->where('auth.user.name', 'Pak Andik')
+            ->where('auth.user.email', 'pakandik@andiklaundry.test')
+            ->where('auth.user.role', 'owner')
             ->where('auth.user.is_active', true)
         );
     });

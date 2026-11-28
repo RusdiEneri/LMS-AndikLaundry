@@ -2,13 +2,13 @@
 import { ref, computed } from 'vue';
 import {
     Printer,
-    Send,
     Copy,
     Check,
     X,
     ExternalLink,
     RotateCcw,
 } from 'lucide-vue-next';
+import WhatsAppIcon from '@/Components/WhatsAppIcon.vue';
 import {
     formatRupiah,
     formatDateTimeIndo,
@@ -350,7 +350,7 @@ function handleNewTransaction() {
                         rel="noopener noreferrer"
                         class="min-h-[44px] flex items-center justify-center space-x-2 rounded-pill bg-success hover:bg-success/90 text-white font-bold text-xs uppercase tracking-wider transition-all duration-[120ms] ease-standard cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500"
                     >
-                        <Send class="h-4 w-4" />
+                        <WhatsAppIcon class="h-4 w-4" />
                         <span>Kirim WhatsApp</span>
                     </a>
                 </div>

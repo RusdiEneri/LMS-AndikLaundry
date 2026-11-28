@@ -56,34 +56,33 @@ describe('Feature F1: AUTH_SESSION (Tier 1 - Equivalence Class Happy Paths)', fu
         $this->assertAuthenticatedAs($owner);
         Auth::logout();
 
-        // 2. Cashier Login -> Redirects to /pos
+        // 2. Non-owner roles route only to public receipt tracker (/nota) under owner-only model
         $responseCashier = $this->post('/login', [
             'email' => 'cashier@andiklaundry.test',
             'password' => 'Password123!',
         ]);
-        $responseCashier->assertRedirect('/pos');
+        $responseCashier->assertRedirect('/nota');
         $this->assertAuthenticatedAs($cashier);
         Auth::logout();
 
-        // 3. Operator Login -> Redirects to /production/station
         $responseOperator = $this->post('/login', [
             'email' => 'operator@andiklaundry.test',
             'password' => 'Password123!',
         ]);
-        $responseOperator->assertRedirect('/production/station');
+        $responseOperator->assertRedirect('/nota');
         $this->assertAuthenticatedAs($operator);
     });
 
     it('T1-AUTH-02: sets persistent remember token cookie when remember-me is checked', function () {
         $user = User::factory()->create([
-            'email' => 'cashier@andiklaundry.test',
+            'email' => 'owner.remember@andiklaundry.test',
             'password' => Hash::make('Password123!'),
-            'role' => 'cashier',
+            'role' => 'owner',
             'is_active' => true,
         ]);
 
         $response = $this->post('/login', [
-            'email' => 'cashier@andiklaundry.test',
+            'email' => 'owner.remember@andiklaundry.test',
             'password' => 'Password123!',
             'remember' => true,
         ]);
@@ -217,8 +216,8 @@ describe('Feature F1: AUTH_SESSION (Tier 2 - Boundaries & Corner Cases)', functi
 
     it('T2-AUTH-05: terminates session and redirects to login when authenticated user is deactivated mid-session', function () {
         $user = User::factory()->create([
-            'email' => 'cashier@andiklaundry.test',
-            'role' => 'cashier',
+            'email' => 'owner.active@andiklaundry.test',
+            'role' => 'owner',
             'is_active' => true,
         ]);
 
@@ -372,7 +371,7 @@ describe('Feature F2: AUTH_RATE_LIMIT (Tier 2 - Boundaries & Corner Cases)', fun
         $user = User::factory()->create([
             'email' => $email,
             'password' => Hash::make('CorrectPassword123!'),
-            'role' => 'cashier',
+            'role' => 'owner',
             'is_active' => true,
         ]);
 
@@ -448,7 +447,7 @@ describe('Feature F2: AUTH_RATE_LIMIT (Tier 2 - Boundaries & Corner Cases)', fun
         $user = User::factory()->create([
             'email' => $email,
             'password' => Hash::make('TargetPass123!'),
-            'role' => 'cashier',
+            'role' => 'owner',
             'is_active' => true,
         ]);
         $key = Str::transliterate(Str::lower($email).'|127.0.0.1');

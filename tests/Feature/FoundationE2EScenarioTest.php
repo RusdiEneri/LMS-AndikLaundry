@@ -50,28 +50,27 @@ describe('Tier 3: Pairwise Cross-Feature Interactions', function () {
         $cashier = User::factory()->create(['email' => 'cashier@test.com', 'role' => 'cashier', 'is_active' => true]);
         $owner = User::factory()->create(['email' => 'owner@test.com', 'role' => 'owner', 'is_active' => true]);
 
-        // 1. Cashier logs in and accesses /pos successfully
-        $this->actingAs($cashier)->get('/pos')->assertOk();
+        // 1. Cashier (non-owner) is blocked from POS and Owner routes -> 403
+        $this->actingAs($cashier)->get('/pos')->assertForbidden();
+        $this->actingAs($cashier)->get('/owner/users')->assertForbidden();
 
-        // 2. Cashier attempts direct navigation to /owner/users -> Intercepted with 403
-        $this->actingAs($cashier)->get('/owner/users')->assertStatus(403);
-
-        // 3. Cashier logs out
+        // 2. Cashier logs out
         $this->actingAs($cashier)->post('/logout')->assertRedirect('/login');
 
-        // 4. Owner logs in and navigates to /owner/users -> 200 OK
+        // 3. Owner logs in and navigates to /pos and /owner/users -> 200 OK
+        $this->actingAs($owner)->get('/pos')->assertOk();
         $this->actingAs($owner)->get('/owner/users')->assertOk();
     });
 
-    it('T3-PAIR-02 (USER_CRUD x AUTH_SESSION x AUTH_RATE_LIMIT): Created cashier with raw phone normalizes in DB, fails login 5 times, hits rate limit 429, recovers after decay', function () {
+    it('T3-PAIR-02 (USER_CRUD x AUTH_SESSION x AUTH_RATE_LIMIT): Created owner with raw phone normalizes in DB, fails login 5 times, hits rate limit 429, recovers after decay', function () {
         $owner = User::factory()->create(['role' => 'owner', 'is_active' => true]);
 
-        // 1. Owner creates new cashier with raw unformatted phone
+        // 1. Owner creates second owner with raw unformatted phone
         $createPayload = [
             'name' => 'Dewi Persik',
             'email' => 'dewi@andiklaundry.test',
             'phone' => '0857-1122-3344',
-            'role' => 'cashier',
+            'role' => 'owner',
             'password' => 'Password123!',
             'password_confirmation' => 'Password123!',
             'is_active' => true,
@@ -116,19 +115,19 @@ describe('Tier 3: Pairwise Cross-Feature Interactions', function () {
         $this->assertAuthenticated();
     });
 
-    it('T3-PAIR-03 (USER_CRUD x AUTH_SESSION x EnsureUserIsActive): Cashier in active session is deactivated by Owner; next request is intercepted and session destroyed', function () {
+    it('T3-PAIR-03 (USER_CRUD x AUTH_SESSION x EnsureUserIsActive): Owner account in active session is deactivated; next request is intercepted and session destroyed', function () {
         $owner = User::factory()->create(['role' => 'owner', 'is_active' => true]);
-        $cashier = User::factory()->create(['email' => 'cashier_siti@test.com', 'role' => 'cashier', 'is_active' => true]);
+        $secondOwner = User::factory()->create(['email' => 'owner_siti@test.com', 'role' => 'owner', 'is_active' => true]);
 
-        // 1. Cashier logs in and confirms active session
-        $this->actingAs($cashier)->get('/pos')->assertOk();
+        // 1. Second owner logs in and confirms active session
+        $this->actingAs($secondOwner)->get('/pos')->assertOk();
 
-        // 2. Owner deactivates Cashier account
-        $this->actingAs($owner)->patch("/owner/users/{$cashier->id}/toggle-status")->assertStatus(302);
-        expect((bool) $cashier->fresh()->is_active)->toBeFalse();
+        // 2. Primary owner deactivates second account
+        $this->actingAs($owner)->patch("/owner/users/{$secondOwner->id}/toggle-status")->assertStatus(302);
+        expect((bool) $secondOwner->fresh()->is_active)->toBeFalse();
 
-        // 3. Cashier performs subsequent request; EnsureUserIsActive intercepts
-        $subsequentResponse = $this->actingAs($cashier)->get('/pos');
+        // 3. Deactivated user performs subsequent request; EnsureUserIsActive intercepts
+        $subsequentResponse = $this->actingAs($secondOwner)->get('/pos');
 
         // Assert session flushed and redirected to login with 403 or deactivated notice
         expect($subsequentResponse->status())->toBeIn([302, 403]);
@@ -152,9 +151,9 @@ describe('Tier 3: Pairwise Cross-Feature Interactions', function () {
         // 3. Setting persists and verified through static getter helper
         expect(BusinessSetting::get('operational.default_min_weight'))->toBeIn(['3.50', 3.50, 3.5]);
 
-        // 4. Cashier visiting POS interface receives 200 OK
-        $posResponse = $this->actingAs($cashier)->get('/pos');
-        $posResponse->assertOk();
+        // 4. Owner visiting POS interface receives 200 OK while Cashier gets 403
+        $this->actingAs($owner)->get('/pos')->assertOk();
+        $this->actingAs($cashier)->get('/pos')->assertForbidden();
     });
 
     it('T3-PAIR-05 (USER_CRUD x SelfProtectionGuards x RBAC_BARRIERS): Owner cannot delete or demote self, but can manage second owner account', function () {
@@ -178,11 +177,11 @@ describe('Tier 3: Pairwise Cross-Feature Interactions', function () {
         $this->assertSoftDeleted('users', ['id' => $owner2->id]);
     });
 
-    it('T3-PAIR-06 (ROUTE_LAYOUT x AUTH_SESSION x RBAC_BARRIERS): Guest visits /pos, redirected to /login with intended URL, logs in as Cashier, redirected to /pos', function () {
-        $cashier = User::factory()->create([
-            'email' => 'cashier_flow@andiklaundry.test',
+    it('T3-PAIR-06 (ROUTE_LAYOUT x AUTH_SESSION x RBAC_BARRIERS): Guest visits /pos, redirected to /login with intended URL, logs in as Owner, redirected to /pos', function () {
+        $owner = User::factory()->create([
+            'email' => 'owner_flow@andiklaundry.test',
             'password' => Hash::make('Password123!'),
-            'role' => 'cashier',
+            'role' => 'owner',
             'is_active' => true,
         ]);
 
@@ -190,19 +189,19 @@ describe('Tier 3: Pairwise Cross-Feature Interactions', function () {
         $guestResponse = $this->get('/pos');
         $guestResponse->assertRedirect('/login');
 
-        // 2. Cashier logs in
+        // 2. Owner logs in
         $loginResponse = $this->post('/login', [
-            'email' => 'cashier_flow@andiklaundry.test',
+            'email' => 'owner_flow@andiklaundry.test',
             'password' => 'Password123!',
         ]);
 
         // 3. Redirected to intended URL /pos
         $loginResponse->assertRedirect('/pos');
 
-        // 4. Verify shared Inertia props confirm cashier identity
+        // 4. Verify shared Inertia props confirm owner identity
         $this->get('/pos')->assertInertia(fn (Assert $page) => $page
             ->has('auth.user')
-            ->where('auth.user.role', 'cashier')
+            ->where('auth.user.role', 'owner')
         );
     });
 
@@ -288,47 +287,46 @@ describe('Tier 4: Real-World Application Workloads', function () {
         // Step 5: Owner logs out
         $this->post('/logout')->assertRedirect('/login');
 
-        // Step 6: Cashier Siti logs in -> Automatically routed to POS -> Denied Owner views
-        $this->post('/login', ['email' => 'siti@andiklaundry.test', 'password' => 'SitiPass123!'])->assertRedirect('/pos');
-        $this->get('/pos')->assertOk();
+        // Step 6: Non-owner roles route only to public /nota and are denied internal views
+        $this->post('/login', ['email' => 'siti@andiklaundry.test', 'password' => 'SitiPass123!'])->assertRedirect('/nota');
+        $this->get('/pos')->assertStatus(403);
         $this->get('/dashboard')->assertStatus(403);
         $this->post('/logout')->assertRedirect('/login');
 
-        // Step 7: Operator Joko logs in -> Automatically routed to Production -> Denied POS & Settings
-        $this->post('/login', ['email' => 'joko@andiklaundry.test', 'password' => 'JokoPass123!'])->assertRedirect('/production/station');
-        $this->get('/production/station')->assertOk();
+        $this->post('/login', ['email' => 'joko@andiklaundry.test', 'password' => 'JokoPass123!'])->assertRedirect('/nota');
+        $this->get('/production/station')->assertStatus(403);
         $this->get('/pos')->assertStatus(403);
         $this->get('/owner/settings')->assertStatus(403);
     });
 
-    it('T4-SCENARIO-02: Rogue Staff Immediate Deactivation & Session Termination', function () {
+    it('T4-SCENARIO-02: Rogue User Immediate Deactivation & Session Termination', function () {
         $owner = User::factory()->create(['role' => 'owner', 'is_active' => true]);
-        $cashier = User::factory()->create([
-            'name' => 'Siti Suspect',
+        $secondOwner = User::factory()->create([
+            'name' => 'Staf Suspect',
             'email' => 'siti.suspect@andiklaundry.test',
             'password' => Hash::make('SitiPass123!'),
-            'role' => 'cashier',
+            'role' => 'owner',
             'is_active' => true,
         ]);
 
-        // Step 1: Cashier is operating POS terminal
-        $this->actingAs($cashier)->get('/pos')->assertOk();
+        // Step 1: Second owner is operating POS terminal
+        $this->actingAs($secondOwner)->get('/pos')->assertOk();
 
-        // Step 2: Owner notices anomaly and disables cashier account
-        $this->actingAs($owner)->patch("/owner/users/{$cashier->id}/toggle-status")->assertStatus(302);
-        expect((bool) $cashier->fresh()->is_active)->toBeFalse();
+        // Step 2: Owner disables account
+        $this->actingAs($owner)->patch("/owner/users/{$secondOwner->id}/toggle-status")->assertStatus(302);
+        expect((bool) $secondOwner->fresh()->is_active)->toBeFalse();
         $this->assertDatabaseHas('audit_logs', [
             'user_id' => $owner->id,
             'auditable_type' => User::class,
-            'auditable_id' => $cashier->id,
+            'auditable_id' => $secondOwner->id,
         ]);
 
-        // Step 3: Cashier attempts to place an order or refresh POS
-        $blockedResponse = $this->actingAs($cashier)->get('/pos');
+        // Step 3: Deactivated user attempts to refresh POS
+        $blockedResponse = $this->actingAs($secondOwner)->get('/pos');
         expect($blockedResponse->status())->toBeIn([302, 403]);
         $this->assertGuest();
 
-        // Step 4: Cashier attempts to re-authenticate -> Blocked at login boundary
+        // Step 4: Deactivated user attempts to re-authenticate -> Blocked at login boundary
         $reauthResponse = $this->post('/login', [
             'email' => 'siti.suspect@andiklaundry.test',
             'password' => 'SitiPass123!',
@@ -360,12 +358,13 @@ describe('Tier 4: Real-World Application Workloads', function () {
             'auditable_type' => BusinessSetting::class,
         ]);
 
-        // Step 3: Cashier accesses POS; system reflects new configuration
+        // Step 3: Owner accesses POS; Cashier gets 403
         expect(BusinessSetting::get('store.name'))->toBe('Andik Laundry Syariah')
             ->and(BusinessSetting::get('operational.default_min_weight'))->toBeIn(['3.00', 3.00, 3.0])
             ->and(BusinessSetting::get('operational.customer_credit_ceiling'))->toBeIn(['500000.00', 500000.00, 500000]);
 
-        $this->actingAs($cashier)->get('/pos')->assertOk();
+        $this->actingAs($owner)->get('/pos')->assertOk();
+        $this->actingAs($cashier)->get('/pos')->assertForbidden();
 
         // Step 4: Cashier attempts to alter operational settings -> Blocked 403
         $this->actingAs($cashier)->put('/owner/settings', [

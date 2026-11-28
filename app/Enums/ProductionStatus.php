@@ -95,14 +95,14 @@ enum ProductionStatus: string
             return in_array($target, [self::SUDAH_DIAMBIL, self::COMPLETED, self::DIPROSES], true);
         }
 
-        // Granular workflow transitions
+        // Granular workflow transitions (also permit direct completion to simplified SELESAI)
         return match ($this) {
             self::RECEIVED => in_array($target, [self::WAITING, self::WASHING, self::DIPROSES, self::SELESAI, self::SUDAH_DIAMBIL], true),
             self::WAITING => in_array($target, [self::SORTING, self::WASHING, self::DIPROSES, self::SELESAI], true),
-            self::SORTING => in_array($target, [self::WASHING, self::DIPROSES], true),
-            self::WASHING => in_array($target, [self::DRYING, self::DIPROSES], true),
-            self::DRYING => in_array($target, [self::IRONING, self::QC, self::DIPROSES], true),
-            self::IRONING => in_array($target, [self::QC, self::PACKING, self::WASHING, self::DIPROSES], true),
+            self::SORTING => in_array($target, [self::WASHING, self::DIPROSES, self::SELESAI], true),
+            self::WASHING => in_array($target, [self::DRYING, self::DIPROSES, self::SELESAI], true),
+            self::DRYING => in_array($target, [self::IRONING, self::QC, self::DIPROSES, self::SELESAI], true),
+            self::IRONING => in_array($target, [self::QC, self::PACKING, self::WASHING, self::DIPROSES, self::SELESAI], true),
             self::QC => in_array($target, [self::READY_FOR_PICKUP, self::WASHING, self::PACKING, self::SELESAI], true),
             self::PACKING => in_array($target, [self::READY_FOR_PICKUP, self::SELESAI], true),
             self::READY_FOR_PICKUP => in_array($target, [self::COMPLETED, self::SUDAH_DIAMBIL], true),

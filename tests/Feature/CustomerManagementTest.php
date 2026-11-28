@@ -82,7 +82,7 @@ describe('Milestone 1: Customer Model & Phone Normalization Invariant', function
 describe('Milestone 1: Customer Quick Search Endpoint (GET /api/pos/customers/search)', function () {
 
     beforeEach(function () {
-        $this->cashier = User::factory()->cashier()->create();
+        $this->cashier = User::factory()->owner()->create();
     });
 
     it('T1-CUST-05: Authenticated cashier can search customers by name', function () {
@@ -151,7 +151,7 @@ describe('Milestone 1: Customer Quick Search Endpoint (GET /api/pos/customers/se
 describe('Milestone 1: Customer Creation Endpoint (POST /api/pos/customers)', function () {
 
     beforeEach(function () {
-        $this->cashier = User::factory()->cashier()->create();
+        $this->cashier = User::factory()->owner()->create();
     });
 
     it('T1-CUST-08: Cashier can create a new customer and receives normalized E.164 profile', function () {

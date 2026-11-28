@@ -6,7 +6,6 @@ import {
     Clock,
     Scale,
     Printer,
-    MessageCircle,
     Phone,
     MapPin,
     AlertCircle,
@@ -23,6 +22,7 @@ import {
     X,
 } from 'lucide-vue-next';
 import { formatRupiah, formatDateTimeIndo } from '@/Support/whatsapp';
+import WhatsAppIcon from '@/Components/WhatsAppIcon.vue';
 
 interface OrderItem {
     id: number;
@@ -277,7 +277,7 @@ const isUnpaid = computed(() => props.order && props.order.outstanding_balance >
                         rel="noopener noreferrer"
                         class="min-h-[42px] px-3.5 py-1.5 rounded-md bg-success hover:bg-success/90 text-white text-xs font-bold shadow-xs flex items-center space-x-1.5 transition-all cursor-pointer"
                     >
-                        <MessageCircle class="h-4 w-4" />
+                        <WhatsAppIcon class="h-4 w-4" />
                         <span>Chat Kasir</span>
                     </a>
                 </div>
@@ -606,7 +606,7 @@ const isUnpaid = computed(() => props.order && props.order.outstanding_balance >
                         rel="noopener noreferrer"
                         class="inline-flex items-center justify-center space-x-2 min-h-[46px] px-6 py-2.5 rounded-md bg-success hover:bg-success/90 text-white font-bold text-sm shadow-xs transition-all cursor-pointer uppercase tracking-wider"
                     >
-                        <MessageCircle class="h-5 w-5" />
+                        <WhatsAppIcon class="h-5 w-5" />
                         <span>Hubungi Admin / Minta Antar</span>
                     </a>
                     <p class="text-xs font-medium text-text-muted">
@@ -633,7 +633,7 @@ const isUnpaid = computed(() => props.order && props.order.outstanding_balance >
                             rel="noopener noreferrer"
                             class="text-primary-600 font-bold hover:underline inline-flex items-center space-x-1"
                         >
-                            <MessageCircle class="h-4 w-4" />
+                            <WhatsAppIcon class="h-4 w-4" />
                             <span>Hubungi Kasir via WhatsApp</span>
                         </a>
                     </div>

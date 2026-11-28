@@ -339,7 +339,7 @@ describe('Milestone 2: Multi-Item Order Intake & Receivables Tracking', function
 describe('Milestone 2: POS API Endpoints', function () {
 
     it('T2-API-01: Cashier can submit transaction intake via POST /api/pos/transactions', function () {
-        $cashier = User::factory()->create(['role' => 'cashier']);
+        $cashier = User::factory()->create(['role' => 'owner']);
         $customer = Customer::factory()->create();
         $service = Service::factory()->create([
             'base_price' => 10000.00,
@@ -388,7 +388,7 @@ describe('Milestone 2: POS API Endpoints', function () {
     });
 
     it('T2-API-02: Returns 422 Unprocessable Entity when items array is empty or invalid', function () {
-        $cashier = User::factory()->create(['role' => 'cashier']);
+        $cashier = User::factory()->create(['role' => 'owner']);
         $customer = Customer::factory()->create();
 
         $response = $this->actingAs($cashier)->postJson('/api/pos/transactions', [
@@ -401,7 +401,7 @@ describe('Milestone 2: POS API Endpoints', function () {
     });
 
     it('T2-API-02B: Successfully processes POS order checkout with Cash payment method', function () {
-        $cashier = User::factory()->create(['role' => 'cashier']);
+        $cashier = User::factory()->create(['role' => 'owner']);
         $customer = Customer::factory()->create(['name' => 'Ikbar', 'phone' => '089686729170']);
         $service = Service::factory()->create([
             'name' => 'Cuci Komplit Reguler',
@@ -440,7 +440,7 @@ describe('Milestone 2: POS API Endpoints', function () {
     });
 
     it('T2-API-02C: Successfully processes POS order checkout with QRIS manual payment method', function () {
-        $cashier = User::factory()->create(['role' => 'cashier']);
+        $cashier = User::factory()->create(['role' => 'owner']);
         $customer = Customer::factory()->create(['name' => 'Ikbar', 'phone' => '089686729170']);
         $service = Service::factory()->create([
             'name' => 'Cuci Komplit Reguler',
@@ -479,7 +479,7 @@ describe('Milestone 2: POS API Endpoints', function () {
     });
 
     it('T2-API-03: Cashier can retrieve transaction details by ID or invoice number via GET /api/pos/transactions/{id}', function () {
-        $cashier = User::factory()->create(['role' => 'cashier']);
+        $cashier = User::factory()->create(['role' => 'owner']);
         $transaction = Transaction::factory()->create([
             'invoice_number' => 'INV-20261114-1234',
         ]);
@@ -513,7 +513,7 @@ describe('Milestone 2: POS API Endpoints', function () {
     });
 
     it('T2-API-05: Supports tax, line-item discounts, and debt authorization notes', function () {
-        $cashier = User::factory()->create(['role' => 'cashier']);
+        $cashier = User::factory()->create(['role' => 'owner']);
         $customer = Customer::factory()->create([
             'total_orders_count' => 0,
             'total_spend' => 0.00,
@@ -592,7 +592,7 @@ describe('Milestone 2: ProductionStatus and PaymentStatus Enums', function () {
     });
 
     it('T2-POS-UNPAID: Cashier can create an order with payment_status unpaid (Bayar Pas Ambil) and settle it later upon pickup', function () {
-        $cashier = User::factory()->create(['role' => 'cashier', 'is_active' => true]);
+        $cashier = User::factory()->create(['role' => 'owner', 'is_active' => true]);
         $customer = Customer::factory()->create();
         $service = Service::factory()->create([
             'base_price' => 8000.00,
